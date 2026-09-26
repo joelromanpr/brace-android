@@ -11,6 +11,7 @@ import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
@@ -67,7 +68,7 @@ public data class BraceRadioOption(
 
 /**
  * Controlled native radio choice. Pair standalone radios with app-managed exclusive state, or use
- * [BraceRadioGroup]. The entire row is a minimum 48 dp target with radio role, selected state,
+ * [BraceRadioGroup]. The entire row is at least 48 dp wide and high with radio role, selected state,
  * keyboard activation, and a visible keyboard focus ring. [description] is included in the
  * accessibility label and shown beneath [label].
  */
@@ -125,8 +126,12 @@ public fun BraceRadio(
         }
     }
     Row(
-        modifier = modifier
-            .defaultMinSize(minHeight = BraceTheme.sizing.touchTarget)
+        modifier = Modifier
+            .defaultMinSize(
+                minWidth = BraceTheme.sizing.touchTarget,
+                minHeight = BraceTheme.sizing.touchTarget,
+            )
+            .then(modifier)
             .focusRequester(requester)
             .clearAndSetSemantics {
                 contentDescription = labelText
@@ -261,7 +266,8 @@ public enum class BraceSegmentedSize { Small, Medium, Large }
  * retain it through recreation. Segments use radio semantics, touch/mouse/keyboard activation,
  * hover/pressed/disabled states, and a visible focus ring. Arrow keys skip disabled options and
  * wrap, with horizontal direction mirrored in RTL. The selected segment is the group's one Tab
- * stop, or the first enabled option when [value] is absent. Non-filling controls scroll on narrow screens.
+ * stop, or the first enabled option when [value] is absent. Narrow controls scroll when segments
+ * cannot retain their 48 dp minimum width, including in [fill] mode.
  */
 @Composable
 public fun BraceSegmentedControl(
@@ -300,95 +306,102 @@ public fun BraceSegmentedControl(
     ) {
         Text(label, color = BraceTheme.colors.semantic.onSurface,
             style = BraceTheme.typography.label, modifier = Modifier.clearAndSetSemantics { })
-        Row(
-            modifier = (if (fill) Modifier.fillMaxWidth() else Modifier.horizontalScroll(rememberScrollState()))
-                .background(colors.container, RoundedCornerShape(metrics.cornerRadius))
-                .border(BraceTheme.sizing.borderWidth, colors.border, RoundedCornerShape(metrics.cornerRadius))
-                .padding(metrics.gap),
-            horizontalArrangement = Arrangement.spacedBy(metrics.gap),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            options.forEachIndexed { index, option ->
-                val active = enabled && option.enabled
-                val selected = option.value == value
-                val interaction = remember(option.value) { MutableInteractionSource() }
-                val focused by interaction.collectIsFocusedAsState()
-                val hovered by interaction.collectIsHoveredAsState()
-                val pressed by interaction.collectIsPressedAsState()
-                val selectedContainer = if (intent == BraceSegmentedIntent.Primary) colors.selectedPrimaryContainer else colors.selectedContainer
-                val selectedContent = if (intent == BraceSegmentedIntent.Primary) colors.selectedPrimaryContent else colors.selectedContent
-                val container = when {
-                    !active -> colors.disabledContainer
-                    selected && intent == BraceSegmentedIntent.Primary && pressed -> colors.selectedPrimaryPressedContainer
-                    selected && intent == BraceSegmentedIntent.Primary && hovered -> colors.selectedPrimaryHoverContainer
-                    selected && intent == BraceSegmentedIntent.Neutral && pressed -> colors.selectedPressedContainer
-                    selected && intent == BraceSegmentedIntent.Neutral && hovered -> colors.selectedHoverContainer
-                    selected -> selectedContainer
-                    pressed -> colors.pressedContainer
-                    hovered -> colors.hoverContainer
-                    else -> colors.unselectedContainer
-                }
-                val content = when {
-                    !active -> colors.disabledContent
-                    selected -> selectedContent
-                    else -> colors.unselectedContent
-                }
-                val shape = RoundedCornerShape(metrics.itemCornerRadius)
-                val itemModifier = Modifier
-                    .then(if (fill) Modifier.weight(1f) else Modifier)
-                    .defaultMinSize(minWidth = BraceTheme.sizing.touchTarget, minHeight = minHeight)
-                    .focusRequester(requesters[index])
-                    .focusProperties { canFocus = active && index == tabStop }
-                    .onPreviewKeyEvent { event ->
-                        if (!enabled || event.type != KeyEventType.KeyDown) false
-                        else {
-                            val step = choiceArrowStep(event.key, direction)
-                            if (step == null) false
+        BoxWithConstraints(modifier = if (fill) Modifier.fillMaxWidth() else Modifier) {
+            val minimumRowWidth = BraceTheme.sizing.touchTarget * options.size +
+                metrics.gap * (options.size + 1)
+            // Weighted children cannot honor their minimum width when the parent is narrower.
+            // Keep 48 dp targets and let the strip scroll in that case.
+            val distribute = fill && constraints.hasBoundedWidth && maxWidth >= minimumRowWidth
+            Row(
+                modifier = (if (distribute) Modifier.fillMaxWidth() else Modifier.horizontalScroll(rememberScrollState()))
+                    .background(colors.container, RoundedCornerShape(metrics.cornerRadius))
+                    .border(BraceTheme.sizing.borderWidth, colors.border, RoundedCornerShape(metrics.cornerRadius))
+                    .padding(metrics.gap),
+                horizontalArrangement = Arrangement.spacedBy(metrics.gap),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                options.forEachIndexed { index, option ->
+                    val active = enabled && option.enabled
+                    val selected = option.value == value
+                    val interaction = remember(option.value) { MutableInteractionSource() }
+                    val focused by interaction.collectIsFocusedAsState()
+                    val hovered by interaction.collectIsHoveredAsState()
+                    val pressed by interaction.collectIsPressedAsState()
+                    val selectedContainer = if (intent == BraceSegmentedIntent.Primary) colors.selectedPrimaryContainer else colors.selectedContainer
+                    val selectedContent = if (intent == BraceSegmentedIntent.Primary) colors.selectedPrimaryContent else colors.selectedContent
+                    val container = when {
+                        !active -> colors.disabledContainer
+                        selected && intent == BraceSegmentedIntent.Primary && pressed -> colors.selectedPrimaryPressedContainer
+                        selected && intent == BraceSegmentedIntent.Primary && hovered -> colors.selectedPrimaryHoverContainer
+                        selected && intent == BraceSegmentedIntent.Neutral && pressed -> colors.selectedPressedContainer
+                        selected && intent == BraceSegmentedIntent.Neutral && hovered -> colors.selectedHoverContainer
+                        selected -> selectedContainer
+                        pressed -> colors.pressedContainer
+                        hovered -> colors.hoverContainer
+                        else -> colors.unselectedContainer
+                    }
+                    val content = when {
+                        !active -> colors.disabledContent
+                        selected -> selectedContent
+                        else -> colors.unselectedContent
+                    }
+                    val shape = RoundedCornerShape(metrics.itemCornerRadius)
+                    val itemModifier = Modifier
+                        .then(if (distribute) Modifier.weight(1f) else Modifier)
+                        .defaultMinSize(minWidth = BraceTheme.sizing.touchTarget, minHeight = minHeight)
+                        .focusRequester(requesters[index])
+                        .focusProperties { canFocus = active && index == tabStop }
+                        .onPreviewKeyEvent { event ->
+                            if (!enabled || event.type != KeyEventType.KeyDown) false
                             else {
-                                val target = nextEnabledIndex(options.size, index, step) {
-                                    options[it].enabled
+                                val step = choiceArrowStep(event.key, direction)
+                                if (step == null) false
+                                else {
+                                    val target = nextEnabledIndex(options.size, index, step) {
+                                        options[it].enabled
+                                    }
+                                    if (target != null) {
+                                        pendingFocus = target
+                                        onValueChange(options[target].value)
+                                    }
+                                    target != null
                                 }
-                                if (target != null) {
-                                    pendingFocus = target
-                                    onValueChange(options[target].value)
-                                }
-                                target != null
                             }
                         }
-                    }
-                    .background(container, shape)
-                    .then(if (focused || (selected && intent == BraceSegmentedIntent.Neutral)) Modifier.border(
-                        if (focused) BraceTheme.sizing.focusRingWidth else BraceTheme.sizing.borderStrongWidth,
-                        if (focused) colors.focusRing else colors.selectedBorder,
-                        shape,
-                    ) else Modifier)
-                    .clearAndSetSemantics {
-                        contentDescription = option.label
-                        role = Role.RadioButton
-                        this.selected = selected
-                        if (!active) disabled() else {
-                            this.focused = focused
-                            onClick { onValueChange(option.value); true }
-                            requestFocus { requesters[index].requestFocus() }
+                        .background(container, shape)
+                        .then(if (focused || (selected && intent == BraceSegmentedIntent.Neutral)) Modifier.border(
+                            if (focused) BraceTheme.sizing.focusRingWidth else BraceTheme.sizing.borderStrongWidth,
+                            if (focused) colors.focusRing else colors.selectedBorder,
+                            shape,
+                        ) else Modifier)
+                        .clearAndSetSemantics {
+                            contentDescription = option.label
+                            role = Role.RadioButton
+                            this.selected = selected
+                            if (!active) disabled() else {
+                                this.focused = focused
+                                onClick { onValueChange(option.value); true }
+                                requestFocus { requesters[index].requestFocus() }
+                            }
                         }
-                    }
-                    .hoverable(interaction, enabled = active)
-                    .selectable(
-                        selected = selected,
-                        enabled = active,
-                        role = Role.RadioButton,
-                        interactionSource = interaction,
-                        indication = null,
-                        onClick = { onValueChange(option.value) },
-                    )
-                Box(itemModifier.padding(horizontal = metrics.horizontalPadding), contentAlignment = Alignment.Center) {
-                    Row(verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xs)) {
-                        option.icon?.let { icon -> Box(Modifier.clearAndSetSemantics { }) { icon() } }
-                        Text(option.label, color = content,
-                            style = if (size == BraceSegmentedSize.Small) BraceTheme.typography.label else BraceTheme.typography.body,
-                            textAlign = TextAlign.Center,
-                            )
+                        .hoverable(interaction, enabled = active)
+                        .selectable(
+                            selected = selected,
+                            enabled = active,
+                            role = Role.RadioButton,
+                            interactionSource = interaction,
+                            indication = null,
+                            onClick = { onValueChange(option.value) },
+                        )
+                    Box(itemModifier.padding(horizontal = metrics.horizontalPadding), contentAlignment = Alignment.Center) {
+                        Row(verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xs)) {
+                            option.icon?.let { icon -> Box(Modifier.clearAndSetSemantics { }) { icon() } }
+                            Text(option.label, color = content,
+                                style = if (size == BraceSegmentedSize.Small) BraceTheme.typography.label else BraceTheme.typography.body,
+                                textAlign = TextAlign.Center,
+                                )
+                        }
                     }
                 }
             }

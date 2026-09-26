@@ -16,7 +16,7 @@ BraceRadio(
 )
 ```
 
-Use `BraceRadioGroup` when the options form one choice. A standalone radio offers a full-row 48 dp target, selected and disabled states, keyboard Enter/Space activation, a focus ring, and a radio role for TalkBack. The optional indicator position uses logical start/end, so it follows RTL. The visible description is included in the spoken label. The caller owns the selected state.
+Use `BraceRadioGroup` when the options form one choice. A standalone radio keeps a minimum 48 × 48 dp target even if a caller requests a smaller size. It exposes selected and disabled states, keyboard Enter/Space activation, a focus ring, and a radio role for TalkBack. The optional indicator position uses logical start/end, so it follows RTL. The visible description is included in the spoken label. The caller owns the selected state.
 
 ## RadioGroup
 
@@ -35,7 +35,7 @@ BraceRadioGroup(
 )
 ```
 
-The label names the selection group. Options must have unique values. Touch and mouse selection update through `onValueChange`. The selected option is the group's Tab stop (or the first enabled option when no value is selected). Arrow keys select, focus, skip disabled options, and wrap; inline layout scrolls horizontally on narrow screens. Left/right direction follows RTL. Options retain 48 dp targets at compact density and large font sizes. Persist the hoisted value with `rememberSaveable` or a view model.
+The label names the selection group. Options must have unique String values. Blueprint also accepts numeric values and child Radio/RadioCard composition; Brace callers map app values to Strings and pass an option list. RadioCard remains a separate planned component. HTML group names and change events become hoisted state and callbacks. Touch and mouse selection update through `onValueChange`. The selected option is the group's Tab stop (or the first enabled option when no value is selected). Arrow keys select, focus, skip disabled options, and wrap; inline layout scrolls horizontally on narrow screens. Left/right direction follows RTL. Options retain 48 dp targets at compact density and large font sizes. Persist the hoisted value with `rememberSaveable` or a view model.
 
 ## SegmentedControl
 
@@ -57,10 +57,10 @@ BraceSegmentedControl(
 )
 ```
 
-The selection strip has `Neutral` and `Primary` visual intents, `Small`, `Medium`, and `Large` sizes, optional decorative icons, a full-width `fill` mode, and horizontal scrolling in intrinsic-width mode. Every option keeps a 48 dp minimum hit region. The chosen option is announced as selected with a radio role. The selected segment is the group's Tab stop (or the first enabled segment when unselected). Arrow keys skip disabled options, wrap, and mirror horizontally in RTL. Enter and Space activate a focused option. The neutral selected segment has a strong token border so its state remains visible even where adjacent surfaces are similar. All colors, focus rings, sizes, and gaps come from Brace semantic and component tokens; global light, dark, high-contrast, brand, and density changes flow through `BraceTheme`.
+The selection strip has `Neutral` and `Primary` visual intents, `Small`, `Medium`, and `Large` sizes, optional decorative icons, a full-width `fill` mode, and horizontal scrolling in intrinsic-width mode. Filled controls also scroll when equal-width segments would fall below the 48 dp minimum on a narrow screen. Every option keeps a 48 dp minimum hit region. The chosen option is announced as selected with a radio role. The selected segment is the group's Tab stop (or the first enabled segment when unselected). Arrow keys skip disabled options, wrap, and mirror horizontally in RTL. Enter and Space activate a focused option. The neutral selected segment has a strong token border so its state remains visible even where adjacent surfaces are similar. All colors, focus rings, sizes, and gaps come from Brace semantic and component tokens; global light, dark, high-contrast, brand, and density changes flow through `BraceTheme`.
 
 Blueprint also exposes DOM refs, CSS `inline`, uncontrolled `defaultValue`, and alternate ARIA group, toolbar, and menu roles. Android callers use a layout `Modifier`, hoisted state, and a radio-style accessibility group. Menu and toolbar interactions belong in their native Brace components. Blueprint's deprecated `small`/`large` flags are represented by `size`.
 
 ## Verification
 
-`BraceRadioSegmentedTest` covers controlled selection, disabled states, spoken labels and roles, 48 dp targets, arrow navigation with skip/wrap and RTL, Enter/Space and mouse activation, state restoration, large text, dark high-contrast compact mode, and an automated accessibility audit on API 34+. The catalog exposes interactive samples for all three rows and switches themes at runtime. Manual TalkBack, hardware keyboard, and mouse checks remain part of release acceptance; the inventory stays **in progress** until a published and verified release.
+`BraceRadioSegmentedTest` covers controlled selection, disabled states, spoken labels and roles, 48 dp boundary cases (including caller-small radio and narrow filled segments), native Android accessibility nodes, arrow navigation with skip/wrap and RTL, Enter/Space and mouse activation, state restoration, large text, dark high-contrast compact mode, and an automated accessibility audit on API 34+. The catalog exposes interactive samples for all three rows and switches themes at runtime. Manual TalkBack, hardware keyboard, and mouse checks remain part of release acceptance; the inventory stays **in progress** until a published and verified release.

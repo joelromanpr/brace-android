@@ -1,7 +1,9 @@
 package io.github.joelromanpr.brace.core
 
 import android.os.Build
+import android.view.accessibility.AccessibilityNodeInfo
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.CompositionLocalProvider
@@ -17,6 +19,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -36,6 +39,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performKeyInput
 import androidx.compose.ui.test.performMouseInput
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.requestFocus
@@ -44,11 +48,13 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import io.github.braceandroid.foundation.BraceColorMode
 import io.github.braceandroid.foundation.BraceContrast
 import io.github.braceandroid.foundation.BraceDensity
 import io.github.braceandroid.foundation.BraceTheme
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -81,6 +87,25 @@ class BraceRadioSegmentedTest {
             .assertHeightIsAtLeast(48.dp).performClick()
         node.assert(selected())
         assertTrue(chosen)
+    }
+
+    @Test fun callerSmallModifierCannotShrinkRadioTouchTarget() {
+        var selections = 0
+        rule.setContent {
+            BraceTheme {
+                BraceRadio(
+                    selected = false,
+                    onSelect = { selections++ },
+                    label = "Small radio",
+                    modifier = Modifier.size(24.dp),
+                )
+            }
+        }
+        rule.onNodeWithContentDescription("Small radio")
+            .assertWidthIsAtLeast(48.dp)
+            .assertHeightIsAtLeast(48.dp)
+            .performTouchInput { click() }
+        assertEquals(1, selections)
     }
 
     @Test fun disabledRadioCannotChangeAndEndIndicatorKeepsTarget() {
@@ -212,6 +237,89 @@ class BraceRadioSegmentedTest {
         rule.onNodeWithText("decorative").assertDoesNotExist()
         rule.onNodeWithContentDescription("Gallery").performClick()
         assertEquals("gallery", value)
+    }
+
+    @Test fun filledSegmentsScrollRatherThanShrinkBelowTouchTarget() {
+        val many = List(6) { BraceSegmentedOption("choice$it", "Choice $it") }
+        rule.setContent {
+            BraceTheme {
+                Column(Modifier.width(160.dp)) {
+                    BraceSegmentedControl(many, "choice0", {}, "Narrow layout", fill = true)
+                }
+            }
+        }
+        many.forEach { option ->
+            rule.onNodeWithContentDescription(option.label)
+                .assertWidthIsAtLeast(48.dp)
+                .assertHeightIsAtLeast(48.dp)
+        }
+        val strip = rule.onNode(
+            SemanticsMatcher.keyIsDefined(SemanticsProperties.HorizontalScrollAxisRange),
+        )
+        val before = strip.fetchSemanticsNode()
+            .config[SemanticsProperties.HorizontalScrollAxisRange].value()
+        strip.performSemanticsAction(SemanticsActions.ScrollBy) { scrollBy -> scrollBy(100f, 0f) }
+        rule.waitForIdle()
+        val after = strip.fetchSemanticsNode()
+            .config[SemanticsProperties.HorizontalScrollAxisRange].value()
+        assertTrue("Narrow filled strip should scroll: $before to $after", after > before)
+    }
+
+    @Test fun nativeRadioAndSegmentNodesExposeOneLabeledEnabledOrDisabledAction() {
+        rule.setContent {
+            BraceTheme {
+                Column {
+                    BraceRadioGroup(radioOptions, "soup", {}, "Lunch special")
+                    BraceSegmentedControl(segmentOptions, "list", {}, "Layout")
+                }
+            }
+        }
+        val labels = listOf("Soup. Vegetarian", "Salad", "Sandwich", "List", "Grid", "Gallery")
+        runCatching {
+            rule.waitUntil(10_000) { labels.all { androidNodesForLabel(it).size == 1 } }
+        }.getOrElse { cause ->
+            throw AssertionError("Native choices were not unique: ${nativeTreeSummary()}", cause)
+        }
+        listOf("Soup. Vegetarian", "List").forEach { label ->
+            val node = androidNodesForLabel(label).single()
+            assertTrue("Selected native choice: $node", node.isEnabled)
+            assertTrue("Native radio role: $node", node.isCheckable)
+            assertTrue("Native selected state: $node", node.isChecked || node.isSelected)
+        }
+        listOf("Sandwich", "Gallery").forEach { label ->
+            val node = androidNodesForLabel(label).single()
+            assertTrue("Available native choice: $node", node.isEnabled)
+            assertTrue("Available native choice: $node", node.isClickable)
+            assertTrue("Native radio role: $node", node.isCheckable)
+            assertFalse("Unselected native choice: $node", node.isChecked || node.isSelected)
+        }
+        listOf("Salad", "Grid").forEach { label ->
+            val node = androidNodesForLabel(label).single()
+            assertFalse("Disabled native choice: $node", node.isEnabled)
+            assertFalse("Disabled native choice: $node", node.isClickable)
+            assertTrue("Native radio role: $node", node.isCheckable)
+        }
+    }
+
+    private fun androidNodesForLabel(label: String): List<AccessibilityNodeInfo> =
+        nativeNodes().filter { it.contentDescription?.toString() == label }
+
+    private fun nativeNodes(): List<AccessibilityNodeInfo> {
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        val roots = automation.windows.mapNotNull { it.root }
+            .ifEmpty { listOfNotNull(automation.rootInActiveWindow) }
+        val nodes = mutableListOf<AccessibilityNodeInfo>()
+        fun visit(node: AccessibilityNodeInfo) {
+            nodes += node
+            for (index in 0 until node.childCount) node.getChild(index)?.let(::visit)
+        }
+        roots.forEach(::visit)
+        return nodes
+    }
+
+    private fun nativeTreeSummary(): String = nativeNodes().take(80).joinToString { node ->
+        "${node.packageName}/${node.className} ${node.text}/${node.contentDescription} " +
+            "clickable=${node.isClickable} enabled=${node.isEnabled} checkable=${node.isCheckable}"
     }
 
     @Test fun disabledGroupsIgnoreTouchAndKeyboard() {

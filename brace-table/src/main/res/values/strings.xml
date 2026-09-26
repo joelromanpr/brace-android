@@ -9,6 +9,11 @@
     <string name="brace_table_row_description">Row %1$d, %2$s</string>
     <string name="brace_table_cell_description">%1$s, row %2$d (%3$s), %4$s</string>
     <string name="brace_table_column_description">%1$s, column %2$d</string>
+    <string name="brace_table_reorder_column">Reorder column %1$s</string>
+    <string name="brace_table_reorder_row">Reorder row %1$s</string>
+    <string name="brace_table_reorder_position">Position %1$d of %2$d</string>
+    <string name="brace_table_move_earlier">Move earlier</string>
+    <string name="brace_table_move_later">Move later</string>
     <string name="brace_table_column_resize">Resize column %1$s</string>
     <string name="brace_table_row_resize">Resize row %1$s</string>
     <string name="brace_table_increase_size">Increase size</string>

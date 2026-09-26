@@ -92,6 +92,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import io.github.braceandroid.foundation.BraceTheme
+import kotlin.math.abs
 import kotlinx.coroutines.launch
 
 /**
@@ -193,7 +194,10 @@ fun rememberBraceTableViewport(): BraceTableViewport {
  * error panels. Loading pauses interactions while retaining caller-owned selection and viewport.
  * Ctrl/Cmd+A or the fixed corner selects the whole table; Ctrl/Cmd+click and TalkBack
  * actions add disjoint cell, row, or column regions. The caller owns the
- * [BraceTableSelection.Regions] value. Frozen data regions are not yet exposed.
+ * [BraceTableSelection.Regions] value. Optional [onRowOrderChange] and
+ * [onColumnOrderChange] request complete key orders that the caller applies to [rows] or
+ * [columns]. Separate 48dp grips support touch/mouse drag to visible items, keyboard
+ * arrows/Home/End, and TalkBack move actions. Frozen data regions are not yet exposed.
  */
 @Composable
 fun <Row> BraceDataTable(
@@ -225,6 +229,8 @@ fun <Row> BraceDataTable(
     onSortChange: ((BraceTableSort?) -> Unit)? = null,
     rowHeaderContent: (@Composable (Row, Int) -> Unit)? = null,
     state: BraceTableState = BraceTableState.Ready,
+    onRowOrderChange: ((List<String>) -> Unit)? = null,
+    onColumnOrderChange: ((List<String>) -> Unit)? = null,
 ) {
     require((onEditingCellChange == null) == (onCellCommit == null)) {
         "Editing requires both onEditingCellChange and onCellCommit"
@@ -257,14 +263,15 @@ fun <Row> BraceDataTable(
     }
     val rowIndex = remember(rows) { validateRowKeys(rows, rowKey) }
     val rowIndexes = rowIndex.byKey
+    val columnKeys = remember(columns) { columns.map { it.key } }
     val baseMinColumnWidth = BraceTheme.sizing.tableMinColumnWidth
     val sortTargetWidth = if (onSortChange != null && columns.any { it.sortable })
         BraceTheme.sizing.touchTarget else 0.dp
     val resizeTargetWidth = if (onColumnWidthChange != null) BraceTheme.sizing.touchTarget else 0.dp
+    val reorderTargetWidth = if (onColumnOrderChange != null && columns.size > 1)
+        BraceTheme.sizing.touchTarget else 0.dp
     val minColumnWidth = maxOf(baseMinColumnWidth,
-        if (onColumnWidthChange == null) 0.dp else BraceTheme.sizing.touchTarget * 2,
-        if (sortTargetWidth == 0.dp) 0.dp else
-            BraceTheme.sizing.touchTarget + sortTargetWidth + resizeTargetWidth)
+        BraceTheme.sizing.touchTarget + sortTargetWidth + resizeTargetWidth + reorderTargetWidth)
     val effectiveMaxColumnWidth = maxColumnWidth?.coerceAtLeast(minColumnWidth)
 
     val colors = BraceTheme.colors.components.table
@@ -295,7 +302,10 @@ fun <Row> BraceDataTable(
         if (editingCell == null) defaultRowHeight else editorRowHeight)
     val headerHeight = if (editingColumnName == null) defaultRowHeight else editorRowHeight
     val rowSelectWidth = BraceTheme.sizing.touchTarget + spacing.sm
-    val rowHeaderWidth = rowSelectWidth + if (onRowHeightChange == null) 0.dp else BraceTheme.sizing.touchTarget
+    val rowReorderWidth = if (onRowOrderChange == null || rows.size < 2) 0.dp
+        else BraceTheme.sizing.touchTarget
+    val rowHeaderWidth = rowSelectWidth + rowReorderWidth +
+        if (onRowHeightChange == null) 0.dp else BraceTheme.sizing.touchTarget
     val widths = remember(columns, columnWidths, minColumnWidth, effectiveMaxColumnWidth) {
         columns.map { column ->
             val minimumApplied = maxOf(minColumnWidth, columnWidths[column.key] ?: column.width)
@@ -342,6 +352,11 @@ fun <Row> BraceDataTable(
     val rowResizeDescription = stringResource(R.string.brace_table_row_resize)
     val increaseSizeLabel = stringResource(R.string.brace_table_increase_size)
     val decreaseSizeLabel = stringResource(R.string.brace_table_decrease_size)
+    val reorderColumnDescription = stringResource(R.string.brace_table_reorder_column)
+    val reorderRowDescription = stringResource(R.string.brace_table_reorder_row)
+    val reorderPositionDescription = stringResource(R.string.brace_table_reorder_position)
+    val moveEarlierLabel = stringResource(R.string.brace_table_move_earlier)
+    val moveLaterLabel = stringResource(R.string.brace_table_move_later)
     val sizeMinDescription = stringResource(R.string.brace_table_size_min)
     val sizeRangeDescription = stringResource(R.string.brace_table_size_range)
     val rangeDescription = stringResource(R.string.brace_table_range_description)
@@ -353,10 +368,24 @@ fun <Row> BraceDataTable(
     }
     var pendingTouchRangeAnchor by remember { mutableStateOf<BraceTableSelection.Cell?>(null) }
     var resizeHandleFocused by remember { mutableStateOf(false) }
+    var focusedReorderHandle by remember { mutableStateOf<String?>(null) }
+    fun requestColumnMove(key: String, targetIndex: Int) {
+        if (isLoading || onColumnOrderChange == null || key !in columnIndex.byKey ||
+            targetIndex !in columns.indices) return
+        val reordered = BraceTableReorder.move(columnKeys, key, targetIndex)
+        if (reordered != columnKeys) onColumnOrderChange(reordered)
+    }
+    fun requestRowMove(key: String, targetIndex: Int) {
+        if (isLoading || onRowOrderChange == null || key !in rowIndexes ||
+            targetIndex !in rows.indices) return
+        val reordered = BraceTableReorder.move(rowIndex.keys, key, targetIndex)
+        if (reordered != rowIndex.keys) onRowOrderChange(reordered)
+    }
     LaunchedEffect(isLoading) {
         if (isLoading) {
             pendingTouchRangeAnchor = null
             resizeHandleFocused = false
+            focusedReorderHandle = null
         }
     }
     val range = (selection as? BraceTableSelection.Range)?.let { selected ->
@@ -489,7 +518,7 @@ fun <Row> BraceDataTable(
                 if (event.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
                 if (isLoading || editingCell != null || editingColumnName != null)
                     return@onPreviewKeyEvent false
-                if (focused && !resizeHandleFocused && !event.isAltPressed &&
+                if (focused && !resizeHandleFocused && focusedReorderHandle == null && !event.isAltPressed &&
                     !event.isCtrlPressed && !event.isMetaPressed &&
                     (event.nativeKeyEvent.keyCode == AndroidKeyEvent.KEYCODE_ENTER ||
                         event.nativeKeyEvent.keyCode == AndroidKeyEvent.KEYCODE_F2)) {
@@ -506,7 +535,8 @@ fun <Row> BraceDataTable(
                         return@onPreviewKeyEvent true
                     }
                 }
-                if (focused && !resizeHandleFocused && rows.isNotEmpty() && columns.isNotEmpty() &&
+                if (focused && !resizeHandleFocused && focusedReorderHandle == null &&
+                    rows.isNotEmpty() && columns.isNotEmpty() &&
                     !event.isAltPressed && (event.isCtrlPressed || event.isMetaPressed) &&
                     event.nativeKeyEvent.keyCode == AndroidKeyEvent.KEYCODE_A) {
                     pendingTouchRangeAnchor = null
@@ -517,7 +547,8 @@ fun <Row> BraceDataTable(
                     event.nativeKeyEvent.keyCode == AndroidKeyEvent.KEYCODE_C) {
                     return@onPreviewKeyEvent copySelection()
                 }
-                if (resizeHandleFocused || rows.isEmpty() || columns.isEmpty() || event.isAltPressed ||
+                if (resizeHandleFocused || focusedReorderHandle != null || rows.isEmpty() ||
+                    columns.isEmpty() || event.isAltPressed ||
                     event.isCtrlPressed || event.isMetaPressed) return@onPreviewKeyEvent false
                 val currentRow = when (selection) {
                     is BraceTableSelection.Cell -> rowIndex.byKey[selection.rowKey]
@@ -738,7 +769,8 @@ fun <Row> BraceDataTable(
                                 sortState = if (sortable) sortStateDescription else null,
                                 sortActionLabel = if (sortEnabled) sortActionDescription else null,
                                 onSort = if (sortEnabled) requestSort else null,
-                                trailingInset = (if (sortable) BraceTheme.sizing.touchTarget else 0.dp) + resizeTargetWidth,
+                                trailingInset = (if (sortable) BraceTheme.sizing.touchTarget else 0.dp) +
+                                    resizeTargetWidth + reorderTargetWidth,
                             )
                         }
                         if (sortable && !isNameEditing && !headerLoading) {
@@ -758,7 +790,7 @@ fun <Row> BraceDataTable(
                             }
                             Box(
                                 Modifier.offset(x = rowHeaderWidth + columnIndex.starts[index] +
-                                    widths[index] - BraceTheme.sizing.touchTarget - resizeTargetWidth)
+                                    widths[index] - BraceTheme.sizing.touchTarget - resizeTargetWidth - reorderTargetWidth)
                                     .width(BraceTheme.sizing.touchTarget).height(headerHeight)
                                     .background(sortBackground)
                                     .border(if (sortFocused) BraceTheme.sizing.focusRingWidth
@@ -779,6 +811,44 @@ fun <Row> BraceDataTable(
                                     BraceTableSortDirection.Descending -> "↓"
                                     null -> "↕"
                                 }, color = sortForeground, style = typography.label)
+                            }
+                        }
+                    }
+                    if (!isLoading && onColumnOrderChange != null && columns.size > 1) {
+                        visibleColumns.filter { columns[it].key != editingColumnName }.forEach { index ->
+                            val column = columns[index]
+                            val grip = BraceTheme.sizing.touchTarget
+                            val offset = columnIndex.starts[index] + widths[index] - grip - resizeTargetWidth
+                            composeKey("reorder-column:${column.key}") {
+                                BraceTableReorderHandle(
+                                    axis = BraceReorderAxis.Column,
+                                    id = column.key,
+                                    name = column.title,
+                                    index = index,
+                                    count = columns.size,
+                                    width = grip,
+                                    height = headerHeight,
+                                    description = reorderColumnDescription,
+                                    positionDescription = reorderPositionDescription,
+                                    earlierLabel = moveEarlierLabel,
+                                    laterLabel = moveLaterLabel,
+                                    onMoveTo = { target -> requestColumnMove(column.key, target) },
+                                    targetIndexForDrag = { deltaPx ->
+                                        val currentCenter = (columnIndex.starts[index].value +
+                                            columnIndex.ends[index].value) / 2f
+                                        val targetCenter = currentCenter + with(density) { deltaPx.toDp().value }
+                                        visibleColumns.minByOrNull { candidate ->
+                                            abs((columnIndex.starts[candidate].value +
+                                                columnIndex.ends[candidate].value) / 2f - targetCenter)
+                                        } ?: index
+                                    },
+                                    onFocusedChange = { focused ->
+                                        if (focused) focusedReorderHandle = "column:${column.key}"
+                                        else if (focusedReorderHandle == "column:${column.key}")
+                                            focusedReorderHandle = null
+                                    },
+                                    modifier = Modifier.offset(x = rowHeaderWidth + offset),
+                                )
                             }
                         }
                     }
@@ -1020,6 +1090,39 @@ fun <Row> BraceDataTable(
                                 .testTag("brace-table-row:$key"),
                             content = visualRowHeader,
                         )
+                        if (!isLoading && onRowOrderChange != null && rows.size > 1) {
+                            composeKey("reorder-row:$key") {
+                                BraceTableReorderHandle(
+                                    axis = BraceReorderAxis.Row,
+                                    id = key,
+                                    name = accessibleRowLabel,
+                                    index = rowNumber,
+                                    count = rows.size,
+                                    width = rowReorderWidth,
+                                    height = itemHeight,
+                                    description = reorderRowDescription,
+                                    positionDescription = reorderPositionDescription,
+                                    earlierLabel = moveEarlierLabel,
+                                    laterLabel = moveLaterLabel,
+                                    onMoveTo = { target -> requestRowMove(key, target) },
+                                    targetIndexForDrag = { deltaPx ->
+                                        val origin = visibleRows.firstOrNull { it.first == rowNumber }
+                                        if (origin == null) rowNumber else {
+                                            val targetCenter = origin.second + origin.third / 2f + deltaPx
+                                            visibleRows.filter { it.first in rows.indices }.minByOrNull { visible ->
+                                                abs(visible.second + visible.third / 2f - targetCenter)
+                                            }?.first ?: rowNumber
+                                        }
+                                    },
+                                    onFocusedChange = { focused ->
+                                        if (focused) focusedReorderHandle = "row:$key"
+                                        else if (focusedReorderHandle == "row:$key") focusedReorderHandle = null
+                                    },
+                                    modifier = Modifier.offset(x = rowSelectWidth,
+                                        y = with(density) { offsetPx.toDp() }),
+                                )
+                            }
+                        }
                         if (!isLoading && onRowHeightChange != null) {
                             val minimum = if (editingCell?.rowKey == key) editorRowHeight else defaultRowHeight
                             BraceTableResizeHandle(
@@ -1040,7 +1143,7 @@ fun <Row> BraceDataTable(
                                 decreaseLabel = decreaseSizeLabel,
                                 onSizeChange = { onRowHeightChange(key, it) },
                                 onFocusedChange = { resizeHandleFocused = it },
-                                modifier = Modifier.offset(x = rowSelectWidth,
+                                modifier = Modifier.offset(x = rowSelectWidth + rowReorderWidth,
                                     y = with(density) { offsetPx.toDp() }),
                             )
                         }

@@ -144,6 +144,7 @@ import io.github.joelromanpr.brace.table.BraceTableState
 import io.github.joelromanpr.brace.table.BraceTableRegion
 import io.github.joelromanpr.brace.table.BraceTableRegions
 import io.github.joelromanpr.brace.table.rememberBraceTableSelection
+import io.github.joelromanpr.brace.table.BraceTableReorder
 import org.json.JSONObject
 import java.util.Locale
 
@@ -223,6 +224,13 @@ BraceButton("Add case", onClick = {
 })
 // Ctrl/Cmd+A or the corner selects BraceTableRegion.Table; Ctrl/Cmd+click adds a region.""".trimIndent(),
     "table-copying" to "BraceTableClipboard.formatSelection(rows, { it.id }, columns, selection) // Ctrl/Cmd+C also copies in BraceDataTable",
+    "table-reordering" to """var rows by remember { mutableStateOf(cases) }
+var columns by remember { mutableStateOf(caseColumns) }
+var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
+BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
+    onRowOrderChange = { keys -> rows = BraceTableReorder.applyOrder(rows, { it.id }, keys) },
+    onColumnOrderChange = { keys -> columns = BraceTableReorder.applyOrder(columns, { it.key }, keys) })
+// Drag a grip, focus it and use arrows/Home/End, or use TalkBack move actions.""".trimIndent(),
     "table-editablecell" to """var editing by remember { mutableStateOf<BraceTableSelection.Cell?>(null) }
 val columns = listOf(BraceTableColumn<Record>("title", "Title", 160.dp, { it.title }, editable = true))
 BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
@@ -714,15 +722,17 @@ private fun ComponentSample(
             }
         }
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
-        "table-cell-selection", "table-region", "table-column-and-row-resizing", "table-copying",
+        "table-cell-selection", "table-region", "table-column-and-row-resizing", "table-copying", "table-reordering",
         "table-cell", "table-columnheadercell", "table-rowheadercell",
         "table-editablecell", "table-editing", "table-editablename" -> {
             var records by remember { mutableStateOf(List(120) { DemoTableRecord("record-$it", "Case ${1000 + it}", if (it % 3 == 0) "Review" else "Ready") }) }
             var columnTitles by remember { mutableStateOf(mapOf("case" to "Case", "status" to "Status", "owner" to "Owner")) }
-            val tableColumns = remember(columnTitles) { listOf(
-                BraceTableColumn<DemoTableRecord>("case", columnTitles.getValue("case"), 140.dp,
+            var columnOrder by rememberSaveable { mutableStateOf(arrayListOf("case", "status", "owner")) }
+            val tableColumns = remember(columnTitles, columnOrder) {
+                val byKey = listOf(
+                    BraceTableColumn<DemoTableRecord>("case", columnTitles.getValue("case"), 140.dp,
                     { it.case }, editable = true, editableName = true),
-                BraceTableColumn<DemoTableRecord>("status", columnTitles.getValue("status"), 130.dp,
+                    BraceTableColumn<DemoTableRecord>("status", columnTitles.getValue("status"), 130.dp,
                     { it.status }, cellContent = { row ->
                         Text("● " + row.status, style = BraceTheme.typography.body)
                     }, editable = true, editableName = true,
@@ -731,9 +741,11 @@ private fun ComponentSample(
                             modifier = Modifier.padding(horizontal = BraceTheme.componentMetrics.table.cellHorizontalPadding),
                             style = BraceTheme.typography.label)
                     }),
-                BraceTableColumn<DemoTableRecord>("owner", columnTitles.getValue("owner"), 130.dp,
+                    BraceTableColumn<DemoTableRecord>("owner", columnTitles.getValue("owner"), 130.dp,
                     { "Team ${(it.id.substringAfter('-').toInt() % 4) + 1}" }, editableName = true),
-            ) }
+                ).associateBy { it.key }
+                columnOrder.map { byKey.getValue(it) }
+            }
             var selection by rememberBraceTableSelection()
             var columnWidths by remember { mutableStateOf<Map<String, androidx.compose.ui.unit.Dp>>(emptyMap()) }
             var rowHeights by remember { mutableStateOf<Map<String, androidx.compose.ui.unit.Dp>>(emptyMap()) }
@@ -760,7 +772,9 @@ private fun ComponentSample(
                 null -> "None"
             }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                Text("Scroll both ways. Tap headers to select a row or column. Ctrl/Cmd+click adds a region; Ctrl/Cmd+A or the corner selects all. Long-press a cell then tap an endpoint for a range; keyboard Shift+arrows extend it. Double-tap a case or status cell, or a header name, to edit. Enter/F2 edits a selected cell or column header; drag or focus resize grips.",
+                Text(if (entry.id == "table-reordering")
+                    "Drag row or column grips to reorder visible items, or focus a grip and use arrows/Home/End. TalkBack offers move actions. The order summary updates below."
+                    else "Scroll both ways. Tap headers to select a row or column. Ctrl/Cmd+click adds a region; Ctrl/Cmd+A or the corner selects all. Long-press a cell then tap an endpoint for a range; keyboard Shift+arrows extend it. Double-tap a case or status cell, or a header name, to edit. Enter/F2 edits a selected cell or column header; drag or focus resize grips.",
                     color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.body)
                 BraceDataTable(records, { it.id }, tableColumns, selection, { selection = it },
                     modifier = Modifier.fillMaxWidth(), height = 260.dp, label = "Cases", rowLabel = { it.case },
@@ -790,7 +804,16 @@ private fun ComponentSample(
                         columnTitles = columnTitles + (key to title)
                         savedColumnTitle = "$key: $title"
                     },
-                    validateColumnName = { _, title -> if (title.length < 3) "Use at least 3 characters" else null })
+                    validateColumnName = { _, title -> if (title.length < 3) "Use at least 3 characters" else null },
+                    onRowOrderChange = if (entry.id == "table-reordering") { keys ->
+                        records = BraceTableReorder.applyOrder(records, { it.id }, keys)
+                    } else null,
+                    onColumnOrderChange = if (entry.id == "table-reordering") { keys ->
+                        columnOrder = ArrayList(keys)
+                    } else null)
+                if (entry.id == "table-reordering") Text(
+                    "First row: ${records.firstOrNull()?.case ?: "none"} · columns: ${columnOrder.joinToString()}",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.caption)
                 Text("Selection: $selectionSummary", color = BraceTheme.colors.semantic.onSurface,
                     style = BraceTheme.typography.body)
                 Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {

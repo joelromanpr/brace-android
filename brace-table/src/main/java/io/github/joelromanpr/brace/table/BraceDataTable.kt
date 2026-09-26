@@ -64,6 +64,8 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.isShiftPressed as isPointerShiftPressed
+import androidx.compose.ui.input.pointer.isCtrlPressed as isPointerCtrlPressed
+import androidx.compose.ui.input.pointer.isMetaPressed as isPointerMetaPressed
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.testTag
@@ -132,6 +134,16 @@ sealed interface BraceTableSelection {
         val extentRowKey: String,
         val extentColumnKey: String,
     ) : BraceTableSelection
+
+    /** One or more disjoint [BraceTableRegion] values. The last is the keyboard-active region. */
+    class Regions(regions: List<BraceTableRegion>) : BraceTableSelection {
+        /** Immutable snapshot of the supplied ordered regions; the last is keyboard-active. */
+        val regions: List<BraceTableRegion> = regions.toList()
+        init { require(this.regions.isNotEmpty()) { "At least one region is required" } }
+        override fun equals(other: Any?): Boolean = other is Regions && regions == other.regions
+        override fun hashCode(): Int = regions.hashCode()
+        override fun toString(): String = "Regions(regions=$regions)"
+    }
 }
 
 /** Saveable scroll positions for a [BraceDataTable]. A remembered viewport survives configuration changes. */
@@ -179,7 +191,9 @@ fun rememberBraceTableViewport(): BraceTableViewport {
  * caller reorders [rows] using stable row keys. [rememberBraceTableSortState] can preserve the
  * descriptor through recreation. [state] provides static skeletons and accessible empty or
  * error panels. Loading pauses interactions while retaining caller-owned selection and viewport.
- * Disjoint selections and frozen data regions are not yet exposed.
+ * Ctrl/Cmd+A or the fixed corner selects the whole table; Ctrl/Cmd+click and TalkBack
+ * actions add disjoint cell, row, or column regions. The caller owns the
+ * [BraceTableSelection.Regions] value. Frozen data regions are not yet exposed.
  */
 @Composable
 fun <Row> BraceDataTable(
@@ -309,6 +323,11 @@ fun <Row> BraceDataTable(
     val editColumnNameAction = stringResource(R.string.brace_table_edit_column_name)
     val editColumnNameDescription = stringResource(R.string.brace_table_edit_column_name_description)
     val extendRangeAction = stringResource(R.string.brace_table_extend_range)
+    val selectAllAction = stringResource(R.string.brace_table_select_all)
+    val selectedTableDescription = stringResource(R.string.brace_table_selected_table)
+    val selectedRegionsDescription = stringResource(R.string.brace_table_selected_regions)
+    val selectedRowsDescription = stringResource(R.string.brace_table_selected_rows)
+    val selectedColumnsDescription = stringResource(R.string.brace_table_selected_columns)
     val emptyText = stringResource(R.string.brace_table_empty)
     val rowDescription = stringResource(R.string.brace_table_row_description)
     val cellDescription = stringResource(R.string.brace_table_cell_description)
@@ -348,7 +367,23 @@ fun <Row> BraceDataTable(
         IntRange(minOf(anchorRow, extentRow), maxOf(anchorRow, extentRow)) to
             IntRange(minOf(anchorColumn, extentColumn), maxOf(anchorColumn, extentColumn))
     }
+    val resolvedRegions = (selection as? BraceTableSelection.Regions)?.let {
+        resolveTableRegions(it.regions, rowIndexes, columnIndex.byKey, rows.size, columns.size)
+    }
     val selectionAnnouncement = if (isLoading) null else when (selection) {
+        is BraceTableSelection.Regions -> resolvedRegions?.let { resolved ->
+            if (resolved.size > 1) selectedRegionsDescription.format(resolved.size)
+            else when (selection.regions.single()) {
+                BraceTableRegion.Table -> selectedTableDescription
+                is BraceTableRegion.Rows -> selectedRowsDescription.format(
+                    resolved.single().rows.first + 1, resolved.single().rows.last + 1)
+                is BraceTableRegion.Columns -> selectedColumnsDescription.format(
+                    resolved.single().columns.first + 1, resolved.single().columns.last + 1)
+                is BraceTableRegion.Cells -> rangeDescription.format(
+                    resolved.single().rows.first + 1, resolved.single().rows.last + 1,
+                    resolved.single().columns.first + 1, resolved.single().columns.last + 1)
+            }
+        }
         is BraceTableSelection.Range -> range?.let { (selectedRows, selectedColumns) ->
             rangeDescription.format(selectedRows.first + 1, selectedRows.last + 1,
                 selectedColumns.first + 1, selectedColumns.last + 1)
@@ -471,6 +506,13 @@ fun <Row> BraceDataTable(
                         return@onPreviewKeyEvent true
                     }
                 }
+                if (focused && !resizeHandleFocused && rows.isNotEmpty() && columns.isNotEmpty() &&
+                    !event.isAltPressed && (event.isCtrlPressed || event.isMetaPressed) &&
+                    event.nativeKeyEvent.keyCode == AndroidKeyEvent.KEYCODE_A) {
+                    pendingTouchRangeAnchor = null
+                    onSelectionChange(BraceTableSelection.Regions(listOf(BraceTableRegion.Table)))
+                    return@onPreviewKeyEvent true
+                }
                 if (!event.isAltPressed && (event.isCtrlPressed || event.isMetaPressed) &&
                     event.nativeKeyEvent.keyCode == AndroidKeyEvent.KEYCODE_C) {
                     return@onPreviewKeyEvent copySelection()
@@ -481,12 +523,22 @@ fun <Row> BraceDataTable(
                     is BraceTableSelection.Cell -> rowIndex.byKey[selection.rowKey]
                     is BraceTableSelection.Row -> rowIndex.byKey[selection.rowKey]
                     is BraceTableSelection.Range -> rowIndex.byKey[selection.extentRowKey]
+                    is BraceTableSelection.Regions -> when (val active = selection.regions.last()) {
+                        is BraceTableRegion.Cells -> rowIndex.byKey[active.extentRowKey]
+                        is BraceTableRegion.Rows -> rowIndex.byKey[active.lastRowKey]
+                        is BraceTableRegion.Columns, BraceTableRegion.Table -> 0
+                    }
                     is BraceTableSelection.Column, null -> 0
                 }?.coerceAtLeast(0) ?: 0
                 val currentCol = when (selection) {
                     is BraceTableSelection.Cell -> columnIndex.byKey[selection.columnKey]
                     is BraceTableSelection.Column -> columnIndex.byKey[selection.columnKey]
                     is BraceTableSelection.Range -> columnIndex.byKey[selection.extentColumnKey]
+                    is BraceTableSelection.Regions -> when (val active = selection.regions.last()) {
+                        is BraceTableRegion.Cells -> columnIndex.byKey[active.extentColumnKey]
+                        is BraceTableRegion.Columns -> columnIndex.byKey[active.lastColumnKey]
+                        is BraceTableRegion.Rows, BraceTableRegion.Table -> 0
+                    }
                     is BraceTableSelection.Row, null -> 0
                 }?.coerceAtLeast(0) ?: 0
                 val pageBudgetPx = (viewportHeightPx - with(density) { headerHeight.roundToPx() })
@@ -526,12 +578,21 @@ fun <Row> BraceDataTable(
                 val anchor = validAnchor(when (selection) {
                     is BraceTableSelection.Range -> BraceTableSelection.Cell(selection.anchorRowKey, selection.anchorColumnKey)
                     is BraceTableSelection.Cell -> selection
+                    is BraceTableSelection.Regions -> (selection.regions.lastOrNull() as? BraceTableRegion.Cells)?.let {
+                        BraceTableSelection.Cell(it.anchorRowKey, it.anchorColumnKey)
+                    }
                     else -> null
                 }) ?: BraceTableSelection.Cell(rowIndex.keys[currentRow], columns[currentCol].key)
                 pendingTouchRangeAnchor = null
-                onSelectionChange(if (event.isShiftPressed) BraceTableSelection.Range(
+                val nextSelection = if (event.isShiftPressed && selection is BraceTableSelection.Regions &&
+                    selection.regions.last() is BraceTableRegion.Cells) {
+                    BraceTableRegions.updateLast(selection, BraceTableRegion.Cells(
+                        anchor.rowKey, anchor.columnKey, rowIndex.keys[targetRow], columns[targetCol].key,
+                    ))
+                } else if (event.isShiftPressed) BraceTableSelection.Range(
                     anchor.rowKey, anchor.columnKey, rowIndex.keys[targetRow], columns[targetCol].key,
-                ) else BraceTableSelection.Cell(rowIndex.keys[targetRow], columns[targetCol].key))
+                ) else BraceTableSelection.Cell(rowIndex.keys[targetRow], columns[targetCol].key)
+                onSelectionChange(nextSelection)
                 scope.launch {
                     val layout = viewport.vertical.layoutInfo
                     val visibleRow = layout.visibleItemsInfo.firstOrNull { it.index == targetRow }
@@ -562,8 +623,16 @@ fun <Row> BraceDataTable(
                     stateDescription = loadingAnnouncement
                     liveRegion = LiveRegionMode.Polite
                 } else if (selectionAnnouncement != null) stateDescription = selectionAnnouncement
-                if (canCopySelection && editingCell == null && editingColumnName == null)
-                    customActions = listOf(CustomAccessibilityAction(copyAction) { copySelection() })
+                if (!isLoading && editingCell == null && editingColumnName == null)
+                    customActions = listOfNotNull(
+                        if (rows.isNotEmpty() && columns.isNotEmpty())
+                            CustomAccessibilityAction(selectAllAction) {
+                                onSelectionChange(BraceTableSelection.Regions(listOf(BraceTableRegion.Table)))
+                                true
+                            } else null,
+                        if (canCopySelection)
+                            CustomAccessibilityAction(copyAction) { copySelection() } else null,
+                    )
             }
             .testTag("brace-table"),
     ) {
@@ -578,8 +647,10 @@ fun <Row> BraceDataTable(
                 Box(Modifier.width(maxOf(totalWidth, viewportWidth)).height(headerHeight).background(colors.header)) {
                     visibleColumns.forEach { index ->
                         val column = columns[index]
-                        val columnSelected = !isLoading &&
-                            selection == BraceTableSelection.Column(column.key)
+                        val columnSelected = !isLoading && (
+                            selection == BraceTableSelection.Column(column.key) ||
+                                resolvedRegions?.any { it.fullColumns && index in it.columns } == true)
+                        var pointerAdditive by remember(column.key) { mutableStateOf(false) }
                         val headerLoading = loading?.columnHeader(column.key) == true
                         val sortable = column.sortable && onSortChange != null
                         val sortEnabled = !isLoading && sortable && editingCell == null && editingColumnName == null
@@ -600,7 +671,11 @@ fun <Row> BraceDataTable(
                         val selectColumn: () -> Unit = {
                             if (!isLoading && editingColumnName == null) {
                                 pendingTouchRangeAnchor = null
-                                onSelectionChange(BraceTableSelection.Column(column.key))
+                                onSelectionChange(if (pointerAdditive)
+                                    BraceTableRegions.add(selection.takeIf { selectionAnnouncement != null },
+                                        BraceTableRegion.Columns(column.key))
+                                else BraceTableSelection.Column(column.key))
+                                pointerAdditive = false
                                 requester.requestFocus()
                             }
                         }
@@ -648,9 +723,16 @@ fun <Row> BraceDataTable(
                                 selected = columnSelected,
                                 onSelect = selectColumn,
                                 enabled = !isLoading && editingColumnName == null,
+                                onAddRegion = if (!isLoading && editingColumnName == null) {{
+                                    onSelectionChange(BraceTableRegions.add(
+                                        selection.takeIf { selectionAnnouncement != null },
+                                        BraceTableRegion.Columns(column.key)))
+                                    requester.requestFocus()
+                                }} else null,
                                 onEdit = if (canBeginNameEdit) beginNameEdit else null,
                                 modifier = Modifier.offset(x = rowHeaderWidth + columnIndex.starts[index])
                                     .width(widths[index]).height(headerHeight)
+                                    .captureAdditivePointer { pointerAdditive = it }
                                     .testTag("brace-table-header:${column.key}"),
                                 content = column.headerContent,
                                 sortState = if (sortable) sortStateDescription else null,
@@ -735,7 +817,9 @@ fun <Row> BraceDataTable(
                         val row = rows[rowNumber]
                         val key = rowIndex.keys[rowNumber]
                         val accessibleRowLabel = if (rowLabel === rowKey) key else rowLabel(row)
-                        val rowSelected = !isLoading && selection == BraceTableSelection.Row(key)
+                        val rowSelected = !isLoading && (
+                            selection == BraceTableSelection.Row(key) ||
+                                resolvedRegions?.any { it.fullRows && rowNumber in it.rows } == true)
                         val minimumRowHeight = if (editingCell?.rowKey == key) editorRowHeight else defaultRowHeight
                         val requestedHeight = maxOf(minimumRowHeight, rowHeights[key] ?: minimumRowHeight)
                         val itemHeight = if (effectiveMaxRowHeight == null) requestedHeight else
@@ -753,10 +837,13 @@ fun <Row> BraceDataTable(
                                         rowNumber in selectedRows && columnNumber in selectedColumns
                                     } == true
                                     null -> false
+                                    is BraceTableSelection.Regions ->
+                                        resolvedRegions?.any { it.contains(rowNumber, columnNumber) } == true
                                 }
                                 val cellLoading = loading?.bodyCell(key, column.key) == true
                                 val value = if (cellLoading) "" else column.cellText(row)
                                 var pointerShift by remember(key, column.key) { mutableStateOf(false) }
+                                var pointerAdditive by remember(key, column.key) { mutableStateOf(false) }
                                 val selectCell: () -> Unit = selectCell@{
                                     if (isLoading) return@selectCell
                                     val anchor = validAnchor(when {
@@ -765,12 +852,16 @@ fun <Row> BraceDataTable(
                                         pointerShift && selection is BraceTableSelection.Cell -> selection
                                         else -> pendingTouchRangeAnchor
                                     })
-                                    if (anchor == null) onSelectionChange(BraceTableSelection.Cell(key, column.key))
+                                    if (pointerAdditive) onSelectionChange(BraceTableRegions.add(
+                                        selection.takeIf { selectionAnnouncement != null },
+                                        BraceTableRegion.Cells(key, column.key)))
+                                    else if (anchor == null) onSelectionChange(BraceTableSelection.Cell(key, column.key))
                                     else onSelectionChange(BraceTableSelection.Range(
                                         anchor.rowKey, anchor.columnKey, key, column.key,
                                     ))
                                     pendingTouchRangeAnchor = null
                                     pointerShift = false
+                                    pointerAdditive = false
                                     requester.requestFocus()
                                 }
                                 val beginTouchRange: () -> Unit = beginTouchRange@{
@@ -837,6 +928,13 @@ fun <Row> BraceDataTable(
                                         enabled = !isLoading,
                                         onSelect = selectCell,
                                         onExtendSelection = if (isLoading) null else beginTouchRange,
+                                        onAddRegion = if (!isLoading && editingCell == null &&
+                                            editingColumnName == null) {{
+                                            onSelectionChange(BraceTableRegions.add(
+                                                selection.takeIf { selectionAnnouncement != null },
+                                                BraceTableRegion.Cells(key, column.key)))
+                                            requester.requestFocus()
+                                        }} else null,
                                         onEdit = if (!isLoading && editingEnabled && column.editable && editingColumnName == null)
                                             beginEdit else null,
                                         modifier = Modifier.offset(x = rowHeaderWidth + columnIndex.starts[columnNumber])
@@ -847,6 +945,8 @@ fun <Row> BraceDataTable(
                                                         val event = awaitPointerEvent(PointerEventPass.Initial)
                                                         if (event.type == PointerEventType.Press) {
                                                             pointerShift = event.keyboardModifiers.isPointerShiftPressed
+                                                            pointerAdditive = event.keyboardModifiers.isPointerCtrlPressed ||
+                                                                event.keyboardModifiers.isPointerMetaPressed
                                                         }
                                                     }
                                                 }
@@ -877,12 +977,19 @@ fun <Row> BraceDataTable(
                         val row = rows[rowNumber]
                         val key = rowIndex.keys[rowNumber]
                         val accessibleRowLabel = if (rowLabel === rowKey) key else rowLabel(row)
-                        val rowSelected = !isLoading && selection == BraceTableSelection.Row(key)
+                        val rowSelected = !isLoading && (
+                            selection == BraceTableSelection.Row(key) ||
+                                resolvedRegions?.any { it.fullRows && rowNumber in it.rows } == true)
+                        var pointerAdditive by remember(key) { mutableStateOf(false) }
                         val itemHeight = with(density) { itemSizePx.toDp() }
                         val selectRow: () -> Unit = selectRow@{
                             if (isLoading) return@selectRow
                             pendingTouchRangeAnchor = null
-                            onSelectionChange(BraceTableSelection.Row(key))
+                            onSelectionChange(if (pointerAdditive)
+                                BraceTableRegions.add(selection.takeIf { selectionAnnouncement != null },
+                                    BraceTableRegion.Rows(key))
+                            else BraceTableSelection.Row(key))
+                            pointerAdditive = false
                             requester.requestFocus()
                         }
                         val visualRowHeader: (@Composable () -> Unit)? =
@@ -901,8 +1008,15 @@ fun <Row> BraceDataTable(
                             selected = rowSelected,
                             enabled = !isLoading,
                             onSelect = selectRow,
+                            onAddRegion = if (!isLoading) {{
+                                onSelectionChange(BraceTableRegions.add(
+                                    selection.takeIf { selectionAnnouncement != null },
+                                    BraceTableRegion.Rows(key)))
+                                requester.requestFocus()
+                            }} else null,
                             modifier = Modifier.offset(y = with(density) { offsetPx.toDp() })
                                 .width(rowSelectWidth).height(itemHeight)
+                                .captureAdditivePointer { pointerAdditive = it }
                                 .testTag("brace-table-row:$key"),
                             content = visualRowHeader,
                         )
@@ -933,21 +1047,54 @@ fun <Row> BraceDataTable(
                     }
                 }
             }
+            val tableSelected = !isLoading && selection is BraceTableSelection.Regions &&
+                resolvedRegions != null && BraceTableRegion.Table in selection.regions
             Box(
                 Modifier.width(rowHeaderWidth).height(headerHeight)
-                    .background(colors.header).border(metrics.gridLineWidth, colors.gridLine)
+                    .background(if (tableSelected) colors.selectedRow else colors.header)
+                    .border(metrics.gridLineWidth, colors.gridLine)
+                    .then(if (!isLoading) Modifier.pointerSelect("table-corner", null, {
+                        if (rows.isNotEmpty() && columns.isNotEmpty()) {
+                            onSelectionChange(BraceTableSelection.Regions(listOf(BraceTableRegion.Table)))
+                            requester.requestFocus()
+                        }
+                    }) else Modifier)
+                    .testTag("brace-table-corner")
                     .clearAndSetSemantics {
                         collectionItemInfo = CollectionItemInfo(0, 1, 0, 1)
-                        contentDescription = rowHeaderName
+                        contentDescription = selectAllAction
+                        selected = tableSelected
+                        if (!isLoading && rows.isNotEmpty() && columns.isNotEmpty()) onClick(selectAllAction) {
+                            onSelectionChange(BraceTableSelection.Regions(listOf(BraceTableRegion.Table)))
+                            requester.requestFocus()
+                            true
+                        }
                     },
                 contentAlignment = Alignment.Center,
             ) {
-                Text(rowHeaderName, color = colors.headerContent, style = typography.label)
+                Text(rowHeaderName, color = if (tableSelected) semantic.onSelection else colors.headerContent,
+                    style = typography.label)
             }
         }
         if (rows.isEmpty()) {
             Box(Modifier.offset(y = headerHeight).height(bodyHeight).fillMaxWidth(), contentAlignment = Alignment.Center) {
                 Text(emptyText, color = semantic.onSurfaceMuted, style = typography.body)
+            }
+        }
+    }
+}
+
+@Composable
+private fun Modifier.captureAdditivePointer(onPress: (Boolean) -> Unit): Modifier {
+    val latestOnPress = rememberUpdatedState(onPress)
+    return pointerInput(Unit) {
+        awaitPointerEventScope {
+            while (true) {
+                val event = awaitPointerEvent(PointerEventPass.Initial)
+                if (event.type == PointerEventType.Press) {
+                    latestOnPress.value(event.keyboardModifiers.isPointerCtrlPressed ||
+                        event.keyboardModifiers.isPointerMetaPressed)
+                }
             }
         }
     }

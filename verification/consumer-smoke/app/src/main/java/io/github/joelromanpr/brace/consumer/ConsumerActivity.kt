@@ -94,6 +94,8 @@ import io.github.joelromanpr.brace.table.BraceTruncatedCell
 import io.github.joelromanpr.brace.table.BraceJsonCell
 import io.github.joelromanpr.brace.table.BraceJsonFormatter
 import io.github.joelromanpr.brace.table.BraceRevealMode
+import io.github.joelromanpr.brace.table.BraceTableRegion
+import io.github.joelromanpr.brace.table.BraceTableRegions
 import io.github.joelromanpr.brace.table.rememberBraceTableViewport
 import androidx.compose.ui.unit.dp
 
@@ -163,7 +165,10 @@ class ConsumerActivity : ComponentActivity() {
                         var statusColumnTitle by remember { mutableStateOf("Status") }
                         var editingColumnName by remember { mutableStateOf<String?>(null) }
                         var selectedTable: BraceTableSelection? by remember {
-                            mutableStateOf(BraceTableSelection.Range("ready", "status", "review", "status"))
+                            mutableStateOf(BraceTableSelection.Regions(listOf(
+                                BraceTableRegion.Cells("ready", "status"),
+                                BraceTableRegion.Cells("review", "status"),
+                            )))
                         }
                         var tableColumnWidth by remember { mutableStateOf(160.dp) }
                         var tableRowHeight by remember { mutableStateOf(64.dp) }
@@ -245,6 +250,13 @@ class ConsumerActivity : ComponentActivity() {
                             maxCharacters = 16)
                         BraceJsonCell(mapOf("status" to "ready"), Modifier.width(220.dp),
                             maxCharacters = 18)
+                        BraceButton("Select entire table", onClick = {
+                            selectedTable = BraceTableSelection.Regions(listOf(BraceTableRegion.Table))
+                        })
+                        BraceButton("Add review region", onClick = {
+                            selectedTable = BraceTableRegions.add(selectedTable,
+                                BraceTableRegion.Rows("review"))
+                        })
                         BraceButton("Select status column", onClick = {
                             selectedTable = BraceTableSelection.Column("status")
                         })

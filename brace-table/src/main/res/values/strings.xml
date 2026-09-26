@@ -20,6 +20,12 @@
     <string name="brace_table_selected_column_description">Selected column %1$d</string>
     <string name="brace_table_selected_cell_description">Selected %1$s, row %2$d (%3$s), %4$s</string>
     <string name="brace_table_selected_row_description">Selected row %1$d, %2$s</string>
+    <string name="brace_table_add_region">Add to selection</string>
+    <string name="brace_table_select_all">Select entire table</string>
+    <string name="brace_table_selected_table">Selected entire table</string>
+    <string name="brace_table_selected_regions">Selected %1$d regions</string>
+    <string name="brace_table_selected_rows">Selected rows %1$d to %2$d</string>
+    <string name="brace_table_selected_columns">Selected columns %1$d to %2$d</string>
     <string name="brace_table_extend_range">Start or extend range</string>
     <string name="brace_table_edit">Edit cell</string>
     <string name="brace_table_edit_description">Edit %1$s, row %2$d (%3$s)</string>

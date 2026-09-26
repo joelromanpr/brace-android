@@ -3145,7 +3145,8 @@
       "documentation": "docs/icons.md",
       "tests": "brace-blueprint-icons-next/src/androidTest/java/io/github/joelromanpr/brace/blueprinticonsnext/BraceBlueprintNextIconPackTest.kt",
       "firstRelease": null,
-      "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/src/icons-list.mdx"
+      "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/src/icons-list.mdx",
+      "pinnedAssetUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/icons-next.json"
     },
     {
       "id": "table-table",

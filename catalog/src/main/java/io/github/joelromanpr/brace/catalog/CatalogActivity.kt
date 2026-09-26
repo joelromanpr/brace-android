@@ -192,6 +192,12 @@ BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
     editingCell = editing, onEditingCellChange = { editing = it },
     onCellCommit = { cell, value -> rows = rows.map { if (it.id == cell.rowKey) it.copy(title = value) else it } })""".trimIndent(),
     "table-editing" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, editingCell = editing, onEditingCellChange = { editing = it }, onCellCommit = { cell, value -> save(cell, value) }) // Enter/F2, double-tap, TalkBack Edit",
+    "table-editablename" to """var editingName by remember { mutableStateOf<String?>(null) }
+var titles by remember { mutableStateOf(mapOf("status" to "Status")) }
+val columns = listOf(BraceTableColumn<Record>("status", titles.getValue("status"), 160.dp, { it.status }, editableName = true))
+BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
+    editingColumnName = editingName, onEditingColumnNameChange = { editingName = it },
+    onColumnNameCommit = { key, title -> titles = titles + (key to title) })""".trimIndent(),
     "table-column-and-row-resizing" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, columnWidths = widths, onColumnWidthChange = { key, width -> widths = widths + (key to width) }, rowHeights = heights, onRowHeightChange = { key, height -> heights = heights + (key to height) })",
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-checkbox" to "BraceCheckbox(checked = checked, onCheckedChange = { checked = it }, label = \"Include archived\")",
@@ -524,12 +530,16 @@ private fun ComponentSample(
         }
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
         "table-cell-selection", "table-column-and-row-resizing", "table-copying",
-        "table-editablecell", "table-editing" -> {
+        "table-editablecell", "table-editing", "table-editablename" -> {
             var records by remember { mutableStateOf(List(120) { DemoTableRecord("record-$it", "Case ${1000 + it}", if (it % 3 == 0) "Review" else "Ready") }) }
-            val tableColumns = remember { listOf(
-                BraceTableColumn<DemoTableRecord>("case", "Case", 140.dp, { it.case }, editable = true),
-                BraceTableColumn<DemoTableRecord>("status", "Status", 130.dp, { it.status }, editable = true),
-                BraceTableColumn<DemoTableRecord>("owner", "Owner", 130.dp, { "Team ${(it.id.substringAfter('-').toInt() % 4) + 1}" }),
+            var columnTitles by remember { mutableStateOf(mapOf("case" to "Case", "status" to "Status", "owner" to "Owner")) }
+            val tableColumns = remember(columnTitles) { listOf(
+                BraceTableColumn<DemoTableRecord>("case", columnTitles.getValue("case"), 140.dp,
+                    { it.case }, editable = true, editableName = true),
+                BraceTableColumn<DemoTableRecord>("status", columnTitles.getValue("status"), 130.dp,
+                    { it.status }, editable = true, editableName = true),
+                BraceTableColumn<DemoTableRecord>("owner", columnTitles.getValue("owner"), 130.dp,
+                    { "Team ${(it.id.substringAfter('-').toInt() % 4) + 1}" }, editableName = true),
             ) }
             var selectedKind by rememberSaveable { mutableStateOf("none") }
             var selectedRow by rememberSaveable { mutableStateOf("") }
@@ -543,6 +553,8 @@ private fun ComponentSample(
             var editingRow by rememberSaveable { mutableStateOf("") }
             var editingColumn by rememberSaveable { mutableStateOf("") }
             var savedValue by rememberSaveable { mutableStateOf<String?>(null) }
+            var editingName by rememberSaveable { mutableStateOf("") }
+            var savedColumnTitle by rememberSaveable { mutableStateOf<String?>(null) }
             val editingCell = if (editingRow.isBlank() || editingColumn.isBlank()) null
                 else BraceTableSelection.Cell(editingRow, editingColumn)
             val selection = when (selectedKind) {
@@ -564,7 +576,7 @@ private fun ComponentSample(
                 null -> "None"
             }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                Text("Scroll both ways. Tap headers to select a row or column. Long-press a cell then tap an endpoint for a range; keyboard Shift+arrows extend it. Double-tap a case or status cell, press Enter/F2 on a selected cell, or use Edit selected cell. Drag or focus resize grips.",
+                Text("Scroll both ways. Tap headers to select a row or column. Long-press a cell then tap an endpoint for a range; keyboard Shift+arrows extend it. Double-tap a case or status cell, or a header name, to edit. Enter/F2 edits a selected cell or column header; drag or focus resize grips.",
                     color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.body)
                 BraceDataTable(records, { it.id }, tableColumns, selection, {
                     when (it) {
@@ -597,7 +609,14 @@ private fun ComponentSample(
                             } }
                         savedValue = value
                     },
-                    validateCell = { _, value -> if (value.isBlank()) "Enter a value" else null })
+                    validateCell = { _, value -> if (value.isBlank()) "Enter a value" else null },
+                    editingColumnName = editingName.ifBlank { null },
+                    onEditingColumnNameChange = { editingName = it.orEmpty() },
+                    onColumnNameCommit = { key, title ->
+                        columnTitles = columnTitles + (key to title)
+                        savedColumnTitle = "$key: $title"
+                    },
+                    validateColumnName = { _, title -> if (title.length < 3) "Use at least 3 characters" else null })
                 Text("Selection: $selectionSummary", color = BraceTheme.colors.semantic.onSurface,
                     style = BraceTheme.typography.body)
                 Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
@@ -615,7 +634,12 @@ private fun ComponentSample(
                 }, enabled = selection is BraceTableSelection.Cell &&
                     (selection.columnKey == "case" || selection.columnKey == "status"),
                     variant = BraceButtonVariant.Outline)
+                BraceButton("Edit selected column name", onClick = {
+                    (selection as? BraceTableSelection.Column)?.let { editingName = it.columnKey }
+                }, enabled = selection is BraceTableSelection.Column, variant = BraceButtonVariant.Outline)
                 savedValue?.let { Text("Saved: $it", color = BraceTheme.colors.semantic.onSurfaceMuted,
+                    style = BraceTheme.typography.body) }
+                savedColumnTitle?.let { Text("Renamed: $it", color = BraceTheme.colors.semantic.onSurfaceMuted,
                     style = BraceTheme.typography.body) }
                 BraceButton("Copy selected cells", onClick = {
                     BraceTableClipboard.formatSelection(records, { it.id }, tableColumns, selection)?.let { value ->

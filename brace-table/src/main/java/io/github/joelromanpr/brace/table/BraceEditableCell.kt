@@ -4,9 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -19,8 +19,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
@@ -29,16 +29,17 @@ import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CollectionItemInfo
-import androidx.compose.ui.semantics.collectionItemInfo
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.collectionItemInfo
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.error
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
@@ -55,7 +56,7 @@ import io.github.braceandroid.foundation.BraceTheme
  * keeps a 48dp minimum touch target. Android exposes the [label] as a nearby context
  * node and retains the native editable text node with validation and save/cancel actions.
  * Screen readers encounter the row/column context before the active text field.
- * Optional zero-based [rowIndex] and [columnIndex] preserve grid collection coordinates.
+ * Optional zero-based [rowIndex] and [columnIndex] preserve Compose grid coordinates.
  * Callers own data updates and should remove this editor after either callback. In a
  * [BraceDataTable], pass the same stable cell key to [BraceDataTable.editingCell].
  */
@@ -74,9 +75,70 @@ fun BraceEditableCell(
         (rowIndex != null && rowIndex >= 0 && columnIndex != null && columnIndex >= 0)) {
         "Row and column indices must both be nonnegative or absent"
     }
-    require(label.isNotBlank()) { "Editable cell label must not be blank" }
+    BraceInlineTableEditor(
+        value = value, label = label, onCommit = onCommit, onCancel = onCancel,
+        modifier = modifier, validate = validate, selectAllOnFocus = false,
+        inputTag = "brace-editable-cell-input",
+        collectionItem = if (rowIndex != null && columnIndex != null)
+            CollectionItemInfo(rowIndex + 1, 1, columnIndex + 1, 1) else null,
+        isSelected = false,
+    )
+}
+
+/**
+ * A single-line editor for a column header's visible [name]. The confirmed title remains
+ * caller-owned; [onCommit] receives the new title and [onCancel] discards the draft. The editor
+ * selects the entire title on focus, like Blueprint's EditableName, and keeps a saveable draft.
+ * Blank or whitespace-only titles are rejected before [validate] runs. Enter or IME Done commits,
+ * Escape cancels, and TalkBack has Save changes and Cancel editing actions. [label] should name
+ * the column and header position; optional zero-based [columnIndex] provides Compose collection
+ * coordinates for the header row. Pass [isSelected] when this header owns the table selection.
+ * The Android context node announces the label separately from
+ * the native editable text node to preserve text selection and IME behavior.
+ *
+ * In [BraceDataTable], use [BraceTableColumn.editableName] and the controlled
+ * [BraceDataTable.editingColumnName] callbacks. Keep [BraceTableColumn.key] stable when renaming.
+ */
+@Composable
+fun BraceEditableColumnName(
+    name: String,
+    label: String,
+    onCommit: (String) -> Unit,
+    onCancel: () -> Unit,
+    modifier: Modifier = Modifier,
+    validate: (String) -> String? = { null },
+    columnIndex: Int? = null,
+    isSelected: Boolean = false,
+) {
+    require(columnIndex == null || columnIndex >= 0) { "Column index must be nonnegative or absent" }
+    val required = stringResource(R.string.brace_table_column_name_required)
+    BraceInlineTableEditor(
+        value = name, label = label, onCommit = onCommit, onCancel = onCancel,
+        modifier = modifier,
+        validate = { draft -> if (draft.isBlank()) required else validate(draft) },
+        selectAllOnFocus = true, inputTag = "brace-editable-column-name-input",
+        collectionItem = columnIndex?.let { CollectionItemInfo(0, 1, it + 1, 1) },
+        isSelected = isSelected,
+    )
+}
+
+@Composable
+private fun BraceInlineTableEditor(
+    value: String,
+    label: String,
+    onCommit: (String) -> Unit,
+    onCancel: () -> Unit,
+    modifier: Modifier,
+    validate: (String) -> String?,
+    selectAllOnFocus: Boolean,
+    inputTag: String,
+    collectionItem: CollectionItemInfo?,
+    isSelected: Boolean,
+) {
+    require(label.isNotBlank()) { "Editable table label must not be blank" }
     var draft by rememberSaveable(stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(TextFieldValue(value, TextRange(value.length)))
+        mutableStateOf(TextFieldValue(value,
+            if (selectAllOnFocus) TextRange(0, value.length) else TextRange(value.length)))
     }
     var errorMessage by rememberSaveable { mutableStateOf<String?>(null) }
     var finishing by remember { mutableStateOf(false) }
@@ -90,7 +152,6 @@ fun BraceEditableCell(
 
     fun commit(): Boolean {
         if (finishing) return false
-        // Input methods can send Enter while a marked candidate is still being composed.
         if (draft.composition != null) return false
         val problem = validate(draft.text)
         if (problem != null) {
@@ -121,7 +182,7 @@ fun BraceEditableCell(
             value = draft,
             onValueChange = { draft = it; errorMessage = null },
             modifier = Modifier.fillMaxWidth().heightIn(min = BraceTheme.sizing.touchTarget)
-                .focusRequester(requester).testTag("brace-editable-cell-input")
+                .focusRequester(requester).testTag(inputTag)
                 .onPreviewKeyEvent { event ->
                     if (event.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
                     when (event.key) {
@@ -134,9 +195,8 @@ fun BraceEditableCell(
                 }
                 .semantics(mergeDescendants = true) {
                     contentDescription = label
-                    if (rowIndex != null && columnIndex != null) {
-                        collectionItemInfo = CollectionItemInfo(rowIndex + 1, 1, columnIndex + 1, 1)
-                    }
+                    if (collectionItem != null) collectionItemInfo = collectionItem
+                    if (isSelected) selected = true
                     errorMessage?.let { error(it) }
                     customActions = listOf(
                         CustomAccessibilityAction(saveLabel) { commit() },

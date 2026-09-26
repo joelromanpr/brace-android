@@ -22,5 +22,8 @@
     <string name="brace_table_edit_description">Edit %1$s, row %2$d (%3$s)</string>
     <string name="brace_table_save_edit">Save changes</string>
     <string name="brace_table_cancel_edit">Cancel editing</string>
+    <string name="brace_table_edit_column_name">Edit column name</string>
+    <string name="brace_table_edit_column_name_description">Edit %1$s, header row, column %2$d</string>
+    <string name="brace_table_column_name_required">Column name is required</string>
     <string name="brace_table_invalid_value">Invalid value</string>
 </resources>

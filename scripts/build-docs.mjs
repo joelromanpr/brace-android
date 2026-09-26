@@ -23,6 +23,7 @@ const guideSources = new Map([
   ['docs/numeric-input.md', 'numeric-input'],
   ['docs/icons.md', 'icons'],
   ['docs/select-query.md', 'select-query'],
+  ['docs/suggest-multiselect.md', 'suggest-multiselect'],
   ['docs/milestones/m1-foundation-core.md', 'milestone-m1'],
   ['docs/milestones/m2-content-feedback.md', 'milestone-m2'],
   ['docs/milestones/m3-navigation-feedback.md', 'milestone-m3'],
@@ -35,6 +36,7 @@ const guideSources = new Map([
   ['docs/milestones/m10-numeric-input.md', 'milestone-m10'],
   ['docs/milestones/m11-icons.md', 'milestone-m11'],
   ['docs/milestones/m12-select-query.md', 'milestone-m12'],
+  ['docs/milestones/m16-suggest-multiselect.md', 'milestone-m16'],
   ['CONTRIBUTING.md', 'contributing'],
   ['docs/attribution.md', 'attribution'],
 ]);

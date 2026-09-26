@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.IntOffset
@@ -67,6 +68,8 @@ import io.github.joelromanpr.brace.icons.BraceIconRegistryProvider
 import io.github.joelromanpr.brace.icons.BraceIcons
 import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
+import io.github.joelromanpr.brace.select.BraceSuggest
+import io.github.joelromanpr.brace.select.BraceMultiSelect
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
 
 /** Compiles against Maven coordinates only, with no dependency on the source checkout. */
@@ -205,6 +208,25 @@ class ConsumerActivity : ComponentActivity() {
                                     onValueChange = { reportTitle = it },
                                     label = "Report title",
                                     editActionLabel = "Edit report title",
+                                )
+                                BraceSuggest(
+                                    value = TextFieldValue("North"),
+                                    onValueChange = {},
+                                    options = listOf(BraceSelectOption("north", "north", "North")),
+                                    selectedKey = "north",
+                                    onSelect = {},
+                                    expanded = false,
+                                    onExpandedChange = {},
+                                    label = "Suggested region",
+                                )
+                                BraceMultiSelect(
+                                    options = listOf(BraceSelectOption("east", "east", "East"),
+                                        BraceSelectOption("west", "west", "West")),
+                                    selectedKeys = listOf("east"),
+                                    onSelectedKeysChange = {},
+                                    expanded = false,
+                                    onExpandedChange = {},
+                                    label = "Regions",
                                 )
                                 BraceSelect(
                                     options = listOf(BraceSelectOption("east", "east", "East"),

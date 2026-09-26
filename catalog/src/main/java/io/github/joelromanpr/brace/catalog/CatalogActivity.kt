@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.IntOffset
 import io.github.braceandroid.foundation.BraceBrandColors
@@ -118,6 +119,8 @@ import io.github.joelromanpr.brace.icons.BraceIconSize
 import io.github.joelromanpr.brace.icons.BraceIcons
 import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
+import io.github.joelromanpr.brace.select.BraceSuggest
+import io.github.joelromanpr.brace.select.BraceMultiSelect
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
 import io.github.joelromanpr.brace.select.braceQueryNavigation
 import org.json.JSONObject
@@ -156,6 +159,17 @@ BraceIconRegistryProvider(custom) {
 var expanded by rememberSaveable { mutableStateOf(false) }
 val options = listOf(BraceSelectOption("east", "east", "East"), BraceSelectOption("west", "west", "West"))
 BraceSelect(options, selectedKey, { selectedKey = it.key }, expanded, { expanded = it }, label = "Region")""".trimIndent(),
+    "select-suggest" to """var value by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
+var expanded by rememberSaveable { mutableStateOf(false) }
+var selectedKey by rememberSaveable { mutableStateOf<String?>(null) }
+val options = listOf(BraceSelectOption("east", "east", "East"), BraceSelectOption("west", "west", "West"))
+BraceSuggest(value, { value = it }, options, selectedKey,
+    onSelect = { selectedKey = it.key; value = TextFieldValue(it.label) },
+    expanded = expanded, onExpandedChange = { expanded = it }, label = "Region")""".trimIndent(),
+    "select-multiselect" to """var keys by rememberSaveable { mutableStateOf(listOf("east")) }
+var expanded by rememberSaveable { mutableStateOf(false) }
+val options = listOf(BraceSelectOption("east", "east", "East"), BraceSelectOption("west", "west", "West"))
+BraceMultiSelect(options, keys, { keys = it }, expanded, { expanded = it }, label = "Regions")""".trimIndent(),
     "select-querylist" to """val state = rememberBraceQueryListState()
 val options = listOf(BraceSelectOption("east", "east", "East"), BraceSelectOption("west", "west", "West"))
 val visible = state.filter(options)
@@ -408,6 +422,50 @@ private fun ComponentSample(
                 }
                 Text("Bundled: ${BraceIconRegistry.Default.names.sorted().joinToString()}",
                     color = BraceTheme.colors.semantic.onSurfaceMuted)
+            }
+        }
+        "select-suggest" -> {
+            var value by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+                mutableStateOf(TextFieldValue(""))
+            }
+            var selectedKey by rememberSaveable { mutableStateOf<String?>(null) }
+            var expanded by rememberSaveable { mutableStateOf(false) }
+            val state = rememberBraceQueryListState()
+            val choices = listOf(
+                BraceSelectOption("east", "east", "East", description = "Eastern region"),
+                BraceSelectOption("west", "west", "West", description = "Western region"),
+                BraceSelectOption("central", "central", "Central", enabled = false),
+            )
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceSuggest(value, { value = it }, choices, selectedKey,
+                    onSelect = { selectedKey = it.key; value = TextFieldValue(it.label) },
+                    expanded = expanded, onExpandedChange = { expanded = it },
+                    label = "Region", state = state)
+                Text("Text: ${value.text.ifBlank { "none" }} · Selected: ${selectedKey ?: "none"}",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BraceButton("Clear", onClick = { value = TextFieldValue(""); selectedKey = null },
+                    variant = BraceButtonVariant.Outline)
+                BraceSuggest(TextFieldValue("West"), {}, choices, "west", {}, false, {},
+                    label = "Unavailable", enabled = false)
+            }
+        }
+        "select-multiselect" -> {
+            var selectedKeys by rememberSaveable { mutableStateOf(listOf("east")) }
+            var expanded by rememberSaveable { mutableStateOf(false) }
+            val state = rememberBraceQueryListState()
+            val choices = listOf(
+                BraceSelectOption("east", "east", "East", description = "Eastern region"),
+                BraceSelectOption("west", "west", "West", description = "Western region"),
+                BraceSelectOption("central", "central", "Central", enabled = false),
+            )
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceMultiSelect(choices, selectedKeys, { selectedKeys = it }, expanded,
+                    { expanded = it }, "Regions", state = state)
+                Text("Selected: ${selectedKeys.joinToString().ifBlank { "none" }} · Query: ${state.query}",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BraceButton("Clear", onClick = { selectedKeys = emptyList(); state.query = "" },
+                    variant = BraceButtonVariant.Outline)
+                BraceMultiSelect(choices, listOf("west"), {}, false, {}, "Unavailable", enabled = false)
             }
         }
         "select-select", "select-querylist" -> {

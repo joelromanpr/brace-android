@@ -27,4 +27,4 @@ Blueprint's native HTML `<select>`, `<option>` children, `value`/`defaultValue`,
 
 ## Verification
 
-`BraceDropdownTest` covers controlled selection, disabled options, touch, keyboard, mouse, focus return, error semantics, RTL, 2x text, compact high contrast dark mode, state restoration, and an automated Compose accessibility audit where supported. Manual TalkBack and real pointer or keyboard review remain before stable status. Use the generated [coverage ledger](coverage.md) as the authoritative availability record.
+`BraceDropdownTest` passed 7/7 API 36 cases covering controlled selection, disabled options, touch, keyboard, mouse, native accessibility click, focus return, error semantics, RTL, 2x text, compact high contrast dark mode, state restoration, and an automated Compose accessibility audit where supported. The catalog was visually reviewed at 320 dp in light and dark high contrast plus 200% Android text. Manual human TalkBack and real hardware review remain before stable status. Use the generated [coverage ledger](coverage.md) as the authoritative availability record.

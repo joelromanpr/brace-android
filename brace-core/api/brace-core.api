@@ -130,6 +130,36 @@ public final class io/github/joelromanpr/brace/core/BraceDrawerSize : java/lang/
 	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceDrawerSize;
 }
 
+public final class io/github/joelromanpr/brace/core/BraceDropdownKt {
+	public static final fun BraceDropdown (Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;ZZZZLio/github/joelromanpr/brace/core/BraceDropdownSize;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceDropdownOption {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Z)Lio/github/joelromanpr/brace/core/BraceDropdownOption;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceDropdownOption;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceDropdownOption;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEnabled ()Z
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceDropdownSize : java/lang/Enum {
+	public static final field Large Lio/github/joelromanpr/brace/core/BraceDropdownSize;
+	public static final field Medium Lio/github/joelromanpr/brace/core/BraceDropdownSize;
+	public static final field Small Lio/github/joelromanpr/brace/core/BraceDropdownSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceDropdownSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceDropdownSize;
+}
+
 public final class io/github/joelromanpr/brace/core/BraceEditableTextIntent : java/lang/Enum {
 	public static final field Danger Lio/github/joelromanpr/brace/core/BraceEditableTextIntent;
 	public static final field Default Lio/github/joelromanpr/brace/core/BraceEditableTextIntent;

@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +35,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.res.stringResource
@@ -41,7 +43,9 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.error
-import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -109,6 +113,7 @@ public fun BraceDropdown(
     var openedBefore by remember { mutableStateOf(false) }
     val placeholderText = placeholder ?: stringResource(R.string.brace_dropdown_placeholder)
     val displayed = chosen?.label ?: placeholderText
+    val announcement = stringResource(R.string.brace_dropdown_announcement, label, displayed)
     val errorMessage = if (isError) requireNotNull(supportingText) else null
     val expandedText = stringResource(R.string.brace_section_expanded)
     val collapsedText = stringResource(R.string.brace_section_collapsed)
@@ -182,17 +187,28 @@ public fun BraceDropdown(
                                 else -> input.border
                             }, shape,
                         )
+                        .onKeyEvent { event ->
+                            if (canOpen && !expanded && event.type == KeyEventType.KeyUp &&
+                                (event.key == Key.Enter || event.key == Key.Spacebar)
+                            ) {
+                                expanded = true
+                                true
+                            } else false
+                        }
+                        .focusable(enabled = canOpen, interactionSource = interaction)
+                        .clearAndSetSemantics {
+                            contentDescription = announcement
+                            role = Role.Button
+                            stateDescription = if (expanded) expandedText else collapsedText
+                            if (canOpen) onClick { expanded = true; true } else disabled()
+                            if (errorMessage != null) error(errorMessage)
+                        }
                         .clickable(
                             enabled = canOpen,
                             role = Role.Button,
                             interactionSource = interaction,
                             indication = null,
                         ) { expanded = true }
-                        .semantics(mergeDescendants = true) {
-                            contentDescription = "$label, $displayed"
-                            stateDescription = if (expanded) expandedText else collapsedText
-                            if (errorMessage != null) error(errorMessage)
-                        }
                         .padding(horizontal = metrics.horizontalPadding, vertical = BraceTheme.spacing.xs),
                     horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm),
                     verticalAlignment = Alignment.CenterVertically,

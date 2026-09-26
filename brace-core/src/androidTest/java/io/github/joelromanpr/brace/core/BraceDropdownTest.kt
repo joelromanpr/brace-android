@@ -1,6 +1,8 @@
 package io.github.joelromanpr.brace.core
 
 import android.os.Build
+import android.accessibilityservice.AccessibilityServiceInfo
+import android.view.accessibility.AccessibilityNodeInfo
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.CompositionLocalProvider
@@ -43,6 +45,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import io.github.braceandroid.foundation.BraceColorMode
 import io.github.braceandroid.foundation.BraceContrast
 import io.github.braceandroid.foundation.BraceDensity
@@ -132,7 +135,7 @@ class BraceDropdownTest {
         rule.onNodeWithText("East").performMouseInput { click() }
         assertEquals("east", selected)
         val bounds = rule.onNodeWithTag("rtl-dropdown").getUnclippedBoundsInRoot()
-        assertTrue(bounds.width <= 220.dp)
+        assertTrue(bounds.right - bounds.left <= 220.dp)
     }
 
     @Test fun disabledAndErrorStateAreAnnounced() {
@@ -163,6 +166,43 @@ class BraceDropdownTest {
         restore.emulateSavedInstanceStateRestore()
         rule.onNodeWithContentDescription("Region, East").assertExists()
         rule.onNodeWithText("West").assertDoesNotExist()
+    }
+
+    private fun accessibleNodes(root: AccessibilityNodeInfo): List<AccessibilityNodeInfo> =
+        buildList {
+            add(root)
+            for (index in 0 until root.childCount) {
+                root.getChild(index)?.let { addAll(accessibleNodes(it)) }
+            }
+        }
+
+    @Test fun nativeAccessibilityTargetOpensTheMenu() {
+        rule.setContent { BraceTheme { BraceDropdown(regions, null, {}, "Region") } }
+        rule.waitForIdle()
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        val service = automation.serviceInfo
+        service.flags = service.flags or AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
+        automation.serviceInfo = service
+        var nodes = emptyList<AccessibilityNodeInfo>()
+        for (attempt in 0 until 20) {
+            val roots = (automation.windows.mapNotNull { it.root } +
+                listOfNotNull(automation.rootInActiveWindow)).distinctBy { it.windowId }
+            nodes = roots.flatMap(::accessibleNodes)
+            val compatibilityOk = nodes.firstOrNull { it.text?.toString() == "OK" }
+            if (compatibilityOk != null) {
+                compatibilityOk.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                Thread.sleep(100)
+                continue
+            }
+            if (nodes.any { it.isClickable &&
+                it.contentDescription?.contains("Region, Choose an option") == true }) break
+            Thread.sleep(100)
+        }
+        val targets = nodes.filter { it.isClickable &&
+            it.contentDescription?.contains("Region, Choose an option") == true }
+        assertEquals("Native Region nodes: ${nodes.filter { it.contentDescription?.contains("Region") == true }.map { it.contentDescription to it.actionList.map { action -> action.id } }}", 1, targets.size)
+        assertTrue(targets.single().performAction(AccessibilityNodeInfo.ACTION_CLICK))
+        rule.onNodeWithText("East").assertExists()
     }
 
     @Test fun automatedAccessibilityCheckCoversFieldAndMenu() {

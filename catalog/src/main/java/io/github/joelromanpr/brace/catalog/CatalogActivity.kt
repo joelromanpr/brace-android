@@ -150,6 +150,10 @@ import io.github.joelromanpr.brace.select.rememberBraceQueryListState
 import io.github.joelromanpr.brace.select.braceQueryNavigation
 import io.github.joelromanpr.brace.datetime.BraceDateField
 import io.github.joelromanpr.brace.datetime.BraceDatePicker
+import io.github.joelromanpr.brace.datetime.BraceDateRange
+import io.github.joelromanpr.brace.datetime.BraceDateRangePicker
+import io.github.joelromanpr.brace.datetime.BraceDateRangeField
+import io.github.joelromanpr.brace.datetime.BraceDateRangeShortcut
 import io.github.joelromanpr.brace.datetime.BraceDateShortcut
 import java.time.LocalDate
 import java.time.YearMonth
@@ -301,6 +305,8 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "core-overlaytoaster" to "val toasts = rememberBraceToastState(); Box(Modifier.fillMaxSize()) { BraceButton(\"Notify\", onClick = { toasts.show(BraceToastSpec(\"Ready\"), key = \"status\") }); BraceToastHost(toasts, position = BraceToastPosition.BottomEnd) }",
     "datetime-datepicker" to "var day by rememberSaveable { mutableStateOf<String?>(null) }; BraceDatePicker(day?.let(LocalDate::parse), { day = it?.toString() }, locale = Locale.US)",
     "datetime-dateinput" to "var day by rememberSaveable { mutableStateOf<String?>(null) }; BraceDateField(day?.let(LocalDate::parse), { day = it?.toString() }, label = \"Due date\", locale = Locale.US)",
+    "datetime-daterangepicker" to "var start by rememberSaveable { mutableStateOf<String?>(null) }; var end by rememberSaveable { mutableStateOf<String?>(null) }; BraceDateRangePicker(BraceDateRange(start?.let(LocalDate::parse), end?.let(LocalDate::parse)), { start = it.start?.toString(); end = it.end?.toString() }, locale = Locale.US)",
+    "datetime-daterangeinput" to "var start by rememberSaveable { mutableStateOf<String?>(null) }; var end by rememberSaveable { mutableStateOf<String?>(null) }; BraceDateRangeField(BraceDateRange(start?.let(LocalDate::parse), end?.let(LocalDate::parse)), { start = it.start?.toString(); end = it.end?.toString() }, label = \"Travel dates\", locale = Locale.US)",
 
 )
 
@@ -769,6 +775,43 @@ private fun ComponentSample(
                     color = BraceTheme.colors.semantic.onSurface,
                     style = BraceTheme.typography.body)
                 BraceDateField(null, {}, label = "Unavailable date", enabled = false,
+                    locale = Locale.US)
+            }
+        }
+        "datetime-daterangepicker" -> {
+            var start by rememberSaveable { mutableStateOf<String?>(null) }
+            var end by rememberSaveable { mutableStateOf<String?>(null) }
+            var allowSingle by rememberSaveable { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceButton(if (allowSingle) "Single day allowed" else "Require two days",
+                    onClick = { allowSingle = !allowSingle }, variant = BraceButtonVariant.Outline)
+                BraceDateRangePicker(
+                    value = BraceDateRange(start?.let(LocalDate::parse), end?.let(LocalDate::parse)),
+                    onValueChange = { start = it.start?.toString(); end = it.end?.toString() },
+                    locale = Locale.US, allowSingleDayRange = allowSingle,
+                    minDate = LocalDate.of(2026, 1, 1), maxDate = LocalDate.of(2027, 12, 31),
+                    shortcuts = listOf(BraceDateRangeShortcut("Sept 14–18",
+                        BraceDateRange(LocalDate.of(2026, 9, 14), LocalDate.of(2026, 9, 18)))),
+                )
+                Text("Selected: ${start ?: "none"} → ${end ?: "none"}",
+                    color = BraceTheme.colors.semantic.onSurface)
+            }
+        }
+        "datetime-daterangeinput" -> {
+            var start by rememberSaveable { mutableStateOf<String?>(null) }
+            var end by rememberSaveable { mutableStateOf<String?>(null) }
+            var errors by rememberSaveable { mutableStateOf(0) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceDateRangeField(
+                    value = BraceDateRange(start?.let(LocalDate::parse), end?.let(LocalDate::parse)),
+                    onValueChange = { start = it.start?.toString(); end = it.end?.toString() },
+                    label = "Travel dates", locale = Locale.US,
+                    minDate = LocalDate.of(2026, 1, 1), maxDate = LocalDate.of(2027, 12, 31),
+                    onInvalidInput = { _, _ -> errors++ },
+                )
+                Text("Selected: ${start ?: "none"} → ${end ?: "none"} · invalid drafts: $errors",
+                    color = BraceTheme.colors.semantic.onSurface)
+                BraceDateRangeField(BraceDateRange(), {}, "Unavailable range", enabled = false,
                     locale = Locale.US)
             }
         }

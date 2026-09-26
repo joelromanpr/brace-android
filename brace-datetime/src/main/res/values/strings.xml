@@ -12,4 +12,18 @@
     <string name="brace_date_invalid">Enter a valid date</string>
     <string name="brace_date_out_of_range">Date is unavailable</string>
     <string name="brace_date_calendar_title">Choose date</string>
+    <string name="brace_range_start">Start date</string>
+    <string name="brace_range_end">End date</string>
+    <string name="brace_range_in">In selected range</string>
+    <string name="brace_range_today">Today</string>
+    <string name="brace_range_previous_month">Previous month</string>
+    <string name="brace_range_next_month">Next month</string>
+    <string name="brace_range_previous_year">Previous year</string>
+    <string name="brace_range_next_year">Next year</string>
+    <string name="brace_range_clear">Clear range</string>
+    <string name="brace_range_open">Open range calendar</string>
+    <string name="brace_range_title">Choose date range</string>
+    <string name="brace_range_invalid">Enter a valid date</string>
+    <string name="brace_range_unavailable">Date is unavailable</string>
+    <string name="brace_range_overlapping">Start date must not follow end date</string>
 </resources>

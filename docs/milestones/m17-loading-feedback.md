@@ -1,6 +1,6 @@
 # M17: Spinner and Skeleton loading feedback
 
-**Status:** source slice locally rebased onto merged main `47d2d38` (M12 Select/QueryList and M25 TopBar included) in `joelromanpr/m17-loading-feedback`. The pinned Blueprint Spinner and Skeleton rows remain **in progress**, `firstRelease` is null, and generated stable coverage is **0/121** applicable rows. This rebased head has not been pushed or run through Gradle, device, Maven consumer, or hosted checks. No Maven Central release is claimed.
+**Status:** source slice merged with current main `b412d49` (including the live GitHub Pages visual showcase) in `joelromanpr/m17-loading-feedback`. The pinned Blueprint Spinner and Skeleton rows remain **in progress**, `firstRelease` is null, and generated stable coverage is **0/121** applicable rows. No Maven Central release is claimed.
 
 ## Included in this branch
 
@@ -13,8 +13,9 @@
 
 | Gate | Result |
 | --- | --- |
-| Current post-M12/M25 static checks | Passed on the locally rebased tree: token generation and coverage `--check`, JavaScript syntax, documentation build (**147 inventory rows, 33 guides**), and Git whitespace/conflict checks. M12 Select/QueryList, M25 TopBar, and M17 Spinner/Skeleton remain in tokens, inventory, catalog, docs, and the independent consumer. |
-| Current Gradle, API, device, Maven consumer, and hosted checks | **Pending** on this local rebase. The evidence below belongs to earlier commits on the M11 base and does not validate the integrated M12/M25 tree. The branch is intentionally unpushed while new GitHub Actions jobs are blocked by account billing. |
+| Current post-Pages static checks | Passed on the current merged tree: token generation and coverage `--check`, JavaScript syntax, documentation build (**147 inventory rows, 9 real catalog captures, 32 guides**), and Git whitespace/conflict checks. M12 Select/QueryList, M25 TopBar, and M17 Spinner/Skeleton remain in tokens, inventory, catalog, docs, and the independent consumer. |
+| Current build, lint, API, and catalog | `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` passed on the post-Pages merged tree: **467 tasks**, no failures. |
+| Current focused device, Maven consumer, and hosted checks | **Pending** on the post-Pages head. The earlier evidence below does not validate this integrated tree. The connected device run was deferred while another component PR uses the local emulator; hosted checks start when this branch is pushed. |
 | Prior post-M11 static checks | Passed on the earlier M11 rebased tree: token generation and coverage `--check`, JavaScript syntax, documentation build (147 inventory rows, 29 guides), and Git whitespace/conflict checks. |
 | Prior post-M11 build, lint, API, and catalog | `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` passed with **377 tasks**. Generated API baselines and icon/loading catalog samples compiled together. |
 | Prior post-M11 API 36 device tests | `BraceLoadingTest` passed **5/5** with no failures or skips (**71 tasks**): determinate and indeterminate range semantics, reduced-motion pixels, sizing/intent tokens, large text, RTL, high contrast, and automated accessibility checks. |
@@ -24,4 +25,4 @@
 
 ## Limits and next branch
 
-The loading placeholders are noninteractive. An app controls when to show a loader and when to replace it with content. Manual TalkBack, pointer, large-text, theme-matrix, and additional form-factor review remain before these rows can become stable. The next integration step is to run the broad Gradle/API gate, focused device tests, Maven consumer, and hosted checks on the post-M12/M25 head before review and manual accessibility assessment of PR #29. Other core, table, and select families remain tracked by their focused inventory rows.
+The loading placeholders are noninteractive. An app controls when to show a loader and when to replace it with content. Manual TalkBack, pointer, large-text, theme-matrix, and additional form-factor review remain before these rows can become stable. The next integration step is to complete focused device tests, the Maven consumer, and hosted checks on the post-Pages head before manual accessibility assessment of PR #29. Other core, table, and select families remain tracked by their focused inventory rows.

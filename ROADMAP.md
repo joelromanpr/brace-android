@@ -11,4 +11,6 @@ The [pinned component inventory](inventory/blueprint-components.json) is authori
 | M4 — datetime and icons | Date/time/range/time-zone experiences and licensed icon strategy | Localization, zone handling, icon attribution and accessibility tests |
 | M5 — data table | Viewport rendering, fixed headers, resize, selection, copy, editing, keyboard navigation | Performance and complex interaction tests, accessibility evidence |
 
+Delivery branch numbers count reviewable PR slices and can differ from these scope phases. For example, navigation and overlays in roadmap M2 span delivery branches M3 and M4.
+
 Each slice updates its inventory rows, documentation, catalog, tests, and changelog together. Full parity can be claimed only after every applicable pinned row is stable and verified. Experimental/labs rows are tracked separately.

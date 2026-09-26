@@ -18,6 +18,12 @@ import io.github.joelromanpr.brace.core.BraceTag
 import io.github.joelromanpr.brace.core.BraceCard
 import io.github.joelromanpr.brace.core.BraceProgressBar
 import io.github.joelromanpr.brace.core.BraceSection
+import io.github.joelromanpr.brace.core.BraceMenu
+import io.github.joelromanpr.brace.core.BraceMenuItem
+import io.github.joelromanpr.brace.core.BraceDialog
+import io.github.joelromanpr.brace.core.BraceAlertDialog
+import io.github.joelromanpr.brace.core.BraceOverlayHost
+import io.github.joelromanpr.brace.core.BraceButtonIntent
 
 /** Compiles against Maven coordinates only, with no dependency on the source checkout. */
 class ConsumerActivity : ComponentActivity() {
@@ -26,6 +32,8 @@ class ConsumerActivity : ComponentActivity() {
         setContent {
             BraceTheme {
                 var count by remember { mutableStateOf(0) }
+                var dialogOpen by remember { mutableStateOf(false) }
+                var alertOpen by remember { mutableStateOf(false) }
                 Column {
                     BraceCard {
                         BraceButton(label = "Saved $count", onClick = { count++ })
@@ -36,6 +44,27 @@ class ConsumerActivity : ComponentActivity() {
                     BraceBreadcrumbs(listOf(BraceBreadcrumb("Home", onClick = {}), BraceBreadcrumb("Imports")))
                     BraceTag("Active")
                     BraceCallout(title = "Ready", intent = BraceCalloutIntent.Success)
+                    BraceMenu {
+                        BraceMenuItem("Edit project", onClick = { dialogOpen = true })
+                        BraceMenuItem("Delete report", onClick = { alertOpen = true },
+                            intent = io.github.joelromanpr.brace.core.BraceMenuIntent.Danger)
+                    }
+                    BraceOverlayHost {
+                        BraceDialog(
+                            open = dialogOpen,
+                            onDismissRequest = { dialogOpen = false },
+                            title = "Edit project",
+                            actions = { BraceButton("Close", onClick = { dialogOpen = false }) },
+                        ) { BraceTag("Editable content") }
+                        BraceAlertDialog(
+                            open = alertOpen,
+                            title = "Delete report?",
+                            onConfirm = { alertOpen = false },
+                            onCancel = { alertOpen = false },
+                            confirmLabel = "Delete",
+                            confirmIntent = BraceButtonIntent.Danger,
+                        )
+                    }
                 }
             }
         }

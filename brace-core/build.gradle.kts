@@ -20,6 +20,7 @@ android {
     }
 
     buildFeatures { compose = true }
+    testOptions { targetSdk = 36 }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

@@ -10,6 +10,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import io.github.braceandroid.foundation.BraceTheme
 import io.github.joelromanpr.brace.core.BraceButton
+import io.github.joelromanpr.brace.core.BraceBreadcrumb
+import io.github.joelromanpr.brace.core.BraceBreadcrumbs
+import io.github.joelromanpr.brace.core.BraceCallout
+import io.github.joelromanpr.brace.core.BraceCalloutIntent
+import io.github.joelromanpr.brace.core.BraceTag
 import io.github.joelromanpr.brace.core.BraceCard
 import io.github.joelromanpr.brace.core.BraceProgressBar
 import io.github.joelromanpr.brace.core.BraceSection
@@ -28,6 +33,9 @@ class ConsumerActivity : ComponentActivity() {
                     BraceSection(title = "Job status", collapsible = true) {
                         BraceProgressBar(label = "Import progress", value = 0.5f)
                     }
+                    BraceBreadcrumbs(listOf(BraceBreadcrumb("Home", onClick = {}), BraceBreadcrumb("Imports")))
+                    BraceTag("Active")
+                    BraceCallout(title = "Ready", intent = BraceCalloutIntent.Success)
                 }
             }
         }

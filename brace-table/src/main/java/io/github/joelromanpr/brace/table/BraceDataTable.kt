@@ -58,6 +58,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.CollectionItemInfo
 import androidx.compose.ui.semantics.collectionInfo
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.collectionItemInfo
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.onClick
@@ -139,11 +140,9 @@ fun <Row> BraceDataTable(
     rowLabel: (Row) -> String = rowKey,
 ) {
     require(height > 0.dp) { "Table height must be positive" }
-    val validatedRowKeys = remember(rows) { validateRowKeys(rows, rowKey) }
-    require(columns.all { it.key.isNotBlank() && it.title.isNotBlank() }) { "Column keys and titles must not be blank" }
-    require(columns.map { it.key }.distinct().size == columns.size) { "Column keys must be unique" }
+    val rowIndex = remember(rows) { validateRowKeys(rows, rowKey) }
     val minColumnWidth = BraceTheme.sizing.tableMinColumnWidth
-    require(columns.all { it.width >= minColumnWidth }) { "Column width must be at least $minColumnWidth" }
+    val columnIndex = remember(columns, minColumnWidth) { indexColumns(columns, minColumnWidth) }
 
     val colors = BraceTheme.colors.components.table
     val semantic = BraceTheme.colors.semantic
@@ -166,14 +165,7 @@ fun <Row> BraceDataTable(
         BraceTheme.sizing.touchTarget, maxOf(bodyLineHeight, headerLineHeight) + spacing.sm)
     val headerHeight = rowHeight
     val rowHeaderWidth = BraceTheme.sizing.touchTarget + spacing.sm
-    val starts = remember(columns) {
-        val positions = ArrayList<Dp>(columns.size)
-        var position = 0.dp
-        columns.forEach { column -> positions += position; position += column.width }
-        positions
-    }
-    val columnWidth = columns.fold(0.dp) { sum, column -> sum + column.width }
-    val totalWidth = rowHeaderWidth + columnWidth
+    val totalWidth = rowHeaderWidth + columnIndex.totalWidth
     val tableLabel = label ?: stringResource(R.string.brace_table_default_label)
     require(tableLabel.isNotBlank()) { "Table label must not be blank" }
     val rowHeaderName = stringResource(R.string.brace_table_row_header)
@@ -197,14 +189,14 @@ fun <Row> BraceDataTable(
                     return@onPreviewKeyEvent false
                 }
                 val currentRow = when (selection) {
-                    is BraceTableSelection.Cell -> rows.indexOfFirst { rowKey(it) == selection.rowKey }
-                    is BraceTableSelection.Row -> rows.indexOfFirst { rowKey(it) == selection.rowKey }
-                    null -> -1
-                }.coerceAtLeast(0)
+                    is BraceTableSelection.Cell -> rowIndex.byKey[selection.rowKey]
+                    is BraceTableSelection.Row -> rowIndex.byKey[selection.rowKey]
+                    null -> null
+                } ?: 0
                 val currentCol = when (selection) {
-                    is BraceTableSelection.Cell -> columns.indexOfFirst { it.key == selection.columnKey }
-                    else -> 0
-                }.coerceAtLeast(0)
+                    is BraceTableSelection.Cell -> columnIndex.byKey[selection.columnKey]
+                    else -> null
+                } ?: 0
                 val page = maxOf(1, (viewportHeightPx - with(density) { headerHeight.roundToPx() }) /
                     with(density) { rowHeight.roundToPx() }.coerceAtLeast(1))
                 val next = when (event.nativeKeyEvent.keyCode) {
@@ -221,7 +213,7 @@ fun <Row> BraceDataTable(
                     else -> null
                 } ?: return@onPreviewKeyEvent false
                 val (targetRow, targetCol) = next
-                onSelectionChange(BraceTableSelection.Cell(rowKey(rows[targetRow]), columns[targetCol].key))
+                onSelectionChange(BraceTableSelection.Cell(rowIndex.keys[targetRow], columns[targetCol].key))
                 scope.launch {
                     val layout = viewport.vertical.layoutInfo
                     val visibleRow = layout.visibleItemsInfo.firstOrNull { it.index == targetRow }
@@ -232,8 +224,8 @@ fun <Row> BraceDataTable(
                         visibleRow.offset + visibleRow.size > layout.viewportEndOffset ->
                             viewport.vertical.scrollBy((visibleRow.offset + visibleRow.size - layout.viewportEndOffset).toFloat())
                     }
-                    val startPx = with(density) { starts[targetCol].roundToPx() }
-                    val endPx = startPx + with(density) { columns[targetCol].width.roundToPx() }
+                    val startPx = with(density) { columnIndex.starts[targetCol].roundToPx() }
+                    val endPx = with(density) { columnIndex.ends[targetCol].roundToPx() }
                     val visibleBodyPx = (viewportWidthPx - with(density) { rowHeaderWidth.roundToPx() }).coerceAtLeast(0)
                     val nextOffset = when {
                         startPx < viewport.horizontal.value -> startPx
@@ -245,16 +237,13 @@ fun <Row> BraceDataTable(
                 true
             }
             .focusable()
-            .semantics { collectionInfo = CollectionInfo(validatedRowKeys.size + 1, columns.size + 1); contentDescription = tableLabel }
+            .semantics { collectionInfo = CollectionInfo(rowIndex.keys.size + 1, columns.size + 1); contentDescription = tableLabel }
             .testTag("brace-table"),
     ) {
         val viewportWidth = maxWidth
         val visibleBodyWidth = (viewportWidth - rowHeaderWidth).coerceAtLeast(0.dp)
         val scrollDp = with(density) { viewport.horizontal.value.toDp() }
-        val first = columns.indices.indexOfFirst { starts[it] + columns[it].width > scrollDp }
-        val last = columns.indices.indexOfLast { starts[it] < scrollDp + visibleBodyWidth }
-        val visibleColumns = if (first < 0 || last < 0) emptyList()
-            else ((first - 1).coerceAtLeast(0)..(last + 1).coerceAtMost(columns.lastIndex)).toList()
+        val visibleColumns = columnIndex.visibleRange(scrollDp, scrollDp + visibleBodyWidth)
         val bodyHeight = (maxHeight - headerHeight).coerceAtLeast(0.dp)
 
         Column(Modifier.horizontalScroll(viewport.horizontal)) {
@@ -263,11 +252,11 @@ fun <Row> BraceDataTable(
                     visibleColumns.forEach { index ->
                         val column = columns[index]
                         Box(
-                            Modifier.offset(x = rowHeaderWidth + starts[index]).width(column.width).height(headerHeight)
+                            Modifier.offset(x = rowHeaderWidth + columnIndex.starts[index]).width(column.width).height(headerHeight)
                                 .border(metrics.gridLineWidth, colors.gridLine)
-                                .semantics { collectionItemInfo = CollectionItemInfo(0, 1, index + 1, 1)
-                                    contentDescription = headerDescription.format(column.title, index + 1) }
-                                .testTag("brace-table-header:${column.key}"),
+                                .testTag("brace-table-header:${column.key}")
+                                .clearAndSetSemantics { collectionItemInfo = CollectionItemInfo(0, 1, index + 1, 1)
+                                    contentDescription = headerDescription.format(column.title, index + 1) },
                             contentAlignment = Alignment.CenterStart,
                         ) {
                             Text(column.title, modifier = Modifier.padding(horizontal = metrics.cellHorizontalPadding),
@@ -279,15 +268,16 @@ fun <Row> BraceDataTable(
                     state = viewport.vertical,
                     modifier = Modifier.width(maxOf(totalWidth, viewportWidth)).height(bodyHeight),
                 ) {
-                    items(count = rows.size, key = { index -> rowKey(rows[index]) }) { rowIndex ->
-                        val row = rows[rowIndex]
-                        val key = rowKey(row)
+                    items(count = rows.size, key = { index -> rowIndex.keys[index] }) { rowNumber ->
+                        val row = rows[rowNumber]
+                        val key = rowIndex.keys[rowNumber]
+                        val accessibleRowLabel = if (rowLabel === rowKey) key else rowLabel(row)
                         val rowSelected = selection == BraceTableSelection.Row(key)
                         val rowColor = if (rowSelected) colors.selectedRow
-                            else if (rowIndex % 2 == 0) colors.row else colors.alternateRow
+                            else if (rowNumber % 2 == 0) colors.row else colors.alternateRow
                         Box(Modifier.width(maxOf(totalWidth, viewportWidth)).height(rowHeight).background(rowColor)) {
-                            visibleColumns.forEach { columnIndex ->
-                                val column = columns[columnIndex]
+                            visibleColumns.forEach { columnNumber ->
+                                val column = columns[columnNumber]
                                 val cellSelected = selection == BraceTableSelection.Cell(key, column.key)
                                 val value = column.cellText(row)
                                 val interaction = remember(key, column.key) { MutableInteractionSource() }
@@ -303,20 +293,20 @@ fun <Row> BraceDataTable(
                                     requester.requestFocus()
                                 }
                                 Box(
-                                    Modifier.offset(x = rowHeaderWidth + starts[columnIndex])
+                                    Modifier.offset(x = rowHeaderWidth + columnIndex.starts[columnNumber])
                                         .width(column.width).height(rowHeight)
                                         .background(cellColor)
                                         .hoverable(interaction)
                                         .border(if (cellSelected && focused) BraceTheme.sizing.focusRingWidth else metrics.gridLineWidth,
                                             if (cellSelected && focused) semantic.focusRing else colors.gridLine)
                                         .pointerSelect(key, column.key, selectCell)
-                                        .semantics(mergeDescendants = true) {
-                                            collectionItemInfo = CollectionItemInfo(rowIndex + 1, 1, columnIndex + 1, 1)
+                                        .testTag("brace-table-cell:$key:${column.key}")
+                                        .clearAndSetSemantics {
+                                            collectionItemInfo = CollectionItemInfo(rowNumber + 1, 1, columnNumber + 1, 1)
                                             selected = cellSelected || rowSelected
-                                            contentDescription = cellDescription.format(column.title, rowIndex + 1, rowLabel(row), value)
+                                            contentDescription = cellDescription.format(column.title, rowNumber + 1, accessibleRowLabel, value)
                                             onClick(selectedAction) { selectCell(); true }
-                                        }
-                                        .testTag("brace-table-cell:$key:${column.key}"),
+                                        },
                                     contentAlignment = Alignment.CenterStart,
                                 ) {
                                     Box(Modifier.fillMaxWidth().padding(horizontal = metrics.cellHorizontalPadding)) {
@@ -340,39 +330,42 @@ fun <Row> BraceDataTable(
             }
         }
         Box(Modifier.align(Alignment.TopStart).width(rowHeaderWidth).height(height).clipToBounds().zIndex(1f)) {
-            visibleRows.forEach { (rowIndex, offsetPx) ->
-                if (rowIndex in rows.indices) {
-                    val row = rows[rowIndex]
-                    val key = rowKey(row)
-                    val rowSelected = selection == BraceTableSelection.Row(key)
-                    val selectRow: () -> Unit = {
-                        onSelectionChange(BraceTableSelection.Row(key))
-                        requester.requestFocus()
-                    }
-                    Box(
-                        Modifier.offset(y = headerHeight + with(density) { offsetPx.toDp() })
-                            .width(rowHeaderWidth).height(rowHeight)
-                            .background(if (rowSelected) colors.selectedRow else colors.header)
-                            .border(metrics.gridLineWidth, colors.gridLine)
-                            .pointerSelect(key, null, selectRow)
-                            .semantics(mergeDescendants = true) {
-                                collectionItemInfo = CollectionItemInfo(rowIndex + 1, 1, 0, 1)
-                                selected = rowSelected
-                                contentDescription = rowDescription.format(rowIndex + 1, rowLabel(row))
-                                onClick(selectedAction) { selectRow(); true }
-                            }
-                            .testTag("brace-table-row:$key"),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text((rowIndex + 1).toString(), color = if (rowSelected) semantic.onSelection else colors.headerContent,
-                            style = typography.label)
+            Box(Modifier.offset(y = headerHeight).width(rowHeaderWidth).height(bodyHeight).clipToBounds()) {
+                visibleRows.forEach { (rowNumber, offsetPx) ->
+                    if (rowNumber in rows.indices) {
+                        val row = rows[rowNumber]
+                        val key = rowIndex.keys[rowNumber]
+                        val rowSelected = selection == BraceTableSelection.Row(key)
+                        val selectRow: () -> Unit = {
+                            onSelectionChange(BraceTableSelection.Row(key))
+                            requester.requestFocus()
+                        }
+                        Box(
+                            Modifier.offset(y = with(density) { offsetPx.toDp() })
+                                .width(rowHeaderWidth).height(rowHeight)
+                                .background(if (rowSelected) colors.selectedRow else colors.header)
+                                .border(metrics.gridLineWidth, colors.gridLine)
+                                .pointerSelect(key, null, selectRow)
+                                .testTag("brace-table-row:$key")
+                                .clearAndSetSemantics {
+                                    collectionItemInfo = CollectionItemInfo(rowNumber + 1, 1, 0, 1)
+                                    selected = rowSelected
+                                    contentDescription = rowDescription.format(rowNumber + 1,
+                                        if (rowLabel === rowKey) key else rowLabel(row))
+                                    onClick(selectedAction) { selectRow(); true }
+                                },
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text((rowNumber + 1).toString(), color = if (rowSelected) semantic.onSelection else colors.headerContent,
+                                style = typography.label)
+                        }
                     }
                 }
             }
             Box(
                 Modifier.width(rowHeaderWidth).height(headerHeight)
                     .background(colors.header).border(metrics.gridLineWidth, colors.gridLine)
-                    .semantics { collectionItemInfo = CollectionItemInfo(0, 1, 0, 1)
+                    .clearAndSetSemantics { collectionItemInfo = CollectionItemInfo(0, 1, 0, 1)
                         contentDescription = rowHeaderName },
                 contentAlignment = Alignment.Center,
             ) {
@@ -393,13 +386,60 @@ private fun Modifier.pointerSelect(rowKey: String, columnKey: String?, select: (
     return pointerInput(rowKey, columnKey) { detectTapGestures(onTap = { latestSelect.value() }) }
 }
 
-/** Validate the stable-key contract once for each immutable data-list version. */
-internal fun <Row> validateRowKeys(rows: List<Row>, rowKey: (Row) -> String): Set<String> {
-    val seen = HashSet<String>(rows.size)
-    rows.forEach { row ->
+/** Validate keys and retain their positions once per immutable data-list version. */
+internal data class TableRowIndex(val keys: List<String>, val byKey: Map<String, Int>)
+
+internal fun <Row> validateRowKeys(rows: List<Row>, rowKey: (Row) -> String): TableRowIndex {
+    val keys = ArrayList<String>(rows.size)
+    val byKey = HashMap<String, Int>(rows.size)
+    rows.forEachIndexed { index, row ->
         val key = rowKey(row)
         require(key.isNotBlank()) { "Row keys must not be blank" }
-        require(seen.add(key)) { "Duplicate row key: $key" }
+        require(byKey.putIfAbsent(key, index) == null) { "Duplicate row key: $key" }
+        keys += key
     }
-    return seen
+    return TableRowIndex(keys, byKey)
+}
+
+/** Contiguous fixed-width boundaries permit logarithmic viewport lookup. */
+internal data class TableColumnIndex(
+    val starts: List<Dp>,
+    val ends: List<Dp>,
+    val byKey: Map<String, Int>,
+    val totalWidth: Dp,
+) {
+    fun visibleRange(left: Dp, right: Dp): IntRange {
+        if (starts.isEmpty() || right <= left) return IntRange.EMPTY
+        // First end strictly after the left edge; last start strictly before the right edge.
+        val first = ends.binarySearchFirst { it > left }
+        val last = starts.binarySearchFirst { it >= right } - 1
+        return if (first > last || first == starts.size || last < 0) IntRange.EMPTY
+            else (first - 1).coerceAtLeast(0)..(last + 1).coerceAtMost(starts.lastIndex)
+    }
+}
+
+internal fun <Row> indexColumns(columns: List<BraceTableColumn<Row>>, minimumWidth: Dp): TableColumnIndex {
+    val starts = ArrayList<Dp>(columns.size)
+    val ends = ArrayList<Dp>(columns.size)
+    val byKey = HashMap<String, Int>(columns.size)
+    var position = 0.dp
+    columns.forEachIndexed { index, column ->
+        require(column.key.isNotBlank() && column.title.isNotBlank()) { "Column keys and titles must not be blank" }
+        require(byKey.putIfAbsent(column.key, index) == null) { "Column keys must be unique" }
+        require(column.width >= minimumWidth) { "Column width must be at least $minimumWidth" }
+        starts += position
+        position += column.width
+        ends += position
+    }
+    return TableColumnIndex(starts, ends, byKey, position)
+}
+
+private inline fun <T> List<T>.binarySearchFirst(predicate: (T) -> Boolean): Int {
+    var low = 0
+    var high = size
+    while (low < high) {
+        val middle = (low + high) ushr 1
+        if (predicate(this[middle])) high = middle else low = middle + 1
+    }
+    return low
 }

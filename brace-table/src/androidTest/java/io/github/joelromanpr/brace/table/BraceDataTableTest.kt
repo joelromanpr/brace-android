@@ -1,6 +1,8 @@
 package io.github.joelromanpr.brace.table
 
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.os.Build
+import android.view.accessibility.AccessibilityNodeInfo
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -38,6 +40,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import io.github.braceandroid.foundation.BraceColorMode
 import io.github.braceandroid.foundation.BraceContrast
 import io.github.braceandroid.foundation.BraceDensity
@@ -58,6 +61,26 @@ class BraceDataTableTest {
     private val rows = List(200) { Record("r$it", "Record $it") }
     private val columns = List(12) { index ->
         BraceTableColumn<Record>("c$index", "Column $index", 100.dp, { "${it.name} / $index" })
+    }
+
+    private fun nativeNodeWithDescription(description: String): AccessibilityNodeInfo {
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        val info = automation.serviceInfo
+        if (info.flags and AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS == 0) {
+            info.flags = info.flags or AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
+            automation.serviceInfo = info
+        }
+        repeat(20) {
+            val roots = automation.windows.mapNotNull { it.root } + listOfNotNull(automation.rootInActiveWindow)
+            fun find(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
+                if (node.contentDescription?.toString() == description) return node
+                for (index in 0 until node.childCount) node.getChild(index)?.let { find(it)?.let { found -> return found } }
+                return null
+            }
+            roots.forEach { root -> find(root)?.let { return it } }
+            Thread.sleep(100)
+        }
+        error("Android accessibility node absent: $description")
     }
 
     @Test fun duplicateAndBlankRowKeysAreRejectedBeforeRendering() {
@@ -108,6 +131,100 @@ class BraceDataTableTest {
         rule.onNodeWithTag("brace-table-cell:r100:c9").assertExists()
         val headerAfter = rule.onNodeWithTag("brace-table-header:c9").fetchSemanticsNode().boundsInRoot.top
         assertTrue("column header should remain pinned vertically", kotlin.math.abs(headerAfter - headerBefore) < 2f)
+    }
+
+    @Test fun rowHeadersStayAlignedWithCellsAfterPartialVerticalScroll() {
+        lateinit var viewport: BraceTableViewport
+        rule.setContent {
+            BraceTheme {
+                viewport = rememberBraceTableViewport()
+                BraceDataTable(rows, { it.id }, columns, null, {},
+                    Modifier.width(320.dp), viewport = viewport, height = 240.dp)
+            }
+        }
+        rule.runOnIdle { runBlocking {
+            viewport.horizontal.scrollTo(430)
+            viewport.vertical.scrollToItem(50, scrollOffset = 17)
+        } }
+        rule.waitForIdle()
+        for (index in 50..52) {
+            val header = rule.onNodeWithTag("brace-table-row:r$index").fetchSemanticsNode().boundsInRoot
+            val cell = rule.onNodeWithTag("brace-table-cell:r$index:c5").fetchSemanticsNode().boundsInRoot
+            assertTrue("row $index header and cell should align after partial scroll: $header, $cell",
+                kotlin.math.abs(header.top - cell.top) < 2f && kotlin.math.abs(header.bottom - cell.bottom) < 2f)
+        }
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test fun largeGridKeepsCompositionAndKeyLookupBoundedAcrossBothScrollAxes() {
+        val largeRows = List(5_000) { Record("large-$it", "Row $it") }
+        var keyCalls = 0
+        var valueCalls = 0
+        val largeColumns = List(400) { index ->
+            BraceTableColumn<Record>("large-col-$index", "Column $index", 100.dp,
+                { row -> valueCalls++; "${row.name} / $index" })
+        }
+        lateinit var viewport: BraceTableViewport
+        var pixelsPerDp = 1f
+        lateinit var inputMode: InputModeManager
+        var selection: BraceTableSelection? by mutableStateOf(null)
+        rule.setContent {
+            BraceTheme {
+                pixelsPerDp = LocalDensity.current.density
+                inputMode = LocalInputModeManager.current
+                viewport = rememberBraceTableViewport()
+                BraceDataTable(largeRows, { row -> keyCalls++; row.id }, largeColumns,
+                    selection, { selection = it }, Modifier.width(320.dp), viewport = viewport, height = 240.dp)
+            }
+        }
+        rule.onNodeWithTag("brace-table-cell:large-0:large-col-0").assertExists()
+        rule.runOnIdle {
+            assertEquals("row keys are indexed once per immutable list", largeRows.size, keyCalls)
+            assertTrue("only viewport cells should format text", valueCalls < 200)
+            runBlocking {
+                viewport.vertical.scrollToItem(4_000, scrollOffset = 13)
+                viewport.horizontal.scrollTo((20_000 * pixelsPerDp).toInt())
+            }
+        }
+        rule.waitForIdle()
+        rule.onNodeWithTag("brace-table-cell:large-4000:large-col-200").assertExists()
+        rule.onNodeWithTag("brace-table-cell:large-0:large-col-0").assertDoesNotExist()
+        rule.runOnIdle {
+            assertEquals("scrolling should use cached row keys", largeRows.size, keyCalls)
+            assertTrue("two distant viewports should remain bounded", valueCalls < 400)
+            selection = BraceTableSelection.Cell("large-4000", "large-col-200")
+            assertTrue(inputMode.requestInputMode(InputMode.Keyboard))
+        }
+        rule.onNodeWithTag("brace-table").requestFocus().performKeyInput { pressKey(Key.DirectionDown) }
+        rule.waitForIdle()
+        rule.runOnIdle {
+            assertEquals(BraceTableSelection.Cell("large-4001", "large-col-200"), selection)
+            assertEquals("keyboard lookup should use cached row positions", largeRows.size, keyCalls)
+        }
+    }
+
+    @Test fun nativeAccessibilityExposesHeaderCellAndSingleKeyboardFocusStop() {
+        var selection: BraceTableSelection? by mutableStateOf(null)
+        rule.setContent {
+            BraceTheme {
+                BraceDataTable(rows.take(2), { it.id }, columns.take(2), selection,
+                    { selection = it }, Modifier.width(320.dp), height = 200.dp, rowLabel = { it.name })
+            }
+        }
+        val header = nativeNodeWithDescription("Column 0, column 1")
+        val cell = nativeNodeWithDescription("Column 0, row 1 (Record 0), Record 0 / 0")
+        val rowHeader = nativeNodeWithDescription("Row 1, Record 0")
+        assertTrue("column header must be exposed to Android accessibility", header.isVisibleToUser)
+        assertTrue("cell must be an accessible action: visible=${cell.isVisibleToUser}, " +
+            "clickable=${cell.isClickable}, important=${cell.isImportantForAccessibility}, " +
+            "actions=${cell.actionList}, parent=${cell.parent?.contentDescription}, " +
+            "parentActions=${cell.parent?.actionList}", cell.isVisibleToUser && cell.isClickable)
+        assertTrue("row header must be an accessible action: visible=${rowHeader.isVisibleToUser}, " +
+            "clickable=${rowHeader.isClickable}, actions=${rowHeader.actionList}",
+            rowHeader.isVisibleToUser && rowHeader.isClickable)
+        rule.onNodeWithTag("brace-table").requestFocus().assertIsFocused()
+        assertTrue("keyboard focus stays on the table navigation stop",
+            nativeNodeWithDescription("Data table").isFocused)
     }
 
     @Test fun rtlRowHeaderRemainsPinnedDuringHorizontalScroll() {

@@ -71,4 +71,4 @@ jobs:
           disk-size: 1024M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: ./gradlew :brace-foundation:connectedDebugAndroidTest :brace-core:connectedDebugAndroidTest :brace-icons:connectedDebugAndroidTest --stacktrace
+          script: ./gradlew :brace-icons:connectedDebugAndroidTest :brace-foundation:connectedDebugAndroidTest :brace-core:connectedDebugAndroidTest --stacktrace

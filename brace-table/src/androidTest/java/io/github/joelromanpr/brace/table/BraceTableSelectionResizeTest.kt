@@ -1,6 +1,9 @@
 package io.github.joelromanpr.brace.table
 
+import android.accessibilityservice.AccessibilityServiceInfo
+import android.graphics.Rect
 import android.os.Build
+import android.view.accessibility.AccessibilityNodeInfo
 import androidx.compose.foundation.layout.width
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.runtime.CompositionLocalProvider
@@ -41,6 +44,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import io.github.braceandroid.foundation.BraceColorMode
 import io.github.braceandroid.foundation.BraceContrast
 import io.github.braceandroid.foundation.BraceDensity
@@ -61,6 +65,26 @@ class BraceTableSelectionResizeTest {
     private val rows = List(120) { Record("r$it", "Case $it") }
     private val columns = List(12) { index ->
         BraceTableColumn<Record>("c$index", "Column $index", 100.dp, { "${it.title} / $index" })
+    }
+
+    private fun nativeNodeWithDescription(description: String): AccessibilityNodeInfo {
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        val info = automation.serviceInfo
+        if (info.flags and AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS == 0) {
+            info.flags = info.flags or AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
+            automation.serviceInfo = info
+        }
+        repeat(20) {
+            val roots = automation.windows.mapNotNull { it.root } + listOfNotNull(automation.rootInActiveWindow)
+            fun find(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
+                if (node.contentDescription?.toString() == description) return node
+                for (index in 0 until node.childCount) node.getChild(index)?.let { find(it)?.let { found -> return found } }
+                return null
+            }
+            roots.forEach { root -> find(root)?.let { return it } }
+            Thread.sleep(100)
+        }
+        error("Android accessibility node absent: $description")
     }
 
     @Test fun headerAndTouchRangeSelectionExposeLogicalExtent() {
@@ -198,6 +222,33 @@ class BraceTableSelectionResizeTest {
             keyUp(Key.ShiftLeft)
         }
         assertEquals(BraceTableSelection.Range("r0", "c0", "r0", "c1"), selected)
+    }
+
+    @Test fun resizeHandlesExposeOneNamedNativeClickNodeAndTouchTarget() {
+        rule.setContent {
+            BraceTheme {
+                BraceDataTable(rows.take(2), { it.id }, columns.take(2), null, {},
+                    Modifier.width(320.dp), height = 240.dp, rowLabel = { it.title },
+                    onColumnWidthChange = { _, _ -> }, onRowHeightChange = { _, _ -> })
+            }
+        }
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val minimumPx = 48f * context.resources.displayMetrics.density
+        listOf(
+            context.getString(R.string.brace_table_column_resize, "Column 0"),
+            context.getString(R.string.brace_table_row_resize, "Case 0"),
+        ).forEach { description ->
+            val node = nativeNodeWithDescription(description)
+            val bounds = Rect().also { node.getBoundsInScreen(it) }
+            assertTrue("resize node must be visible and clickable: $description, actions=${node.actionList}",
+                node.isVisibleToUser && node.isClickable)
+            assertEquals("one native click action: $description", 1,
+                node.actionList.count { it.id == AccessibilityNodeInfo.ACTION_CLICK })
+            assertTrue("decrease action must share named node: $description",
+                node.actionList.any { it.label?.toString() == context.getString(R.string.brace_table_decrease_size) })
+            assertTrue("native target must be at least 48dp: $description, bounds=$bounds",
+                bounds.width() >= minimumPx - 1 && bounds.height() >= minimumPx - 1)
+        }
     }
 
     @Test fun columnHandleHasBoundedKeyboardAndTalkBackActions() {

@@ -29,9 +29,10 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
-import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
@@ -109,15 +110,16 @@ internal fun BraceTableResizeHandle(
                     },
                 )
             }
-            .clickable(onClickLabel = increaseLabel) { update(latestSize + step) }
-            .semantics(mergeDescendants = true) {
+            .clearAndSetSemantics {
                 contentDescription = description.format(name)
                 stateDescription = stateLabel
+                onClick(increaseLabel) { update(latestSize + step); true }
                 customActions = listOf(CustomAccessibilityAction(decreaseLabel) {
                     update(latestSize - step)
                     true
                 })
             }
+            .clickable(onClickLabel = increaseLabel) { update(latestSize + step) }
             .testTag("brace-table-resize-${axis.name.lowercase()}:$id"),
         contentAlignment = Alignment.Center,
     ) {

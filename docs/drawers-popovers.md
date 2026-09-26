@@ -39,7 +39,7 @@ BracePopover(
 
 `BracePopover` is a focusable Compose popup anchored to its target. It supports automatic placement, top/bottom with start/center/end alignment, and logical start/end sides with top/center/bottom alignment. Placement flips when the opposite side has more room and clamps to the window. Logical sides and alignments mirror in RTL. Outside tap, Back, and keyboard Escape request dismissal; closing requests focus back to the target. Provide a localized `title` as a TalkBack pane name and label the controls in `content`. Long content supplies its own scrolling layout.
 
-The popup participates in `BraceOverlayHost` when one is present. Blueprint's Floating UI middleware, React target render props, arrows, DOM wrappers, and deprecated Popper machinery map to the Compose anchor, position provider, content slot, and `Modifier`; there is no Android DOM equivalent. Hover-triggered tooltip behavior is a separate planned row. Nonmodal free-positioned overlays, custom transitions, and exact web arrow geometry remain follow-up parity work.
+The popup participates in `BraceOverlayHost` when one is present. Blueprint's Floating UI middleware, React target render props, arrows, DOM wrappers, and deprecated Popper machinery map to the Compose anchor, position provider, content slot, and `Modifier`; there is no Android DOM equivalent. Brief hover, long-press, and keyboard-focus help is covered by [BraceTooltip](tooltip-toast.md). Nonmodal free-positioned overlays, custom transitions, and exact web arrow geometry remain follow-up parity work.
 
 ## Verification and limitations
 

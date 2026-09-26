@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -69,6 +70,12 @@ import io.github.joelromanpr.brace.core.BraceDrawer
 import io.github.joelromanpr.brace.core.BraceDrawerPosition
 import io.github.joelromanpr.brace.core.BracePopover
 import io.github.joelromanpr.brace.core.BracePopoverPlacement
+import io.github.joelromanpr.brace.core.BraceTooltip
+import io.github.joelromanpr.brace.core.BraceToastHost
+import io.github.joelromanpr.brace.core.BraceToastIntent
+import io.github.joelromanpr.brace.core.BraceToastPosition
+import io.github.joelromanpr.brace.core.BraceToastSpec
+import io.github.joelromanpr.brace.core.BraceToastState
 import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.rememberBraceOverlayState
 import io.github.joelromanpr.brace.core.BraceProgressIntent
@@ -131,6 +138,9 @@ private val usageExamples = mapOf(
     "core-drawer" to "BraceDrawer(open = open, onDismissRequest = { open = false }, title = \"Filters\", position = BraceDrawerPosition.End) { Text(\"Filter options\") }",
     "core-popover" to "BracePopover(expanded = open, onDismissRequest = { open = false }, target = { BraceButton(\"Filters\", onClick = { open = true }) }, title = \"Filter options\") { Text(\"Filter options\") }",
     "core-popovernext" to "BracePopover(expanded = open, onDismissRequest = { open = false }, target = { BraceButton(\"Filters\", onClick = { open = true }) }, title = \"Filter options\") { Text(\"Filter options\") }",
+    "core-tooltip" to "BraceTooltip(text = \"Imports include archived records\", target = { BraceButton(\"Import help\", onClick = {}) })",
+    "core-toast" to "val toasts = rememberBraceToastState(); Box(Modifier.fillMaxSize()) { BraceButton(\"Save\", onClick = { toasts.show(BraceToastSpec(\"Saved\", intent = BraceToastIntent.Success)) }); BraceToastHost(toasts) }",
+    "core-overlaytoaster" to "val toasts = rememberBraceToastState(); Box(Modifier.fillMaxSize()) { BraceButton(\"Notify\", onClick = { toasts.show(BraceToastSpec(\"Ready\"), key = \"status\") }); BraceToastHost(toasts, position = BraceToastPosition.BottomEnd) }",
 
 )
 
@@ -228,7 +238,10 @@ private fun Catalog() {
 private fun Detail(entry: CatalogEntry, onBack: () -> Unit) {
     val semantic = BraceTheme.colors.semantic
     val clipboard = LocalClipboardManager.current
-    LazyColumn(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
+    val toasts = remember(entry.id) { BraceToastState() }
+    var toastPosition by rememberSaveable(entry.id) { mutableStateOf(BraceToastPosition.BottomEnd) }
+    Box(Modifier.fillMaxSize()) {
+      LazyColumn(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
         item { BraceButton("← All components", onClick = onBack, variant = BraceButtonVariant.Outline) }
         item { Text(entry.name, color = semantic.onSurface, style = BraceTheme.typography.title) }
         item { Text("${entry.status} · ${entry.classification} · ${entry.family}", color = semantic.onSurfaceMuted, style = BraceTheme.typography.label) }
@@ -237,7 +250,9 @@ private fun Detail(entry: CatalogEntry, onBack: () -> Unit) {
         item { Text("Blueprint source: ${entry.url}", color = semantic.onSurfaceMuted, style = BraceTheme.typography.label) }
         if (entry.id in usageExamples) {
             item { Text("Interactive states", color = semantic.onSurface, style = BraceTheme.typography.subtitle) }
-            item { ComponentSample(entry.id) }
+            item {
+                ComponentSample(entry.id, toasts, toastPosition) { toastPosition = it }
+            }
             item { Text("Compose usage", color = semantic.onSurface, style = BraceTheme.typography.subtitle) }
             item { Text(usageExamples.getValue(entry.id), color = semantic.onSurface, style = BraceTheme.typography.body) }
             item {
@@ -247,11 +262,20 @@ private fun Detail(entry: CatalogEntry, onBack: () -> Unit) {
         } else {
             item { Text("This component is on the roadmap. No Android API is available yet.", color = semantic.onSurfaceMuted, style = BraceTheme.typography.body) }
         }
+      }
+      if (entry.id == "core-toast" || entry.id == "core-overlaytoaster") {
+          BraceToastHost(state = toasts, position = toastPosition)
+      }
     }
 }
 
 @Composable
-private fun ComponentSample(id: String) {
+private fun ComponentSample(
+    id: String,
+    toasts: BraceToastState,
+    toastPosition: BraceToastPosition,
+    onToastPositionChange: (BraceToastPosition) -> Unit,
+) {
     when (id) {
         "core-button" -> {
             var count by rememberSaveable { mutableStateOf(0) }
@@ -479,6 +503,59 @@ private fun ComponentSample(id: String) {
                         BraceButton("Apply", onClick = { open = false })
                     }
                 }
+            }
+        }
+        "core-tooltip" -> {
+            var enabled by rememberSaveable { mutableStateOf(true) }
+            var targetClicks by rememberSaveable { mutableStateOf(0) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Hover, long press, or focus the target for help.",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BraceTooltip(
+                    text = "Imports include archived records when this option is selected.",
+                    enabled = enabled,
+                    target = { BraceButton("Import help", onClick = { targetClicks++ }) },
+                )
+                Text("Target taps: $targetClicks", color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BraceButton(if (enabled) "Disable tooltip" else "Enable tooltip",
+                    onClick = { enabled = !enabled }, variant = BraceButtonVariant.Outline)
+            }
+        }
+        "core-toast", "core-overlaytoaster" -> {
+            var lastEvent by rememberSaveable { mutableStateOf("No toast dismissed") }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Toast stack: ${toasts.visibleToasts.size} visible · $toastPosition",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BraceButton("Show neutral", onClick = {
+                    toasts.show(BraceToastSpec("Import queued", intent = BraceToastIntent.Neutral,
+                        onDismiss = { lastEvent = "Neutral: $it" }))
+                }, variant = BraceButtonVariant.Outline)
+                BraceButton("Show success", onClick = {
+                    toasts.show(BraceToastSpec("Changes saved", intent = BraceToastIntent.Success,
+                        onDismiss = { lastEvent = "Success: $it" }))
+                })
+                BraceButton("Show warning", onClick = {
+                    toasts.show(BraceToastSpec("Review one missing field", intent = BraceToastIntent.Warning,
+                        onDismiss = { lastEvent = "Warning: $it" }))
+                }, intent = BraceButtonIntent.Secondary)
+                BraceButton("Show danger with action", onClick = {
+                    toasts.show(BraceToastSpec("Upload failed", intent = BraceToastIntent.Danger,
+                        durationMillis = 0, actionLabel = "Retry",
+                        onAction = { lastEvent = "Retry requested" },
+                        onDismiss = { lastEvent = "Danger: $it" }))
+                }, intent = BraceButtonIntent.Danger)
+                BraceButton("Show or update keyed status", onClick = {
+                    toasts.show(BraceToastSpec("Status refreshed", intent = BraceToastIntent.Primary,
+                        onDismiss = { lastEvent = "Status: $it" }), key = "catalog-status")
+                }, variant = BraceButtonVariant.Outline)
+                BraceButton(if (toastPosition == BraceToastPosition.BottomEnd) "Move stack to top start"
+                    else "Move stack to bottom end", onClick = {
+                    onToastPositionChange(if (toastPosition == BraceToastPosition.BottomEnd)
+                        BraceToastPosition.TopStart else BraceToastPosition.BottomEnd)
+                }, variant = BraceButtonVariant.Outline)
+                BraceButton("Clear notifications", onClick = { toasts.clear() },
+                    variant = BraceButtonVariant.Outline)
+                Text(lastEvent, color = BraceTheme.colors.semantic.onSurfaceMuted)
             }
         }
         "core-dialog", "core-dialogbody", "core-dialogfooter", "core-alert" -> {

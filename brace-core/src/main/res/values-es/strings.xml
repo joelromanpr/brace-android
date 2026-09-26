@@ -3,4 +3,5 @@
     <string name="brace_section_collapse">Contraer sección</string>
     <string name="brace_section_expanded">Expandida</string>
     <string name="brace_section_collapsed">Contraída</string>
+    <string name="brace_toast_dismiss">Descartar notificación</string>
 </resources>

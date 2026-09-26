@@ -451,6 +451,25 @@
       "container": "{semantic.surfaceRaised}",
       "content": "{semantic.onSurface}",
       "border": "{semantic.border}"
+    },
+    "toast": {
+      "neutralContainer": "{semantic.surfaceRaised}",
+      "neutralContent": "{semantic.onSurface}",
+      "primaryContainer": "{semantic.primarySubtle}",
+      "primaryContent": "{semantic.onPrimarySubtle}",
+      "successContainer": "{semantic.successSubtle}",
+      "successContent": "{semantic.onSuccessSubtle}",
+      "warningContainer": "{semantic.warningSubtle}",
+      "warningContent": "{semantic.onWarningSubtle}",
+      "dangerContainer": "{semantic.dangerSubtle}",
+      "dangerContent": "{semantic.onDangerSubtle}",
+      "border": "{semantic.borderStrong}",
+      "focusRing": "{semantic.focusRing}"
+    },
+    "tooltip": {
+      "container": "{semantic.inverseSurface}",
+      "content": "{semantic.onInverseSurface}",
+      "border": "{semantic.borderStrong}"
     }
   },
   "componentMetricsDp": {
@@ -516,6 +535,17 @@
       "cornerRadius": 8,
       "contentPadding": 12,
       "maxWidth": 360
+    },
+    "toast": {
+      "cornerRadius": 8,
+      "contentPadding": 12,
+      "maxWidth": 440,
+      "iconGap": 8
+    },
+    "tooltip": {
+      "cornerRadius": 5,
+      "contentPadding": 8,
+      "maxWidth": 280
     }
   }
 }

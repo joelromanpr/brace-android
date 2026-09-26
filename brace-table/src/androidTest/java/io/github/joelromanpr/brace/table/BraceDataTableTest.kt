@@ -21,6 +21,7 @@ import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsAtLeast
+import androidx.compose.ui.test.assertWidthIsAtLeast
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.junit4.accessibility.enableAccessibilityChecks
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -38,6 +39,7 @@ import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.tryPerformAccessibilityChecks
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -96,6 +98,21 @@ class BraceDataTableTest {
             fail("Blank keys should fail")
         } catch (expected: IllegalArgumentException) {
             assertTrue(expected.message.orEmpty().contains("must not be blank"))
+        }
+    }
+
+    @Test fun oversizedSchemaFailsWithActionableWidthLimit() {
+        try {
+            validateTableContentSize(300_000.dp, 240.dp, Density(3f))
+            fail("A table wider than Compose's measured limit must be rejected")
+        } catch (expected: IllegalArgumentException) {
+            assertTrue(expected.message.orEmpty().contains("fewer or narrower columns"))
+        }
+        try {
+            indexColumns(listOf(BraceTableColumn<Record>("infinite", "Infinite", Dp.Infinity, { it.name })), 64.dp)
+            fail("Infinite column width must be rejected")
+        } catch (expected: IllegalArgumentException) {
+            assertTrue(expected.message.orEmpty().contains("finite"))
         }
     }
 
@@ -230,6 +247,26 @@ class BraceDataTableTest {
         rule.onNodeWithTag("brace-table").requestFocus().assertIsFocused()
         assertTrue("keyboard focus stays on the table navigation stop",
             nativeNodeWithDescription("Data table").isFocused)
+    }
+
+    @Test fun traversalHintsFollowVisibleGridRows() {
+        rule.setContent {
+            BraceTheme {
+                BraceDataTable(rows.take(2), { it.id }, columns.take(2), null, {},
+                    Modifier.width(320.dp), height = 200.dp)
+            }
+        }
+        val orderedTags = listOf(
+            "brace-table-corner", "brace-table-header:c0", "brace-table-header:c1",
+            "brace-table-row:r0", "brace-table-cell:r0:c0", "brace-table-cell:r0:c1",
+            "brace-table-row:r1", "brace-table-cell:r1:c0", "brace-table-cell:r1:c1",
+        )
+        val positions = orderedTags.map { tag ->
+            rule.onNodeWithTag(tag).fetchSemanticsNode().config[SemanticsProperties.TraversalIndex]
+        }
+        assertEquals((0..8).map(Int::toFloat), positions)
+        assertTrue(rule.onNodeWithTag("brace-table").fetchSemanticsNode()
+            .config[SemanticsProperties.IsTraversalGroup])
     }
 
     @Test fun rtlRowHeaderRemainsPinnedDuringHorizontalScroll() {
@@ -387,6 +424,8 @@ class BraceDataTableTest {
         }
         val cell = rule.onNodeWithTag("brace-table-cell:r0:description")
         cell.assertHeightIsAtLeast(64.dp)
+        rule.onNodeWithTag("brace-table-corner").assertWidthIsAtLeast(72.dp)
+        rule.onNodeWithTag("brace-table-row:r0").assertWidthIsAtLeast(72.dp)
         assertTrue(cell.fetchSemanticsNode().config[SemanticsProperties.ContentDescription]
             .joinToString().contains("A very long financial transaction description"))
     }

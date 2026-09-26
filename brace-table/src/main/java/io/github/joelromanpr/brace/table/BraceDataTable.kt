@@ -58,18 +58,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.CollectionItemInfo
 import androidx.compose.ui.semantics.collectionInfo
+import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.collectionItemInfo
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.traversalIndex
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import io.github.braceandroid.foundation.BraceTheme
 import kotlinx.coroutines.launch
 
@@ -124,6 +128,8 @@ fun rememberBraceTableViewport(): BraceTableViewport {
  * reveal a keyboard-selected cell. Row headers select one whole row. Provide a saveable
  * [selection] from the caller when selection should survive process recreation.
  *
+ * The parent must bound its width. Column widths must fit within Compose measured layout
+ * constraints; pass a narrower column subset when a schema exceeds that limit.
  * This first table slice does not yet expose range selection, editing, resize, or copying.
  */
 @Composable
@@ -164,11 +170,19 @@ fun <Row> BraceDataTable(
     val rowHeight = maxOf(densityTokens.rowHeightDp + densityTokens.itemGapDp,
         BraceTheme.sizing.touchTarget, maxOf(bodyLineHeight, headerLineHeight) + spacing.sm)
     val headerHeight = rowHeight
-    val rowHeaderWidth = BraceTheme.sizing.touchTarget + spacing.sm
-    val totalWidth = rowHeaderWidth + columnIndex.totalWidth
     val tableLabel = label ?: stringResource(R.string.brace_table_default_label)
     require(tableLabel.isNotBlank()) { "Table label must not be blank" }
     val rowHeaderName = stringResource(R.string.brace_table_row_header)
+    val textMeasurer = rememberTextMeasurer()
+    val rowHeaderTextWidth = with(density) {
+        maxOf(
+            textMeasurer.measure(rowHeaderName, style = typography.label, maxLines = 1).size.width,
+            textMeasurer.measure(rows.size.toString(), style = typography.label, maxLines = 1).size.width,
+        ).toDp()
+    }
+    val rowHeaderWidth = maxOf(BraceTheme.sizing.touchTarget + spacing.sm,
+        rowHeaderTextWidth + metrics.cellHorizontalPadding * 2)
+    val totalWidth = rowHeaderWidth + columnIndex.totalWidth
     val selectedAction = stringResource(R.string.brace_table_select)
     val emptyText = stringResource(R.string.brace_table_empty)
     val rowDescription = stringResource(R.string.brace_table_row_description)
@@ -237,16 +251,20 @@ fun <Row> BraceDataTable(
                 true
             }
             .focusable()
-            .semantics { collectionInfo = CollectionInfo(rowIndex.keys.size + 1, columns.size + 1); contentDescription = tableLabel }
+            .semantics { collectionInfo = CollectionInfo(rowIndex.keys.size + 1, columns.size + 1)
+                contentDescription = tableLabel; isTraversalGroup = true }
             .testTag("brace-table"),
     ) {
+        require(maxWidth != Dp.Infinity) { "BraceDataTable requires a bounded parent width" }
+        val contentWidth = maxOf(totalWidth, maxWidth)
+        validateTableContentSize(contentWidth, height, density)
         val viewportWidth = maxWidth
         val visibleBodyWidth = (viewportWidth - rowHeaderWidth).coerceAtLeast(0.dp)
         val scrollDp = with(density) { viewport.horizontal.value.toDp() }
         val visibleColumns = columnIndex.visibleRange(scrollDp, scrollDp + visibleBodyWidth)
         val bodyHeight = (maxHeight - headerHeight).coerceAtLeast(0.dp)
 
-        Column(Modifier.horizontalScroll(viewport.horizontal)) {
+        Column(Modifier.horizontalScroll(viewport.horizontal).semantics { isTraversalGroup = false }) {
             Column(Modifier.width(maxOf(totalWidth, viewportWidth))) {
                 Box(Modifier.width(maxOf(totalWidth, viewportWidth)).height(headerHeight).background(colors.header)) {
                     visibleColumns.forEach { index ->
@@ -256,6 +274,7 @@ fun <Row> BraceDataTable(
                                 .border(metrics.gridLineWidth, colors.gridLine)
                                 .testTag("brace-table-header:${column.key}")
                                 .clearAndSetSemantics { collectionItemInfo = CollectionItemInfo(0, 1, index + 1, 1)
+                                    traversalIndex = (index + 1).toFloat()
                                     contentDescription = headerDescription.format(column.title, index + 1) },
                             contentAlignment = Alignment.CenterStart,
                         ) {
@@ -266,7 +285,8 @@ fun <Row> BraceDataTable(
                 }
                 LazyColumn(
                     state = viewport.vertical,
-                    modifier = Modifier.width(maxOf(totalWidth, viewportWidth)).height(bodyHeight),
+                    modifier = Modifier.width(maxOf(totalWidth, viewportWidth)).height(bodyHeight)
+                        .semantics { isTraversalGroup = false },
                 ) {
                     items(count = rows.size, key = { index -> rowIndex.keys[index] }) { rowNumber ->
                         val row = rows[rowNumber]
@@ -303,6 +323,7 @@ fun <Row> BraceDataTable(
                                         .testTag("brace-table-cell:$key:${column.key}")
                                         .clearAndSetSemantics {
                                             collectionItemInfo = CollectionItemInfo(rowNumber + 1, 1, columnNumber + 1, 1)
+                                            traversalIndex = ((rowNumber + 1).toLong() * (columns.size + 1) + columnNumber + 1).toFloat()
                                             selected = cellSelected || rowSelected
                                             contentDescription = cellDescription.format(column.title, rowNumber + 1, accessibleRowLabel, value)
                                             onClick(selectedAction) { selectCell(); true }
@@ -329,7 +350,7 @@ fun <Row> BraceDataTable(
                 viewport.vertical.layoutInfo.visibleItemsInfo.map { it.index to it.offset }
             }
         }
-        Box(Modifier.align(Alignment.TopStart).width(rowHeaderWidth).height(height).clipToBounds().zIndex(1f)) {
+        Box(Modifier.align(Alignment.TopStart).width(rowHeaderWidth).height(height).clipToBounds()) {
             Box(Modifier.offset(y = headerHeight).width(rowHeaderWidth).height(bodyHeight).clipToBounds()) {
                 visibleRows.forEach { (rowNumber, offsetPx) ->
                     if (rowNumber in rows.indices) {
@@ -349,6 +370,7 @@ fun <Row> BraceDataTable(
                                 .testTag("brace-table-row:$key")
                                 .clearAndSetSemantics {
                                     collectionItemInfo = CollectionItemInfo(rowNumber + 1, 1, 0, 1)
+                                    traversalIndex = ((rowNumber + 1).toLong() * (columns.size + 1)).toFloat()
                                     selected = rowSelected
                                     contentDescription = rowDescription.format(rowNumber + 1,
                                         if (rowLabel === rowKey) key else rowLabel(row))
@@ -365,7 +387,9 @@ fun <Row> BraceDataTable(
             Box(
                 Modifier.width(rowHeaderWidth).height(headerHeight)
                     .background(colors.header).border(metrics.gridLineWidth, colors.gridLine)
+                    .testTag("brace-table-corner")
                     .clearAndSetSemantics { collectionItemInfo = CollectionItemInfo(0, 1, 0, 1)
+                        traversalIndex = 0f
                         contentDescription = rowHeaderName },
                 contentAlignment = Alignment.Center,
             ) {
@@ -384,6 +408,16 @@ fun <Row> BraceDataTable(
 private fun Modifier.pointerSelect(rowKey: String, columnKey: String?, select: () -> Unit): Modifier {
     val latestSelect = rememberUpdatedState(select)
     return pointerInput(rowKey, columnKey) { detectTapGestures(onTap = { latestSelect.value() }) }
+}
+
+/** Fail with an actionable contract before Compose rejects an oversized packed constraint. */
+internal fun validateTableContentSize(contentWidth: Dp, tableHeight: Dp, density: Density) {
+    require(contentWidth.value.isFinite()) { "Table content width must be finite" }
+    try {
+        Constraints.fixed(with(density) { contentWidth.roundToPx() }, with(density) { tableHeight.roundToPx() })
+    } catch (cause: IllegalArgumentException) {
+        throw IllegalArgumentException("Table content exceeds Compose measured layout limits; use fewer or narrower columns", cause)
+    }
 }
 
 /** Validate keys and retain their positions once per immutable data-list version. */
@@ -426,7 +460,9 @@ internal fun <Row> indexColumns(columns: List<BraceTableColumn<Row>>, minimumWid
     columns.forEachIndexed { index, column ->
         require(column.key.isNotBlank() && column.title.isNotBlank()) { "Column keys and titles must not be blank" }
         require(byKey.putIfAbsent(column.key, index) == null) { "Column keys must be unique" }
-        require(column.width >= minimumWidth) { "Column width must be at least $minimumWidth" }
+        require(column.width.value.isFinite() && column.width >= minimumWidth) {
+            "Column width must be finite and at least $minimumWidth"
+        }
         starts += position
         position += column.width
         ends += position

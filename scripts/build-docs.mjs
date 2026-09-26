@@ -32,6 +32,7 @@ const guideSources = new Map([
   ['docs/top-bar.md', 'top-bar'],
   ['docs/radio-segmented.md', 'radio-segmented'],
   ['docs/datetime-picker-input.md', 'datetime-picker-input'],
+  ['docs/time-picker-input.md', 'time-picker-input'],
   ['docs/web-mechanisms.md', 'web-mechanisms'],
   ['docs/milestones/m1-foundation-core.md', 'milestone-m1'],
   ['docs/milestones/m2-content-feedback.md', 'milestone-m2'],

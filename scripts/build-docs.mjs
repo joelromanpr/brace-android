@@ -58,6 +58,7 @@ const guideSources = new Map([
   ['docs/panel-stack.md', 'panel-stack'],
   ['docs/sliders.md', 'sliders'],
   ['docs/multi-slider.md', 'multi-slider'],
+  ['docs/simple-table.md', 'simple-table'],
   ['docs/milestones/m1-foundation-core.md', 'milestone-m1'],
   ['docs/milestones/m2-content-feedback.md', 'milestone-m2'],
   ['docs/milestones/m3-navigation-feedback.md', 'milestone-m3'],
@@ -96,6 +97,7 @@ const guideSources = new Map([
   ['docs/milestones/m32-panel-stack.md', 'milestone-m32'],
   ['docs/milestones/m37-sliders.md', 'milestone-m37'],
   ['docs/milestones/m38-multi-slider.md', 'milestone-m38'],
+  ['docs/milestones/m45-simple-table.md', 'milestone-m45'],
   ['CONTRIBUTING.md', 'contributing'],
   ['docs/attribution.md', 'attribution'],
 ]);
@@ -262,6 +264,7 @@ const componentGuideLinks = [
   ['Date ranges', 'datetime-range'],
   ['Trees', 'tree'],
   ['Time-zone selection', 'time-zone-select'],
+  ['Small tables', 'simple-table'],
   ['Data tables', 'table-viewport'],
   ['Selection and resizing', 'table-selection-resize'],
   ['Copying cells', 'table-copying'],

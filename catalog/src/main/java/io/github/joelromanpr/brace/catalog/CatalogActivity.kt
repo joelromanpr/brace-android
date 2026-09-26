@@ -152,6 +152,9 @@ import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.rememberBraceOverlayState
 import io.github.joelromanpr.brace.core.BraceProgressIntent
 import io.github.joelromanpr.brace.core.BraceSection
+import io.github.joelromanpr.brace.core.BraceSimpleTable
+import io.github.joelromanpr.brace.core.BraceSimpleTableColumn
+import io.github.joelromanpr.brace.core.BraceSimpleTableRow
 import io.github.joelromanpr.brace.core.BraceSectionCard
 import io.github.joelromanpr.brace.core.BraceSwitch
 import io.github.joelromanpr.brace.core.BraceTextField
@@ -392,6 +395,12 @@ val handles = listOf(
     BraceSliderHandle("maximum", positions[2], "Maximum")
 )
 BraceMultiSlider(handles, { positions = it.map(BraceSliderHandle::value) }, label = "Thresholds")""",
+    "core-htmltable" to """val columns = listOf(BraceSimpleTableColumn("name", "Name"), BraceSimpleTableColumn("status", "Status"))
+val rows = listOf(BraceSimpleTableRow("alpha", mapOf("name" to "Alpha", "status" to "Ready")),
+    BraceSimpleTableRow("beta", mapOf("name" to "Beta", "status" to "Paused")))
+var selected by rememberSaveable { mutableStateOf<String?>(null) }
+BraceSimpleTable(columns, rows, label = "Job status", bordered = true, striped = true,
+    interactive = true, selectedRowKey = selected, onRowClick = { selected = it })""".trimIndent(),
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-link" to "BraceLink(\"Read guide\", BraceLinkDestination.Uri(\"https://example.org/guide\", \"Guide\"))",
     "core-anchorbutton" to "BraceLinkButton(\"Open reports\", BraceLinkDestination.Action(\"Reports\") { navigateToReports() })",
@@ -1840,6 +1849,37 @@ private fun ComponentSample(
                 }
                 BraceButton("Toggle content", onClick = { loading = !loading })
                 BraceButton("Toggle shimmer", onClick = { animated = !animated })
+            }
+        }
+        "core-htmltable" -> {
+            var selected by rememberSaveable { mutableStateOf<String?>(null) }
+            var bordered by rememberSaveable { mutableStateOf(true) }
+            var striped by rememberSaveable { mutableStateOf(true) }
+            var compact by rememberSaveable { mutableStateOf(false) }
+            val columns = remember { listOf(
+                BraceSimpleTableColumn("name", "Name"),
+                BraceSimpleTableColumn("status", "Status"),
+                BraceSimpleTableColumn("owner", "Owner"),
+            ) }
+            val rows = remember { listOf(
+                BraceSimpleTableRow("alpha", mapOf("name" to "Alpha", "status" to "Ready", "owner" to "Casey")),
+                BraceSimpleTableRow("beta", mapOf("name" to "Beta", "status" to "Paused", "owner" to "Drew")),
+                BraceSimpleTableRow("gamma", mapOf("name" to "Gamma", "status" to "Running", "owner" to "Morgan")),
+            ) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Row(Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (bordered) "Bordered" else "No borders", onClick = { bordered = !bordered },
+                        variant = BraceButtonVariant.Outline)
+                    BraceButton(if (striped) "Striped" else "No stripes", onClick = { striped = !striped },
+                        variant = BraceButtonVariant.Outline)
+                    BraceButton(if (compact) "Compact rows" else "Comfortable rows", onClick = { compact = !compact },
+                        variant = BraceButtonVariant.Outline)
+                }
+                BraceSimpleTable(columns, rows, label = "Job status", bordered = bordered,
+                    striped = striped, interactive = true, compact = compact,
+                    selectedRowKey = selected, onRowClick = { selected = it })
+                Text("Selected: ${selected ?: "none"}", color = BraceTheme.colors.semantic.onSurfaceMuted)
             }
         }
         "core-section" -> {

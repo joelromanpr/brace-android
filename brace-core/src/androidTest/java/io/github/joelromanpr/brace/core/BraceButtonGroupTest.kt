@@ -1,5 +1,7 @@
 package io.github.joelromanpr.brace.core
 
+import android.accessibilityservice.AccessibilityServiceInfo
+import android.view.accessibility.AccessibilityNodeInfo
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.CompositionLocalProvider
@@ -40,6 +42,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.input.key.Key
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import io.github.braceandroid.foundation.BraceColorMode
 import io.github.braceandroid.foundation.BraceContrast
 import io.github.braceandroid.foundation.BraceTheme
@@ -82,16 +85,63 @@ class BraceButtonGroupTest {
         unavailable.assertIsNotEnabled().performClick()
         listOf(inspectNode, shareNode, unavailable).forEach { node ->
             val bounds = node.getUnclippedBoundsInRoot()
-            assertTrue(bounds.width >= 48.dp && bounds.height >= 48.dp)
+            assertTrue(bounds.right - bounds.left >= 48.dp && bounds.bottom - bounds.top >= 48.dp)
         }
         val first = inspectNode.getUnclippedBoundsInRoot()
         val second = shareNode.getUnclippedBoundsInRoot()
-        assertTrue(kotlin.math.abs(first.width.value - second.width.value) <= 1f)
+        assertTrue(kotlin.math.abs((first.right - first.left).value - (second.right - second.left).value) <= 1f)
         rule.enableAccessibilityChecks()
         inspectNode.tryPerformAccessibilityChecks().performClick()
         shareNode.performClick()
         assertEquals(1, inspect)
         assertEquals(1, share)
+    }
+
+    private fun accessibleNodes(root: AccessibilityNodeInfo): List<AccessibilityNodeInfo> =
+        buildList {
+            add(root)
+            for (index in 0 until root.childCount) {
+                root.getChild(index)?.let { addAll(accessibleNodes(it)) }
+            }
+        }
+
+    @Test fun nativeAccessibilityActionsHaveNamesAndClick() {
+        var count = 0
+        rule.setContent {
+            BraceTheme {
+                BraceButtonGroup(listOf(
+                    BraceButtonGroupAction("export", "Export report", onClick = { count++ }),
+                    BraceButtonGroupAction("disabled", "Unavailable", onClick = { count++ }, enabled = false),
+                ))
+            }
+        }
+        rule.waitForIdle()
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        val service = automation.serviceInfo
+        service.flags = service.flags or AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
+        automation.serviceInfo = service
+        var nodes = emptyList<AccessibilityNodeInfo>()
+        for (attempt in 0 until 20) {
+            val roots = (automation.windows.mapNotNull { it.root } +
+                listOfNotNull(automation.rootInActiveWindow)).distinctBy { it.windowId }
+            nodes = roots.flatMap(::accessibleNodes)
+            val compatibilityOk = nodes.firstOrNull { it.text?.toString() == "OK" }
+            if (compatibilityOk != null) {
+                compatibilityOk.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                Thread.sleep(100)
+                continue
+            }
+            if (nodes.any { it.contentDescription?.contains("Export report") == true }) break
+            Thread.sleep(100)
+        }
+        val export = nodes.filter { it.isClickable &&
+            it.contentDescription?.contains("Export report") == true }
+        assertEquals("Export nodes: ${nodes.filter { it.contentDescription?.contains("Export report") == true }.map { it.contentDescription to it.actionList.map { action -> action.id } }}", 1, export.size)
+        assertTrue(export.single().performAction(AccessibilityNodeInfo.ACTION_CLICK))
+        rule.runOnIdle { assertEquals(1, count) }
+        val disabled = nodes.filter { it.contentDescription?.contains("Unavailable") == true }
+        assertEquals(1, disabled.size)
+        assertTrue(disabled.single().isEnabled.not())
     }
 
     @Test fun keyboardAndMouseActivateDistinctActionsInFocusOrder() {
@@ -161,8 +211,8 @@ class BraceButtonGroupTest {
         assertTrue("logical first should appear at RTL start", first.left > second.left)
         val top = rule.onNodeWithContentDescription("Top").getUnclippedBoundsInRoot()
         val bottom = rule.onNodeWithContentDescription("Bottom").getUnclippedBoundsInRoot()
-        assertTrue(top.bottom <= bottom.top && top.height >= 56.dp && bottom.height >= 56.dp)
-        assertTrue(top.width >= 220.dp && bottom.width >= 220.dp)
+        assertTrue(top.bottom <= bottom.top && top.bottom - top.top >= 56.dp && bottom.bottom - bottom.top >= 56.dp)
+        assertTrue(top.right - top.left >= 220.dp && bottom.right - bottom.left >= 220.dp)
     }
 
     @Test fun loadingAndIconOnlyStatesKeepNamesAndSuppressActivation() {

@@ -3,6 +3,7 @@ package io.github.joelromanpr.brace.core
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -31,9 +32,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
@@ -254,6 +263,22 @@ private fun GroupAction(
                     }
                 }
             }
+            .onKeyEvent { event ->
+                if (!unavailable && event.type == KeyEventType.KeyUp &&
+                    (event.key == Key.Enter || event.key == Key.Spacebar)
+                ) {
+                    action.onClick()
+                    true
+                } else false
+            }
+            .focusable(enabled = !unavailable, interactionSource = source)
+            .clearAndSetSemantics {
+                contentDescription = action.label
+                role = Role.Button
+                if (!unavailable) onClick { action.onClick(); true } else disabled()
+                if (action.selected != null) selected = action.selected
+                if (action.loading) stateDescription = loadingDescription
+            }
             .clickable(
                 enabled = !unavailable,
                 role = Role.Button,
@@ -261,11 +286,6 @@ private fun GroupAction(
                 indication = null,
                 onClick = action.onClick,
             )
-            .semantics {
-                contentDescription = action.label
-                if (action.selected != null) selected = action.selected
-                if (action.loading) stateDescription = loadingDescription
-            }
             .then(if (focused) Modifier.border(BraceTheme.sizing.focusRingWidth, tokens.focusRing) else Modifier),
         contentAlignment = contentAlignment,
     ) {

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -80,9 +81,14 @@ import io.github.joelromanpr.brace.icons.BraceIconButton
 import io.github.joelromanpr.brace.icons.BraceIconRegistry
 import io.github.joelromanpr.brace.icons.BraceIconRegistryProvider
 import io.github.joelromanpr.brace.icons.BraceIcons
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIcon
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconNames
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconPack
 import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /** Compiles against Maven coordinates only, with no dependency on the source checkout. */
 class ConsumerActivity : ComponentActivity() {
@@ -111,6 +117,9 @@ class ConsumerActivity : ComponentActivity() {
                 var reportTitle by remember { mutableStateOf("Quarterly report") }
                 var amount by rememberSaveable { mutableStateOf("0.2") }
                 var iconName by remember { mutableStateOf("search") }
+                val blueprintIconPack by produceState<BraceBlueprintIconPack?>(null) {
+                    value = withContext(Dispatchers.IO) { BraceBlueprintIconPack.load(applicationContext) }
+                }
                 val iconRegistry = remember {
                     BraceIconRegistry.Default.register("custom-check",
                         BraceIconRegistry.Default.resolve("check"))
@@ -173,6 +182,10 @@ class ConsumerActivity : ComponentActivity() {
                         BraceIconRegistryProvider(iconRegistry) {
                             Row {
                                 BraceIcon(BraceIcons.Info, contentDescription = null)
+                                blueprintIconPack?.let { pack ->
+                                    BraceBlueprintIcon(pack, BraceBlueprintIconNames.Search,
+                                        contentDescription = null)
+                                }
                                 BraceIconByName(iconName, contentDescription = "Status icon")
                                 BraceIconButton(BraceIcons.Search, label = "Search records",
                                     onClick = { iconName = "custom-check" })

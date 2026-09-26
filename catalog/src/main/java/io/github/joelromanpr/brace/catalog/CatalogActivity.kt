@@ -44,6 +44,15 @@ import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceButtonVariant
 import io.github.joelromanpr.brace.core.BraceCheckbox
 import io.github.joelromanpr.brace.core.BraceCard
+import io.github.joelromanpr.brace.core.BraceBreadcrumb
+import io.github.joelromanpr.brace.core.BraceBreadcrumbItem
+import io.github.joelromanpr.brace.core.BraceBreadcrumbs
+import io.github.joelromanpr.brace.core.BraceCallout
+import io.github.joelromanpr.brace.core.BraceCalloutIntent
+import io.github.joelromanpr.brace.core.BraceCompoundTag
+import io.github.joelromanpr.brace.core.BraceEmptyState
+import io.github.joelromanpr.brace.core.BraceTag
+import io.github.joelromanpr.brace.core.BraceTagIntent
 import io.github.joelromanpr.brace.core.BraceCardElevation
 import io.github.joelromanpr.brace.core.BraceCardList
 import io.github.joelromanpr.brace.core.BraceDivider
@@ -87,6 +96,12 @@ private val usageExamples = mapOf(
     "core-progressbar" to "BraceProgressBar(label = \"Uploading files\", value = progress, intent = BraceProgressIntent.Primary)",
     "core-section" to "BraceSection(title = \"Projects\", collapsible = true) { Text(\"Section content\") }",
     "core-sectioncard" to "BraceSectionCard { Text(\"Project settings\") }",
+    "core-breadcrumbs" to "BraceBreadcrumbs(listOf(BraceBreadcrumb(\"Home\", onClick = { home() }), BraceBreadcrumb(\"Projects\")))",
+    "core-breadcrumb" to "BraceBreadcrumbItem(label = \"Home\", onClick = { home() })",
+    "core-tag" to "BraceTag(label = \"Finance\", intent = BraceTagIntent.Primary, onRemove = { removeFilter() })",
+    "core-compoundtag" to "BraceCompoundTag(label = \"Status\", value = \"Active\", onRemove = { clearStatus() })",
+    "core-callout" to "BraceCallout(title = \"Saved\", intent = BraceCalloutIntent.Success) { Text(\"Your changes are ready.\") }",
+    "core-nonidealstate" to "BraceEmptyState(title = \"No results\", description = \"Try another query.\")",
 )
 
 @Composable
@@ -288,6 +303,66 @@ private fun ComponentSample(id: String) {
                 BraceSectionCard { Text("Padded content", color = BraceTheme.colors.semantic.onSurface) }
                 BraceSectionCard(padded = false) { Text("Edge to edge content", color = BraceTheme.colors.semantic.onSurface) }
             }
+        }
+        "core-breadcrumbs" -> {
+            var destination by rememberSaveable { mutableStateOf("Dashboard") }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceBreadcrumbs(listOf(
+                    BraceBreadcrumb("Home", onClick = { destination = "Home" }),
+                    BraceBreadcrumb("Workspaces", onClick = { destination = "Workspaces" }),
+                    BraceBreadcrumb("Analytics", onClick = { destination = "Analytics" }),
+                    BraceBreadcrumb("Dashboard"),
+                ))
+                Text("Opened: $destination", color = BraceTheme.colors.semantic.onSurfaceMuted)
+            }
+        }
+        "core-breadcrumb" -> {
+            var opened by rememberSaveable { mutableStateOf(false) }
+            Column {
+                BraceBreadcrumbItem("Projects", onClick = { opened = !opened })
+                BraceBreadcrumbItem("Current view", current = true)
+                Text(if (opened) "Projects opened" else "Tap Projects", color = BraceTheme.colors.semantic.onSurfaceMuted)
+            }
+        }
+        "core-tag" -> {
+            var visible by rememberSaveable { mutableStateOf(true) }
+            var selected by rememberSaveable { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                if (visible) BraceTag("Finance", intent = BraceTagIntent.Primary, selected = selected,
+                    onClick = { selected = !selected }, onRemove = { visible = false },
+                    removeContentDescription = "Remove Finance filter")
+                BraceTag("Warning", intent = BraceTagIntent.Warning)
+                BraceTag("Unavailable", enabled = false, onClick = {})
+                BraceButton("Restore tag", onClick = { visible = true })
+            }
+        }
+        "core-compoundtag" -> {
+            var visible by rememberSaveable { mutableStateOf(true) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                if (visible) BraceCompoundTag("Status", "Active", onRemove = { visible = false },
+                    removeContentDescription = "Remove Status filter")
+                BraceCompoundTag("Owner", "Team", intent = BraceTagIntent.Success, rounded = true)
+                BraceButton("Restore filter", onClick = { visible = true })
+            }
+        }
+        "core-callout" -> {
+            var dismissed by rememberSaveable { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                if (!dismissed) BraceCallout(title = "Changes saved", intent = BraceCalloutIntent.Success,
+                    action = { BraceButton("Dismiss", onClick = { dismissed = true }) }) {
+                    Text("Your workspace is up to date.")
+                }
+                BraceCallout(title = "Review access", intent = BraceCalloutIntent.Warning, minimal = true) {
+                    Text("One member still needs approval.")
+                }
+                if (dismissed) BraceButton("Show message", onClick = { dismissed = false })
+            }
+        }
+        "core-nonidealstate" -> {
+            var retried by rememberSaveable { mutableStateOf(false) }
+            BraceEmptyState(title = if (retried) "Still no results" else "No results",
+                description = "Try changing the query.",
+                action = { BraceButton("Retry", onClick = { retried = true }) })
         }
     }
 }

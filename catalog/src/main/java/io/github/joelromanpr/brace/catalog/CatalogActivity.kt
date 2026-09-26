@@ -481,7 +481,7 @@ internal fun Detail(entry: CatalogEntry, onBack: () -> Unit) {
         if (entry.reason.isNotBlank()) item { Text(entry.reason, color = semantic.onSurfaceMuted, style = BraceTheme.typography.body) }
         item { Text("Blueprint source: ${entry.url}", color = semantic.onSurfaceMuted, style = BraceTheme.typography.label) }
         if (hasLiveSample) {
-            item { Text("Interactive states", color = semantic.onSurface, style = BraceTheme.typography.subtitle) }
+            item { Text("Live sample and states", color = semantic.onSurface, style = BraceTheme.typography.subtitle) }
             item {
                 ComponentSample(entry.id, toasts, toastPosition) { toastPosition = it }
             }

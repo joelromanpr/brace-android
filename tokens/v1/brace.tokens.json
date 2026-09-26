@@ -493,6 +493,37 @@
       "searchContainer": "{semantic.surface}",
       "searchBorder": "{semantic.border}",
       "focusRing": "{semantic.focusRing}"
+    },
+    "radio": {
+      "container": "{semantic.surface}",
+      "selectedBorder": "{semantic.primary}",
+      "selectedDot": "{semantic.primary}",
+      "unselectedBorder": "{semantic.borderStrong}",
+      "disabledContainer": "{semantic.disabledContainer}",
+      "disabledContent": "{semantic.disabledContent}",
+      "focusRing": "{semantic.focusRing}",
+      "hoverBorder": "{semantic.primaryHover}",
+      "pressedBorder": "{semantic.primaryPressed}"
+    },
+    "segmentedControl": {
+      "container": "{semantic.surfaceInset}",
+      "border": "{semantic.border}",
+      "unselectedContainer": "{semantic.surfaceInset}",
+      "unselectedContent": "{semantic.onSurface}",
+      "hoverContainer": "{semantic.surfaceRaised}",
+      "selectedContainer": "{semantic.surfaceRaised}",
+      "selectedContent": "{semantic.onSurface}",
+      "selectedPrimaryContainer": "{semantic.primary}",
+      "selectedPrimaryContent": "{semantic.onPrimary}",
+      "disabledContainer": "{semantic.disabledContainer}",
+      "disabledContent": "{semantic.disabledContent}",
+      "focusRing": "{semantic.focusRing}",
+      "pressedContainer": "{semantic.pressed}",
+      "selectedHoverContainer": "{semantic.hover}",
+      "selectedPressedContainer": "{semantic.pressed}",
+      "selectedPrimaryHoverContainer": "{semantic.primaryHover}",
+      "selectedPrimaryPressedContainer": "{semantic.primaryPressed}",
+      "selectedBorder": "{semantic.borderStrong}"
     }
   },
   "componentMetricsDp": {
@@ -588,6 +619,17 @@
       "searchHorizontalPadding": 10,
       "minWidth": 240,
       "maxListHeight": 280
+    },
+    "radio": {
+      "size": 20,
+      "strokeWidth": 2,
+      "dotRadius": 5
+    },
+    "segmentedControl": {
+      "cornerRadius": 6,
+      "itemCornerRadius": 4,
+      "horizontalPadding": 12,
+      "gap": 2
     }
   }
 }

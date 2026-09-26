@@ -99,6 +99,9 @@ import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.rememberBraceOverlayState
 import io.github.joelromanpr.brace.core.BraceProgressIntent
 import io.github.joelromanpr.brace.core.BraceSection
+import io.github.joelromanpr.brace.core.BraceSimpleTable
+import io.github.joelromanpr.brace.core.BraceSimpleTableColumn
+import io.github.joelromanpr.brace.core.BraceSimpleTableRow
 import io.github.joelromanpr.brace.core.BraceSectionCard
 import io.github.joelromanpr.brace.core.BraceSwitch
 import io.github.joelromanpr.brace.core.BraceTextField
@@ -168,6 +171,12 @@ Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
     BraceTextField(state.query, { state.query = it }, label = "Filter regions")
     visible.forEach { option -> BraceButton(option.label, onClick = { state.activeKey = option.key }) }
 }""".trimIndent(),
+    "core-htmltable" to """val columns = listOf(BraceSimpleTableColumn("name", "Name"), BraceSimpleTableColumn("status", "Status"))
+val rows = listOf(BraceSimpleTableRow("alpha", mapOf("name" to "Alpha", "status" to "Ready")),
+    BraceSimpleTableRow("beta", mapOf("name" to "Beta", "status" to "Paused")))
+var selected by rememberSaveable { mutableStateOf<String?>(null) }
+BraceSimpleTable(columns, rows, label = "Job status", bordered = true, striped = true,
+    interactive = true, selectedRowKey = selected, onRowClick = { selected = it })""".trimIndent(),
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-checkbox" to "BraceCheckbox(checked = checked, onCheckedChange = { checked = it }, label = \"Include archived\")",
     "core-switch" to "BraceSwitch(checked = enabled, onCheckedChange = { enabled = it }, label = \"Notifications\")",
@@ -733,6 +742,37 @@ private fun ComponentSample(
                 BraceButton("Advance upload", onClick = { progress = (progress + 0.15f).coerceAtMost(1f) })
                 BraceProgressBar(label = "Waiting for response", value = null, intent = BraceProgressIntent.Warning)
                 BraceProgressBar(label = "Unavailable task", value = 0.6f, enabled = false)
+            }
+        }
+        "core-htmltable" -> {
+            var selected by rememberSaveable { mutableStateOf<String?>(null) }
+            var bordered by rememberSaveable { mutableStateOf(true) }
+            var striped by rememberSaveable { mutableStateOf(true) }
+            var compact by rememberSaveable { mutableStateOf(false) }
+            val columns = remember { listOf(
+                BraceSimpleTableColumn("name", "Name"),
+                BraceSimpleTableColumn("status", "Status"),
+                BraceSimpleTableColumn("owner", "Owner"),
+            ) }
+            val rows = remember { listOf(
+                BraceSimpleTableRow("alpha", mapOf("name" to "Alpha", "status" to "Ready", "owner" to "Casey")),
+                BraceSimpleTableRow("beta", mapOf("name" to "Beta", "status" to "Paused", "owner" to "Drew")),
+                BraceSimpleTableRow("gamma", mapOf("name" to "Gamma", "status" to "Running", "owner" to "Morgan")),
+            ) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Row(Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (bordered) "Bordered" else "No borders", onClick = { bordered = !bordered },
+                        variant = BraceButtonVariant.Outline)
+                    BraceButton(if (striped) "Striped" else "No stripes", onClick = { striped = !striped },
+                        variant = BraceButtonVariant.Outline)
+                    BraceButton(if (compact) "Compact rows" else "Comfortable rows", onClick = { compact = !compact },
+                        variant = BraceButtonVariant.Outline)
+                }
+                BraceSimpleTable(columns, rows, label = "Job status", bordered = bordered,
+                    striped = striped, interactive = true, compact = compact,
+                    selectedRowKey = selected, onRowClick = { selected = it })
+                Text("Selected: ${selected ?: "none"}", color = BraceTheme.colors.semantic.onSurfaceMuted)
             }
         }
         "core-section" -> {

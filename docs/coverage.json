@@ -734,16 +734,16 @@
       "sourcePage": "core/components/html-table",
       "braceApi": "BraceSimpleTable",
       "artifact": "io.github.joelromanpr.brace:brace-core",
-      "behavior": "Styled HTML table element with Blueprint theming and compact/striped options. Expose row and column context, focused cell and selection; support touch, keyboard, mouse, and TalkBack.",
+      "behavior": "Small structured table with optional row activation and selected state; TalkBack collection coordinates, labeled cells and headings, touch/mouse activation, 48 dp actionable cells, and RTL-aware keyboard cell navigation.",
       "classification": "adaptation",
-      "reason": "Compose has no HTML table element; render a structured compact table.",
-      "milestone": "M6",
+      "reason": "Compose has no HTML table element. Render a fully composed small table in brace-core; viewport rendering, resize, range selection, copy and editing belong to brace-table.",
+      "milestone": "M45",
       "priority": "P1",
-      "status": "planned",
-      "implementation": null,
-      "sample": null,
-      "documentation": null,
-      "tests": null,
+      "status": "in progress",
+      "implementation": "brace-core/src/main/java/io/github/joelromanpr/brace/core/BraceSimpleTable.kt",
+      "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "documentation": "docs/simple-table.md",
+      "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceSimpleTableTest.kt",
       "firstRelease": null,
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/html-table/html-table.mdx"
     },
@@ -3749,8 +3749,8 @@
         "total": 108,
         "stable": 0,
         "status": {
-          "in progress": 62,
-          "planned": 46
+          "in progress": 63,
+          "planned": 45
         }
       },
       "datetime": {

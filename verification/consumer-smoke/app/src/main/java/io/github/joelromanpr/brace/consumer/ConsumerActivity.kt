@@ -47,6 +47,9 @@ import io.github.joelromanpr.brace.core.BraceOverlayHost
 import io.github.joelromanpr.brace.core.BracePopover
 import io.github.joelromanpr.brace.core.BraceProgressBar
 import io.github.joelromanpr.brace.core.BraceSection
+import io.github.joelromanpr.brace.core.BraceSimpleTable
+import io.github.joelromanpr.brace.core.BraceSimpleTableColumn
+import io.github.joelromanpr.brace.core.BraceSimpleTableRow
 import io.github.joelromanpr.brace.core.BraceShortcut
 import io.github.joelromanpr.brace.core.BraceShortcutLabel
 import io.github.joelromanpr.brace.core.BraceShortcutRegistry
@@ -127,6 +130,15 @@ class ConsumerActivity : ComponentActivity() {
                             BraceProgressBar(label = "Import progress", value = 0.5f)
                         }
                         BraceBreadcrumbs(listOf(BraceBreadcrumb("Home", onClick = {}), BraceBreadcrumb("Imports")))
+                        var selectedJob by rememberSaveable { mutableStateOf<String?>(null) }
+                        BraceSimpleTable(
+                            columns = listOf(BraceSimpleTableColumn("job", "Job"),
+                                BraceSimpleTableColumn("state", "State")),
+                            rows = listOf(BraceSimpleTableRow("latest",
+                                mapOf("job" to "Latest import", "state" to "Ready"))),
+                            label = "Import jobs", striped = true, interactive = true,
+                            selectedRowKey = selectedJob, onRowClick = { selectedJob = it },
+                        )
                         BraceTag("Active")
                         BraceFieldLabel("Export format", spokenLabel = "Export format, CSV") { controlModifier ->
                             BraceButton("CSV", onClick = {}, modifier = controlModifier)

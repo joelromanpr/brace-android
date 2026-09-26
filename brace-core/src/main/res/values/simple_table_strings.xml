@@ -1,0 +1,4 @@
+<resources>
+    <string name="brace_simple_table_cell">%1$s, row %2$d, %3$s</string>
+    <string name="brace_simple_table_activate_row">Open row</string>
+</resources>

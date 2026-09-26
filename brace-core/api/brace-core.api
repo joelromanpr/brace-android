@@ -40,7 +40,7 @@ public final class io/github/joelromanpr/brace/core/BraceButtonIntent : java/lan
 }
 
 public final class io/github/joelromanpr/brace/core/BraceButtonKt {
-	public static final fun BraceButton (Ljava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;ZZLio/github/joelromanpr/brace/core/BraceButtonIntent;Lio/github/joelromanpr/brace/core/BraceButtonVariant;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceButton (Ljava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;ZZLio/github/joelromanpr/brace/core/BraceButtonIntent;Lio/github/joelromanpr/brace/core/BraceButtonVariant;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/runtime/Composer;III)V
 }
 
 public final class io/github/joelromanpr/brace/core/BraceButtonVariant : java/lang/Enum {
@@ -201,6 +201,56 @@ public final class io/github/joelromanpr/brace/core/BraceInputsKt {
 	public static final fun BraceCheckbox (ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;II)V
 	public static final fun BraceSwitch (ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;II)V
 	public static final fun BraceTextField (Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;ZZZLandroidx/compose/foundation/text/KeyboardOptions;Landroidx/compose/ui/text/input/VisualTransformation;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceLinkColor : java/lang/Enum {
+	public static final field Danger Lio/github/joelromanpr/brace/core/BraceLinkColor;
+	public static final field Inherit Lio/github/joelromanpr/brace/core/BraceLinkColor;
+	public static final field Primary Lio/github/joelromanpr/brace/core/BraceLinkColor;
+	public static final field Success Lio/github/joelromanpr/brace/core/BraceLinkColor;
+	public static final field Warning Lio/github/joelromanpr/brace/core/BraceLinkColor;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceLinkColor;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceLinkColor;
+}
+
+public abstract interface class io/github/joelromanpr/brace/core/BraceLinkDestination {
+	public abstract fun getLabel ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceLinkDestination$Action : io/github/joelromanpr/brace/core/BraceLinkDestination {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
+	public fun getLabel ()Ljava/lang/String;
+	public final fun getOnNavigate ()Lkotlin/jvm/functions/Function0;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceLinkDestination$Uri : io/github/joelromanpr/brace/core/BraceLinkDestination {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceLinkDestination$Uri;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceLinkDestination$Uri;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceLinkDestination$Uri;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getLabel ()Ljava/lang/String;
+	public final fun getUri ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceLinkKt {
+	public static final fun BraceLink-YVnJamc (Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceLinkDestination;Landroidx/compose/ui/Modifier;ZLio/github/joelromanpr/brace/core/BraceLinkUnderline;Lio/github/joelromanpr/brace/core/BraceLinkColor;Landroidx/compose/ui/graphics/Color;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceLinkButton (Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceLinkDestination;Landroidx/compose/ui/Modifier;ZZLio/github/joelromanpr/brace/core/BraceButtonIntent;Lio/github/joelromanpr/brace/core/BraceButtonVariant;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceLinkUnderline : java/lang/Enum {
+	public static final field Always Lio/github/joelromanpr/brace/core/BraceLinkUnderline;
+	public static final field Hover Lio/github/joelromanpr/brace/core/BraceLinkUnderline;
+	public static final field None Lio/github/joelromanpr/brace/core/BraceLinkUnderline;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceLinkUnderline;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceLinkUnderline;
 }
 
 public final class io/github/joelromanpr/brace/core/BraceMenuIntent : java/lang/Enum {

@@ -250,11 +250,13 @@ fun <Row> BraceDataTable(
         is BraceTableSelection.Cell -> rowIndexes[selection.rowKey]?.let { rowNumber ->
             columnIndex.byKey[selection.columnKey]?.let { columnNumber ->
                 cellSelectedDescription.format(columns[columnNumber].title, rowNumber + 1,
-                    rowLabel(rows[rowNumber]), columns[columnNumber].cellText(rows[rowNumber]))
+                    if (rowLabel === rowKey) rowIndex.keys[rowNumber] else rowLabel(rows[rowNumber]),
+                    columns[columnNumber].cellText(rows[rowNumber]))
             }
         }
         is BraceTableSelection.Row -> rowIndexes[selection.rowKey]?.let { rowNumber ->
-            rowSelectedDescription.format(rowNumber + 1, rowLabel(rows[rowNumber]))
+            rowSelectedDescription.format(rowNumber + 1,
+                if (rowLabel === rowKey) rowIndex.keys[rowNumber] else rowLabel(rows[rowNumber]))
         }
         else -> null
     }

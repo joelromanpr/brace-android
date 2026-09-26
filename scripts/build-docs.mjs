@@ -42,6 +42,7 @@ const guideSources = new Map([
   ['docs/web-mechanisms.md', 'web-mechanisms'],
   ['docs/links.md', 'links'],
   ['docs/time-zone-select.md', 'time-zone-select'],
+  ['docs/file-picker.md', 'file-picker'],
   ['docs/milestones/m1-foundation-core.md', 'milestone-m1'],
   ['docs/milestones/m2-content-feedback.md', 'milestone-m2'],
   ['docs/milestones/m3-navigation-feedback.md', 'milestone-m3'],
@@ -70,6 +71,7 @@ const guideSources = new Map([
   ['docs/milestones/m57-icon-large-text.md', 'milestone-m57'],
   ['docs/milestones/m34-timezone-select.md', 'milestone-m34'],
   ['docs/milestones/m59-visual-catalog.md', 'milestone-m59'],
+  ['docs/milestones/m39-file-picker.md', 'milestone-m39'],
   ['CONTRIBUTING.md', 'contributing'],
   ['docs/attribution.md', 'attribution'],
 ]);
@@ -228,6 +230,7 @@ const primaryGuideLinks = [
 const componentGuideLinks = [
   ['Core controls', 'core-components'],
   ['Forms and text', 'form-text'],
+  ['File picker', 'file-picker'],
   ['Select and query', 'select-query'],
   ['Date and time', 'datetime-picker-input'],
   ['Date ranges', 'datetime-range'],

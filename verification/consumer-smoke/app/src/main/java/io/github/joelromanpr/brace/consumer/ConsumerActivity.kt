@@ -41,6 +41,7 @@ import io.github.joelromanpr.brace.core.BraceTopBar
 import io.github.joelromanpr.brace.core.BraceTopBarGroup
 import io.github.joelromanpr.brace.core.BraceTopBarTitle
 import io.github.joelromanpr.brace.core.BraceTopBarDivider
+import io.github.joelromanpr.brace.core.BraceFilePickerField
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceCallout
@@ -120,6 +121,7 @@ class ConsumerActivity : ComponentActivity() {
         setContent {
             BraceTheme {
                 var count by remember { mutableStateOf(0) }
+                var fileNames by rememberSaveable { mutableStateOf(emptyList<String>()) }
                 var dialogOpen by remember { mutableStateOf(false) }
                 var alertOpen by remember { mutableStateOf(false) }
                 var drawerOpen by remember { mutableStateOf(false) }
@@ -165,6 +167,15 @@ class ConsumerActivity : ComponentActivity() {
                 val toasts = rememberBraceToastState()
                 Box(Modifier.fillMaxSize()) {
                     Column {
+                        BraceFilePickerField(
+                            label = "Import files",
+                            selectedNames = fileNames,
+                            onFilesPicked = { uris ->
+                                fileNames = uris.map { it.lastPathSegment ?: "Document" }
+                            },
+                            mimeTypes = listOf("application/pdf"),
+                            multiple = true,
+                        )
                         BraceTopBar(
                             startContent = { BraceTopBarGroup {
                                 BraceTopBarTitle("Imports")

@@ -56,6 +56,8 @@ import io.github.braceandroid.foundation.BraceContrast
 import io.github.braceandroid.foundation.BraceDensity
 import io.github.braceandroid.foundation.BraceMotion
 import io.github.braceandroid.foundation.BraceTheme
+import io.github.joelromanpr.brace.core.BraceFilePickerField
+import io.github.joelromanpr.brace.core.BraceFilePickerSize
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceButtonVariant
@@ -281,6 +283,10 @@ BraceTheme {
         }
     }
 }""".trimIndent(),
+    "core-fileinput" to """var names by rememberSaveable { mutableStateOf(emptyList<String>()) }
+BraceFilePickerField(label = "Attachments", selectedNames = names,
+    onFilesPicked = { uris -> viewModel.acceptDocuments(uris) },
+    mimeTypes = listOf("application/pdf", "image/*"), multiple = true)""",
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-link" to "BraceLink(\"Read guide\", BraceLinkDestination.Uri(\"https://example.org/guide\", \"Guide\"))",
     "core-anchorbutton" to "BraceLinkButton(\"Open reports\", BraceLinkDestination.Action(\"Reports\") { navigateToReports() })",
@@ -1163,6 +1169,35 @@ private fun ComponentSample(
                     color = BraceTheme.colors.semantic.onSurface)
                 BraceTimeZoneSelect(null, {}, "Unavailable time zone", enabled = false,
                     locale = Locale.US)
+            }
+        }
+        "core-fileinput" -> {
+            var names by rememberSaveable { mutableStateOf(emptyList<String>()) }
+            var multiple by rememberSaveable { mutableStateOf(false) }
+            var enabled by rememberSaveable { mutableStateOf(true) }
+            var showError by rememberSaveable { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceFilePickerField(
+                    label = "Attachments",
+                    selectedNames = names,
+                    onFilesPicked = { uris ->
+                        names = uris.map { it.lastPathSegment ?: "Selected document" }
+                    },
+                    mimeTypes = listOf("application/pdf", "image/*"),
+                    multiple = multiple,
+                    enabled = enabled,
+                    size = BraceFilePickerSize.Medium,
+                    helperText = "Files stay on your device until the app reads them.",
+                    errorText = if (showError) "Select a supported document" else null,
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (multiple) "Single" else "Multiple", onClick = { multiple = !multiple },
+                        variant = BraceButtonVariant.Outline)
+                    BraceButton(if (enabled) "Disable" else "Enable", onClick = { enabled = !enabled },
+                        variant = BraceButtonVariant.Outline)
+                }
+                BraceButton(if (showError) "Clear error" else "Show error",
+                    onClick = { showError = !showError }, variant = BraceButtonVariant.Outline)
             }
         }
         "core-button" -> {

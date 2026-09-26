@@ -1,0 +1,5 @@
+<resources>
+    <string name="brace_file_picker_browse">Parcourir</string>
+    <string name="brace_file_picker_placeholder">Choisir un fichier…</string>
+    <string name="brace_file_picker_announcement">%1$s, %2$s, %3$s</string>
+</resources>

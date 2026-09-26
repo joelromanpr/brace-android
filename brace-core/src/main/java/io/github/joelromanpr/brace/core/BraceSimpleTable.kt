@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -33,7 +34,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.isAltPressed
 import androidx.compose.ui.input.key.isCtrlPressed
 import androidx.compose.ui.input.key.isMetaPressed
@@ -52,10 +56,12 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.isTraversalGroup
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntrinsicSize
 import androidx.compose.ui.unit.LayoutDirection
 import io.github.braceandroid.foundation.BraceDensity
 import io.github.braceandroid.foundation.BraceTheme
@@ -221,16 +227,31 @@ public fun BraceSimpleTable(
                                 requesters[next.first][next.second].requestFocus()
                                 true
                             }
-                            .then(if (onRowClick != null) Modifier.clickable(enabled = row.enabled,
-                                role = Role.Button, onClickLabel = activateRow) { onRowClick(row.key) } else Modifier)
-                            .semantics(mergeDescendants = true) {
+                            .onKeyEvent { event ->
+                                if (onRowClick != null && row.enabled && event.type == KeyEventType.KeyUp &&
+                                    (event.key == Key.Enter || event.key == Key.Spacebar)
+                                ) {
+                                    onRowClick(row.key)
+                                    true
+                                } else false
+                            }
+                            .focusable()
+                            .clearAndSetSemantics {
                                 collectionItemInfo = CollectionItemInfo(rowIndex + 1, 1, columnIndex, 1)
+                                testTag = "brace-simple-table-cell:${row.key}:${column.key}"
                                 contentDescription = spokenCell
                                 this.selected = rowSelected
+                                if (onRowClick != null) {
+                                    role = Role.Button
+                                    if (row.enabled) onClick(label = activateRow) {
+                                        onRowClick(row.key)
+                                        true
+                                    }
+                                }
                                 if (!row.enabled) disabled()
                             }
-                            .then(if (onRowClick == null || !row.enabled) Modifier.focusable() else Modifier)
-                            .testTag("brace-simple-table-cell:${row.key}:${column.key}")
+                            .then(if (onRowClick != null) Modifier.clickable(enabled = row.enabled,
+                                role = Role.Button, onClickLabel = activateRow) { onRowClick(row.key) } else Modifier)
                         Box(cellModifier, contentAlignment = Alignment.CenterStart) {
                             if (cellContent == null) {
                                 Text(value, color = contentColor, style = BraceTheme.typography.body,

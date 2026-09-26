@@ -19,6 +19,10 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.IntOffset
 import io.github.braceandroid.foundation.BraceTheme
+import io.github.joelromanpr.brace.datetime.BraceDatePicker
+import io.github.joelromanpr.brace.datetime.BraceDateField
+import java.time.LocalDate
+import java.util.Locale
 import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbs
@@ -121,6 +125,7 @@ class ConsumerActivity : ComponentActivity() {
                 var regionKey by remember { mutableStateOf<String?>(null) }
                 var regionExpanded by remember { mutableStateOf(false) }
                 val regionQuery = rememberBraceQueryListState()
+                var dueDate by remember { mutableStateOf<LocalDate?>(null) }
                 var meal by remember { mutableStateOf("soup") }
                 var layout by remember { mutableStateOf("list") }
                 val shortcutState = rememberBraceShortcutRegistryState()
@@ -157,6 +162,9 @@ class ConsumerActivity : ComponentActivity() {
                         }
                         BraceNumericField(amount, { amount = it }, label = "Amount",
                             min = 0.0, max = 100.0, minorStepSize = 0.1)
+                        BraceDateField(dueDate, { dueDate = it }, "Due date", locale = Locale.US)
+                        BraceDatePicker(dueDate, { dueDate = it }, locale = Locale.US,
+                            minDate = LocalDate.of(2026, 1, 1))
                         BraceRadio(selected = meal == "soup", onSelect = { meal = "soup" }, label = "Soup")
                         BraceRadioGroup(
                             options = listOf(BraceRadioOption("soup", "Soup"), BraceRadioOption("salad", "Salad")),

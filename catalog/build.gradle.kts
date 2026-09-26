@@ -31,6 +31,7 @@ dependencies {
     implementation(project(":brace-icons"))
     implementation(project(":brace-blueprint-icons"))
     implementation(project(":brace-select"))
+    implementation(project(":brace-datetime"))
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.foundation)

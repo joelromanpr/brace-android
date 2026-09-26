@@ -139,6 +139,8 @@ import io.github.joelromanpr.brace.table.BraceTruncatedCell
 import io.github.joelromanpr.brace.table.BraceJsonCell
 import io.github.joelromanpr.brace.table.BraceJsonFormatter
 import io.github.joelromanpr.brace.table.BraceRevealMode
+import io.github.joelromanpr.brace.table.BraceTableLoading
+import io.github.joelromanpr.brace.table.BraceTableState
 import org.json.JSONObject
 import java.util.Locale
 
@@ -201,6 +203,12 @@ BraceJsonCell(payload, modifier = Modifier.width(220.dp), maxCharacters = 24)
     cellText = { it.status }, headerContent = { Text("◆ Status") })""",
     "table-rowheadercell" to """BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
     rowLabel = { it.name }, rowHeaderContent = { _, index -> Text("R" + (index + 1)) })""",
+    "table-loading-states" to """val state = BraceTableState.Loading(
+    BraceTableLoading(columnCells = mapOf("status" to true),
+        columnHeaderOverrides = mapOf("status" to true)))
+BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, state = state)
+// Also use BraceTableState.Empty("No matches") or
+// BraceTableState.Error("Could not load", onRetry = ::refresh)""".trimIndent(),
     "table-viewport-rendering" to "val viewport = rememberBraceTableViewport(); BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, viewport = viewport)",
     "table-fixed-headers" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // row and column headers stay visible",
     "table-keyboard-navigation" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // Shift+arrows extend a range",
@@ -641,6 +649,59 @@ private fun ComponentSample(
                         cellContent = { row -> BraceJsonCell(row.second, maxCharacters = 16,
                             revealMode = BraceRevealMode.Never) }),
                 ), selection, { selection = it }, height = 145.dp, label = "Formatted data table")
+            }
+        }
+        "table-loading-states" -> {
+            val records = remember {
+                listOf(
+                    DemoTableRecord("record-1", "Case 1001", "Ready"),
+                    DemoTableRecord("record-2", "Case 1002", "Review"),
+                    DemoTableRecord("record-3", "Case 1003", "Ready"),
+                )
+            }
+            val tableColumns = remember {
+                listOf(
+                    BraceTableColumn<DemoTableRecord>("case", "Case", 140.dp, { it.case }),
+                    BraceTableColumn<DemoTableRecord>("status", "Status", 130.dp, { it.status }),
+                )
+            }
+            var mode by rememberSaveable { mutableStateOf("ready") }
+            var retries by rememberSaveable { mutableStateOf(0) }
+            var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
+            val state: BraceTableState = when (mode) {
+                "all" -> BraceTableState.Loading()
+                "column" -> BraceTableState.Loading(BraceTableLoading(
+                    columnCells = mapOf("status" to true),
+                    columnHeaderOverrides = mapOf("status" to true),
+                ))
+                "cell" -> BraceTableState.Loading(BraceTableLoading(
+                    cellOverrides = mapOf(BraceTableSelection.Cell("record-2", "status") to true),
+                    rowHeaderOverrides = mapOf("record-2" to true),
+                ))
+                "empty" -> BraceTableState.Empty("No matching cases")
+                "error" -> BraceTableState.Error("Could not load cases",
+                    onRetry = { retries++; mode = "ready" })
+                else -> BraceTableState.Ready
+            }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Row(Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xs)) {
+                    BraceButton("Ready", onClick = { mode = "ready" })
+                    BraceButton("All loading", onClick = { mode = "all" })
+                    BraceButton("Column", onClick = { mode = "column" })
+                }
+                Row(Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xs)) {
+                    BraceButton("Cell + row", onClick = { mode = "cell" })
+                    BraceButton("Empty", onClick = { mode = "empty" })
+                    BraceButton("Error", onClick = { mode = "error" })
+                }
+                BraceDataTable(records, { it.id }, tableColumns, selection,
+                    { selection = it }, modifier = Modifier.fillMaxWidth(),
+                    height = 250.dp, label = "Cases", rowLabel = { it.case },
+                    state = state)
+                Text("State: $mode · retries: $retries", color = BraceTheme.colors.semantic.onSurface,
+                    style = BraceTheme.typography.body)
             }
         }
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",

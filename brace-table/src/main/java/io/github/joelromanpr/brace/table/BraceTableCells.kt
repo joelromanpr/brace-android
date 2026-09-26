@@ -38,7 +38,8 @@ import io.github.braceandroid.foundation.BraceTheme
  * renders a badge or other noninteractive presentation. Coordinates are zero-based; the spoken
  * row number is one-based. [rowKey] and [columnKey] must remain stable as data moves. The
  * parent [BraceDataTable] owns keyboard navigation and viewport focus; [onSelect] and optional
- * range/edit callbacks are also exposed to touch, mouse, and TalkBack here.
+ * range/edit callbacks are also exposed to touch, mouse, and TalkBack here. [enabled]
+ * pauses those actions during a controlled table load.
  */
 @Composable
 fun BraceTableCell(
@@ -53,6 +54,7 @@ fun BraceTableCell(
     onSelect: () -> Unit,
     modifier: Modifier = Modifier,
     focused: Boolean = false,
+    enabled: Boolean = true,
     onExtendSelection: (() -> Unit)? = null,
     onEdit: (() -> Unit)? = null,
     content: (@Composable () -> Unit)? = null,
@@ -66,7 +68,7 @@ fun BraceTableCell(
     val hovered by interaction.collectIsHoveredAsState()
     val background = when {
         selected -> colors.selectedRow
-        hovered -> semantic.hover
+        hovered && enabled -> semantic.hover
         rowIndex % 2 == 0 -> colors.row
         else -> colors.alternateRow
     }
@@ -80,20 +82,21 @@ fun BraceTableCell(
             .hoverable(interaction)
             .border(if (selected && focused) BraceTheme.sizing.focusRingWidth else metrics.gridLineWidth,
                 if (selected && focused) semantic.focusRing else colors.gridLine)
-            .pointerSelect(rowKey, columnKey, onSelect, onExtendSelection, onEdit)
+            .then(if (enabled) Modifier.pointerSelect(rowKey, columnKey, onSelect,
+                onExtendSelection, onEdit) else Modifier)
             .clearAndSetSemantics {
                 collectionItemInfo = CollectionItemInfo(rowIndex + 1, 1, columnIndex + 1, 1)
                 this.selected = selected
                 contentDescription = description
-                onClick(selectLabel) { onSelect(); true }
-                customActions = listOfNotNull(
+                if (enabled) onClick(selectLabel) { onSelect(); true }
+                customActions = if (enabled) listOfNotNull(
                     onExtendSelection?.let { action ->
                         CustomAccessibilityAction(extendLabel) { action(); true }
                     },
                     onEdit?.let { action ->
                         CustomAccessibilityAction(editLabel) { action(); true }
                     },
-                )
+                ) else emptyList()
             },
         contentAlignment = Alignment.CenterStart,
     ) {
@@ -181,7 +184,8 @@ fun BraceColumnHeader(
 /**
  * Fixed row header used by [BraceDataTable]. [rowLabel] is announced with the one-based row
  * number even when [content] replaces the visible ordinal. Selection is controlled by the
- * caller, while the table retains keyboard focus and any separate resize handle.
+ * caller, while the table retains keyboard focus and any separate resize handle. [enabled]
+ * pauses the selection action during a controlled table load.
  */
 @Composable
 fun BraceRowHeader(
@@ -191,6 +195,7 @@ fun BraceRowHeader(
     selected: Boolean,
     onSelect: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     content: (@Composable () -> Unit)? = null,
 ) {
     require(rowIndex >= 0) { "Row index must be nonnegative" }
@@ -203,12 +208,12 @@ fun BraceRowHeader(
     Box(
         modifier.background(if (selected) colors.selectedRow else colors.header)
             .border(metrics.gridLineWidth, colors.gridLine)
-            .pointerSelect(rowKey, null, onSelect)
+            .then(if (enabled) Modifier.pointerSelect(rowKey, null, onSelect) else Modifier)
             .clearAndSetSemantics {
                 collectionItemInfo = CollectionItemInfo(rowIndex + 1, 1, 0, 1)
                 this.selected = selected
                 contentDescription = description
-                onClick(selectLabel) { onSelect(); true }
+                if (enabled) onClick(selectLabel) { onSelect(); true }
             },
         contentAlignment = Alignment.Center,
     ) {

@@ -16,6 +16,8 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.isAltPressed
@@ -32,6 +34,8 @@ import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.focused
+import androidx.compose.ui.semantics.requestFocus
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.Dp
@@ -68,13 +72,15 @@ internal fun BraceTableResizeHandle(
     val step = BraceTheme.spacing.md
     val latestSize by rememberUpdatedState(size)
     val latestChange by rememberUpdatedState(onSizeChange)
-    var focused by remember { mutableStateOf(false) }
+    var focused by remember(axis, id) { mutableStateOf(false) }
+    val focusRequester = remember(axis, id) { FocusRequester() }
     fun update(candidate: Dp) {
         val lower = maxOf(minimum, candidate)
         latestChange(if (maximum == null) lower else minOf(maximum, lower))
     }
     Box(
         modifier.width(width).height(height)
+            .focusRequester(focusRequester)
             .onFocusChanged { focused = it.isFocused; onFocusedChange(it.isFocused) }
             .onPreviewKeyEvent { event ->
                 if (event.type != KeyEventType.KeyDown || event.isCtrlPressed || event.isAltPressed ||
@@ -110,17 +116,19 @@ internal fun BraceTableResizeHandle(
                     },
                 )
             }
+            .testTag("brace-table-resize-${axis.name.lowercase()}:$id")
             .clearAndSetSemantics {
                 contentDescription = description.format(name)
                 stateDescription = stateLabel
+                this.focused = focused
+                requestFocus { focusRequester.requestFocus(); true }
                 onClick(increaseLabel) { update(latestSize + step); true }
                 customActions = listOf(CustomAccessibilityAction(decreaseLabel) {
                     update(latestSize - step)
                     true
                 })
             }
-            .clickable(onClickLabel = increaseLabel) { update(latestSize + step) }
-            .testTag("brace-table-resize-${axis.name.lowercase()}:$id"),
+            .clickable(onClickLabel = increaseLabel) { update(latestSize + step) },
         contentAlignment = Alignment.Center,
     ) {
         Box(

@@ -1,6 +1,6 @@
 # M6 delivery slice: tooltips and toast notifications
 
-**Status:** implementation in progress on `joelromanpr/m6-tooltip-toast`; review and hosted CI pending. These rows belong to roadmap phase **M2 overlays/navigation**. No Maven Central version has shipped. Released applicable coverage remains **0/121**; the full pinned ledger now has **46 in progress** and **101 planned** rows out of 147.
+**Status:** implementation in progress in [PR #16](https://github.com/joelromanpr/brace-android/pull/16); hosted CI rerun pending. These rows belong to roadmap phase **M2 overlays/navigation**. No Maven Central version has shipped. Released applicable coverage remains **0/121**; the full pinned ledger now has **46 in progress** and **101 planned** rows out of 147.
 
 ## Scope
 
@@ -18,7 +18,7 @@
 | Documentation build and generated inventory | Passed: 147 rows and 17 guides; generated coverage, JavaScript syntax, and diff checks passed. |
 | Maven Local publication and independent consumer | Passed: foundation/core AAR, source and KDoc artifacts; separate consumer app assembled with Tooltip and Toast APIs. |
 | Installed catalog interaction | Passed on API 36 phone emulator: Toast search/detail opened; persistent actionable danger toast displayed without clipping and action dismissed it. |
-| Hosted CI and PR | Pending focused PR creation. |
+| Hosted CI and PR | [PR #16](https://github.com/joelromanpr/brace-android/pull/16): hosted `verify` passed on the first run. The API 34 emulator job failed before tests because its 4 GiB data partition needed 7.37 GiB and the runner had 6.99 GiB free. The partition is now 2 GiB; rerun pending. |
 
 ## Limits and next branch
 

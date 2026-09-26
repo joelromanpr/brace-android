@@ -47,9 +47,11 @@ const guideSources = new Map([
   ['docs/table-editing.md', 'table-editing'],
   ['docs/table-column-name.md', 'table-column-name'],
   ['docs/table-sorting.md', 'table-sorting'],
+  ['docs/table-formats.md', 'table-formats'],
   ['docs/milestones/m22-table-editing.md', 'milestone-m22'],
   ['docs/milestones/m26-table-editable-name.md', 'milestone-m26'],
   ['docs/milestones/m46-table-sorting.md', 'milestone-m46'],
+  ['docs/milestones/m47-table-formatters.md', 'milestone-m47'],
   ['docs/milestones/m21-table-copying.md', 'milestone-m21'],
   ['docs/web-mechanisms.md', 'web-mechanisms'],
   ['docs/links.md', 'links'],
@@ -271,6 +273,7 @@ const componentGuideLinks = [
   ['Editing cells', 'table-editing'],
   ['Editing column names', 'table-column-name'],
   ['Sorting columns', 'table-sorting'],
+  ['Table value formats', 'table-formats'],
   ['Icons', 'icons'],
 ];
 const extraGuideLinks = [

@@ -144,6 +144,10 @@ import io.github.joelromanpr.brace.table.BraceTableColumn
 import io.github.joelromanpr.brace.table.BraceTableSelection
 import io.github.joelromanpr.brace.table.BraceTableSortDirection
 import io.github.joelromanpr.brace.table.rememberBraceTableSortState
+import io.github.joelromanpr.brace.table.BraceTruncatedCell
+import io.github.joelromanpr.brace.table.BraceJsonCell
+import io.github.joelromanpr.brace.table.BraceJsonFormatter
+import io.github.joelromanpr.brace.table.BraceRevealMode
 import io.github.joelromanpr.brace.table.rememberBraceTableViewport
 import androidx.compose.ui.unit.dp
 
@@ -281,8 +285,14 @@ class ConsumerActivity : ComponentActivity() {
                         BraceDataTable(
                             rows = displayedTableRows,
                             rowKey = { it.first },
-                            columns = listOf(BraceTableColumn<Pair<String, String>>("status", statusColumnTitle, 160.dp,
-                                { it.second }, editable = true, editableName = true, sortable = true)),
+                            columns = listOf(
+                                BraceTableColumn<Pair<String, String>>("status", statusColumnTitle, 160.dp,
+                                    { it.second }, editable = true, editableName = true, sortable = true),
+                                BraceTableColumn<Pair<String, String>>("payload", "Payload", 160.dp,
+                                    { BraceJsonFormatter.format(mapOf("status" to it.second)) },
+                                    cellContent = { row -> BraceJsonCell(mapOf("status" to row.second),
+                                        maxCharacters = 12, revealMode = BraceRevealMode.Never) }),
+                            ),
                             selection = selectedTable,
                             onSelectionChange = { selectedTable = it },
                             viewport = tableViewport,
@@ -306,6 +316,10 @@ class ConsumerActivity : ComponentActivity() {
                         )
                         BasicText("Table copy: ${BraceTableClipboard.formatSelection(tableRows, { it.first },
                             listOf(BraceTableColumn<Pair<String, String>>("status", "Status", 120.dp, { it.second })), selectedTable) ?: "none"}")
+                        BraceTruncatedCell("Long import message with details", Modifier.width(220.dp),
+                            maxCharacters = 16)
+                        BraceJsonCell(mapOf("status" to "ready"), Modifier.width(220.dp),
+                            maxCharacters = 18)
                         BraceButton("Select status column", onClick = {
                             selectedTable = BraceTableSelection.Column("status")
                         })

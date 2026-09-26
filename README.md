@@ -8,9 +8,9 @@ An open-source Jetpack Compose design system for complex, data-dense Android app
 **Released coverage: 0/121 applicable rows** (0/94 components; 0/27 capabilities). Web-specific mappings: 0/24. Labs tracked separately: 2 rows. Full applicable parity: no.
 <!-- coverage:end -->
 
-[Browse every row and its evidence](docs/coverage.md) · [Machine-readable inventory](inventory/blueprint-components.json) · [Roadmap](ROADMAP.md)
+[Live documentation and component showcase](https://joelromanpr.github.io/brace-android/) · [Browse every inventory row and its evidence](docs/coverage.md) · [Machine-readable inventory](inventory/blueprint-components.json) · [Roadmap](ROADMAP.md)
 
-The source milestones contain versioned platform-neutral design tokens, a generated Kotlin token API, `BraceTheme`, an interactive inventory-driven catalog, a documentation site source, actions and form controls, M2 content and progress feedback, M3 navigation labels and messages, M4 menu and modal overlay source, M5 drawer and anchored popover source, M6 tooltip and toast source, M7 context-menu and shortcut source, M8 form-field and editable-text source, M9 labels/control groups, M10 numeric input, M11 icon foundation, M12 select/query state, and M13 date picker/date field. These APIs remain **in progress** until release evidence is recorded. Blueprint parity is a project goal, not a current claim. Suggest, MultiSelect, remaining date/time, the full icon glyph catalog, and the data table are planned work in the pinned inventory.
+The source milestones contain versioned platform-neutral design tokens, a generated Kotlin token API, `BraceTheme`, an interactive inventory-driven catalog, a documentation site source, actions and form controls, M2 content and progress feedback, M3 navigation labels and messages, M4 menu and modal overlay source, M5 drawer and anchored popover source, M6 tooltip and toast source, M7 context-menu and shortcut source, M8 form-field and editable-text source, M9 labels/control groups, M10 numeric input, M11 icon foundation, M12 select/query state, and M13 date picker/date field. These APIs remain **in progress** until release evidence is recorded. Blueprint parity is a project goal, not a current claim. Suggest, MultiSelect, remaining date/time, the full icon glyph catalog, and the data table are planned work in the pinned inventory. Gallery previews do not change released coverage.
 
 ## Try the source build
 
@@ -51,7 +51,7 @@ Theme tokens support light, dark, and high-contrast schemes, brand colors, scope
 
 ## Documentation and contribution
 
-The GitHub Pages source is in `docs/site`, built by `node scripts/build-docs.mjs`. Its intended address is [joelromanpr.github.io/brace-android](https://joelromanpr.github.io/brace-android/); Pages must be enabled before that URL is treated as live. Coverage counts on both the site and this README come from the pinned inventory and are checked in CI.
+The [GitHub Pages site](https://joelromanpr.github.io/brace-android/) is live and is built from `docs/site` by `node scripts/build-docs.mjs`. The [visual showcase](docs/showcase.md) uses real Android catalog captures with source-commit and appearance metadata. Component names, availability labels, and coverage counts come from the pinned inventory; a draft capture is not shipped coverage.
 
 [Contributing](CONTRIBUTING.md) · [Code of conduct](CODE_OF_CONDUCT.md) · [Security](SECURITY.md) · [Support](SUPPORT.md) · [Governance](GOVERNANCE.md) · [Maintainer guide](MAINTAINERS.md) · [Attribution](docs/attribution.md)
 

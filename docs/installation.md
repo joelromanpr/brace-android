@@ -1,0 +1,43 @@
+# Installation
+
+Brace Android is in source development. The planned Maven Central coordinates below are **not published yet**. To try a local snapshot, build and publish the repository artifacts to Maven Local, then consume them from a separate Android project.
+
+```sh
+./gradlew publishToMavenLocal
+```
+
+Add Maven Local in the consumer project's repository list and use aligned versions:
+
+```kotlin
+// settings.gradle.kts in the consumer project
+dependencyResolutionManagement {
+    repositories {
+        mavenLocal()
+        google()
+        mavenCentral()
+    }
+}
+
+// app/build.gradle.kts in the consumer project
+dependencies {
+    implementation("io.github.joelromanpr.brace:brace-foundation:0.1.0-SNAPSHOT")
+    implementation("io.github.joelromanpr.brace:brace-core:0.1.0-SNAPSHOT")
+}
+```
+
+After the first release, remove `mavenLocal()` and use the released version from Maven Central. All public Brace artifacts use the same version. The source build currently targets Android SDK 36 and Android 26 as its minimum; verify the release's compatibility table before adoption.
+
+The catalog app is a separate Android application in this repository. Run `./gradlew :catalog:assembleDebug` to inspect examples. The [coverage page](coverage.md) distinguishes implemented components from planned ones.
+
+## Current source compatibility baseline
+
+| Tool or platform | Version |
+| --- | --- |
+| Minimum Android | API 26 |
+| Compile SDK | API 36 |
+| Android Gradle Plugin | 8.13.2 |
+| Kotlin and Compose compiler plugin | 2.2.20 |
+| Compose BOM | 2025.08.00 |
+| Contributor build JDK | 21 (JVM target 17) |
+
+These are the versions pinned by this source build, not a claim that every other version combination has been tested. The separate Maven consumer smoke test uses the published local artifacts before a release. Release notes will name the tested consumer matrix.

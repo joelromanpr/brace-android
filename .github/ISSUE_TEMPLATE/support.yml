@@ -1,0 +1,21 @@
+name: Question or support
+description: Ask a usage question until Discussions is enabled.
+title: "[Question] "
+labels: ["question"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: Describe what you are trying to build and what you tried.
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Brace, Android, Kotlin, and Compose versions
+  - type: textarea
+    id: example
+    attributes:
+      label: Minimal relevant example
+      description: Do not include credentials or private data.

@@ -76,6 +76,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.CollectionItemInfo
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.collectionInfo
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.collectionItemInfo
 import androidx.compose.ui.semantics.contentDescription
@@ -84,6 +85,7 @@ import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -369,23 +371,31 @@ fun <Row> BraceDataTable(
     var pendingTouchRangeAnchor by remember { mutableStateOf<BraceTableSelection.Cell?>(null) }
     var resizeHandleFocused by remember { mutableStateOf(false) }
     var focusedReorderHandle by remember { mutableStateOf<String?>(null) }
+    var pendingReorderFocus by remember { mutableStateOf<String?>(null) }
     fun requestColumnMove(key: String, targetIndex: Int) {
         if (isLoading || onColumnOrderChange == null || key !in columnIndex.byKey ||
             targetIndex !in columns.indices) return
         val reordered = BraceTableReorder.move(columnKeys, key, targetIndex)
-        if (reordered != columnKeys) onColumnOrderChange(reordered)
+        if (reordered != columnKeys) {
+            if (focusedReorderHandle == "column:$key") pendingReorderFocus = "column:$key"
+            onColumnOrderChange(reordered)
+        }
     }
     fun requestRowMove(key: String, targetIndex: Int) {
         if (isLoading || onRowOrderChange == null || key !in rowIndexes ||
             targetIndex !in rows.indices) return
         val reordered = BraceTableReorder.move(rowIndex.keys, key, targetIndex)
-        if (reordered != rowIndex.keys) onRowOrderChange(reordered)
+        if (reordered != rowIndex.keys) {
+            if (focusedReorderHandle == "row:$key") pendingReorderFocus = "row:$key"
+            onRowOrderChange(reordered)
+        }
     }
     LaunchedEffect(isLoading) {
         if (isLoading) {
             pendingTouchRangeAnchor = null
             resizeHandleFocused = false
             focusedReorderHandle = null
+            pendingReorderFocus = null
         }
     }
     val range = (selection as? BraceTableSelection.Range)?.let { selected ->
@@ -435,6 +445,33 @@ fun <Row> BraceDataTable(
     }
     val canCopySelection = !isLoading && rows.isNotEmpty() && columns.isNotEmpty() &&
         selectionAnnouncement != null
+    val activeCell = when (selection) {
+        is BraceTableSelection.Cell -> selection
+        is BraceTableSelection.Range -> BraceTableSelection.Cell(
+            selection.extentRowKey, selection.extentColumnKey)
+        is BraceTableSelection.Row -> columns.firstOrNull()?.let {
+            BraceTableSelection.Cell(selection.rowKey, it.key)
+        }
+        is BraceTableSelection.Column -> rowIndex.keys.firstOrNull()?.let {
+            BraceTableSelection.Cell(it, selection.columnKey)
+        }
+        is BraceTableSelection.Regions -> when (val region = selection.regions.last()) {
+            is BraceTableRegion.Cells -> BraceTableSelection.Cell(
+                region.extentRowKey, region.extentColumnKey)
+            is BraceTableRegion.Rows -> columns.firstOrNull()?.let {
+                BraceTableSelection.Cell(region.lastRowKey, it.key)
+            }
+            is BraceTableRegion.Columns -> rowIndex.keys.firstOrNull()?.let {
+                BraceTableSelection.Cell(it, region.lastColumnKey)
+            }
+            BraceTableRegion.Table -> rowIndex.keys.firstOrNull()?.let { firstRow ->
+                columns.firstOrNull()?.let { firstColumn ->
+                    BraceTableSelection.Cell(firstRow, firstColumn.key)
+                }
+            }
+        }
+        null -> null
+    }
     LaunchedEffect(editingColumnName, columns) {
         if (editingColumnName != null &&
             columns.none { it.key == editingColumnName && it.editableName }) {
@@ -543,11 +580,11 @@ fun <Row> BraceDataTable(
                     onSelectionChange(BraceTableSelection.Regions(listOf(BraceTableRegion.Table)))
                     return@onPreviewKeyEvent true
                 }
-                if (!event.isAltPressed && (event.isCtrlPressed || event.isMetaPressed) &&
+                if (focused && !event.isAltPressed && (event.isCtrlPressed || event.isMetaPressed) &&
                     event.nativeKeyEvent.keyCode == AndroidKeyEvent.KEYCODE_C) {
                     return@onPreviewKeyEvent copySelection()
                 }
-                if (resizeHandleFocused || focusedReorderHandle != null || rows.isEmpty() ||
+                if (!focused || resizeHandleFocused || focusedReorderHandle != null || rows.isEmpty() ||
                     columns.isEmpty() || event.isAltPressed ||
                     event.isCtrlPressed || event.isMetaPressed) return@onPreviewKeyEvent false
                 val currentRow = when (selection) {
@@ -724,9 +761,9 @@ fun <Row> BraceDataTable(
                         if (headerLoading) {
                             BraceTableSkeleton(
                                 header = true,
+                                tag = "brace-table-loading-header:${column.key}",
                                 modifier = Modifier.offset(x = rowHeaderWidth + columnIndex.starts[index])
-                                    .width(widths[index]).height(headerHeight)
-                                    .testTag("brace-table-loading-header:${column.key}"),
+                                    .width(widths[index]).height(headerHeight),
                             )
                         } else if (isNameEditing) {
                             composeKey("header:${column.key}") {
@@ -762,15 +799,14 @@ fun <Row> BraceDataTable(
                                 }} else null,
                                 onEdit = if (canBeginNameEdit) beginNameEdit else null,
                                 modifier = Modifier.offset(x = rowHeaderWidth + columnIndex.starts[index])
-                                    .width(widths[index]).height(headerHeight)
-                                    .captureAdditivePointer { pointerAdditive = it }
-                                    .testTag("brace-table-header:${column.key}"),
+                                    .width(widths[index] - (if (sortable) BraceTheme.sizing.touchTarget else 0.dp) -
+                                        resizeTargetWidth - reorderTargetWidth)
+                                    .height(headerHeight)
+                                    .captureAdditivePointer { pointerAdditive = it },
                                 content = column.headerContent,
                                 sortState = if (sortable) sortStateDescription else null,
                                 sortActionLabel = if (sortEnabled) sortActionDescription else null,
                                 onSort = if (sortEnabled) requestSort else null,
-                                trailingInset = (if (sortable) BraceTheme.sizing.touchTarget else 0.dp) +
-                                    resizeTargetWidth + reorderTargetWidth,
                             )
                         }
                         if (sortable && !isNameEditing && !headerLoading) {
@@ -799,10 +835,15 @@ fun <Row> BraceDataTable(
                                     .clickable(enabled = sortEnabled, role = Role.Button,
                                         interactionSource = sortInteraction, indication = null,
                                         onClick = requestSort)
-                                    .testTag("brace-table-sort:${column.key}")
-                                    .semantics {
+                                    .clearAndSetSemantics {
+                                        testTag = "brace-table-sort:${column.key}"
+                                        role = Role.Button
                                         contentDescription = sortActionDescription
                                         stateDescription = sortStateDescription
+                                        if (sortEnabled) onClick(sortActionDescription) {
+                                            requestSort()
+                                            true
+                                        }
                                     },
                                 contentAlignment = Alignment.Center,
                             ) {
@@ -847,6 +888,8 @@ fun <Row> BraceDataTable(
                                         else if (focusedReorderHandle == "column:${column.key}")
                                             focusedReorderHandle = null
                                     },
+                                    restoreFocus = pendingReorderFocus == "column:${column.key}",
+                                    onFocusRestored = { pendingReorderFocus = null },
                                     modifier = Modifier.offset(x = rowHeaderWidth + offset),
                                 )
                             }
@@ -960,9 +1003,9 @@ fun <Row> BraceDataTable(
                                 if (cellLoading) {
                                     BraceTableSkeleton(
                                         header = false,
+                                        tag = "brace-table-loading-cell:$key:${column.key}",
                                         modifier = Modifier.offset(x = rowHeaderWidth + columnIndex.starts[columnNumber])
-                                            .width(widths[columnNumber]).height(itemHeight)
-                                            .testTag("brace-table-loading-cell:$key:${column.key}"),
+                                            .width(widths[columnNumber]).height(itemHeight),
                                     )
                                 } else if (isEditing) {
                                     composeKey(key, column.key) {
@@ -994,7 +1037,7 @@ fun <Row> BraceDataTable(
                                         rowKey = key,
                                         columnKey = column.key,
                                         selected = cellSelected,
-                                        focused = focused,
+                                        focused = focused && activeCell == cell,
                                         enabled = !isLoading,
                                         onSelect = selectCell,
                                         onExtendSelection = if (isLoading) null else beginTouchRange,
@@ -1020,8 +1063,7 @@ fun <Row> BraceDataTable(
                                                         }
                                                     }
                                                 }
-                                            }
-                                            .testTag("brace-table-cell:$key:${column.key}"),
+                                            },
                                         content = visualContent,
                                     )
                                 }
@@ -1067,9 +1109,9 @@ fun <Row> BraceDataTable(
                         if (loading?.rowHeader(key) == true) {
                             BraceTableSkeleton(
                                 header = true,
+                                tag = "brace-table-loading-row:$key",
                                 modifier = Modifier.offset(y = with(density) { offsetPx.toDp() })
-                                    .width(rowSelectWidth).height(itemHeight)
-                                    .testTag("brace-table-loading-row:$key"),
+                                    .width(rowSelectWidth).height(itemHeight),
                             )
                         } else BraceRowHeader(
                             rowLabel = accessibleRowLabel,
@@ -1086,8 +1128,7 @@ fun <Row> BraceDataTable(
                             }} else null,
                             modifier = Modifier.offset(y = with(density) { offsetPx.toDp() })
                                 .width(rowSelectWidth).height(itemHeight)
-                                .captureAdditivePointer { pointerAdditive = it }
-                                .testTag("brace-table-row:$key"),
+                                .captureAdditivePointer { pointerAdditive = it },
                             content = visualRowHeader,
                         )
                         if (!isLoading && onRowOrderChange != null && rows.size > 1) {
@@ -1118,6 +1159,8 @@ fun <Row> BraceDataTable(
                                         if (focused) focusedReorderHandle = "row:$key"
                                         else if (focusedReorderHandle == "row:$key") focusedReorderHandle = null
                                     },
+                                    restoreFocus = pendingReorderFocus == "row:$key",
+                                    onFocusRestored = { pendingReorderFocus = null },
                                     modifier = Modifier.offset(x = rowSelectWidth,
                                         y = with(density) { offsetPx.toDp() }),
                                 )
@@ -1162,8 +1205,8 @@ fun <Row> BraceDataTable(
                             requester.requestFocus()
                         }
                     }) else Modifier)
-                    .testTag("brace-table-corner")
                     .clearAndSetSemantics {
+                        testTag = "brace-table-corner"
                         collectionItemInfo = CollectionItemInfo(0, 1, 0, 1)
                         contentDescription = selectAllAction
                         selected = tableSelected
@@ -1204,7 +1247,7 @@ private fun Modifier.captureAdditivePointer(onPress: (Boolean) -> Unit): Modifie
 }
 
 @Composable
-private fun Modifier.pointerSelect(
+internal fun Modifier.pointerSelect(
     rowKey: String,
     columnKey: String?,
     select: () -> Unit,

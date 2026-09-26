@@ -1,11 +1,38 @@
+public final class io/github/joelromanpr/brace/table/BraceCellFormatsKt {
+	public static final fun BraceJsonCell (Ljava/lang/Object;Landroidx/compose/ui/Modifier;ZIIILio/github/joelromanpr/brace/table/BraceRevealMode;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceTruncatedCell-dbPd8LY (Ljava/lang/String;Landroidx/compose/ui/Modifier;IILjava/lang/String;Lio/github/joelromanpr/brace/table/BraceRevealMode;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;ZLandroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/graphics/Color;Landroidx/compose/runtime/Composer;III)V
+}
+
 public final class io/github/joelromanpr/brace/table/BraceDataTableKt {
-	public static final fun BraceDataTable-dldD6T4 (Ljava/util/List;Lkotlin/jvm/functions/Function1;Ljava/util/List;Lio/github/joelromanpr/brace/table/BraceTableSelection;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/table/BraceTableViewport;FLjava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/util/Map;Lkotlin/jvm/functions/Function2;Ljava/util/Map;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/unit/Dp;Landroidx/compose/ui/unit/Dp;Lio/github/joelromanpr/brace/table/BraceTableSelection$Cell;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;IIII)V
+	public static final fun BraceDataTable-WbPUwH4 (Ljava/util/List;Lkotlin/jvm/functions/Function1;Ljava/util/List;Lio/github/joelromanpr/brace/table/BraceTableSelection;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/table/BraceTableViewport;FLjava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/util/Map;Lkotlin/jvm/functions/Function2;Ljava/util/Map;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/unit/Dp;Landroidx/compose/ui/unit/Dp;Lio/github/joelromanpr/brace/table/BraceTableSelection$Cell;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lio/github/joelromanpr/brace/table/BraceTableSort;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function4;Lio/github/joelromanpr/brace/table/BraceTableState;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;IIII)V
 	public static final fun rememberBraceTableViewport (Landroidx/compose/runtime/Composer;I)Lio/github/joelromanpr/brace/table/BraceTableViewport;
 }
 
 public final class io/github/joelromanpr/brace/table/BraceEditableCellKt {
 	public static final fun BraceEditableCell (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function1;Ljava/lang/Integer;Ljava/lang/Integer;Landroidx/compose/runtime/Composer;II)V
 	public static final fun BraceEditableColumnName (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function1;Ljava/lang/Integer;ZLandroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/table/BraceJsonFormatter {
+	public static final field $stable I
+	public static final field INSTANCE Lio/github/joelromanpr/brace/table/BraceJsonFormatter;
+	public final fun format (Ljava/lang/Object;ZI)Ljava/lang/String;
+	public static synthetic fun format$default (Lio/github/joelromanpr/brace/table/BraceJsonFormatter;Ljava/lang/Object;ZIILjava/lang/Object;)Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceRevealMode : java/lang/Enum {
+	public static final field Always Lio/github/joelromanpr/brace/table/BraceRevealMode;
+	public static final field Never Lio/github/joelromanpr/brace/table/BraceRevealMode;
+	public static final field WhenTruncated Lio/github/joelromanpr/brace/table/BraceRevealMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/table/BraceRevealMode;
+	public static fun values ()[Lio/github/joelromanpr/brace/table/BraceRevealMode;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableCellsKt {
+	public static final fun BraceColumnHeader-4u75S8o (Ljava/lang/String;ILjava/lang/String;ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;FLkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;III)V
+	public static final fun BraceRowHeader (Ljava/lang/String;ILjava/lang/String;ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceTableCell (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;ZZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;III)V
 }
 
 public final class io/github/joelromanpr/brace/table/BraceTableClipboard {
@@ -16,15 +43,127 @@ public final class io/github/joelromanpr/brace/table/BraceTableClipboard {
 
 public final class io/github/joelromanpr/brace/table/BraceTableColumn {
 	public static final field $stable I
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;ZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;ZZZLkotlin/jvm/functions/Function2;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;ZZZLkotlin/jvm/functions/Function2;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getCellContent ()Lkotlin/jvm/functions/Function3;
 	public final fun getCellText ()Lkotlin/jvm/functions/Function1;
 	public final fun getEditable ()Z
 	public final fun getEditableName ()Z
+	public final fun getHeaderContent ()Lkotlin/jvm/functions/Function2;
 	public final fun getKey ()Ljava/lang/String;
+	public final fun getSortable ()Z
 	public final fun getTitle ()Ljava/lang/String;
 	public final fun getWidth-D9Ej5fM ()F
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableLoading {
+	public static final field $stable I
+	public static final field Companion Lio/github/joelromanpr/brace/table/BraceTableLoading$Companion;
+	public fun <init> ()V
+	public fun <init> (ZZZLjava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;)V
+	public synthetic fun <init> (ZZZLjava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun bodyCell (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun columnHeader (Ljava/lang/String;)Z
+	public final fun component1 ()Z
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun component4 ()Ljava/util/Map;
+	public final fun component5 ()Ljava/util/Map;
+	public final fun component6 ()Ljava/util/Map;
+	public final fun component7 ()Ljava/util/Map;
+	public final fun component8 ()Ljava/util/Map;
+	public final fun copy (ZZZLjava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;)Lio/github/joelromanpr/brace/table/BraceTableLoading;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/table/BraceTableLoading;ZZZLjava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;ILjava/lang/Object;)Lio/github/joelromanpr/brace/table/BraceTableLoading;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCellOverrides ()Ljava/util/Map;
+	public final fun getCells ()Z
+	public final fun getColumnCells ()Ljava/util/Map;
+	public final fun getColumnHeaderOverrides ()Ljava/util/Map;
+	public final fun getColumnHeaders ()Z
+	public final fun getRowCells ()Ljava/util/Map;
+	public final fun getRowHeaderOverrides ()Ljava/util/Map;
+	public final fun getRowHeaders ()Z
+	public fun hashCode ()I
+	public final fun rowHeader (Ljava/lang/String;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableLoading$Companion {
+	public final fun getAll ()Lio/github/joelromanpr/brace/table/BraceTableLoading;
+}
+
+public abstract interface class io/github/joelromanpr/brace/table/BraceTableRegion {
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableRegion$Cells : io/github/joelromanpr/brace/table/BraceTableRegion {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lio/github/joelromanpr/brace/table/BraceTableRegion$Cells;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/table/BraceTableRegion$Cells;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/joelromanpr/brace/table/BraceTableRegion$Cells;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAnchorColumnKey ()Ljava/lang/String;
+	public final fun getAnchorRowKey ()Ljava/lang/String;
+	public final fun getExtentColumnKey ()Ljava/lang/String;
+	public final fun getExtentRowKey ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableRegion$Columns : io/github/joelromanpr/brace/table/BraceTableRegion {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lio/github/joelromanpr/brace/table/BraceTableRegion$Columns;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/table/BraceTableRegion$Columns;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/joelromanpr/brace/table/BraceTableRegion$Columns;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFirstColumnKey ()Ljava/lang/String;
+	public final fun getLastColumnKey ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableRegion$Rows : io/github/joelromanpr/brace/table/BraceTableRegion {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lio/github/joelromanpr/brace/table/BraceTableRegion$Rows;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/table/BraceTableRegion$Rows;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/joelromanpr/brace/table/BraceTableRegion$Rows;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFirstRowKey ()Ljava/lang/String;
+	public final fun getLastRowKey ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableRegion$Table : io/github/joelromanpr/brace/table/BraceTableRegion {
+	public static final field $stable I
+	public static final field INSTANCE Lio/github/joelromanpr/brace/table/BraceTableRegion$Table;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableRegions {
+	public static final field $stable I
+	public static final field INSTANCE Lio/github/joelromanpr/brace/table/BraceTableRegions;
+	public final fun add (Lio/github/joelromanpr/brace/table/BraceTableSelection;Lio/github/joelromanpr/brace/table/BraceTableRegion;)Lio/github/joelromanpr/brace/table/BraceTableSelection$Regions;
+	public final fun updateLast (Lio/github/joelromanpr/brace/table/BraceTableSelection$Regions;Lio/github/joelromanpr/brace/table/BraceTableRegion;)Lio/github/joelromanpr/brace/table/BraceTableSelection$Regions;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableReorder {
+	public static final field $stable I
+	public static final field INSTANCE Lio/github/joelromanpr/brace/table/BraceTableReorder;
+	public final fun applyOrder (Ljava/util/List;Lkotlin/jvm/functions/Function1;Ljava/util/List;)Ljava/util/List;
+	public final fun move (Ljava/util/List;Ljava/lang/String;I)Ljava/util/List;
 }
 
 public abstract interface class io/github/joelromanpr/brace/table/BraceTableSelection {
@@ -74,6 +213,15 @@ public final class io/github/joelromanpr/brace/table/BraceTableSelection$Range :
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class io/github/joelromanpr/brace/table/BraceTableSelection$Regions : io/github/joelromanpr/brace/table/BraceTableSelection {
+	public static final field $stable I
+	public fun <init> (Ljava/util/List;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRegions ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class io/github/joelromanpr/brace/table/BraceTableSelection$Row : io/github/joelromanpr/brace/table/BraceTableSelection {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;)V
@@ -86,10 +234,122 @@ public final class io/github/joelromanpr/brace/table/BraceTableSelection$Row : i
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class io/github/joelromanpr/brace/table/BraceTableSelectionStateKt {
+	public static final fun getBraceTableSelectionSaver ()Landroidx/compose/runtime/saveable/Saver;
+	public static final fun rememberBraceTableSelection (Lio/github/joelromanpr/brace/table/BraceTableSelection;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/MutableState;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableSort {
+	public static final field $stable I
+	public static final field Companion Lio/github/joelromanpr/brace/table/BraceTableSort$Companion;
+	public fun <init> (Ljava/lang/String;Lio/github/joelromanpr/brace/table/BraceTableSortDirection;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lio/github/joelromanpr/brace/table/BraceTableSortDirection;
+	public final fun copy (Ljava/lang/String;Lio/github/joelromanpr/brace/table/BraceTableSortDirection;)Lio/github/joelromanpr/brace/table/BraceTableSort;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/table/BraceTableSort;Ljava/lang/String;Lio/github/joelromanpr/brace/table/BraceTableSortDirection;ILjava/lang/Object;)Lio/github/joelromanpr/brace/table/BraceTableSort;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDirection ()Lio/github/joelromanpr/brace/table/BraceTableSortDirection;
+	public final fun getKey ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableSort$Companion {
+	public final fun next (Lio/github/joelromanpr/brace/table/BraceTableSort;Ljava/lang/String;)Lio/github/joelromanpr/brace/table/BraceTableSort;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableSortDirection : java/lang/Enum {
+	public static final field Ascending Lio/github/joelromanpr/brace/table/BraceTableSortDirection;
+	public static final field Descending Lio/github/joelromanpr/brace/table/BraceTableSortDirection;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/table/BraceTableSortDirection;
+	public static fun values ()[Lio/github/joelromanpr/brace/table/BraceTableSortDirection;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableSortKt {
+	public static final fun rememberBraceTableSortState (Lio/github/joelromanpr/brace/table/BraceTableSort;Landroidx/compose/runtime/Composer;II)Lio/github/joelromanpr/brace/table/BraceTableSortState;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableSortState {
+	public static final field $stable I
+	public static final field Companion Lio/github/joelromanpr/brace/table/BraceTableSortState$Companion;
+	public final fun getValue ()Lio/github/joelromanpr/brace/table/BraceTableSort;
+	public final fun setValue (Lio/github/joelromanpr/brace/table/BraceTableSort;)V
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableSortState$Companion {
+	public final fun getSaver ()Landroidx/compose/runtime/saveable/Saver;
+}
+
+public abstract interface class io/github/joelromanpr/brace/table/BraceTableState {
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableState$Empty : io/github/joelromanpr/brace/table/BraceTableState {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lio/github/joelromanpr/brace/table/BraceTableState$Empty;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/table/BraceTableState$Empty;Ljava/lang/String;ILjava/lang/Object;)Lio/github/joelromanpr/brace/table/BraceTableState$Empty;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableState$Error : io/github/joelromanpr/brace/table/BraceTableState {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lkotlin/jvm/functions/Function0;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Lio/github/joelromanpr/brace/table/BraceTableState$Error;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/table/BraceTableState$Error;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Lio/github/joelromanpr/brace/table/BraceTableState$Error;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessage ()Ljava/lang/String;
+	public final fun getOnRetry ()Lkotlin/jvm/functions/Function0;
+	public final fun getRetryLabel ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableState$Loading : io/github/joelromanpr/brace/table/BraceTableState {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Lio/github/joelromanpr/brace/table/BraceTableLoading;Ljava/lang/String;)V
+	public synthetic fun <init> (Lio/github/joelromanpr/brace/table/BraceTableLoading;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lio/github/joelromanpr/brace/table/BraceTableLoading;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Lio/github/joelromanpr/brace/table/BraceTableLoading;Ljava/lang/String;)Lio/github/joelromanpr/brace/table/BraceTableState$Loading;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/table/BraceTableState$Loading;Lio/github/joelromanpr/brace/table/BraceTableLoading;Ljava/lang/String;ILjava/lang/Object;)Lio/github/joelromanpr/brace/table/BraceTableState$Loading;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLoading ()Lio/github/joelromanpr/brace/table/BraceTableLoading;
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableState$Ready : io/github/joelromanpr/brace/table/BraceTableState {
+	public static final field $stable I
+	public static final field INSTANCE Lio/github/joelromanpr/brace/table/BraceTableState$Ready;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class io/github/joelromanpr/brace/table/BraceTableViewport {
 	public static final field $stable I
 	public final fun getHorizontal ()Landroidx/compose/foundation/ScrollState;
 	public final fun getVertical ()Landroidx/compose/foundation/lazy/LazyListState;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTruncatedFormatter {
+	public static final field $stable I
+	public static final field INSTANCE Lio/github/joelromanpr/brace/table/BraceTruncatedFormatter;
+	public final fun preview (Ljava/lang/String;ILjava/lang/String;)Ljava/lang/String;
+	public static synthetic fun preview$default (Lio/github/joelromanpr/brace/table/BraceTruncatedFormatter;Ljava/lang/String;ILjava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
 }
 
 public final class io/github/joelromanpr/brace/table/ComposableSingletons$BraceEditableCellKt {

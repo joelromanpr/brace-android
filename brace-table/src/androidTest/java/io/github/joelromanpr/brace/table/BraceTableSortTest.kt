@@ -20,8 +20,8 @@ import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.click
 import androidx.compose.ui.test.assertHeightIsAtLeast
-import androidx.compose.ui.test.assertDoesNotExist
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.junit4.StateRestorationTester
@@ -82,7 +82,7 @@ class BraceTableSortTest {
             automation.serviceInfo = info
         }
         repeat(25) {
-            val roots = automation.windows.mapNotNull { it.root } + listOfNotNull(automation.rootInActiveWindow)
+            val roots = listOfNotNull(automation.rootInActiveWindow) + automation.windows.mapNotNull { it.root }
             fun find(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
                 if (node.contentDescription?.toString() == description) return node
                 for (index in 0 until node.childCount) node.getChild(index)?.let { child ->
@@ -211,6 +211,9 @@ class BraceTableSortTest {
             .config[SemanticsActions.CustomActions]
         rule.runOnIdle { assertTrue(actions.single { it.label == "Sort Name ascending" }.action()) }
         assertEquals(BraceTableSort("name", BraceTableSortDirection.Ascending), sort)
+        rule.waitForIdle()
+        rule.onNodeWithTag("brace-table-header:name").assert(
+            SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Sorted ascending"))
         assertEquals("Sorted ascending", nativeNode("Name, column 1").stateDescription?.toString())
         if (Build.VERSION.SDK_INT >= 34) {
             rule.enableAccessibilityChecks()

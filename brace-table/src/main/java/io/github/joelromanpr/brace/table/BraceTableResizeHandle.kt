@@ -38,6 +38,7 @@ import androidx.compose.ui.semantics.focused
 import androidx.compose.ui.semantics.requestFocus
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -116,8 +117,9 @@ internal fun BraceTableResizeHandle(
                     },
                 )
             }
-            .testTag("brace-table-resize-${axis.name.lowercase()}:$id")
+            .clickable(onClickLabel = increaseLabel) { update(latestSize + step) }
             .clearAndSetSemantics {
+                testTag = "brace-table-resize-${axis.name.lowercase()}:$id"
                 contentDescription = description.format(name)
                 stateDescription = stateLabel
                 this.focused = focused
@@ -127,8 +129,7 @@ internal fun BraceTableResizeHandle(
                     update(latestSize - step)
                     true
                 })
-            }
-            .clickable(onClickLabel = increaseLabel) { update(latestSize + step) },
+            },
         contentAlignment = Alignment.Center,
     ) {
         Box(

@@ -21,10 +21,12 @@ import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.collectionItemInfo
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -88,9 +90,11 @@ fun BraceTableCell(
             .then(if (enabled) Modifier.pointerSelect(rowKey, columnKey, onSelect,
                 onExtendSelection, onEdit) else Modifier)
             .clearAndSetSemantics {
+                testTag = "brace-table-cell:$rowKey:$columnKey"
                 collectionItemInfo = CollectionItemInfo(rowIndex + 1, 1, columnIndex + 1, 1)
                 this.selected = selected
                 contentDescription = description
+                if (!enabled) disabled()
                 if (enabled) onClick(selectLabel) { onSelect(); true }
                 customActions = if (enabled) listOfNotNull(
                     onExtendSelection?.let { action ->
@@ -162,9 +166,11 @@ fun BraceColumnHeader(
             .pointerSelect("column:$columnKey", null, if (enabled) onSelect else ({}),
                 onDoubleTap = if (enabled) onEdit else null)
             .clearAndSetSemantics {
+                testTag = "brace-table-header:$columnKey"
                 collectionItemInfo = CollectionItemInfo(0, 1, columnIndex + 1, 1)
                 this.selected = selected
                 contentDescription = description
+                if (!enabled) disabled()
                 if (sortState != null) stateDescription = sortState
                 if (enabled) onClick(selectLabel) { onSelect(); true }
                 customActions = listOfNotNull(
@@ -225,9 +231,11 @@ fun BraceRowHeader(
             .border(metrics.gridLineWidth, colors.gridLine)
             .then(if (enabled) Modifier.pointerSelect(rowKey, null, onSelect) else Modifier)
             .clearAndSetSemantics {
+                testTag = "brace-table-row:$rowKey"
                 collectionItemInfo = CollectionItemInfo(rowIndex + 1, 1, 0, 1)
                 this.selected = selected
                 contentDescription = description
+                if (!enabled) disabled()
                 if (enabled) onClick(selectLabel) { onSelect(); true }
                 customActions = if (enabled && onAddRegion != null)
                     listOf(CustomAccessibilityAction(addRegionLabel) { onAddRegion(); true })

@@ -43,6 +43,7 @@ import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.requestFocus
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -67,6 +68,8 @@ internal fun BraceTableReorderHandle(
     onMoveTo: (Int) -> Unit,
     targetIndexForDrag: (Float) -> Int,
     onFocusedChange: (Boolean) -> Unit,
+    restoreFocus: Boolean = false,
+    onFocusRestored: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val direction = LocalLayoutDirection.current
@@ -82,12 +85,15 @@ internal fun BraceTableReorderHandle(
     val primaryTarget = if (index < count - 1) index + 1 else index - 1
     val primaryLabel = if (index < count - 1) laterLabel else earlierLabel
     fun moveTo(target: Int) {
-        if (target in 0 until latestCount && target != latestIndex) latestMove(target)
+        if (target in 0 until latestCount && target != latestIndex) {
+            latestMove(target)
+        }
     }
-    LaunchedEffect(index, isFocused) {
-        if (isFocused) {
+    LaunchedEffect(index, restoreFocus) {
+        if (restoreFocus) {
             withFrameNanos { }
-            focusRequester.requestFocus()
+            withFrameNanos { }
+            if (focusRequester.requestFocus()) onFocusRestored()
         }
     }
     Box(
@@ -134,8 +140,9 @@ internal fun BraceTableReorderHandle(
                     },
                 )
             }
-            .testTag("brace-table-reorder-${axis.name.lowercase()}:$id")
+            .clickable(onClickLabel = primaryLabel) { moveTo(primaryTarget) }
             .clearAndSetSemantics {
+                testTag = "brace-table-reorder-${axis.name.lowercase()}:$id"
                 contentDescription = description.format(name)
                 stateDescription = positionDescription.format(index + 1, count)
                 liveRegion = LiveRegionMode.Polite
@@ -150,8 +157,7 @@ internal fun BraceTableReorderHandle(
                         CustomAccessibilityAction(laterLabel) { moveTo(index + 1); true }
                     else null,
                 )
-            }
-            .clickable(onClickLabel = primaryLabel) { moveTo(primaryTarget) },
+            },
         contentAlignment = Alignment.Center,
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xs)) {

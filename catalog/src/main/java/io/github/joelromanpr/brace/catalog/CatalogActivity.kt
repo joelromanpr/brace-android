@@ -58,6 +58,15 @@ import io.github.joelromanpr.brace.core.BraceCardList
 import io.github.joelromanpr.brace.core.BraceDivider
 import io.github.joelromanpr.brace.core.BraceDividerOrientation
 import io.github.joelromanpr.brace.core.BraceProgressBar
+import io.github.joelromanpr.brace.core.BraceMenu
+import io.github.joelromanpr.brace.core.BraceMenuPopup
+import io.github.joelromanpr.brace.core.BraceMenuItem
+import io.github.joelromanpr.brace.core.BraceMenuDivider
+import io.github.joelromanpr.brace.core.BraceOverlay
+import io.github.joelromanpr.brace.core.BraceOverlayHost
+import io.github.joelromanpr.brace.core.BraceDialog
+import io.github.joelromanpr.brace.core.BraceAlertDialog
+import io.github.joelromanpr.brace.core.rememberBraceOverlayState
 import io.github.joelromanpr.brace.core.BraceProgressIntent
 import io.github.joelromanpr.brace.core.BraceSection
 import io.github.joelromanpr.brace.core.BraceSectionCard
@@ -102,6 +111,20 @@ private val usageExamples = mapOf(
     "core-compoundtag" to "BraceCompoundTag(label = \"Status\", value = \"Active\", onRemove = { clearStatus() })",
     "core-callout" to "BraceCallout(title = \"Saved\", intent = BraceCalloutIntent.Success) { Text(\"Your changes are ready.\") }",
     "core-nonidealstate" to "BraceEmptyState(title = \"No results\", description = \"Try another query.\")",
+    "core-menu" to "BraceMenu { BraceMenuItem(\"Open report\", onClick = { openReport() }) }",
+    "core-menuitem" to "BraceMenuItem(\"Archived\", onClick = { archived = !archived }, selected = archived)",
+    "core-menudivider" to "BraceMenuDivider(title = \"Workspace\")",
+    "core-overlay2" to "BraceOverlay(open = open, onDismissRequest = { open = false }, title = \"Details\") { Text(\"Details\") }",
+    "core-overlay" to "BraceOverlay(open = open, onDismissRequest = { open = false }, title = \"Details\") { Text(\"Details\") }",
+    "core-portal" to "BraceOverlay(open = open, onDismissRequest = { open = false }, title = \"Details\") { Text(\"Details\") }",
+    "core-overlaysprovider" to "BraceOverlayHost(rememberBraceOverlayState()) { /* modal content */ }",
+    "core-portalprovider" to "BraceOverlayHost(rememberBraceOverlayState()) { /* modal content */ }",
+    "core-useoverlaystack" to "val overlays = rememberBraceOverlayState(); BraceOverlayHost(overlays) { /* modal content */ }",
+    "core-dialog" to "BraceDialog(open = open, onDismissRequest = { open = false }, title = \"Edit project\", actions = { BraceButton(\"Save\", onClick = save) }) { Text(\"Details\") }",
+    "core-dialogbody" to "BraceDialogBody { Text(\"Scrollable details\") }",
+    "core-dialogfooter" to "BraceDialogActions { BraceButton(\"Save\", onClick = save) }",
+    "core-alert" to "BraceAlertDialog(open = open, title = \"Delete report?\", onConfirm = delete, onCancel = cancel, confirmIntent = BraceButtonIntent.Danger)",
+
 )
 
 @Composable
@@ -364,5 +387,81 @@ private fun ComponentSample(id: String) {
                 description = "Try changing the query.",
                 action = { BraceButton("Retry", onClick = { retried = true }) })
         }
+        "core-menu", "core-menuitem", "core-menudivider" -> {
+            var selected by rememberSaveable { mutableStateOf(false) }
+            var expanded by rememberSaveable { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceMenu {
+                    BraceMenuItem("Open report", onClick = { selected = true })
+                    BraceMenuDivider(title = "Workspace")
+                    BraceMenuItem("Archived", onClick = { selected = !selected }, selected = selected)
+                    BraceMenuItem("Unavailable", onClick = {}, enabled = false)
+                }
+                BraceMenuPopup(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    anchor = { BraceButton("Open anchored menu", onClick = { expanded = true }) },
+                ) {
+                    BraceMenuItem("Open report", onClick = { selected = true })
+                    BraceMenuItem("Archived", onClick = { selected = !selected }, selected = selected)
+                }
+            }
+        }
+        "core-overlay", "core-overlay2", "core-portal", "core-overlaysprovider", "core-portalprovider", "core-useoverlaystack" -> {
+            var open by rememberSaveable { mutableStateOf(false) }
+            val overlays = rememberBraceOverlayState()
+            BraceOverlayHost(overlays) {
+                Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton("Open overlay", onClick = { open = true })
+                    Text("Active layers: ${overlays.activeCount}", color = BraceTheme.colors.semantic.onSurface)
+                    BraceOverlay(open = open, onDismissRequest = { open = false }, title = "Details") {
+                        Column(Modifier.padding(BraceTheme.componentMetrics.dialog.contentPadding),
+                            verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                            Text("Details", color = BraceTheme.colors.semantic.onSurface,
+                                style = BraceTheme.typography.title)
+                            Text("Android dialog window with Brace tokens.",
+                                color = BraceTheme.colors.semantic.onSurface)
+                            BraceButton("Close", onClick = { open = false })
+                        }
+                    }
+                }
+            }
+        }
+
+        "core-dialog", "core-dialogbody", "core-dialogfooter", "core-alert" -> {
+            var dialogOpen by rememberSaveable { mutableStateOf(false) }
+            var alertOpen by rememberSaveable { mutableStateOf(false) }
+            var saved by rememberSaveable { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceButton("Open edit dialog", onClick = { dialogOpen = true })
+                BraceButton("Open confirmation", onClick = { alertOpen = true },
+                    intent = BraceButtonIntent.Danger)
+                Text(if (saved) "Saved" else "No change yet", color = BraceTheme.colors.semantic.onSurface)
+                BraceDialog(
+                    open = dialogOpen,
+                    onDismissRequest = { dialogOpen = false },
+                    title = "Edit project",
+                    actions = {
+                        BraceButton("Cancel", onClick = { dialogOpen = false },
+                            intent = BraceButtonIntent.Secondary)
+                        BraceButton("Save", onClick = { saved = true; dialogOpen = false })
+                    },
+                ) {
+                    Text("Project details", color = BraceTheme.colors.semantic.onSurface)
+                    Text("Actions remain visible while long content scrolls.",
+                        color = BraceTheme.colors.semantic.onSurfaceMuted)
+                }
+                BraceAlertDialog(
+                    open = alertOpen,
+                    title = "Delete report?",
+                    message = "This removes the report from this workspace.",
+                    onConfirm = { saved = false; alertOpen = false },
+                    onCancel = { alertOpen = false },
+                    confirmLabel = "Delete",
+                    confirmIntent = BraceButtonIntent.Danger,
+                )
+            }
+        }
+
     }
 }

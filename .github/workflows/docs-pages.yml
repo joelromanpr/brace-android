@@ -30,11 +30,13 @@ jobs:
       - name: Build site
         run: node scripts/build-docs.mjs
       - uses: actions/configure-pages@v5
+        if: ${{ !github.event.repository.private }}
       - uses: actions/upload-pages-artifact@v4
+        if: ${{ !github.event.repository.private }}
         with:
           path: build/site
   deploy:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && !github.event.repository.private
     needs: build
     runs-on: ubuntu-latest
     permissions:

@@ -56,7 +56,7 @@ mavenPublishing {
     if (providers.gradleProperty("signingInMemoryKey").isPresent) signAllPublications()
     pom {
         name.set("Brace Datetime")
-        description.set("Localized date picker and date input for Brace Android.")
+        description.set("Localized date and time pickers and fields for Brace Android.")
         inceptionYear.set("2026")
         url.set("https://github.com/joelromanpr/brace-android")
         licenses {

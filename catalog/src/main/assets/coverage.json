@@ -3036,18 +3036,18 @@
       "blueprintName": "TimePicker",
       "blueprintUrl": "https://blueprintjs.com/docs/#datetime/timepicker",
       "sourcePage": "datetime/timepicker",
-      "braceApi": "BraceTimePicker",
+      "braceApi": "BraceTimePicker / BraceTimeField",
       "artifact": "io.github.joelromanpr.brace:brace-datetime",
-      "behavior": "Choose hour, minute, and optional seconds with locale-aware 12 or 24 hour labels. Expose localized date or time values and bounds; support touch, keyboard, TalkBack, and restored selection.",
+      "behavior": "Choose and enter a LocalTime with locale-aware 12/24 hour cycle, minute/second/millisecond precision, overnight bounds, 48 dp controls, keyboard/IME input, TalkBack labels, and restored draft and selected state.",
       "classification": "adaptation",
-      "reason": "Android locale, calendar, IME, and time-zone presentation differ from web input behavior.",
-      "milestone": "M4",
+      "reason": "Compose numeric unit fields and a validated anchored time field replace web Date objects, DOM inputs, and React blur mechanics. Blueprint 6.18.0 has no separate documented TimeInput row; BraceTimeField is an Android adjunct under TimePicker. LocalTime has no date or time zone.",
+      "milestone": "M30",
       "priority": "P1",
-      "status": "planned",
-      "implementation": null,
-      "sample": null,
-      "documentation": null,
-      "tests": null,
+      "status": "in progress",
+      "implementation": "brace-datetime/src/main/java/io/github/joelromanpr/brace/datetime/BraceTimePicker.kt",
+      "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "documentation": "docs/time-picker-input.md",
+      "tests": "brace-datetime/src/androidTest/java/io/github/joelromanpr/brace/datetime/BraceTimePickerTest.kt",
       "firstRelease": null,
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/datetime/src/components/time-picker/timepicker.mdx"
     },
@@ -3757,8 +3757,8 @@
         "total": 6,
         "stable": 0,
         "status": {
-          "in progress": 2,
-          "planned": 4
+          "in progress": 3,
+          "planned": 3
         }
       },
       "icons": {

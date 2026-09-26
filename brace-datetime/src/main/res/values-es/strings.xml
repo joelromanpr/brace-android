@@ -12,4 +12,23 @@
     <string name="brace_date_invalid">Ingrese una fecha válida</string>
     <string name="brace_date_out_of_range">Fecha no disponible</string>
     <string name="brace_date_calendar_title">Elegir fecha</string>
+    <string name="brace_time_hour_12">Hora, 12 horas</string>
+    <string name="brace_time_hour_24">Hora, 24 horas</string>
+    <string name="brace_time_minute">Minuto</string>
+    <string name="brace_time_second">Segundo</string>
+    <string name="brace_time_millisecond">Milisegundo</string>
+    <string name="brace_time_period">Período del día</string>
+    <string name="brace_time_increase">Aumentar %1$s</string>
+    <string name="brace_time_decrease">Disminuir %1$s</string>
+    <string name="brace_time_switch_period">Cambiar a %1$s</string>
+    <string name="brace_time_open">Abrir selector de hora para %1$s</string>
+    <string name="brace_time_invalid">Ingresa una hora válida</string>
+    <string name="brace_time_unavailable">Hora no disponible</string>
+    <string name="brace_time_title">Elegir hora</string>
+    <string name="brace_time_done">Listo</string>
+    <string name="brace_time_clear">Borrar</string>
+    <string name="brace_time_hour_short">H</string>
+    <string name="brace_time_minute_short">Min</string>
+    <string name="brace_time_second_short">Seg</string>
+    <string name="brace_time_millisecond_short">Ms</string>
 </resources>

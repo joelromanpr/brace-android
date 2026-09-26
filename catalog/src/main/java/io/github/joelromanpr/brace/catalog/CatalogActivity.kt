@@ -143,7 +143,11 @@ import io.github.joelromanpr.brace.select.braceQueryNavigation
 import io.github.joelromanpr.brace.datetime.BraceDateField
 import io.github.joelromanpr.brace.datetime.BraceDatePicker
 import io.github.joelromanpr.brace.datetime.BraceDateShortcut
+import io.github.joelromanpr.brace.datetime.BraceTimePicker
+import io.github.joelromanpr.brace.datetime.BraceTimeField
+import io.github.joelromanpr.brace.datetime.BraceTimePrecision
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.YearMonth
 import org.json.JSONObject
 import java.util.Locale
@@ -265,6 +269,11 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "core-overlaytoaster" to "val toasts = rememberBraceToastState(); Box(Modifier.fillMaxSize()) { BraceButton(\"Notify\", onClick = { toasts.show(BraceToastSpec(\"Ready\"), key = \"status\") }); BraceToastHost(toasts, position = BraceToastPosition.BottomEnd) }",
     "datetime-datepicker" to "var day by rememberSaveable { mutableStateOf<String?>(null) }; BraceDatePicker(day?.let(LocalDate::parse), { day = it?.toString() }, locale = Locale.US)",
     "datetime-dateinput" to "var day by rememberSaveable { mutableStateOf<String?>(null) }; BraceDateField(day?.let(LocalDate::parse), { day = it?.toString() }, label = \"Due date\", locale = Locale.US)",
+    "datetime-timepicker" to """var time by rememberSaveable { mutableStateOf("23:30") }
+BraceTimePicker(LocalTime.parse(time), { time = it.toString() }, locale = Locale.US,
+    use24Hour = true, minTime = LocalTime.of(22, 0), maxTime = LocalTime.of(2, 0))
+BraceTimeField(LocalTime.parse(time), { time = it?.toString() ?: "23:30" },
+    label = "Time", locale = Locale.US)""",
 
 )
 
@@ -584,6 +593,30 @@ private fun ComponentSample(
                     color = BraceTheme.colors.semantic.onSurface,
                     style = BraceTheme.typography.body)
                 BraceDateField(null, {}, label = "Unavailable date", enabled = false,
+                    locale = Locale.US)
+            }
+        }
+        "datetime-timepicker" -> {
+            var selected by rememberSaveable { mutableStateOf("23:30") }
+            var fieldTime by rememberSaveable { mutableStateOf<String?>(null) }
+            var errors by rememberSaveable { mutableStateOf(0) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Overnight window · 22:00–02:00", color = BraceTheme.colors.semantic.onSurfaceMuted,
+                    style = BraceTheme.typography.label)
+                BraceTimePicker(LocalTime.parse(selected), { selected = it.toString() },
+                    locale = Locale.US, use24Hour = true,
+                    minTime = LocalTime.of(22, 0), maxTime = LocalTime.of(2, 0))
+                Text("Selected: $selected", color = BraceTheme.colors.semantic.onSurface,
+                    style = BraceTheme.typography.body)
+                BraceTimeField(fieldTime?.let(LocalTime::parse), { fieldTime = it?.toString() },
+                    label = "Meeting time", locale = Locale.US,
+                    precision = BraceTimePrecision.Second,
+                    supportingText = "Enter a time or open the picker",
+                    onInvalidInput = { errors++ })
+                Text("Field: ${fieldTime ?: "none"} · invalid entries: $errors",
+                    color = BraceTheme.colors.semantic.onSurface,
+                    style = BraceTheme.typography.body)
+                BraceTimeField(null, {}, label = "Unavailable time", enabled = false,
                     locale = Locale.US)
             }
         }

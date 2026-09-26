@@ -27,7 +27,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.LayoutDirection
 import io.github.braceandroid.foundation.BraceTheme
 
-/** Semantic color intent for a [BraceProgressBar]. */
+/** Semantic color intent shared by [BraceProgressBar] and [BraceSpinner]. */
 public enum class BraceProgressIntent { Primary, Success, Warning, Danger }
 
 /**

@@ -494,6 +494,18 @@
       "searchBorder": "{semantic.border}",
       "focusRing": "{semantic.focusRing}"
     },
+    "spinner": {
+      "track": "{semantic.surfaceInset}",
+      "indicator": "{semantic.primary}",
+      "successIndicator": "{semantic.success}",
+      "warningIndicator": "{semantic.warning}",
+      "dangerIndicator": "{semantic.danger}"
+    },
+    "skeleton": {
+      "base": "{semantic.disabledContainer}",
+      "highlight": "{semantic.selection}",
+      "border": "{semantic.border}"
+    },
     "datePicker": {
       "container": "{semantic.surface}",
       "content": "{semantic.onSurface}",
@@ -643,6 +655,16 @@
       "searchHorizontalPadding": 10,
       "minWidth": 240,
       "maxListHeight": 280
+    },
+    "spinner": {
+      "smallSize": 20,
+      "mediumSize": 32,
+      "largeSize": 48,
+      "strokeWidth": 3
+    },
+    "skeleton": {
+      "cornerRadius": 4,
+      "lineHeight": 16
     },
     "datePicker": {
       "daySize": 48,

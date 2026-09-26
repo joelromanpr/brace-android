@@ -12,7 +12,6 @@ import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.StateRestorationTester
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNode
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performKeyInput
@@ -63,9 +62,9 @@ class BraceTimeZoneSelectTest {
                 referenceInstant = winter, systemZone = utc)
         } }
         rule.onNodeWithContentDescription("Time zone: Select time zone").performClick()
-        rule.onNodeWithContentDescription("Search time zones")
-            .performTextInput("America/New_York")
-            .performKeyInput { pressKey(Key.Enter) }
+        val search = rule.onNodeWithContentDescription("Search time zones")
+        search.performTextInput("America/New_York")
+        search.performKeyInput { pressKey(Key.Enter) }
         rule.runOnIdle { assertEquals(ZoneId.of("America/New_York"), zone) }
     }
 

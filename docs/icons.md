@@ -1,6 +1,6 @@
 # Icons and icon loading
 
-This `brace-icons` source slice maps the pinned Blueprint 6.18.0 [Icon component](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/icon/icon.mdx) and [icon loading](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/src/loading-icons.mdx) capabilities (`@blueprintjs/icons` 6.13.0 at that commit) to Compose. Both inventory rows remain **in progress**. The separate opt-in [Blueprint glyph pack](#optional-blueprint-glyph-pack) is **in progress** with all 706 names from the pinned icons package. `brace-icons` continues to bundle only 11 original Brace drawings. No Maven Central version has shipped.
+This `brace-icons` source slice maps the pinned Blueprint 6.18.0 [Icon component](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/icon/icon.mdx) and [icon loading](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/src/loading-icons.mdx) capabilities (`@blueprintjs/icons` 6.13.0 at that commit) to Compose. Both inventory rows remain **in progress**. The separate opt-in [Blueprint glyph pack](#optional-blueprint-glyph-pack) is **in progress** with all 706 legacy names from the pinned icons package. `brace-icons` continues to bundle only 11 original Brace drawings. No Maven Central version has shipped.
 
 ## Install and use
 
@@ -51,7 +51,7 @@ Blueprint's React static imports, JavaScript dynamic chunks and loader options, 
 
 ## Optional Blueprint glyph pack
 
-`brace-blueprint-icons` is an **opt-in**, aligned-version artifact. It does not replace `brace-icons` or change `BraceIconRegistry.Default`. It imports the 706 names in pinned `@blueprintjs/icons` 6.13.0, with distinct 16px and 20px SVG paths. Add it only when the complete pinned artwork is needed:
+`brace-blueprint-icons` is an **opt-in**, aligned-version artifact. It does not replace `brace-icons` or change `BraceIconRegistry.Default`. It imports the 706 legacy names in pinned `@blueprintjs/icons` 6.13.0, with distinct 16px and 20px SVG paths. The package’s separate `/next` artwork is tracked in a later inventory capability. Add this artifact when the complete pinned legacy artwork is needed:
 
 ```kotlin
 implementation("io.github.joelromanpr.brace:brace-blueprint-icons:0.1.0-SNAPSHOT")

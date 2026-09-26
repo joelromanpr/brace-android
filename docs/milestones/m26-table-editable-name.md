@@ -1,6 +1,6 @@
 # M26: editable table column names
 
-**Status:** local source branch rebased onto M22 cell editing head `f5882da`, stacked on M21, M18, M14, and M13 DatePicker `ac121b3`. These APIs are **in progress**, `firstRelease` is null, and released applicable coverage remains **0/121**. The rebased head has passed current local build, device, Maven Local, independent consumer, and 320dp catalog checks; hosted CI and review remain pending.
+**Status:** local source branch rebased onto M22 cell editing head `4dda5bf`, stacked on M21, M18, M14, and M13 DatePicker `ac121b3`. These APIs are **in progress**, `firstRelease` is null, and released applicable coverage remains **0/121**. The stacked source has passed local build, device, Maven Local, independent consumer, and 320dp catalog checks. The later report-only parent restack left production code, tokens, inventory, tests, and API byte-identical; hosted CI and review remain pending.
 
 ## Source delivered in this branch
 

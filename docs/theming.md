@@ -4,7 +4,7 @@
 
 ## Token source and version
 
-The platform-neutral source is [`tokens/v1/brace.tokens.json`](../tokens/v1/brace.tokens.json). Its `version` is the token contract version and can evolve separately from the library's Maven version. The source records primitive palettes, semantic light/dark/high-contrast roles, typography styles and scales, spacing, sizing, shape, elevation, motion, compact/comfortable density, and visual states and dimensions for each component family. Logical lengths map to Android `dp`; type sizes map to `sp`; motion maps to milliseconds. Colors use `#RRGGBB` or `#AARRGGBB`.
+The v1 token contract is at `1.1.0` after the additive select component group. The platform-neutral source is [`tokens/v1/brace.tokens.json`](../tokens/v1/brace.tokens.json). Its `version` is the token contract version and can evolve separately from the library's Maven version. The source records primitive palettes, semantic light/dark/high-contrast roles, typography styles and scales, spacing, sizing, shape, elevation, motion, compact/comfortable density, and visual states and dimensions for each component family. Logical lengths map to Android `dp`; type sizes map to `sp`; motion maps to milliseconds. Colors use `#RRGGBB` or `#AARRGGBB`.
 
 Run `python3 scripts/generate_tokens.py` after editing the JSON. Commit both source and generated Kotlin. `python3 scripts/generate_tokens.py --check` fails if they differ. The generator validates semantic-role completeness across modes, references, dimensions, typography references, and component families. The generated file carries a SHA-256 of its source, giving iOS and Flutter maintainers a way to verify they consumed the same version. Add new tokens to the JSON first; do not edit `GeneratedBraceTokens.kt` directly.
 
@@ -69,7 +69,7 @@ val controlHeight = BraceTheme.densityTokens.controlHeightDp
 val touchTarget = BraceTheme.sizing.touchTarget
 ```
 
-`BraceTheme.colors.semantic` contains surfaces, content, borders, focus, selection, disabled states, and primary/success/warning/danger roles. `BraceTheme.colors.components` supplies state roles for button, input, checkbox, switch, card, callout, progress, menu, dialog, table, and tag. `BraceTheme.componentMetrics` supplies their dimensions. The `BraceTheme.typography` named styles use `sp` and respond to Android font-scale settings. `BraceTokenDefaults.typeScale` exposes primitive size, line-height, weight, and family values for custom styles.
+`BraceTheme.colors.semantic` contains surfaces, content, borders, focus, selection, disabled states, and primary/success/warning/danger roles. `BraceTheme.colors.components` supplies state roles for button, input, checkbox, switch, card, callout, progress, menu, select, dialog, table, and tag. `BraceTheme.componentMetrics` supplies their dimensions. The `BraceTheme.typography` named styles use `sp` and respond to Android font-scale settings. `BraceTokenDefaults.typeScale` exposes primitive size, line-height, weight, and family values for custom styles.
 
 Compact controls are visually shorter, but the token `sizing.touchTarget` remains 48 dp. Use `Modifier.braceMinimumTouchTarget()` or an equivalent 48 dp interactive region. Do not force text into fixed-height containers: use a minimum height so large text can expand. `Modifier.braceFocusOutline(focused)` draws a token-colored 2 dp keyboard focus boundary; pass focus state from the component's interaction source. Keyboard and mouse states should be visually distinct from disabled state.
 

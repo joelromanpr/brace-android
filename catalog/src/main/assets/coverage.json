@@ -2824,14 +2824,14 @@
       "artifact": "io.github.joelromanpr.brace:brace-select",
       "behavior": "Choose one item from a filterable list; announce active and selected options. Expose option count, active and selected state; support touch, arrows, Enter, Escape, and TalkBack.",
       "classification": "direct",
-      "reason": "",
+      "reason": "React render props and DOM anchoring become typed Compose options and a focusable popup. Create-new-item callbacks/rendering, initial popup content, whole-list predicate reordering, and replacement list rendering remain unimplemented within this in-progress row.",
       "milestone": "M3",
       "priority": "P1",
-      "status": "planned",
-      "implementation": null,
-      "sample": null,
-      "documentation": null,
-      "tests": null,
+      "status": "in progress",
+      "implementation": "brace-select/src/main/java/io/github/joelromanpr/brace/select/BraceSelect.kt",
+      "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "documentation": "docs/select-query.md",
+      "tests": "brace-select/src/androidTest/java/io/github/joelromanpr/brace/select/BraceSelectTest.kt",
       "firstRelease": null,
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/select/src/components/select/select-component.mdx"
     },
@@ -2923,11 +2923,11 @@
       "reason": "A headless React render-prop becomes Compose state.",
       "milestone": "M3",
       "priority": "P1",
-      "status": "planned",
-      "implementation": null,
-      "sample": null,
-      "documentation": null,
-      "tests": null,
+      "status": "in progress",
+      "implementation": "brace-select/src/main/java/io/github/joelromanpr/brace/select/BraceQueryList.kt",
+      "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "documentation": "docs/select-query.md",
+      "tests": "brace-select/src/androidTest/java/io/github/joelromanpr/brace/select/BraceSelectTest.kt",
       "firstRelease": null,
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/select/src/components/query-list/query-list.mdx"
     },
@@ -3779,7 +3779,8 @@
         "total": 5,
         "stable": 0,
         "status": {
-          "planned": 5
+          "in progress": 2,
+          "planned": 3
         }
       },
       "table": {

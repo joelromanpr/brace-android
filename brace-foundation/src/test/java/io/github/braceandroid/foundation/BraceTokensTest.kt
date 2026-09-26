@@ -80,6 +80,8 @@ class BraceTokensTest {
         assertEquals(custom, components.progress.indicator)
         assertEquals(Color.Red, components.button.focusRing)
         assertEquals(overridden.primarySubtle, components.callout.primaryContainer)
+        assertEquals(overridden.selection, components.select.selectedContainer)
+        assertEquals(Color.Red, components.select.focusRing)
     }
 
     @Test
@@ -87,6 +89,6 @@ class BraceTokensTest {
         assertTrue(BraceTokenDefaults.compact.controlHeightDp < BraceTokenDefaults.comfortable.controlHeightDp)
         assertTrue(BraceTokenDefaults.sizing.touchTarget >= BraceTokenDefaults.compact.controlHeightDp)
         assertEquals(0, BraceTokenDefaults.motion.withoutAnimation().normal)
-        assertEquals("1.0.0", BraceTokenDefaults.version)
+        assertEquals("1.1.0", BraceTokenDefaults.version)
     }
 }

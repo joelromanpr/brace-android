@@ -19,7 +19,7 @@
 | API36 device | PASS: 11/11 focused tests for touch, mouse, keyboard, exclusivity, disabled and indeterminate states, RTL arrows and switch-thumb pixels, focus, state restoration, caller-small 48 dp target, 2× text, high contrast, automated accessibility checks, and native same-node label/action/disabled state. |
 | Maven consumer | PASS: foundation, core, icons, and select published to Maven Local with AAR, POM, Gradle metadata, sources, and KDoc JARs; separate Maven-coordinate consumer `:app:assembleDebug` passed. Maven Central staging remains unverified. |
 | Visual | PASS locally: 320×640 light SwitchCard, CheckboxCard, and RadioCard samples and dark high-contrast/2× text SwitchCard inspected. No card content clipped in inspected states. The disabled switch track was initially visually lost against its card surface and was corrected with token-driven colors and all-scheme contrast assertions. |
-| Hosted | Pending current-head GitHub CI and CodeQL. No hosted pass or release is claimed. |
+| Hosted | Initial PR head `3aab966` [CI run 36261045604](https://github.com/joelromanpr/brace-android/actions/runs/36261045604) failed before any steps in verify and instrumented; [CodeQL run 36261045622](https://github.com/joelromanpr/brace-android/actions/runs/36261045622) skipped analysis. The repository account billing blocker remains; these are infrastructure outcomes, not code-test results. No hosted pass or release is claimed. |
 
 ## Adaptations, limits, and next branch
 

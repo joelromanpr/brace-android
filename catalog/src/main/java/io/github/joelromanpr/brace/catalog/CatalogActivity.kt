@@ -285,7 +285,7 @@ BraceTheme {
 }""".trimIndent(),
     "core-fileinput" to """var names by rememberSaveable { mutableStateOf(emptyList<String>()) }
 BraceFilePickerField(label = "Attachments", selectedNames = names,
-    onFilesPicked = { uris -> names = uris.mapIndexed { index, _ -> "Document ${index + 1}" } },
+    onFilesPicked = { uris -> names = uris.mapIndexed { index, _ -> "Document ${'$'}{index + 1}" } },
     mimeTypes = listOf("application/pdf", "image/*"), multiple = true)""",
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-link" to "BraceLink(\"Read guide\", BraceLinkDestination.Uri(\"https://example.org/guide\", \"Guide\"))",

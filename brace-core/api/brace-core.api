@@ -167,6 +167,19 @@ public final class io/github/joelromanpr/brace/core/BraceFeedbackKt {
 	public static final fun BraceEmptyState (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lio/github/joelromanpr/brace/core/BraceEmptyStateIconSize;ZLio/github/joelromanpr/brace/core/BraceEmptyStateLayout;Lkotlin/jvm/functions/Function2;ZLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
 }
 
+public final class io/github/joelromanpr/brace/core/BraceFilePickerFieldKt {
+	public static final fun BraceFilePickerField (Ljava/lang/String;Ljava/util/List;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ljava/util/List;ZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceFilePickerSize;ZLandroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceFilePickerSize : java/lang/Enum {
+	public static final field Large Lio/github/joelromanpr/brace/core/BraceFilePickerSize;
+	public static final field Medium Lio/github/joelromanpr/brace/core/BraceFilePickerSize;
+	public static final field Small Lio/github/joelromanpr/brace/core/BraceFilePickerSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceFilePickerSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceFilePickerSize;
+}
+
 public final class io/github/joelromanpr/brace/core/BraceFormFieldKt {
 	public static final fun BraceFormField (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ZLio/github/joelromanpr/brace/core/BraceFormIntent;ZZLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
 }

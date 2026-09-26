@@ -6,6 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
@@ -24,12 +25,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.error
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import io.github.braceandroid.foundation.BraceTheme
 
@@ -91,6 +99,10 @@ public fun BraceFilePickerField(
     val metrics = BraceTheme.componentMetrics.input
     val spacing = BraceTheme.spacing
     val interaction = remember { MutableInteractionSource() }
+    val openPicker: () -> Unit = {
+        val types = mimeTypes.toTypedArray()
+        if (multiple) multiplePicker.launch(types) else singlePicker.launch(types)
+    }
     val focused by interaction.collectIsFocusedAsState()
     val hovered by interaction.collectIsHoveredAsState()
     val pressed by interaction.collectIsPressedAsState()
@@ -124,26 +136,34 @@ public fun BraceFilePickerField(
         Row(
             modifier = Modifier
                 .then(if (fill) Modifier.fillMaxWidth() else Modifier)
-                .defaultMinSize(minHeight = BraceTheme.sizing.touchTarget)
                 .border(BraceTheme.sizing.focusRingWidth,
                     if (focused) semantic.focusRing else semantic.focusRing.copy(alpha = 0f), shape)
                 .padding(BraceTheme.sizing.focusRingWidth)
+                .defaultMinSize(minHeight = BraceTheme.sizing.touchTarget)
                 .clip(shape)
                 .background(container)
                 .border(metrics.borderWidth, outline, shape)
+                .onKeyEvent { event ->
+                    if (enabled && event.type == KeyEventType.KeyUp &&
+                        (event.key == Key.Enter || event.key == Key.Spacebar)
+                    ) {
+                        openPicker()
+                        true
+                    } else false
+                }
+                .focusable(enabled = enabled, interactionSource = interaction)
+                .clearAndSetSemantics {
+                    contentDescription = announcement
+                    role = Role.Button
+                    if (enabled) onClick { openPicker(); true } else disabled()
+                    if (errorText != null) error(errorText)
+                }
                 .clickable(
                     enabled = enabled,
                     role = Role.Button,
                     interactionSource = interaction,
                     indication = null,
-                ) {
-                    val types = mimeTypes.toTypedArray()
-                    if (multiple) multiplePicker.launch(types) else singlePicker.launch(types)
-                }
-                .semantics {
-                    contentDescription = announcement
-                    if (errorText != null) error(errorText)
-                },
+                ) { openPicker() },
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(

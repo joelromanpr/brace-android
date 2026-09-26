@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.Intent
 import android.net.Uri
 import android.view.accessibility.AccessibilityNodeInfo
+import android.accessibilityservice.AccessibilityServiceInfo
 import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.ActivityResultRegistryOwner
@@ -14,7 +15,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.InputMode
+import androidx.compose.ui.input.InputModeManager
+import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertHeightIsAtLeast
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -43,6 +48,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@OptIn(ExperimentalTestApi::class)
 @RunWith(AndroidJUnit4::class)
 class BraceFilePickerFieldTest {
     @get:Rule val rule = createComposeRule()
@@ -99,7 +105,9 @@ class BraceFilePickerFieldTest {
     @Test fun systemDocumentContractOpensForTouchKeyboardAndMouse() {
         val registry = PickerRegistry()
         val picked = mutableListOf<Uri>()
+        lateinit var inputMode: InputModeManager
         rule.setContent {
+            inputMode = LocalInputModeManager.current
             CompositionLocalProvider(LocalActivityResultRegistryOwner provides owner(registry)) {
                 BraceTheme {
                     BraceFilePickerField("Receipt", emptyList(), { picked += it },
@@ -109,36 +117,59 @@ class BraceFilePickerFieldTest {
         }
         val picker = rule.onNodeWithContentDescription("Receipt", substring = true)
         picker.assertHeightIsAtLeast(48.dp).performClick()
+        rule.runOnIdle {
+            assertEquals("touch", 1, registry.launches.size)
+            assertTrue(inputMode.requestInputMode(InputMode.Keyboard))
+        }
         picker.requestFocus().performKeyInput { pressKey(Key.Enter) }
+        rule.runOnIdle { assertEquals("Enter", 2, registry.launches.size) }
+        picker.performKeyInput { pressKey(Key.Spacebar) }
+        rule.runOnIdle { assertEquals("Space", 3, registry.launches.size) }
         picker.performMouseInput { click() }
         rule.runOnIdle {
-            assertEquals(3, registry.launches.size)
+            assertEquals(4, registry.launches.size)
             assertTrue(registry.launches.all {
                 !it.multiple && it.mimeTypes == listOf("application/pdf") &&
                     it.intent.action == Intent.ACTION_OPEN_DOCUMENT &&
-                    it.intent.hasCategory(Intent.CATEGORY_OPENABLE)
+                    it.intent.type == "*/*"
             })
-            assertEquals(listOf(registry.first, registry.first, registry.first), picked)
+            assertEquals(List(4) { registry.first }, picked)
         }
         // The visible label is folded into one native TalkBack button target.
         rule.waitForIdle()
         val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        val service = automation.serviceInfo
+        service.flags = service.flags or AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
+        automation.serviceInfo = service
         var nodes = emptyList<AccessibilityNodeInfo>()
         for (attempt in 0 until 20) {
-            nodes = automation.rootInActiveWindow?.let(::accessibleNodes).orEmpty()
+            val roots = (automation.windows.mapNotNull { it.root } +
+                listOfNotNull(automation.rootInActiveWindow)).distinctBy { it.windowId }
+            nodes = roots.flatMap(::accessibleNodes)
+            val compatibilityOk = nodes.firstOrNull { it.text?.toString() == "OK" }
+            if (compatibilityOk != null) {
+                compatibilityOk.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                Thread.sleep(100)
+                continue
+            }
             if (nodes.any { it.isClickable && it.contentDescription?.contains("Receipt") == true }) break
             Thread.sleep(100)
         }
-        assertEquals(1, nodes.count {
+        val targets = nodes.filter {
             it.isClickable && it.contentDescription?.contains("Receipt") == true
-        })
+        }
+        assertEquals("Native Receipt nodes: ${nodes.filter { it.contentDescription?.contains("Receipt") == true }.map { it.contentDescription to it.actionList.map { action -> action.id } }}", 1, targets.size)
         assertFalse(nodes.any { it.text?.toString() == "Receipt" })
-
-        rule.runOnIdle { registry.cancelNext = true }
+        assertTrue(targets.single().performAction(AccessibilityNodeInfo.ACTION_CLICK))
+        rule.runOnIdle {
+            assertEquals(5, registry.launches.size)
+            assertEquals(5, picked.size)
+            registry.cancelNext = true
+        }
         picker.performClick()
         rule.runOnIdle {
-            assertEquals(4, registry.launches.size)
-            assertEquals(3, picked.size)
+            assertEquals(6, registry.launches.size)
+            assertEquals(5, picked.size)
         }
     }
 
@@ -166,11 +197,11 @@ class BraceFilePickerFieldTest {
             assertTrue(launch.multiple)
             assertEquals(listOf("image/png", "image/jpeg"), launch.mimeTypes)
             assertEquals(Intent.ACTION_OPEN_DOCUMENT, launch.intent.action)
-            assertTrue(launch.intent.hasCategory(Intent.CATEGORY_OPENABLE))
+            assertEquals("*/*", launch.intent.type)
             assertTrue(launch.intent.getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false))
             assertEquals(listOf("first", "second"), selected.value)
         }
-        rule.onNodeWithText("first, second").assertExists()
+        rule.onNodeWithContentDescription("first, second", substring = true).assertExists()
         rule.runOnIdle { registry.cancelNext = true }
         rule.onNodeWithContentDescription("Attachments", substring = true).performClick()
         rule.runOnIdle { assertEquals(listOf("first", "second"), selected.value) }

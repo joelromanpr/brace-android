@@ -122,8 +122,13 @@ class BraceFilePickerFieldTest {
         }
         // The visible label is folded into one native TalkBack button target.
         rule.waitForIdle()
-        val root = InstrumentationRegistry.getInstrumentation().uiAutomation.rootInActiveWindow
-        val nodes = accessibleNodes(root)
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        var nodes = emptyList<AccessibilityNodeInfo>()
+        for (attempt in 0 until 20) {
+            nodes = automation.rootInActiveWindow?.let(::accessibleNodes).orEmpty()
+            if (nodes.any { it.isClickable && it.contentDescription?.contains("Receipt") == true }) break
+            Thread.sleep(100)
+        }
         assertEquals(1, nodes.count {
             it.isClickable && it.contentDescription?.contains("Receipt") == true
         })

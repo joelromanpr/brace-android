@@ -1,0 +1,7 @@
+<resources>
+    <string name="brace_table_show_full_value">Mostrar valor completo</string>
+    <string name="brace_table_close_full_value">Cerrar valor completo</string>
+    <string name="brace_table_full_value">Valor completo</string>
+    <string name="brace_table_more">Más</string>
+    <string name="brace_table_close">Cerrar</string>
+</resources>

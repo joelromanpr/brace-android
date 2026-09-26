@@ -135,6 +135,10 @@ import io.github.joelromanpr.brace.table.BraceTableColumn
 import io.github.joelromanpr.brace.table.BraceTableSelection
 import io.github.joelromanpr.brace.table.BraceTableSortDirection
 import io.github.joelromanpr.brace.table.rememberBraceTableSortState
+import io.github.joelromanpr.brace.table.BraceTruncatedCell
+import io.github.joelromanpr.brace.table.BraceJsonCell
+import io.github.joelromanpr.brace.table.BraceJsonFormatter
+import io.github.joelromanpr.brace.table.BraceRevealMode
 import org.json.JSONObject
 import java.util.Locale
 
@@ -181,6 +185,14 @@ Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
     BraceTextField(state.query, { state.query = it }, label = "Filter regions")
     visible.forEach { option -> BraceButton(option.label, onClick = { state.activeKey = option.key }) }
 }""".trimIndent(),
+    "table-truncatedformat" to """BraceTruncatedCell(value = longText, modifier = Modifier.width(220.dp),
+    maxCharacters = 24, revealMode = BraceRevealMode.WhenTruncated)
+// In BraceDataTable: cellText = { it.longText }, cellContent = { row ->
+//     BraceTruncatedCell(row.longText, maxCharacters = 24, revealMode = BraceRevealMode.Never) }""".trimIndent(),
+    "table-jsonformat" to """val payload = linkedMapOf<String, Any?>("status" to "ready", "count" to 2)
+BraceJsonCell(payload, modifier = Modifier.width(220.dp), maxCharacters = 24)
+// In BraceDataTable: cellText = { BraceJsonFormatter.format(it.payload) },
+// cellContent = { row -> BraceJsonCell(row.payload, revealMode = BraceRevealMode.Never) }""".trimIndent(),
     "table-table" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it })",
     "table-column" to "BraceTableColumn<Record>(\"name\", \"Name\", 140.dp, { it.name })",
     "table-viewport-rendering" to "val viewport = rememberBraceTableViewport(); BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, viewport = viewport)",
@@ -580,6 +592,49 @@ private fun ComponentSample(
                     color = BraceTheme.colors.semantic.onSurface)
                 Text("First: ${visible.first().case} · Selected: ${selection ?: "none"}",
                     color = BraceTheme.colors.semantic.onSurfaceMuted)
+            }
+        }
+        "table-truncatedformat" -> {
+            var short by rememberSaveable { mutableStateOf(false) }
+            var always by rememberSaveable { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (short) "Long value" else "Short value", onClick = { short = !short },
+                        variant = BraceButtonVariant.Outline)
+                    BraceButton(if (always) "Always show More" else "Show when clipped", onClick = { always = !always },
+                        variant = BraceButtonVariant.Outline)
+                }
+                BraceTruncatedCell(
+                    value = if (short) "Ready" else "A long report description with details that need a full-value reveal",
+                    modifier = Modifier.width(240.dp), maxCharacters = 20,
+                    revealMode = if (always) BraceRevealMode.Always else BraceRevealMode.WhenTruncated,
+                )
+            }
+        }
+        "table-jsonformat" -> {
+            var kind by rememberSaveable { mutableStateOf("object") }
+            val payload: Any? = when (kind) {
+                "string" -> "Plain JSON string"
+                "null" -> null
+                else -> linkedMapOf("status" to "ready", "items" to listOf(1, null, true))
+            }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    listOf("object", "string", "null").forEach { option ->
+                        BraceButton(option, onClick = { kind = option }, variant = BraceButtonVariant.Outline)
+                    }
+                }
+                BraceJsonCell(payload, modifier = Modifier.width(240.dp), maxCharacters = 22)
+                Text("Full JSON: ${BraceJsonFormatter.format(payload)}",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.code)
+                val rows = remember { listOf("job" to linkedMapOf<String, Any?>("status" to "ready")) }
+                var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
+                BraceDataTable(rows, { it.first }, listOf(
+                    BraceTableColumn<Pair<String, LinkedHashMap<String, Any?>>>("payload", "Payload", 180.dp,
+                        { BraceJsonFormatter.format(it.second) },
+                        cellContent = { row -> BraceJsonCell(row.second, maxCharacters = 16,
+                            revealMode = BraceRevealMode.Never) }),
+                ), selection, { selection = it }, height = 145.dp, label = "Formatted data table")
             }
         }
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",

@@ -41,6 +41,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -115,7 +116,12 @@ import kotlinx.coroutines.launch
  * [editableName] to opt its visible header title into a separate controlled rename session.
  * Renaming must update [title] while preserving [key]. Set [sortable] to add a distinct
  * 48 dp header sort action when [BraceDataTable.onSortChange] is supplied. The table reports
- * direction changes but leaves row ordering to its caller.
+ * direction changes but leaves row ordering to its caller. [revealFullValue] is an
+ * optional row predicate for a distinct 48 dp full-value action. The dialog reads [cellText],
+ * so visual [cellContent] may abbreviate without changing spoken or copied content. The
+ * caller decides which rows need the action; Compose cannot infer clipping of custom content.
+ * Use [fullValuePreformatted] for code or JSON values that should retain line breaks and
+ * left-to-right text in the dialog.
  */
 class BraceTableColumn<Row>(
     val key: String,
@@ -127,6 +133,8 @@ class BraceTableColumn<Row>(
     val editableName: Boolean = false,
     val sortable: Boolean = false,
     val headerContent: (@Composable () -> Unit)? = null,
+    val revealFullValue: ((Row) -> Boolean)? = null,
+    val fullValuePreformatted: Boolean = false,
 )
 
 /** Controlled table selection identified by stable row and column keys. */
@@ -212,7 +220,10 @@ fun rememberBraceTableViewport(): BraceTableViewport {
  * arrows/Home/End, and TalkBack move actions. [frozenRows] and [frozenColumns]
  * pin leading data positions beside the fixed headers; the caller controls both counts.
  * Pinned rows and columns keep one accessible cell per coordinate and preserve absolute
- * grid indices. The grid exposes native collection dimensions, row and column headings,
+ * grid indices. [BraceTableColumn.revealFullValue] adds a separate full-value button,
+ * a cell TalkBack action, and Ctrl/Cmd+Enter for the active cell. The dialog reuses the
+ * [BraceTableColumn.cellText] value; closing returns keyboard focus to the grid. The grid
+ * exposes native collection dimensions, row and column headings,
  * logical row-major TalkBack traversal across panes, and an active-cell announcement that
  * combines with frozen state. Disabled sort and bounded resize controls expose only available
  * accessibility actions. Choose counts that leave room for at least one scrollable row and column
@@ -295,6 +306,7 @@ fun <Row> BraceDataTable(
     val columnKeys = remember(columns) { columns.map { it.key } }
     val baseMinColumnWidth = BraceTheme.sizing.tableMinColumnWidth
     val touchTargetWidth = BraceTheme.sizing.touchTarget
+    val touchTarget = touchTargetWidth
     val resizeTargetWidth = if (onColumnWidthChange != null) touchTargetWidth else 0.dp
     val reorderTargetWidth = if (onColumnOrderChange != null && columns.size > 1)
         touchTargetWidth else 0.dp
@@ -350,9 +362,10 @@ fun <Row> BraceDataTable(
         else BraceTheme.sizing.touchTarget
     val rowHeaderWidth = rowSelectWidth + rowReorderWidth +
         if (onRowHeightChange == null) 0.dp else BraceTheme.sizing.touchTarget
-    val widths = remember(columns, columnWidths, columnMinWidths, maxColumnWidth) {
+    val widths = remember(columns, columnWidths, columnMinWidths, maxColumnWidth, touchTarget) {
         columns.mapIndexed { index, column ->
-            val minimum = columnMinWidths[index]
+            val minimum = maxOf(columnMinWidths[index],
+                if (column.revealFullValue == null) 0.dp else touchTarget * 2)
             val requested = maxOf(minimum, columnWidths[column.key] ?: column.width)
             val maximum = maxColumnWidth?.coerceAtLeast(minimum)
             if (maximum == null) requested else minOf(maximum, requested)
@@ -433,6 +446,27 @@ fun <Row> BraceDataTable(
     var focusedResizeHandleId by remember { mutableStateOf<String?>(null) }
     var focusedReorderHandle by remember { mutableStateOf<String?>(null) }
     var pendingReorderFocus by remember { mutableStateOf<String?>(null) }
+    var revealedRowKey by rememberSaveable { mutableStateOf<String?>(null) }
+    var revealedColumnKey by rememberSaveable { mutableStateOf<String?>(null) }
+    var revealOpen by rememberSaveable { mutableStateOf(false) }
+    var revealHadOpened by remember { mutableStateOf(false) }
+    val revealedRowNumber = revealedRowKey?.let { rowIndexes[it] }
+    val revealedColumnNumber = revealedColumnKey?.let { columnIndex.byKey[it] }
+    val revealedRow = revealedRowNumber?.let { rows[it] }
+    val revealedColumn = revealedColumnNumber?.let { columns[it] }
+    val revealValid = !isLoading && editingCell == null && editingColumnName == null &&
+        revealedRow != null && revealedColumn?.revealFullValue?.invoke(revealedRow) == true
+    LaunchedEffect(revealOpen, revealValid) {
+        if (revealOpen && !revealValid) revealOpen = false
+    }
+    LaunchedEffect(revealOpen) {
+        if (revealOpen) revealHadOpened = true
+        else if (revealHadOpened) {
+            withFrameNanos { }
+            requester.requestFocus()
+            revealHadOpened = false
+        }
+    }
     fun requestColumnMove(key: String, targetIndex: Int) {
         if (isLoading || onColumnOrderChange == null || key !in columnIndex.byKey ||
             targetIndex !in columns.indices) return
@@ -617,6 +651,16 @@ fun <Row> BraceDataTable(
             requester.requestFocus()
         }
     }
+    fun openFullValue(target: BraceTableSelection.Cell): Boolean {
+        if (isLoading || editingCell != null || editingColumnName != null) return false
+        val rowNumber = rowIndexes[target.rowKey] ?: return false
+        val columnNumber = columnIndex.byKey[target.columnKey] ?: return false
+        if (columns[columnNumber].revealFullValue?.invoke(rows[rowNumber]) != true) return false
+        revealedRowKey = target.rowKey
+        revealedColumnKey = target.columnKey
+        revealOpen = true
+        return true
+    }
 
     BoxWithConstraints(
         modifier.fillMaxWidth().height(height).clipToBounds()
@@ -630,6 +674,10 @@ fun <Row> BraceDataTable(
                 if (event.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
                 if (isLoading || editingCell != null || editingColumnName != null)
                     return@onPreviewKeyEvent false
+                if (focused && focusedResizeHandleId == null && focusedReorderHandle == null &&
+                    !event.isAltPressed && (event.isCtrlPressed || event.isMetaPressed) &&
+                    event.nativeKeyEvent.keyCode == AndroidKeyEvent.KEYCODE_ENTER &&
+                    activeCell?.let(::openFullValue) == true) return@onPreviewKeyEvent true
                 if (focused && focusedResizeHandleId == null && focusedReorderHandle == null && !event.isAltPressed &&
                     !event.isCtrlPressed && !event.isMetaPressed &&
                     (event.nativeKeyEvent.keyCode == AndroidKeyEvent.KEYCODE_ENTER ||
@@ -1050,7 +1098,8 @@ fun <Row> BraceDataTable(
                     columnNumbers.filter { columns[it].key != editingColumnName }.forEach { index ->
                         val column = columns[index]
                         val currentWidth = widths[index]
-                        val minColumnWidth = columnMinWidths[index]
+                        val minColumnWidth = maxOf(columnMinWidths[index],
+                            if (column.revealFullValue == null) 0.dp else touchTarget * 2)
                         val effectiveMaxColumnWidth = maxColumnWidth?.coerceAtLeast(minColumnWidth)
                         BraceTableResizeHandle(
                             axis = BraceResizeAxis.Column,
@@ -1148,6 +1197,8 @@ fun <Row> BraceDataTable(
                         requester.requestFocus()
                     }
                     val cell = BraceTableSelection.Cell(key, column.key)
+                    val canReveal = !isLoading && editingCell == null &&
+                        editingColumnName == null && column.revealFullValue?.invoke(row) == true
                     val isEditing = !isLoading && editingEnabled && editingCell == cell && column.editable
                     val beginEdit: () -> Unit = {
                         if (!isLoading && editingEnabled && column.editable && editingColumnName == null) {
@@ -1208,6 +1259,7 @@ fun <Row> BraceDataTable(
                             }} else null,
                             onEdit = if (!isLoading && editingEnabled && column.editable && editingColumnName == null)
                                 beginEdit else null,
+                            onReveal = if (canReveal) {{ openFullValue(cell) }} else null,
                             modifier = Modifier.offset(x = columnIndex.starts[columnNumber] - paneOrigin)
                                 .width(widths[columnNumber]).height(itemHeight)
                                 .pointerInput(key, column.key) {
@@ -1463,6 +1515,14 @@ fun <Row> BraceDataTable(
                 Text(emptyText, color = semantic.onSurfaceMuted, style = typography.body)
             }
         }
+    }
+    if (revealOpen && revealValid) {
+        BraceFullValueDialog(value = revealedColumn.cellText(revealedRow),
+            onDismiss = { revealOpen = false },
+            title = stringResource(R.string.brace_table_full_value_cell,
+                revealedColumn.title, revealedRowNumber + 1),
+            preformatted = revealedColumn.fullValuePreformatted,
+            tagPrefix = "brace-table-value")
     }
 }
 

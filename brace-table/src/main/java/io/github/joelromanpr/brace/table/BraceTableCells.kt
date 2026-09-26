@@ -1,22 +1,34 @@
 package io.github.joelromanpr.brace.table
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.border
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.CollectionItemInfo
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.collectionItemInfo
@@ -27,8 +39,10 @@ import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -47,7 +61,8 @@ import io.github.braceandroid.foundation.BraceTheme
  * TalkBack action for adding this cell to a disjoint selection. [pinState] can announce
  * that the cell remains visible in a frozen row, column, or their intersection. [traversalIndex]
  * lets a parent grid order cells across independently composed panes. When [focused] is true,
- * [activeCellLabel] is announced alongside any pinned state.
+ * [activeCellLabel] is announced alongside any pinned state. [onReveal] adds a separate 48 dp
+ * full-value button and a TalkBack custom action on the cell without changing selection.
  */
 @Composable
 fun BraceTableCell(
@@ -66,6 +81,7 @@ fun BraceTableCell(
     onExtendSelection: (() -> Unit)? = null,
     onEdit: (() -> Unit)? = null,
     onAddRegion: (() -> Unit)? = null,
+    onReveal: (() -> Unit)? = null,
     pinState: String? = null,
     content: (@Composable () -> Unit)? = null,
     traversalIndex: Float = 0f,
@@ -91,11 +107,29 @@ fun BraceTableCell(
     val addRegionLabel = stringResource(R.string.brace_table_add_region)
     val description = stringResource(R.string.brace_table_cell_description, columnTitle,
         rowIndex + 1, rowLabel, value)
-    Box(
-        modifier.background(background)
-            .hoverable(interaction)
-            .border(if (selected && focused) BraceTheme.sizing.focusRingWidth else metrics.gridLineWidth,
-                if (selected && focused) semantic.focusRing else colors.gridLine)
+    val revealLabel = stringResource(R.string.brace_table_show_full_value)
+    val revealInteraction = remember(rowKey, columnKey) { MutableInteractionSource() }
+    val revealHovered by revealInteraction.collectIsHoveredAsState()
+    val revealPressed by revealInteraction.collectIsPressedAsState()
+    var revealFocused by remember(rowKey, columnKey) { mutableStateOf(false) }
+    val revealShape = RoundedCornerShape(BraceTheme.shape.sm)
+    val revealBackground = when {
+        revealPressed -> semantic.primaryPressed
+        revealHovered -> semantic.primaryHover
+        else -> semantic.primarySubtle
+    }
+    val revealContentColor = if (revealPressed || revealHovered) semantic.onPrimary
+        else semantic.onPrimarySubtle
+    val revealWidth = if (enabled && onReveal != null) BraceTheme.sizing.touchTarget else 0.dp
+    val targetBounds = if (enabled && onReveal != null)
+        Modifier.widthIn(min = BraceTheme.sizing.touchTarget * 2)
+            .heightIn(min = BraceTheme.sizing.touchTarget)
+    else Modifier
+    Box(targetBounds.then(modifier).background(background)
+        .hoverable(interaction)
+        .border(if (selected && focused) BraceTheme.sizing.focusRingWidth else metrics.gridLineWidth,
+            if (selected && focused) semantic.focusRing else colors.gridLine)) {
+        Box(Modifier.fillMaxSize().padding(end = revealWidth)
             .then(if (enabled) Modifier.pointerSelect(rowKey, columnKey, onSelect,
                 onExtendSelection, onEdit) else Modifier)
             .clearAndSetSemantics {
@@ -118,19 +152,41 @@ fun BraceTableCell(
                     onAddRegion?.let { action ->
                         CustomAccessibilityAction(addRegionLabel) { action(); true }
                     },
+                    onReveal?.let { action ->
+                        CustomAccessibilityAction(revealLabel) { action(); true }
+                    },
                 ) else emptyList()
-            },
-        contentAlignment = Alignment.CenterStart,
-    ) {
-        Box(Modifier.fillMaxWidth().padding(horizontal = metrics.cellHorizontalPadding)) {
-            if (content == null) {
-                Text(value, color = if (selected) semantic.onSelection else semantic.onSurface,
-                    style = BraceTheme.typography.body, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            } else CompositionLocalProvider(
-                LocalContentColor provides if (selected) semantic.onSelection else semantic.onSurface,
-            ) { content() }
+            }, contentAlignment = Alignment.CenterStart) {
+            Box(Modifier.fillMaxWidth().padding(horizontal = metrics.cellHorizontalPadding)) {
+                if (content == null) {
+                    Text(value, color = if (selected) semantic.onSelection else semantic.onSurface,
+                        style = BraceTheme.typography.body, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                } else CompositionLocalProvider(
+                    LocalContentColor provides if (selected) semantic.onSelection else semantic.onSurface,
+                ) { content() }
+            }
+        }
+        if (enabled && onReveal != null) {
+            Box(Modifier.align(Alignment.CenterEnd).width(BraceTheme.sizing.touchTarget)
+                .fillMaxHeight().background(revealBackground, revealShape)
+                .then(if (revealFocused) Modifier.border(BraceTheme.sizing.focusRingWidth,
+                    semantic.focusRing, revealShape) else Modifier)
+                .onFocusChanged { revealFocused = it.isFocused }
+                .clickable(role = Role.Button, interactionSource = revealInteraction,
+                    indication = null, onClickLabel = revealLabel, onClick = onReveal)
+                .semantics {
+                    contentDescription = revealLabel
+                    this.traversalIndex = traversalIndex + 1f
+                }
+                .testTag("brace-table-reveal:$rowKey:$columnKey"),
+                contentAlignment = Alignment.Center) {
+                Text(stringResource(R.string.brace_table_more), color = revealContentColor,
+                    style = BraceTheme.typography.label,
+                    modifier = Modifier.clearAndSetSemantics { })
+            }
         }
     }
+
 }
 
 /**

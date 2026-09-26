@@ -299,7 +299,8 @@ class ConsumerActivity : ComponentActivity() {
                             else BraceTableColumn<Pair<String, String>>("payload", "Payload", 160.dp,
                                 { BraceJsonFormatter.format(mapOf("status" to it.second)) },
                                 cellContent = { row -> BraceJsonCell(mapOf("status" to row.second),
-                                    maxCharacters = 12, revealMode = BraceRevealMode.Never) })
+                                    maxCharacters = 12, revealMode = BraceRevealMode.Never) },
+                                revealFullValue = { true }, fullValuePreformatted = true)
                         }
                         var tableRowHeight by remember { mutableStateOf(64.dp) }
                         val tableViewport = rememberBraceTableViewport()

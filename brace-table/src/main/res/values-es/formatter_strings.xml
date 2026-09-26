@@ -4,4 +4,5 @@
     <string name="brace_table_full_value">Valor completo</string>
     <string name="brace_table_more">Más</string>
     <string name="brace_table_close">Cerrar</string>
+    <string name="brace_table_full_value_cell">Valor completo: %1$s, fila %2$d</string>
 </resources>

@@ -1,6 +1,6 @@
-# Table value formatters
+# Table value formatting and reveal
 
-Pinned Blueprint [TruncatedFormat and JSONFormat](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx) display long cell values and offer a full-value popover. Brace exposes `BraceTruncatedCell`, `BraceJsonCell`, `BraceTruncatedFormatter` and `BraceJsonFormatter` in `brace-table`. These inventory rows are **in progress** and unpublished.
+Pinned Blueprint [TruncatedFormat and JSONFormat](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx) display compact cell values and offer a full-value popover. Brace exposes `BraceTruncatedCell`, `BraceJsonCell`, `BraceTruncatedFormatter`, and `BraceJsonFormatter` in `brace-table`. These inventory rows remain **in progress** and unpublished.
 
 ```kotlin
 val details = "A long log line that needs room to read..."
@@ -10,19 +10,28 @@ val payload = linkedMapOf<String, Any?>("status" to "ready", "items" to listOf(1
 BraceJsonCell(payload, Modifier.width(220.dp), maxCharacters = 30)
 ```
 
-`BraceTruncatedCell` counts Unicode code points. `maxCharacters = 0` disables character clipping. It applies `suffix` only when clipping, then uses Compose's measured text layout to detect line or width overflow. `BraceRevealMode.WhenTruncated` offers the 48 dp **More** action only when needed; `Always` and `Never` override that. Unlike Blueprint's approximate DOM mode, Compose can measure the text at the actual Android width, font scale and style. The preview keeps the full value in TalkBack semantics even while visually clipped. **More** opens a token-styled dialog with selectable full text. Touch, mouse, Enter or Space open it; Close, Back, outside touch or Escape dismiss it. The trigger regains keyboard focus. Uncontrolled open state is saveable; controlled `expanded` requires `onExpandedChange` and caller restoration.
+`BraceTruncatedCell` counts Unicode code points. `maxCharacters = 0` disables character clipping. It applies `suffix` only when clipping, then uses Compose text layout to detect line or width overflow. `BraceRevealMode.WhenTruncated` offers a 48 dp **More** action only when needed; `Always` and `Never` override that. Compose measures text at the actual Android width, font scale, and style. The preview keeps the full value in TalkBack semantics even while visually clipped. **More** opens a Brace-token-styled dialog with selectable full text. Touch, mouse, Enter, or Space open it; Close, Back, outside touch, or Escape dismiss it. The standalone trigger regains keyboard focus. Uncontrolled open state is saveable; controlled `expanded` requires `onExpandedChange` and caller restoration.
 
-`BraceJsonFormatter.format` accepts null, strings, finite numbers, booleans, `Map<String, *>`, lists, arrays, `JSONObject` and `JSONArray`. It rejects cycles, non-string map keys, unsupported objects, non-finite numbers and nesting beyond 128 levels instead of producing invalid JSON. Maps keep their iteration order. Replace mutable maps or lists with a new instance when data changes so Compose can refresh the remembered formatted value. The default two-space indentation and unquoted top-level strings follow Blueprint; `omitQuotesOnStrings = false` adds JSON quotes. `indent = 0` produces compact JSON. `BraceJsonCell` formats a value and renders it with code typography, left-to-right JSON text, and the same reveal behavior. Null displays `null` and has no reveal action.
+`BraceJsonFormatter.format` accepts null, strings, finite numbers, booleans, `Map<String, *>`, lists, arrays, `JSONObject`, and `JSONArray`. It rejects cycles, non-string map keys, unsupported objects, non-finite numbers, and nesting beyond 128 levels. Maps keep iteration order. Replace mutable maps or lists with a new instance when data changes so Compose can refresh the remembered formatted value. The default two-space indentation and unquoted top-level strings follow Blueprint; `omitQuotesOnStrings = false` adds JSON quotes. `indent = 0` produces compact JSON. `BraceJsonCell` uses code typography and left-to-right JSON text. Null displays `null` and has no standalone reveal action.
 
-For a viewport table, pass a full text value to `BraceTableColumn.cellText` and use a formatter for visual `cellContent`:
+## Revealing a value inside `BraceDataTable`
+
+The table owns cell selection gestures. Pass the **complete** string to `cellText` for TalkBack, clipboard copying, and the full-value dialog. Use noninteractive `cellContent` for the compact display. The row-dependent `revealFullValue` predicate adds a separate 48 dp **More** target and a custom TalkBack action only where a full-value view is useful:
 
 ```kotlin
 val columns = listOf(
-    BraceTableColumn<Record>("payload", "Payload", 180.dp,
+    BraceTableColumn<Record>("payload", "Payload", 220.dp,
         cellText = { BraceJsonFormatter.format(it.payload) },
         cellContent = { row -> BraceJsonCell(row.payload, maxCharacters = 24,
-            revealMode = BraceRevealMode.Never) }),
+            revealMode = BraceRevealMode.Never) },
+        revealFullValue = { row -> row.payload != null &&
+            BraceJsonFormatter.format(row.payload).length > 24 },
+        fullValuePreformatted = true),
 )
+BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
+    frozenRows = 1, frozenColumns = 1)
 ```
 
-`BraceDataTable` intentionally owns its cell pointer gesture and one native accessibility node. `cellText` therefore carries the complete spoken and copied value, while `cellContent` supplies the shortened visual value. A separate reveal action inside a viewport cell is not yet exposed; place `BraceJsonCell` or `BraceTruncatedCell` outside the table for an interactive full-value dialog. This integration limit keeps the rows in progress. The catalog includes standalone reveal samples and table formatting, and the independent Maven consumer compiles both APIs. Device tests cover Unicode truncation, measured overflow, JSON formatting, touch/mouse/keyboard reveal, focus, RTL, large text, high contrast and table cell accessibility. Manual TalkBack and release review remain.
+The predicate decides which values need reveal; the table cannot infer whether arbitrary custom `cellContent` is clipped. A nullable predicate means no reveal action. Columns with a predicate have at least two 48 dp touch targets even if a smaller width or maximum is requested. The button does not alter selection, while the cell keeps its own selection and editing gestures. Ctrl/Cmd+Enter opens the active cell's full value when its predicate is true; plain Enter retains editing behavior. TalkBack can invoke **Show full value** on either the cell's custom action or the separate button. The dialog follows the current `cellText`, survives saved-state restoration while the row and column remain, and closes if the caller removes either key, disables the predicate, begins editing, or enters loading. Closing returns keyboard focus to the table navigation stop. A preformatted dialog preserves line breaks and left-to-right code text.
+
+The catalog includes short, long, and null values and the independent Maven consumer compiles the table API. Device checks cover separate touch targets, full spoken and copied values, selection and editing independence, keyboard and mouse reveal, loading/removal behavior, saved state, frozen panes, RTL, large text, and high contrast. Manual TalkBack traversal and release review remain open.

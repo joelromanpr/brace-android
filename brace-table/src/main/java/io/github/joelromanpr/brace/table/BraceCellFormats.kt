@@ -74,8 +74,8 @@ public enum class BraceRevealMode { WhenTruncated, Always, Never }
  *
  * In [BraceDataTable], pass the full string as [BraceTableColumn.cellText] so the table's single
  * accessibility cell node can speak it. Set [revealMode] to [BraceRevealMode.Never] inside
- * `cellContent`: the data table owns pointer selection and suppresses nested semantics. Place
- * this formatter outside the table when a separate reveal action is required.
+ * `cellContent`: the data table owns pointer selection. Opt its column into the table's own
+ * reveal action with [BraceTableColumn.revealFullValue] when a full-value dialog is useful.
  */
 @Composable
 public fun BraceTruncatedCell(
@@ -97,7 +97,6 @@ public fun BraceTruncatedCell(
         "Controlled BraceTruncatedCell needs onExpandedChange"
     }
     val semantic = BraceTheme.colors.semantic
-    val popover = BraceTheme.colors.components.popover
     val metrics = BraceTheme.componentMetrics.popover
     val shape = RoundedCornerShape(metrics.cornerRadius)
     val style = textStyle ?: BraceTheme.typography.body
@@ -127,8 +126,6 @@ public fun BraceTruncatedCell(
         onExpandedChange?.invoke(next)
     }
     val revealLabel = stringResource(R.string.brace_table_show_full_value)
-    val closeLabel = stringResource(R.string.brace_table_close_full_value)
-    val revealTitle = stringResource(R.string.brace_table_full_value)
     val interaction = remember { MutableInteractionSource() }
     val hovered by interaction.collectIsHoveredAsState()
     val pressed by interaction.collectIsPressedAsState()
@@ -174,56 +171,80 @@ public fun BraceTruncatedCell(
     }
 
     if (isExpanded) {
-        Dialog(onDismissRequest = { requestExpanded(false) }) {
-            val closeRequester = remember { FocusRequester() }
-            var closeFocused by remember { mutableStateOf(false) }
-            LaunchedEffect(Unit) { closeRequester.requestFocus() }
-            Column(Modifier.fillMaxWidth().widthIn(max = metrics.maxWidth)
-                .heightIn(max = BraceTheme.sizing.overlayMaxWidth)
-                .background(popover.container, shape)
-                .border(BraceTheme.sizing.borderWidth, popover.border, shape)
-                .padding(metrics.contentPadding)
-                .onPreviewKeyEvent { event ->
-                    if (event.type == KeyEventType.KeyDown && event.key == Key.Escape) {
-                        requestExpanded(false)
-                        true
-                    } else false
+        BraceFullValueDialog(value = value, onDismiss = { requestExpanded(false) },
+            title = stringResource(R.string.brace_table_full_value),
+            preformatted = preformatted, textStyle = resolvedStyle,
+            tagPrefix = "brace-truncated")
+    }
+
+}
+
+/** Shared native full-value dialog for standalone formatters and viewport table cells. */
+@Composable
+internal fun BraceFullValueDialog(
+    value: String,
+    onDismiss: () -> Unit,
+    title: String,
+    preformatted: Boolean = false,
+    textStyle: TextStyle? = null,
+    tagPrefix: String = "brace-truncated",
+) {
+    val semantic = BraceTheme.colors.semantic
+    val popover = BraceTheme.colors.components.popover
+    val metrics = BraceTheme.componentMetrics.popover
+    val shape = RoundedCornerShape(metrics.cornerRadius)
+    val resolvedStyle = (textStyle ?: if (preformatted) BraceTheme.typography.code
+        else BraceTheme.typography.body).let { style ->
+        if (preformatted) style.copy(textDirection = TextDirection.Ltr) else style
+    }
+    val closeLabel = stringResource(R.string.brace_table_close_full_value)
+    Dialog(onDismissRequest = onDismiss) {
+        val closeRequester = remember { FocusRequester() }
+        var closeFocused by remember { mutableStateOf(false) }
+        LaunchedEffect(Unit) { closeRequester.requestFocus() }
+        Column(Modifier.fillMaxWidth().widthIn(max = metrics.maxWidth)
+            .heightIn(max = BraceTheme.sizing.overlayMaxWidth)
+            .background(popover.container, shape)
+            .border(BraceTheme.sizing.borderWidth, popover.border, shape)
+            .padding(metrics.contentPadding)
+            .onPreviewKeyEvent { event ->
+                if (event.type == KeyEventType.KeyDown && event.key == Key.Escape) {
+                    onDismiss()
+                    true
+                } else false
+            }
+            .semantics { isTraversalGroup = true }
+            .testTag("$tagPrefix-dialog"),
+            verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+            Text(title, color = popover.content, style = BraceTheme.typography.subtitle,
+                modifier = Modifier.semantics { heading() })
+            Box(Modifier.weight(1f, fill = false).fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .horizontalScroll(rememberScrollState())) {
+                SelectionContainer {
+                    Text(value,
+                        modifier = Modifier.padding(vertical = BraceTheme.spacing.xs)
+                            .testTag("$tagPrefix-full-value"),
+                        color = popover.content, style = resolvedStyle,
+                        softWrap = !preformatted)
                 }
-                .semantics { isTraversalGroup = true }
-                .testTag("brace-truncated-dialog"),
-                verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                Text(revealTitle, color = popover.content, style = BraceTheme.typography.subtitle,
-                    modifier = Modifier.semantics { heading() })
-                Box(Modifier.weight(1f, fill = false).fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .horizontalScroll(rememberScrollState())) {
-                    SelectionContainer {
-                        Text(value,
-                            modifier = Modifier.padding(vertical = BraceTheme.spacing.xs)
-                                .testTag("brace-truncated-full-value"),
-                            color = popover.content, style = resolvedStyle,
-                            softWrap = !preformatted)
-                    }
-                }
-                Box(Modifier.align(Alignment.End)
-                    .defaultMinSize(minWidth = BraceTheme.sizing.touchTarget,
-                        minHeight = BraceTheme.sizing.touchTarget)
-                    .background(semantic.primarySubtle, shape)
-                    .then(if (closeFocused) Modifier.border(BraceTheme.sizing.focusRingWidth,
-                        semantic.focusRing, shape) else Modifier)
-                    .focusRequester(closeRequester)
-                    .onFocusChanged { closeFocused = it.isFocused }
-                    .clickable(role = Role.Button, onClickLabel = closeLabel) {
-                        requestExpanded(false)
-                    }
-                    .semantics { contentDescription = closeLabel }
-                    .testTag("brace-truncated-close"),
-                    contentAlignment = Alignment.Center) {
-                    Text(stringResource(R.string.brace_table_close), color = semantic.onPrimarySubtle,
-                        style = BraceTheme.typography.label,
-                        modifier = Modifier.padding(horizontal = BraceTheme.spacing.md)
-                            .clearAndSetSemantics { })
-                }
+            }
+            Box(Modifier.align(Alignment.End)
+                .defaultMinSize(minWidth = BraceTheme.sizing.touchTarget,
+                    minHeight = BraceTheme.sizing.touchTarget)
+                .background(semantic.primarySubtle, shape)
+                .then(if (closeFocused) Modifier.border(BraceTheme.sizing.focusRingWidth,
+                    semantic.focusRing, shape) else Modifier)
+                .focusRequester(closeRequester)
+                .onFocusChanged { closeFocused = it.isFocused }
+                .clickable(role = Role.Button, onClickLabel = closeLabel) { onDismiss() }
+                .semantics { contentDescription = closeLabel }
+                .testTag("$tagPrefix-close"),
+                contentAlignment = Alignment.Center) {
+                Text(stringResource(R.string.brace_table_close), color = semantic.onPrimarySubtle,
+                    style = BraceTheme.typography.label,
+                    modifier = Modifier.padding(horizontal = BraceTheme.spacing.md)
+                        .clearAndSetSemantics { })
             }
         }
     }

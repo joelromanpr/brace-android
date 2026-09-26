@@ -1,6 +1,6 @@
 # M31 delivery slice: Tree and TreeNode
 
-**Status:** locally verified source on `joelromanpr/m31-tree`, based on main `47d2d38`; draft review is pending hosted checks. The two pinned Blueprint rows are **in progress**. Released coverage remains **0/121** applicable rows and no release version is assigned.
+**Status:** locally verified source in draft [PR #41](https://github.com/joelromanpr/brace-android/pull/41) on `joelromanpr/m31-tree`, based on main `47d2d38`; hosted checks remain pending. The two pinned Blueprint rows are **in progress**. Released coverage remains **0/121** applicable rows and no release version is assigned.
 
 ## Scope
 
@@ -18,7 +18,7 @@
 | API 36 interaction and accessibility | Passed focused `BraceTreeTest` **8/8**, zero failures on `Brace_API36`, including controlled state, touch/mouse, keyboard/RTL, lazy viewport, save restoration, large text/high contrast, native accessibility node and API 34+ automated checks. The initial run exposed missing row test tags inside `clearAndSetSemantics`; after correction, native UIAutomation also needed interactive-window retrieval and dismissal of the emulator's older-target compatibility dialog. The final suite passed. |
 | Maven Local and separate consumer | Passed publication of aligned `brace-foundation`, `brace-core`, `brace-icons`, and `brace-select` `0.1.0-SNAPSHOT` artifacts to Maven Local, then passed coordinate-only `verification/consumer-smoke :app:assembleDebug`. Task counts were not emitted by `--quiet`. |
 | 320×640 catalog review | Passed light and dark high-contrast inspection on API 36: inventory search lists Tree and TreeNode as in progress, detail/usage and live sample fit, touch-selected Alpha changes label and highlight, and caret-expanded Gamma reveals Notes. Screenshots were inspected from the local emulator; no artifact is published. |
-| Hosted CI, review and release | Draft PR pending; hosted checks remain required before review or merge. No publication or stable claim. |
+| Hosted CI, review and release | Draft [PR #41](https://github.com/joelromanpr/brace-android/pull/41) is open. Hosted Actions checks are blocked by repository billing and remain required before ready-for-review or merge. No publication or stable claim. |
 
 ## Limits and next branch
 

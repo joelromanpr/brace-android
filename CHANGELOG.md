@@ -5,3 +5,4 @@ Changes to released public artifacts are recorded here using [Semantic Versionin
 ## Unreleased
 
 - Established the pinned scope and foundations for Brace Android.
+- Added in-progress localized date picker and date field source APIs, component tokens, catalog samples, and the `brace-datetime` publication boundary.

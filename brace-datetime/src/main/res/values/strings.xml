@@ -1,0 +1,15 @@
+<resources>
+    <string name="brace_date_previous_month">Previous month</string>
+    <string name="brace_date_next_month">Next month</string>
+    <string name="brace_date_previous_year">Previous year</string>
+    <string name="brace_date_next_year">Next year</string>
+    <string name="brace_date_choose_month">Choose month and year</string>
+    <string name="brace_date_today">Today</string>
+    <string name="brace_date_clear">Clear</string>
+    <string name="brace_date_selected">Selected</string>
+    <string name="brace_date_current_day">Today</string>
+    <string name="brace_date_open_calendar">Open calendar for %1$s</string>
+    <string name="brace_date_invalid">Enter a valid date</string>
+    <string name="brace_date_out_of_range">Date is unavailable</string>
+    <string name="brace_date_calendar_title">Choose date</string>
+</resources>

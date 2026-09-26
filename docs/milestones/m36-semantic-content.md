@@ -12,8 +12,8 @@
 
 - Inventory, token, and documentation generation: pass, 147 rows, 0/121 applicable rows stable.
 - Default inset text contrast from the platform-neutral token source: 13.65:1 light, 17.16:1 dark, 19.54:1 high-contrast light, 21.0:1 high-contrast dark. Muted quote citation text against the same inset surface: 5.59:1, 10.53:1, 12.22:1, and 15.47:1 respectively. Brand and scoped override colors still need consumer review.
-- Kotlin API, broad build/lint, API 36 device suite, Maven Local, and independent consumer: pending the shared validation lane.
-- Manual TalkBack, large-text visual inspection, and representative app layout: pending.
+- Exact core API dump/check, Kotlin compilation, and broad `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug`: passed (467 tasks). API 36 semantic-content tests: 3/3 passed. Full core suite: 174 tests total, 173 passed, one pre-existing overlay test skipped, zero failures. Maven Local publication of four artifacts passed (156 tasks); the separate consumer app compiled from those artifacts (37 tasks).
+- The 320×640 catalog heading detail was visually inspected in light and dark high-contrast modes; 2× system text remained scrollable. Manual TalkBack and brand/scoped-override visual review remain pending.
 
 ## Limits and remaining work
 
@@ -21,4 +21,4 @@ Android exposes heading status but no HTML H1–H6 level, so rank is visual and 
 
 ## Next branch
 
-Validate this branch after M32 PanelStack, M33 DateRange, and M34 TimezoneSelect release the shared Gradle/ADB lane. Then continue with the remaining form and navigation rows in a focused branch.
+The next focused branch is `joelromanpr/m37-sliders` for controlled Slider and RangeSlider interactions; M38 follows for MultiSlider. Both require their own local and hosted review evidence.

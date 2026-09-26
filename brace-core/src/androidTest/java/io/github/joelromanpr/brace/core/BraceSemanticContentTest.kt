@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
@@ -80,10 +79,12 @@ class BraceSemanticContentTest {
                 }
             }
         }
-        rule.onNodeWithTag("ordered").assert(
-            SemanticsMatcher.expectValue(SemanticsProperties.CollectionInfo, CollectionInfo(2, 1)))
-        rule.onNodeWithTag("unordered").assert(
-            SemanticsMatcher.expectValue(SemanticsProperties.CollectionInfo, CollectionInfo(2, 1)))
+        val twoItems = SemanticsMatcher("2 rows and 1 column") { node ->
+            val info = node.config[SemanticsProperties.CollectionInfo]
+            info.rowCount == 2 && info.columnCount == 1
+        }
+        rule.onNodeWithTag("ordered").assert(twoItems)
+        rule.onNodeWithTag("unordered").assert(twoItems)
         rule.onNodeWithText("3. Alpha").assertExists()
         rule.onNodeWithText("4. Beta").assertExists()
         rule.onNodeWithText("• Gamma").assertExists()

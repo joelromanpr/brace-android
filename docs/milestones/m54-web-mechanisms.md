@@ -15,9 +15,9 @@
 | --- | --- |
 | Pinned Blueprint source review | Read the Classes, ResizeSensor, and BlueprintProvider MDX and provider source at commit `a60d4c92257612808fbfac81cfeee4fcba91a8b4`. |
 | Inventory generation and `--check` | Passed: 147 rows, 0/121 applicable rows stable; no row was marked stable. |
-| Documentation site build and JavaScript syntax | Passed: 33 guides, including this report and the mapping guide; `node --check` passed for the generator and catalog site script. |
-| Gradle compile, lint, API, token, inventory, and catalog install | Passed offline: catalog/foundation/core compile and lint, `checkTokenGeneration`, `checkInventory`, `apiCheck` (234 tasks); catalog assembly and foundation/core Android test compilation (137 tasks). Installed the catalog on API 36. |
-| Device accessibility and interaction | On a 320 × 640 API 36 emulator, inspected light and dark high-contrast CSS samples; toggled the button state; observed ResizeSensor sample width change 144 → 224 px; opened and dismissed the scoped overlay and shortcut guide; tabbed to a preview control and sent Ctrl+R, incrementing its counter from 0 to 1. Checked a visible 2× text layout and Arabic RTL catalog mirroring. Existing theme and shortcut Android test sources compiled; their device tests were not rerun in this slice. |
+| Documentation site build and JavaScript syntax | Passed on current main integration: 36 guides and 9 real catalog captures, including this report and the mapping guide; `node --check` passed for the generator and catalog site script. |
+| Gradle compile, lint, API, token, inventory, and catalog install | Passed offline on current main integration: `./gradlew --offline build lint checkTokenGeneration checkInventory apiCheck` (467 actionable tasks). An earlier M54 source head assembled and installed the catalog on API 36. |
+| Device accessibility and interaction | On the earlier M54 source head, used a 320 × 640 API 36 emulator to inspect light and dark high-contrast CSS samples; toggled the button state; observed ResizeSensor sample width change 144 → 224 px; opened and dismissed the scoped overlay and shortcut guide; tabbed to a preview control and sent Ctrl+R, incrementing its counter from 0 to 1. Checked a visible 2× text layout and Arabic RTL catalog mirroring. Existing theme and shortcut Android test sources compiled; their device tests were not rerun in this slice after main integration. |
 | Hosted CI, review, and release | Pending. |
 
 ## Known limits and next branch

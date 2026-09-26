@@ -54,6 +54,13 @@ import io.github.joelromanpr.brace.core.BraceButtonVariant
 import io.github.joelromanpr.brace.core.BraceCheckbox
 import io.github.joelromanpr.brace.core.BraceControlGroup
 import io.github.joelromanpr.brace.core.BraceFieldLabel
+import io.github.joelromanpr.brace.core.BraceRadio
+import io.github.joelromanpr.brace.core.BraceRadioGroup
+import io.github.joelromanpr.brace.core.BraceRadioOption
+import io.github.joelromanpr.brace.core.BraceSegmentedControl
+import io.github.joelromanpr.brace.core.BraceSegmentedOption
+import io.github.joelromanpr.brace.core.BraceSegmentedIntent
+import io.github.joelromanpr.brace.core.BraceSegmentedSize
 import io.github.joelromanpr.brace.core.BraceCard
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbItem
@@ -190,6 +197,9 @@ BraceTheme {
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-checkbox" to "BraceCheckbox(checked = checked, onCheckedChange = { checked = it }, label = \"Include archived\")",
     "core-switch" to "BraceSwitch(checked = enabled, onCheckedChange = { enabled = it }, label = \"Notifications\")",
+    "core-radio" to "BraceRadio(selected = meal == \"soup\", onSelect = { meal = \"soup\" }, label = \"Soup\")",
+    "core-radiogroup" to "BraceRadioGroup(options = listOf(BraceRadioOption(\"soup\", \"Soup\"), BraceRadioOption(\"salad\", \"Salad\")), selectedValue = meal, onValueChange = { meal = it }, label = \"Lunch special\")",
+    "core-segmentedcontrol" to "BraceSegmentedControl(options = listOf(BraceSegmentedOption(\"list\", \"List\"), BraceSegmentedOption(\"grid\", \"Grid\")), value = layout, onValueChange = { layout = it }, label = \"Layout\")",
     "core-inputgroup" to "BraceTextField(value = query, onValueChange = { query = it }, label = \"Search\")",
     "core-formgroup" to """var notes by rememberSaveable { mutableStateOf("") }
 BraceFormField(label = "Case notes", helperText = "Include the event time", required = true, requiredDescription = "Required") { controlModifier ->
@@ -598,6 +608,43 @@ private fun ComponentSample(
             var checked by rememberSaveable { mutableStateOf(false) }
             Column { BraceCheckbox(checked, { checked = it }, "Include archived")
                 BraceCheckbox(false, {}, "Disabled choice", enabled = false) }
+        }
+        "core-radio" -> {
+            var meal by rememberSaveable { mutableStateOf("soup") }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xs)) {
+                BraceRadio(meal == "soup", { meal = "soup" }, "Soup", description = "Vegetarian")
+                BraceRadio(meal == "sandwich", { meal = "sandwich" }, "Sandwich")
+                BraceRadio(false, {}, "Unavailable", enabled = false)
+            }
+        }
+        "core-radiogroup" -> {
+            var meal by rememberSaveable { mutableStateOf("soup") }
+            BraceRadioGroup(
+                options = listOf(
+                    BraceRadioOption("soup", "Soup", description = "Vegetarian"),
+                    BraceRadioOption("salad", "Salad", enabled = false),
+                    BraceRadioOption("sandwich", "Sandwich"),
+                ),
+                selectedValue = meal, onValueChange = { meal = it }, label = "Lunch special",
+            )
+        }
+        "core-segmentedcontrol" -> {
+            var layout by rememberSaveable { mutableStateOf("list") }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceSegmentedControl(
+                    options = listOf(
+                        BraceSegmentedOption("list", "List"),
+                        BraceSegmentedOption("grid", "Grid", enabled = false),
+                        BraceSegmentedOption("gallery", "Gallery"),
+                    ),
+                    value = layout, onValueChange = { layout = it }, label = "Layout",
+                    fill = true, intent = BraceSegmentedIntent.Primary,
+                )
+                BraceSegmentedControl(
+                    options = listOf(BraceSegmentedOption("day", "Day"), BraceSegmentedOption("week", "Week")),
+                    value = "day", onValueChange = {}, label = "Small size", size = BraceSegmentedSize.Small,
+                )
+            }
         }
         "core-switch" -> {
             var checked by rememberSaveable { mutableStateOf(true) }

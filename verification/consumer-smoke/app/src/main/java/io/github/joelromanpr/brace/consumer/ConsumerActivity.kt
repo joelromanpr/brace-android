@@ -244,6 +244,20 @@ class ConsumerActivity : ComponentActivity() {
                             },
                             onColumnOrderChange = { tableColumnOrder = it },
                         )
+                        BraceDataTable(
+                            rows = displayedTableRows,
+                            rowKey = { it.first },
+                            columns = listOf(
+                                BraceTableColumn<Pair<String, String>>("status", "Status", 100.dp, { it.second }),
+                                BraceTableColumn<Pair<String, String>>("key", "Key", 100.dp, { it.first }),
+                            ),
+                            selection = null,
+                            onSelectionChange = {},
+                            modifier = Modifier.width(320.dp),
+                            height = 160.dp,
+                            frozenRows = 1,
+                            frozenColumns = 1,
+                        )
                         BasicText("Table order: ${tableRows.joinToString { it.first }} / ${tableColumnOrder.joinToString()}")
                         Row {
                             BraceButton("Table ready", onClick = { tableMode = "ready" })

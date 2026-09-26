@@ -42,7 +42,8 @@ import io.github.braceandroid.foundation.BraceTheme
  * parent [BraceDataTable] owns keyboard navigation and viewport focus; [onSelect] and optional
  * range/edit callbacks are also exposed to touch, mouse, and TalkBack here. [enabled]
  * pauses those actions during a controlled table load. [onAddRegion] exposes a separate
- * TalkBack action for adding this cell to a disjoint selection.
+ * TalkBack action for adding this cell to a disjoint selection. [pinState] can announce
+ * that the cell remains visible in a frozen row, column, or their intersection.
  */
 @Composable
 fun BraceTableCell(
@@ -61,6 +62,7 @@ fun BraceTableCell(
     onExtendSelection: (() -> Unit)? = null,
     onEdit: (() -> Unit)? = null,
     onAddRegion: (() -> Unit)? = null,
+    pinState: String? = null,
     content: (@Composable () -> Unit)? = null,
 ) {
     require(rowIndex >= 0 && columnIndex >= 0) { "Table cell coordinates must be nonnegative" }
@@ -95,6 +97,7 @@ fun BraceTableCell(
                 this.selected = selected
                 contentDescription = description
                 if (!enabled) disabled()
+                if (pinState != null) stateDescription = pinState
                 if (enabled) onClick(selectLabel) { onSelect(); true }
                 customActions = if (enabled) listOfNotNull(
                     onExtendSelection?.let { action ->
@@ -128,7 +131,8 @@ fun BraceTableCell(
  * Set [enabled] false while another header editor owns interaction. [sortState] and
  * [sortActionLabel] announce an optional sort action without changing the selection target.
  * [trailingInset] reserves room for adjacent sort and resize controls.
- * [onAddRegion] exposes a distinct TalkBack selection action.
+ * [onAddRegion] exposes a distinct TalkBack selection action. [pinState] announces a
+ * frozen column without changing its sort state.
  */
 @Composable
 fun BraceColumnHeader(
@@ -145,6 +149,7 @@ fun BraceColumnHeader(
     sortActionLabel: String? = null,
     onSort: (() -> Unit)? = null,
     trailingInset: Dp = 0.dp,
+    pinState: String? = null,
     onAddRegion: (() -> Unit)? = null,
 ) {
     require((sortActionLabel == null) == (onSort == null)) {
@@ -171,7 +176,8 @@ fun BraceColumnHeader(
                 this.selected = selected
                 contentDescription = description
                 if (!enabled) disabled()
-                if (sortState != null) stateDescription = sortState
+                if (sortState != null || pinState != null)
+                    stateDescription = listOfNotNull(sortState, pinState).joinToString(", ")
                 if (enabled) onClick(selectLabel) { onSelect(); true }
                 customActions = listOfNotNull(
                     (if (enabled) onEdit else null)?.let { action ->
@@ -204,7 +210,8 @@ fun BraceColumnHeader(
  * number even when [content] replaces the visible ordinal. Selection is controlled by the
  * caller, while the table retains keyboard focus and any separate resize handle. [enabled]
  * pauses the selection action during a controlled table load. [onAddRegion] adds this
- * row to a disjoint selection through a separate TalkBack action.
+ * row to a disjoint selection through a separate TalkBack action. [pinState] announces
+ * a frozen row.
  */
 @Composable
 fun BraceRowHeader(
@@ -216,6 +223,7 @@ fun BraceRowHeader(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     onAddRegion: (() -> Unit)? = null,
+    pinState: String? = null,
     content: (@Composable () -> Unit)? = null,
 ) {
     require(rowIndex >= 0) { "Row index must be nonnegative" }
@@ -236,6 +244,7 @@ fun BraceRowHeader(
                 this.selected = selected
                 contentDescription = description
                 if (!enabled) disabled()
+                if (pinState != null) stateDescription = pinState
                 if (enabled) onClick(selectLabel) { onSelect(); true }
                 customActions = if (enabled && onAddRegion != null)
                     listOf(CustomAccessibilityAction(addRegionLabel) { onAddRegion(); true })

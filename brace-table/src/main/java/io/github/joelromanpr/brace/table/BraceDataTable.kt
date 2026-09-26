@@ -199,7 +199,11 @@ fun rememberBraceTableViewport(): BraceTableViewport {
  * [BraceTableSelection.Regions] value. Optional [onRowOrderChange] and
  * [onColumnOrderChange] request complete key orders that the caller applies to [rows] or
  * [columns]. Separate 48dp grips support touch/mouse drag to visible items, keyboard
- * arrows/Home/End, and TalkBack move actions. Frozen data regions are not yet exposed.
+ * arrows/Home/End, and TalkBack move actions. [frozenRows] and [frozenColumns]
+ * pin leading data positions beside the fixed headers; the caller controls both counts.
+ * Pinned rows and columns keep one accessible cell per coordinate and preserve absolute
+ * grid indices. Choose counts that leave room for at least one scrollable row and column
+ * at the target screen size; oversized pinned panes are clipped by the viewport.
  */
 @Composable
 fun <Row> BraceDataTable(
@@ -233,6 +237,8 @@ fun <Row> BraceDataTable(
     state: BraceTableState = BraceTableState.Ready,
     onRowOrderChange: ((List<String>) -> Unit)? = null,
     onColumnOrderChange: ((List<String>) -> Unit)? = null,
+    frozenRows: Int = 0,
+    frozenColumns: Int = 0,
 ) {
     require((onEditingCellChange == null) == (onCellCommit == null)) {
         "Editing requires both onEditingCellChange and onCellCommit"
@@ -248,6 +254,10 @@ fun <Row> BraceDataTable(
     }
     require(editingCell == null || editingColumnName == null) {
         "Only one table editor may be active"
+    }
+    require(frozenRows >= 0 && frozenRows <= rows.size) { "Frozen row count is outside the table" }
+    require(frozenColumns >= 0 && frozenColumns <= columns.size) {
+        "Frozen column count is outside the table"
     }
     val editingEnabled = onEditingCellChange != null && onCellCommit != null
     val nameEditingEnabled = onEditingColumnNameChange != null && onColumnNameCommit != null
@@ -317,7 +327,20 @@ fun <Row> BraceDataTable(
     val columnIndex = remember(columns, widths, baseMinColumnWidth) {
         indexColumns(columns, baseMinColumnWidth, widths)
     }
-    val totalWidth = rowHeaderWidth + columnIndex.totalWidth
+    val frozenWidth = if (frozenColumns == 0) 0.dp else columnIndex.ends[frozenColumns - 1]
+    fun rowHeightAt(index: Int): Dp {
+        val key = rowIndex.keys[index]
+        val minimum = if (editingCell?.rowKey == key) editorRowHeight else defaultRowHeight
+        val requested = maxOf(minimum, rowHeights[key] ?: minimum)
+        return if (effectiveMaxRowHeight == null) requested else minOf(effectiveMaxRowHeight, requested)
+    }
+    val frozenRowHeights = (0 until frozenRows).map(::rowHeightAt)
+    val frozenRowOffsets = ArrayList<Dp>(frozenRows)
+    var frozenHeight = 0.dp
+    frozenRowHeights.forEach { rowHeight ->
+        frozenRowOffsets += frozenHeight
+        frozenHeight += rowHeight
+    }
     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val copySelection: () -> Boolean = {
         val text = BraceTableClipboard.formatSelectionWithIndexes(rows, columns, selection,
@@ -350,6 +373,9 @@ fun <Row> BraceDataTable(
     val sortedAscendingState = stringResource(R.string.brace_table_sorted_ascending)
     val sortedDescendingState = stringResource(R.string.brace_table_sorted_descending)
     val unsortedState = stringResource(R.string.brace_table_unsorted)
+    val frozenRowState = stringResource(R.string.brace_table_frozen_row)
+    val frozenColumnState = stringResource(R.string.brace_table_frozen_column)
+    val frozenIntersectionState = stringResource(R.string.brace_table_frozen_row_column)
     val columnResizeDescription = stringResource(R.string.brace_table_column_resize)
     val rowResizeDescription = stringResource(R.string.brace_table_row_resize)
     val increaseSizeLabel = stringResource(R.string.brace_table_increase_size)
@@ -480,19 +506,23 @@ fun <Row> BraceDataTable(
             requester.requestFocus()
         }
     }
-    LaunchedEffect(editingColumnName, viewportWidthPx, columnIndex) {
+    LaunchedEffect(editingColumnName, viewportWidthPx, columnIndex, frozenColumns, frozenWidth) {
         if (editingColumnName == null || !nameEditingEnabled || viewportWidthPx <= 0) return@LaunchedEffect
         val index = columnIndex.byKey[editingColumnName] ?: return@LaunchedEffect
         if (!columns[index].editableName) return@LaunchedEffect
-        val startPx = with(density) { columnIndex.starts[index].roundToPx() }
-        val endPx = with(density) { columnIndex.ends[index].roundToPx() }
-        val bodyWidthPx = (viewportWidthPx - with(density) { rowHeaderWidth.roundToPx() }).coerceAtLeast(0)
-        val nextOffset = when {
-            startPx < viewport.horizontal.value -> startPx
-            endPx > viewport.horizontal.value + bodyWidthPx -> endPx - bodyWidthPx
-            else -> viewport.horizontal.value
+        if (index >= frozenColumns) {
+            val startPx = with(density) { (columnIndex.starts[index] - frozenWidth).roundToPx() }
+            val endPx = with(density) { (columnIndex.ends[index] - frozenWidth).roundToPx() }
+            val bodyWidthPx = (viewportWidthPx - with(density) {
+                (rowHeaderWidth + frozenWidth).roundToPx()
+            }).coerceAtLeast(0)
+            val nextOffset = when {
+                startPx < viewport.horizontal.value -> startPx
+                endPx > viewport.horizontal.value + bodyWidthPx -> endPx - bodyWidthPx
+                else -> viewport.horizontal.value
+            }
+            viewport.horizontal.scrollTo(nextOffset.coerceAtLeast(0))
         }
-        viewport.horizontal.scrollTo(nextOffset.coerceAtLeast(0))
     }
     LaunchedEffect(editingCell, rowIndexes, columns) {
         if (editingCell != null && (editingCell.rowKey !in rowIndexes ||
@@ -502,31 +532,39 @@ fun <Row> BraceDataTable(
             requester.requestFocus()
         }
     }
-    LaunchedEffect(editingCell, viewportWidthPx, columnIndex, rowIndex) {
+    LaunchedEffect(editingCell, viewportWidthPx, columnIndex, rowIndex,
+        frozenRows, frozenColumns, frozenWidth, frozenHeight) {
         if (editingCell == null || !editingEnabled || viewportWidthPx <= 0) return@LaunchedEffect
         val targetRow = rowIndexes[editingCell.rowKey] ?: return@LaunchedEffect
         val targetColumn = columnIndex.byKey[editingCell.columnKey] ?: return@LaunchedEffect
         if (!columns[targetColumn].editable) return@LaunchedEffect
-        val visibleRow = viewport.vertical.layoutInfo.visibleItemsInfo.firstOrNull { it.index == targetRow }
-        if (visibleRow == null) viewport.vertical.scrollToItem(targetRow)
-        else {
-            val layout = viewport.vertical.layoutInfo
-            when {
-                visibleRow.offset < layout.viewportStartOffset ->
-                    viewport.vertical.scrollBy((visibleRow.offset - layout.viewportStartOffset).toFloat())
-                visibleRow.offset + visibleRow.size > layout.viewportEndOffset ->
-                    viewport.vertical.scrollBy((visibleRow.offset + visibleRow.size - layout.viewportEndOffset).toFloat())
+        if (targetRow >= frozenRows) {
+            val localRow = targetRow - frozenRows
+            val visibleRow = viewport.vertical.layoutInfo.visibleItemsInfo.firstOrNull { it.index == localRow }
+            if (visibleRow == null) viewport.vertical.scrollToItem(localRow)
+            else {
+                val layout = viewport.vertical.layoutInfo
+                when {
+                    visibleRow.offset < layout.viewportStartOffset ->
+                        viewport.vertical.scrollBy((visibleRow.offset - layout.viewportStartOffset).toFloat())
+                    visibleRow.offset + visibleRow.size > layout.viewportEndOffset ->
+                        viewport.vertical.scrollBy((visibleRow.offset + visibleRow.size - layout.viewportEndOffset).toFloat())
+                }
             }
         }
-        val startPx = with(density) { columnIndex.starts[targetColumn].roundToPx() }
-        val endPx = with(density) { columnIndex.ends[targetColumn].roundToPx() }
-        val bodyWidthPx = (viewportWidthPx - with(density) { rowHeaderWidth.roundToPx() }).coerceAtLeast(0)
-        val nextOffset = when {
-            startPx < viewport.horizontal.value -> startPx
-            endPx > viewport.horizontal.value + bodyWidthPx -> endPx - bodyWidthPx
-            else -> viewport.horizontal.value
+        if (targetColumn >= frozenColumns) {
+            val startPx = with(density) { (columnIndex.starts[targetColumn] - frozenWidth).roundToPx() }
+            val endPx = with(density) { (columnIndex.ends[targetColumn] - frozenWidth).roundToPx() }
+            val bodyWidthPx = (viewportWidthPx - with(density) {
+                (rowHeaderWidth + frozenWidth).roundToPx()
+            }).coerceAtLeast(0)
+            val nextOffset = when {
+                startPx < viewport.horizontal.value -> startPx
+                endPx > viewport.horizontal.value + bodyWidthPx -> endPx - bodyWidthPx
+                else -> viewport.horizontal.value
+            }
+            viewport.horizontal.scrollTo(nextOffset.coerceAtLeast(0))
         }
-        viewport.horizontal.scrollTo(nextOffset.coerceAtLeast(0))
     }
     fun finishNameEditing() {
         onEditingColumnNameChange?.invoke(null)
@@ -544,7 +582,7 @@ fun <Row> BraceDataTable(
     }
 
     BoxWithConstraints(
-        modifier.fillMaxWidth().height(height)
+        modifier.fillMaxWidth().height(height).clipToBounds()
             .background(colors.row)
             .border(if (focused) BraceTheme.sizing.focusRingWidth else metrics.gridLineWidth,
                 if (focused) semantic.focusRing else colors.gridLine)
@@ -609,7 +647,9 @@ fun <Row> BraceDataTable(
                     }
                     is BraceTableSelection.Row, null -> 0
                 }?.coerceAtLeast(0) ?: 0
-                val pageBudgetPx = (viewportHeightPx - with(density) { headerHeight.roundToPx() })
+                val pageBudgetPx = (viewportHeightPx - with(density) {
+                    (headerHeight + frozenHeight).roundToPx()
+                })
                     .coerceAtLeast(1)
                 fun pageJump(direction: Int): Int {
                     var index = currentRow + direction
@@ -662,24 +702,31 @@ fun <Row> BraceDataTable(
                 ) else BraceTableSelection.Cell(rowIndex.keys[targetRow], columns[targetCol].key)
                 onSelectionChange(nextSelection)
                 scope.launch {
-                    val layout = viewport.vertical.layoutInfo
-                    val visibleRow = layout.visibleItemsInfo.firstOrNull { it.index == targetRow }
-                    when {
-                        visibleRow == null -> viewport.vertical.scrollToItem(targetRow)
-                        visibleRow.offset < layout.viewportStartOffset ->
-                            viewport.vertical.scrollBy((visibleRow.offset - layout.viewportStartOffset).toFloat())
-                        visibleRow.offset + visibleRow.size > layout.viewportEndOffset ->
-                            viewport.vertical.scrollBy((visibleRow.offset + visibleRow.size - layout.viewportEndOffset).toFloat())
+                    if (targetRow >= frozenRows) {
+                        val localRow = targetRow - frozenRows
+                        val layout = viewport.vertical.layoutInfo
+                        val visibleRow = layout.visibleItemsInfo.firstOrNull { it.index == localRow }
+                        when {
+                            visibleRow == null -> viewport.vertical.scrollToItem(localRow)
+                            visibleRow.offset < layout.viewportStartOffset ->
+                                viewport.vertical.scrollBy((visibleRow.offset - layout.viewportStartOffset).toFloat())
+                            visibleRow.offset + visibleRow.size > layout.viewportEndOffset ->
+                                viewport.vertical.scrollBy((visibleRow.offset + visibleRow.size - layout.viewportEndOffset).toFloat())
+                        }
                     }
-                    val startPx = with(density) { columnIndex.starts[targetCol].roundToPx() }
-                    val endPx = with(density) { columnIndex.ends[targetCol].roundToPx() }
-                    val visibleBodyPx = (viewportWidthPx - with(density) { rowHeaderWidth.roundToPx() }).coerceAtLeast(0)
-                    val nextOffset = when {
-                        startPx < viewport.horizontal.value -> startPx
-                        endPx > viewport.horizontal.value + visibleBodyPx -> endPx - visibleBodyPx
-                        else -> viewport.horizontal.value
+                    if (targetCol >= frozenColumns) {
+                        val startPx = with(density) { (columnIndex.starts[targetCol] - frozenWidth).roundToPx() }
+                        val endPx = with(density) { (columnIndex.ends[targetCol] - frozenWidth).roundToPx() }
+                        val visibleBodyPx = (viewportWidthPx - with(density) {
+                            (rowHeaderWidth + frozenWidth).roundToPx()
+                        }).coerceAtLeast(0)
+                        val nextOffset = when {
+                            startPx < viewport.horizontal.value -> startPx
+                            endPx > viewport.horizontal.value + visibleBodyPx -> endPx - visibleBodyPx
+                            else -> viewport.horizontal.value
+                        }
+                        viewport.horizontal.scrollTo(nextOffset.coerceAtLeast(0))
                     }
-                    viewport.horizontal.scrollTo(nextOffset.coerceAtLeast(0))
                 }
                 true
             }
@@ -705,492 +752,570 @@ fun <Row> BraceDataTable(
             .testTag("brace-table"),
     ) {
         val viewportWidth = maxWidth
-        val visibleBodyWidth = (viewportWidth - rowHeaderWidth).coerceAtLeast(0.dp)
+        val scrollViewportWidth = (viewportWidth - rowHeaderWidth - frozenWidth).coerceAtLeast(0.dp)
+        val scrollContentWidth = (columnIndex.totalWidth - frozenWidth).coerceAtLeast(0.dp)
         val scrollDp = with(density) { viewport.horizontal.value.toDp() }
-        val visibleColumns = columnIndex.visibleRange(scrollDp, scrollDp + visibleBodyWidth)
+        val scrollColumns = columnIndex.visibleRange(frozenWidth + scrollDp,
+            frozenWidth + scrollDp + scrollViewportWidth).filter { it >= frozenColumns }
+        val frozenColumnNumbers = (0 until frozenColumns).toList()
+        val visibleColumns = frozenColumnNumbers + scrollColumns
         val bodyHeight = (maxHeight - headerHeight).coerceAtLeast(0.dp)
-
-        Column(Modifier.horizontalScroll(viewport.horizontal)) {
-            Column(Modifier.width(maxOf(totalWidth, viewportWidth))) {
-                Box(Modifier.width(maxOf(totalWidth, viewportWidth)).height(headerHeight).background(colors.header)) {
-                    visibleColumns.forEach { index ->
-                        val column = columns[index]
-                        val columnSelected = !isLoading && (
-                            selection == BraceTableSelection.Column(column.key) ||
-                                resolvedRegions?.any { it.fullColumns && index in it.columns } == true)
-                        var pointerAdditive by remember(column.key) { mutableStateOf(false) }
-                        val headerLoading = loading?.columnHeader(column.key) == true
-                        val sortable = column.sortable && onSortChange != null
-                        val sortEnabled = !isLoading && sortable && editingCell == null && editingColumnName == null
-                        val activeSort = sort?.takeIf { it.key == column.key }
-                        val sortStateDescription = when (activeSort?.direction) {
-                            BraceTableSortDirection.Ascending -> sortedAscendingState
-                            BraceTableSortDirection.Descending -> sortedDescendingState
-                            null -> unsortedState
-                        }
-                        val sortActionDescription = when (activeSort?.direction) {
-                            BraceTableSortDirection.Ascending -> sortDescendingAction.format(column.title)
-                            BraceTableSortDirection.Descending -> clearSortAction.format(column.title)
-                            null -> sortAscendingAction.format(column.title)
-                        }
-                        val requestSort: () -> Unit = {
-                            if (sortEnabled) onSortChange?.invoke(BraceTableSort.next(sort, column.key))
-                        }
-                        val selectColumn: () -> Unit = {
-                            if (!isLoading && editingColumnName == null) {
-                                pendingTouchRangeAnchor = null
-                                onSelectionChange(if (pointerAdditive)
-                                    BraceTableRegions.add(selection.takeIf { selectionAnnouncement != null },
-                                        BraceTableRegion.Columns(column.key))
-                                else BraceTableSelection.Column(column.key))
-                                pointerAdditive = false
-                                requester.requestFocus()
-                            }
-                        }
-                        val isNameEditing = !isLoading && nameEditingEnabled &&
-                            editingColumnName == column.key && column.editableName
-                        val canBeginNameEdit = !isLoading && nameEditingEnabled && column.editableName &&
-                            editingCell == null && editingColumnName == null
-                        val beginNameEdit: () -> Unit = {
-                            if (canBeginNameEdit) {
-                                pendingTouchRangeAnchor = null
-                                onSelectionChange(BraceTableSelection.Column(column.key))
-                                onEditingColumnNameChange?.invoke(column.key)
-                            }
-                        }
-                        if (headerLoading) {
-                            BraceTableSkeleton(
-                                header = true,
-                                tag = "brace-table-loading-header:${column.key}",
-                                modifier = Modifier.offset(x = rowHeaderWidth + columnIndex.starts[index])
-                                    .width(widths[index]).height(headerHeight),
-                            )
-                        } else if (isNameEditing) {
-                            composeKey("header:${column.key}") {
-                                BraceEditableColumnName(
-                                    name = column.title,
-                                    label = editColumnNameDescription.format(column.title, index + 1),
-                                    onCommit = { title ->
-                                        onColumnNameCommit?.invoke(column.key, title)
-                                        finishNameEditing()
-                                    },
-                                    onCancel = { finishNameEditing() },
-                                    validate = { title -> validateColumnName(column.key, title) },
-                                    columnIndex = index,
-                                    isSelected = columnSelected,
-                                    modifier = Modifier.offset(x = rowHeaderWidth + columnIndex.starts[index])
-                                        .width(widths[index]).height(headerHeight)
-                                        .testTag("brace-table-name-editor:${column.key}"),
-                                )
-                            }
-                        } else {
-                            BraceColumnHeader(
-                                title = column.title,
-                                columnIndex = index,
-                                columnKey = column.key,
-                                selected = columnSelected,
-                                onSelect = selectColumn,
-                                enabled = !isLoading && editingColumnName == null,
-                                onAddRegion = if (!isLoading && editingColumnName == null) {{
-                                    onSelectionChange(BraceTableRegions.add(
-                                        selection.takeIf { selectionAnnouncement != null },
-                                        BraceTableRegion.Columns(column.key)))
-                                    requester.requestFocus()
-                                }} else null,
-                                onEdit = if (canBeginNameEdit) beginNameEdit else null,
-                                modifier = Modifier.offset(x = rowHeaderWidth + columnIndex.starts[index])
-                                    .width(widths[index] - (if (sortable) BraceTheme.sizing.touchTarget else 0.dp) -
-                                        resizeTargetWidth - reorderTargetWidth)
-                                    .height(headerHeight)
-                                    .captureAdditivePointer { pointerAdditive = it },
-                                content = column.headerContent,
-                                sortState = if (sortable) sortStateDescription else null,
-                                sortActionLabel = if (sortEnabled) sortActionDescription else null,
-                                onSort = if (sortEnabled) requestSort else null,
-                            )
-                        }
-                        if (sortable && !isNameEditing && !headerLoading) {
-                            val sortInteraction = remember(column.key) { MutableInteractionSource() }
-                            val sortFocused by sortInteraction.collectIsFocusedAsState()
-                            val sortHovered by sortInteraction.collectIsHoveredAsState()
-                            val sortBackground = when {
-                                !sortEnabled -> semantic.disabledContainer
-                                activeSort != null -> semantic.primarySubtle
-                                sortHovered -> semantic.hover
-                                else -> colors.header
-                            }
-                            val sortForeground = when {
-                                !sortEnabled -> semantic.disabledContent
-                                activeSort != null -> semantic.onPrimarySubtle
-                                else -> colors.headerContent
-                            }
-                            Box(
-                                Modifier.offset(x = rowHeaderWidth + columnIndex.starts[index] +
-                                    widths[index] - BraceTheme.sizing.touchTarget - resizeTargetWidth - reorderTargetWidth)
-                                    .width(BraceTheme.sizing.touchTarget).height(headerHeight)
-                                    .background(sortBackground)
-                                    .border(if (sortFocused) BraceTheme.sizing.focusRingWidth
-                                        else metrics.gridLineWidth,
-                                        if (sortFocused) semantic.focusRing else colors.gridLine)
-                                    .clickable(enabled = sortEnabled, role = Role.Button,
-                                        interactionSource = sortInteraction, indication = null,
-                                        onClick = requestSort)
-                                    .clearAndSetSemantics {
-                                        testTag = "brace-table-sort:${column.key}"
-                                        role = Role.Button
-                                        contentDescription = sortActionDescription
-                                        stateDescription = sortStateDescription
-                                        if (sortEnabled) onClick(sortActionDescription) {
-                                            requestSort()
-                                            true
-                                        }
-                                    },
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Text(when (activeSort?.direction) {
-                                    BraceTableSortDirection.Ascending -> "↑"
-                                    BraceTableSortDirection.Descending -> "↓"
-                                    null -> "↕"
-                                }, color = sortForeground, style = typography.label)
-                            }
-                        }
-                    }
-                    if (!isLoading && onColumnOrderChange != null && columns.size > 1) {
-                        visibleColumns.filter { columns[it].key != editingColumnName }.forEach { index ->
-                            val column = columns[index]
-                            val grip = BraceTheme.sizing.touchTarget
-                            val offset = columnIndex.starts[index] + widths[index] - grip - resizeTargetWidth
-                            composeKey("reorder-column:${column.key}") {
-                                BraceTableReorderHandle(
-                                    axis = BraceReorderAxis.Column,
-                                    id = column.key,
-                                    name = column.title,
-                                    index = index,
-                                    count = columns.size,
-                                    width = grip,
-                                    height = headerHeight,
-                                    description = reorderColumnDescription,
-                                    positionDescription = reorderPositionDescription,
-                                    earlierLabel = moveEarlierLabel,
-                                    laterLabel = moveLaterLabel,
-                                    onMoveTo = { target -> requestColumnMove(column.key, target) },
-                                    targetIndexForDrag = { deltaPx ->
-                                        val currentCenter = (columnIndex.starts[index].value +
-                                            columnIndex.ends[index].value) / 2f
-                                        val targetCenter = currentCenter + with(density) { deltaPx.toDp().value }
-                                        visibleColumns.minByOrNull { candidate ->
-                                            abs((columnIndex.starts[candidate].value +
-                                                columnIndex.ends[candidate].value) / 2f - targetCenter)
-                                        } ?: index
-                                    },
-                                    onFocusedChange = { focused ->
-                                        if (focused) focusedReorderHandle = "column:${column.key}"
-                                        else if (focusedReorderHandle == "column:${column.key}")
-                                            focusedReorderHandle = null
-                                    },
-                                    restoreFocus = pendingReorderFocus == "column:${column.key}",
-                                    onFocusRestored = { pendingReorderFocus = null },
-                                    modifier = Modifier.offset(x = rowHeaderWidth + offset),
-                                )
-                            }
-                        }
-                    }
-                    if (!isLoading && onColumnWidthChange != null) {
-                        visibleColumns.filter { columns[it].key != editingColumnName }.forEach { index ->
-                            val column = columns[index]
-                            val currentWidth = widths[index]
-                            BraceTableResizeHandle(
-                                axis = BraceResizeAxis.Column,
-                                id = column.key,
-                                name = column.title,
-                                size = currentWidth,
-                                minimum = minColumnWidth,
-                                maximum = effectiveMaxColumnWidth,
-                                width = BraceTheme.sizing.touchTarget,
-                                height = headerHeight,
-                                description = columnResizeDescription,
-                                stateLabel = if (effectiveMaxColumnWidth == null)
-                                    sizeMinDescription.format(currentWidth.value.toInt(), minColumnWidth.value.toInt())
-                                    else sizeRangeDescription.format(currentWidth.value.toInt(),
-                                        minColumnWidth.value.toInt(), effectiveMaxColumnWidth.value.toInt()),
-                                increaseLabel = increaseSizeLabel,
-                                decreaseLabel = decreaseSizeLabel,
-                                onSizeChange = { onColumnWidthChange(column.key, it) },
-                                onFocusedChange = { resizeHandleFocused = it },
-                                modifier = Modifier.offset(x = rowHeaderWidth + columnIndex.starts[index] + currentWidth - BraceTheme.sizing.touchTarget),
-                            )
-                        }
-                    }
-                }
-                LazyColumn(
-                    state = viewport.vertical,
-                    modifier = Modifier.width(maxOf(totalWidth, viewportWidth)).height(bodyHeight),
-                ) {
-                    items(count = rows.size, key = { index -> rowIndex.keys[index] }) { rowNumber ->
-                        val row = rows[rowNumber]
-                        val key = rowIndex.keys[rowNumber]
-                        val accessibleRowLabel = if (rowLabel === rowKey) key else rowLabel(row)
-                        val rowSelected = !isLoading && (
-                            selection == BraceTableSelection.Row(key) ||
-                                resolvedRegions?.any { it.fullRows && rowNumber in it.rows } == true)
-                        val minimumRowHeight = if (editingCell?.rowKey == key) editorRowHeight else defaultRowHeight
-                        val requestedHeight = maxOf(minimumRowHeight, rowHeights[key] ?: minimumRowHeight)
-                        val itemHeight = if (effectiveMaxRowHeight == null) requestedHeight else
-                            minOf(effectiveMaxRowHeight, requestedHeight)
-                        val rowColor = if (rowSelected) colors.selectedRow
-                            else if (rowNumber % 2 == 0) colors.row else colors.alternateRow
-                        Box(Modifier.width(maxOf(totalWidth, viewportWidth)).height(itemHeight).background(rowColor)) {
-                            visibleColumns.forEach { columnNumber ->
-                                val column = columns[columnNumber]
-                                val cellSelected = if (isLoading) false else when (selection) {
-                                    is BraceTableSelection.Cell -> selection.rowKey == key && selection.columnKey == column.key
-                                    is BraceTableSelection.Row -> selection.rowKey == key
-                                    is BraceTableSelection.Column -> selection.columnKey == column.key
-                                    is BraceTableSelection.Range -> range?.let { (selectedRows, selectedColumns) ->
-                                        rowNumber in selectedRows && columnNumber in selectedColumns
-                                    } == true
-                                    null -> false
-                                    is BraceTableSelection.Regions ->
-                                        resolvedRegions?.any { it.contains(rowNumber, columnNumber) } == true
-                                }
-                                val cellLoading = loading?.bodyCell(key, column.key) == true
-                                val value = if (cellLoading) "" else column.cellText(row)
-                                var pointerShift by remember(key, column.key) { mutableStateOf(false) }
-                                var pointerAdditive by remember(key, column.key) { mutableStateOf(false) }
-                                val selectCell: () -> Unit = selectCell@{
-                                    if (isLoading) return@selectCell
-                                    val anchor = validAnchor(when {
-                                        pointerShift && selection is BraceTableSelection.Range ->
-                                            BraceTableSelection.Cell(selection.anchorRowKey, selection.anchorColumnKey)
-                                        pointerShift && selection is BraceTableSelection.Cell -> selection
-                                        else -> pendingTouchRangeAnchor
-                                    })
-                                    if (pointerAdditive) onSelectionChange(BraceTableRegions.add(
-                                        selection.takeIf { selectionAnnouncement != null },
-                                        BraceTableRegion.Cells(key, column.key)))
-                                    else if (anchor == null) onSelectionChange(BraceTableSelection.Cell(key, column.key))
-                                    else onSelectionChange(BraceTableSelection.Range(
-                                        anchor.rowKey, anchor.columnKey, key, column.key,
-                                    ))
-                                    pendingTouchRangeAnchor = null
-                                    pointerShift = false
-                                    pointerAdditive = false
-                                    requester.requestFocus()
-                                }
-                                val beginTouchRange: () -> Unit = beginTouchRange@{
-                                    if (isLoading) return@beginTouchRange
-                                    val anchor = validAnchor(when (selection) {
-                                        is BraceTableSelection.Range -> BraceTableSelection.Cell(
-                                            selection.anchorRowKey, selection.anchorColumnKey)
-                                        is BraceTableSelection.Cell -> selection
-                                        else -> null
-                                    }) ?: BraceTableSelection.Cell(key, column.key)
-                                    pendingTouchRangeAnchor = anchor
-                                    onSelectionChange(BraceTableSelection.Range(
-                                        anchor.rowKey, anchor.columnKey, key, column.key,
-                                    ))
-                                    requester.requestFocus()
-                                }
-                                val cell = BraceTableSelection.Cell(key, column.key)
-                                val isEditing = !isLoading && editingEnabled && editingCell == cell && column.editable
-                                val beginEdit: () -> Unit = {
-                                    if (!isLoading && editingEnabled && column.editable && editingColumnName == null) {
-                                        pendingTouchRangeAnchor = null
-                                        onSelectionChange(cell)
-                                        onEditingCellChange?.invoke(cell)
-                                    }
-                                }
-                                if (cellLoading) {
-                                    BraceTableSkeleton(
-                                        header = false,
-                                        tag = "brace-table-loading-cell:$key:${column.key}",
-                                        modifier = Modifier.offset(x = rowHeaderWidth + columnIndex.starts[columnNumber])
-                                            .width(widths[columnNumber]).height(itemHeight),
-                                    )
-                                } else if (isEditing) {
-                                    composeKey(key, column.key) {
-                                        BraceEditableCell(
-                                            value = value,
-                                            label = editDescription.format(column.title, rowNumber + 1, accessibleRowLabel),
-                                            onCommit = { draft ->
-                                                onCellCommit?.invoke(cell, draft)
-                                                finishEditing()
-                                            },
-                                            onCancel = { finishEditing() },
-                                            validate = { draft -> validateCell(cell, draft) },
-                                            rowIndex = rowNumber,
-                                            columnIndex = columnNumber,
-                                            modifier = Modifier.offset(x = rowHeaderWidth + columnIndex.starts[columnNumber])
-                                                .width(widths[columnNumber]).height(itemHeight)
-                                                .testTag("brace-table-editor:$key:${column.key}"),
-                                        )
-                                    }
-                                } else {
-                                    val visualContent: (@Composable () -> Unit)? =
-                                        column.cellContent?.let { custom -> @Composable { custom(row) } }
-                                    BraceTableCell(
-                                        value = value,
-                                        columnTitle = column.title,
-                                        rowLabel = accessibleRowLabel,
-                                        rowIndex = rowNumber,
-                                        columnIndex = columnNumber,
-                                        rowKey = key,
-                                        columnKey = column.key,
-                                        selected = cellSelected,
-                                        focused = focused && activeCell == cell,
-                                        enabled = !isLoading,
-                                        onSelect = selectCell,
-                                        onExtendSelection = if (isLoading) null else beginTouchRange,
-                                        onAddRegion = if (!isLoading && editingCell == null &&
-                                            editingColumnName == null) {{
-                                            onSelectionChange(BraceTableRegions.add(
-                                                selection.takeIf { selectionAnnouncement != null },
-                                                BraceTableRegion.Cells(key, column.key)))
-                                            requester.requestFocus()
-                                        }} else null,
-                                        onEdit = if (!isLoading && editingEnabled && column.editable && editingColumnName == null)
-                                            beginEdit else null,
-                                        modifier = Modifier.offset(x = rowHeaderWidth + columnIndex.starts[columnNumber])
-                                            .width(widths[columnNumber]).height(itemHeight)
-                                            .pointerInput(key, column.key) {
-                                                awaitPointerEventScope {
-                                                    while (true) {
-                                                        val event = awaitPointerEvent(PointerEventPass.Initial)
-                                                        if (event.type == PointerEventType.Press) {
-                                                            pointerShift = event.keyboardModifiers.isPointerShiftPressed
-                                                            pointerAdditive = event.keyboardModifiers.isPointerCtrlPressed ||
-                                                                event.keyboardModifiers.isPointerMetaPressed
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                        content = visualContent,
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        // Row headers must draw outside the horizontal scroll container so scrolled cells
-        // cannot cover their pixels. Observe stable index/offset pairs; reading raw layoutInfo
-        // in composition would recompose the LazyColumn on each measurement.
-        val visibleRows by remember(viewport.vertical) {
+        val scrollBodyHeight = (bodyHeight - frozenHeight).coerceAtLeast(0.dp)
+        val visibleRows by remember(viewport.vertical, frozenRows) {
             derivedStateOf(structuralEqualityPolicy()) {
-                viewport.vertical.layoutInfo.visibleItemsInfo.map { Triple(it.index, it.offset, it.size) }
+                viewport.vertical.layoutInfo.visibleItemsInfo.map {
+                    Triple(it.index + frozenRows, it.offset, it.size)
+                }
             }
         }
-        Box(Modifier.align(Alignment.TopStart).width(rowHeaderWidth).height(height).clipToBounds().zIndex(1f)) {
-            // The body clip keeps partially scrolled headers and resize handles below the fixed corner.
-            Box(Modifier.offset(y = headerHeight).width(rowHeaderWidth).height(bodyHeight).clipToBounds()) {
-                visibleRows.forEach { (rowNumber, offsetPx, itemSizePx) ->
-                    if (rowNumber in rows.indices) {
-                        val row = rows[rowNumber]
-                        val key = rowIndex.keys[rowNumber]
-                        val accessibleRowLabel = if (rowLabel === rowKey) key else rowLabel(row)
-                        val rowSelected = !isLoading && (
-                            selection == BraceTableSelection.Row(key) ||
-                                resolvedRegions?.any { it.fullRows && rowNumber in it.rows } == true)
-                        var pointerAdditive by remember(key) { mutableStateOf(false) }
-                        val itemHeight = with(density) { itemSizePx.toDp() }
-                        val selectRow: () -> Unit = selectRow@{
-                            if (isLoading) return@selectRow
+        val frozenHeightPx = with(density) { frozenHeight.roundToPx() }
+        val visibleRowTargets = (0 until frozenRows).map { rowNumber ->
+            Triple(rowNumber, with(density) { frozenRowOffsets[rowNumber].roundToPx() },
+                with(density) { frozenRowHeights[rowNumber].roundToPx() })
+        } + visibleRows.map { (rowNumber, offsetPx, sizePx) ->
+            Triple(rowNumber, offsetPx + frozenHeightPx, sizePx)
+        }
+        fun columnCenterPx(index: Int): Float {
+            val center = (columnIndex.starts[index] + widths[index] * 0.5f)
+            val scroll = if (index < frozenColumns) 0.dp else scrollDp
+            return with(density) { (center - scroll).toPx() }
+        }
+
+        @Composable
+        fun renderHeaderPane(columnNumbers: List<Int>, paneOrigin: Dp, paneWidth: Dp) {
+            Box(Modifier.width(paneWidth).height(headerHeight).background(colors.header)) {
+                columnNumbers.forEach { index ->
+                    val column = columns[index]
+                    val columnSelected = !isLoading && (
+                        selection == BraceTableSelection.Column(column.key) ||
+                            resolvedRegions?.any { it.fullColumns && index in it.columns } == true)
+                    var pointerAdditive by remember(column.key) { mutableStateOf(false) }
+                    val headerLoading = loading?.columnHeader(column.key) == true
+                    val sortable = column.sortable && onSortChange != null
+                    val sortEnabled = !isLoading && sortable && editingCell == null && editingColumnName == null
+                    val activeSort = sort?.takeIf { it.key == column.key }
+                    val sortStateDescription = when (activeSort?.direction) {
+                        BraceTableSortDirection.Ascending -> sortedAscendingState
+                        BraceTableSortDirection.Descending -> sortedDescendingState
+                        null -> unsortedState
+                    }
+                    val sortActionDescription = when (activeSort?.direction) {
+                        BraceTableSortDirection.Ascending -> sortDescendingAction.format(column.title)
+                        BraceTableSortDirection.Descending -> clearSortAction.format(column.title)
+                        null -> sortAscendingAction.format(column.title)
+                    }
+                    val requestSort: () -> Unit = {
+                        if (sortEnabled) onSortChange?.invoke(BraceTableSort.next(sort, column.key))
+                    }
+                    val selectColumn: () -> Unit = {
+                        if (!isLoading && editingColumnName == null) {
                             pendingTouchRangeAnchor = null
                             onSelectionChange(if (pointerAdditive)
                                 BraceTableRegions.add(selection.takeIf { selectionAnnouncement != null },
-                                    BraceTableRegion.Rows(key))
-                            else BraceTableSelection.Row(key))
+                                    BraceTableRegion.Columns(column.key))
+                            else BraceTableSelection.Column(column.key))
                             pointerAdditive = false
                             requester.requestFocus()
                         }
-                        val visualRowHeader: (@Composable () -> Unit)? =
-                            rowHeaderContent?.let { custom -> @Composable { custom(row, rowNumber) } }
-                        if (loading?.rowHeader(key) == true) {
-                            BraceTableSkeleton(
-                                header = true,
-                                tag = "brace-table-loading-row:$key",
-                                modifier = Modifier.offset(y = with(density) { offsetPx.toDp() })
-                                    .width(rowSelectWidth).height(itemHeight),
+                    }
+                    val isNameEditing = !isLoading && nameEditingEnabled &&
+                        editingColumnName == column.key && column.editableName
+                    val canBeginNameEdit = !isLoading && nameEditingEnabled && column.editableName &&
+                        editingCell == null && editingColumnName == null
+                    val beginNameEdit: () -> Unit = {
+                        if (canBeginNameEdit) {
+                            pendingTouchRangeAnchor = null
+                            onSelectionChange(BraceTableSelection.Column(column.key))
+                            onEditingColumnNameChange?.invoke(column.key)
+                        }
+                    }
+                    if (headerLoading) {
+                        BraceTableSkeleton(
+                            header = true,
+                            tag = "brace-table-loading-header:${column.key}",
+                            modifier = Modifier.offset(x = columnIndex.starts[index] - paneOrigin)
+                                .width(widths[index]).height(headerHeight),
+                        )
+                    } else if (isNameEditing) {
+                        composeKey("header:${column.key}") {
+                            BraceEditableColumnName(
+                                name = column.title,
+                                label = editColumnNameDescription.format(column.title, index + 1),
+                                onCommit = { title ->
+                                    onColumnNameCommit?.invoke(column.key, title)
+                                    finishNameEditing()
+                                },
+                                onCancel = { finishNameEditing() },
+                                validate = { title -> validateColumnName(column.key, title) },
+                                columnIndex = index,
+                                isSelected = columnSelected,
+                                modifier = Modifier.offset(x = columnIndex.starts[index] - paneOrigin)
+                                    .width(widths[index]).height(headerHeight)
+                                    .testTag("brace-table-name-editor:${column.key}"),
                             )
-                        } else BraceRowHeader(
-                            rowLabel = accessibleRowLabel,
-                            rowIndex = rowNumber,
-                            rowKey = key,
-                            selected = rowSelected,
-                            enabled = !isLoading,
-                            onSelect = selectRow,
-                            onAddRegion = if (!isLoading) {{
+                        }
+                    } else {
+                        BraceColumnHeader(
+                            title = column.title,
+                            columnIndex = index,
+                            columnKey = column.key,
+                            selected = columnSelected,
+                            onSelect = selectColumn,
+                            enabled = !isLoading && editingColumnName == null,
+                            onAddRegion = if (!isLoading && editingColumnName == null) {{
                                 onSelectionChange(BraceTableRegions.add(
                                     selection.takeIf { selectionAnnouncement != null },
-                                    BraceTableRegion.Rows(key)))
+                                    BraceTableRegion.Columns(column.key)))
                                 requester.requestFocus()
                             }} else null,
-                            modifier = Modifier.offset(y = with(density) { offsetPx.toDp() })
-                                .width(rowSelectWidth).height(itemHeight)
+                            onEdit = if (canBeginNameEdit) beginNameEdit else null,
+                            modifier = Modifier.offset(x = columnIndex.starts[index] - paneOrigin)
+                                .width(widths[index] - (if (sortable) BraceTheme.sizing.touchTarget else 0.dp) -
+                                    resizeTargetWidth - reorderTargetWidth)
+                                .height(headerHeight)
                                 .captureAdditivePointer { pointerAdditive = it },
-                            content = visualRowHeader,
+                            content = column.headerContent,
+                            pinState = if (index < frozenColumns) frozenColumnState else null,
+                            sortState = if (sortable) sortStateDescription else null,
+                            sortActionLabel = if (sortEnabled) sortActionDescription else null,
+                            onSort = if (sortEnabled) requestSort else null,
                         )
-                        if (!isLoading && onRowOrderChange != null && rows.size > 1) {
-                            composeKey("reorder-row:$key") {
-                                BraceTableReorderHandle(
-                                    axis = BraceReorderAxis.Row,
-                                    id = key,
-                                    name = accessibleRowLabel,
-                                    index = rowNumber,
-                                    count = rows.size,
-                                    width = rowReorderWidth,
-                                    height = itemHeight,
-                                    description = reorderRowDescription,
-                                    positionDescription = reorderPositionDescription,
-                                    earlierLabel = moveEarlierLabel,
-                                    laterLabel = moveLaterLabel,
-                                    onMoveTo = { target -> requestRowMove(key, target) },
-                                    targetIndexForDrag = { deltaPx ->
-                                        val origin = visibleRows.firstOrNull { it.first == rowNumber }
-                                        if (origin == null) rowNumber else {
-                                            val targetCenter = origin.second + origin.third / 2f + deltaPx
-                                            visibleRows.filter { it.first in rows.indices }.minByOrNull { visible ->
-                                                abs(visible.second + visible.third / 2f - targetCenter)
-                                            }?.first ?: rowNumber
-                                        }
-                                    },
-                                    onFocusedChange = { focused ->
-                                        if (focused) focusedReorderHandle = "row:$key"
-                                        else if (focusedReorderHandle == "row:$key") focusedReorderHandle = null
-                                    },
-                                    restoreFocus = pendingReorderFocus == "row:$key",
-                                    onFocusRestored = { pendingReorderFocus = null },
-                                    modifier = Modifier.offset(x = rowSelectWidth,
-                                        y = with(density) { offsetPx.toDp() }),
-                                )
-                            }
+                    }
+                    if (sortable && !isNameEditing && !headerLoading) {
+                        val sortInteraction = remember(column.key) { MutableInteractionSource() }
+                        val sortFocused by sortInteraction.collectIsFocusedAsState()
+                        val sortHovered by sortInteraction.collectIsHoveredAsState()
+                        val sortBackground = when {
+                            !sortEnabled -> semantic.disabledContainer
+                            activeSort != null -> semantic.primarySubtle
+                            sortHovered -> semantic.hover
+                            else -> colors.header
                         }
-                        if (!isLoading && onRowHeightChange != null) {
-                            val minimum = if (editingCell?.rowKey == key) editorRowHeight else defaultRowHeight
-                            BraceTableResizeHandle(
-                                axis = BraceResizeAxis.Row,
-                                id = key,
-                                name = accessibleRowLabel,
-                                size = itemHeight,
-                                minimum = minimum,
-                                maximum = effectiveMaxRowHeight,
-                                width = BraceTheme.sizing.touchTarget,
-                                height = itemHeight,
-                                description = rowResizeDescription,
-                                stateLabel = if (effectiveMaxRowHeight == null)
-                                    sizeMinDescription.format(itemHeight.value.toInt(), minimum.value.toInt())
-                                    else sizeRangeDescription.format(itemHeight.value.toInt(),
-                                        minimum.value.toInt(), effectiveMaxRowHeight.value.toInt()),
-                                increaseLabel = increaseSizeLabel,
-                                decreaseLabel = decreaseSizeLabel,
-                                onSizeChange = { onRowHeightChange(key, it) },
-                                onFocusedChange = { resizeHandleFocused = it },
-                                modifier = Modifier.offset(x = rowSelectWidth + rowReorderWidth,
-                                    y = with(density) { offsetPx.toDp() }),
+                        val sortForeground = when {
+                            !sortEnabled -> semantic.disabledContent
+                            activeSort != null -> semantic.onPrimarySubtle
+                            else -> colors.headerContent
+                        }
+                        Box(
+                            Modifier.offset(x = columnIndex.starts[index] - paneOrigin +
+                                widths[index] - BraceTheme.sizing.touchTarget - resizeTargetWidth - reorderTargetWidth)
+                                .width(BraceTheme.sizing.touchTarget).height(headerHeight)
+                                .background(sortBackground)
+                                .border(if (sortFocused) BraceTheme.sizing.focusRingWidth
+                                    else metrics.gridLineWidth,
+                                    if (sortFocused) semantic.focusRing else colors.gridLine)
+                                .clickable(enabled = sortEnabled, role = Role.Button,
+                                    interactionSource = sortInteraction, indication = null,
+                                    onClick = requestSort)
+                                .clearAndSetSemantics {
+                                    testTag = "brace-table-sort:${column.key}"
+                                    role = Role.Button
+                                    contentDescription = sortActionDescription
+                                    stateDescription = sortStateDescription
+                                    if (sortEnabled) onClick(sortActionDescription) {
+                                        requestSort()
+                                        true
+                                    }
+                                },
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(when (activeSort?.direction) {
+                                BraceTableSortDirection.Ascending -> "↑"
+                                BraceTableSortDirection.Descending -> "↓"
+                                null -> "↕"
+                            }, color = sortForeground, style = typography.label)
+                        }
+                    }
+                }
+                if (!isLoading && onColumnOrderChange != null && columns.size > 1) {
+                    columnNumbers.filter { columns[it].key != editingColumnName }.forEach { index ->
+                        val column = columns[index]
+                        val grip = BraceTheme.sizing.touchTarget
+                        val offset = columnIndex.starts[index] + widths[index] - grip - resizeTargetWidth
+                        composeKey("reorder-column:${column.key}") {
+                            BraceTableReorderHandle(
+                                axis = BraceReorderAxis.Column,
+                                id = column.key,
+                                name = column.title,
+                                index = index,
+                                count = columns.size,
+                                width = grip,
+                                height = headerHeight,
+                                description = reorderColumnDescription,
+                                positionDescription = reorderPositionDescription,
+                                earlierLabel = moveEarlierLabel,
+                                laterLabel = moveLaterLabel,
+                                onMoveTo = { target -> requestColumnMove(column.key, target) },
+                                targetIndexForDrag = { deltaPx ->
+                                    val targetCenter = columnCenterPx(index) + deltaPx
+                                    visibleColumns.minByOrNull { candidate ->
+                                        abs(columnCenterPx(candidate) - targetCenter)
+                                    } ?: index
+                                },
+                                onFocusedChange = { focused ->
+                                    if (focused) focusedReorderHandle = "column:${column.key}"
+                                    else if (focusedReorderHandle == "column:${column.key}")
+                                        focusedReorderHandle = null
+                                },
+                                restoreFocus = pendingReorderFocus == "column:${column.key}",
+                                onFocusRestored = { pendingReorderFocus = null },
+                                modifier = Modifier.offset(x = offset - paneOrigin),
                             )
                         }
                     }
+                }
+                if (!isLoading && onColumnWidthChange != null) {
+                    columnNumbers.filter { columns[it].key != editingColumnName }.forEach { index ->
+                        val column = columns[index]
+                        val currentWidth = widths[index]
+                        BraceTableResizeHandle(
+                            axis = BraceResizeAxis.Column,
+                            id = column.key,
+                            name = column.title,
+                            size = currentWidth,
+                            minimum = minColumnWidth,
+                            maximum = effectiveMaxColumnWidth,
+                            width = BraceTheme.sizing.touchTarget,
+                            height = headerHeight,
+                            description = columnResizeDescription,
+                            stateLabel = if (effectiveMaxColumnWidth == null)
+                                sizeMinDescription.format(currentWidth.value.toInt(), minColumnWidth.value.toInt())
+                                else sizeRangeDescription.format(currentWidth.value.toInt(),
+                                    minColumnWidth.value.toInt(), effectiveMaxColumnWidth.value.toInt()),
+                            increaseLabel = increaseSizeLabel,
+                            decreaseLabel = decreaseSizeLabel,
+                            onSizeChange = { onColumnWidthChange(column.key, it) },
+                            onFocusedChange = { resizeHandleFocused = it },
+                            modifier = Modifier.offset(x = columnIndex.starts[index] - paneOrigin + currentWidth - BraceTheme.sizing.touchTarget),
+                        )
+                    }
+                }
+            }
+        }
+
+        @Composable
+        fun renderRow(rowNumber: Int, columnNumbers: List<Int>, paneOrigin: Dp, paneWidth: Dp) {
+            val row = rows[rowNumber]
+            val key = rowIndex.keys[rowNumber]
+            val accessibleRowLabel = if (rowLabel === rowKey) key else rowLabel(row)
+            val rowSelected = !isLoading && (
+                selection == BraceTableSelection.Row(key) ||
+                    resolvedRegions?.any { it.fullRows && rowNumber in it.rows } == true)
+            val minimumRowHeight = if (editingCell?.rowKey == key) editorRowHeight else defaultRowHeight
+            val requestedHeight = maxOf(minimumRowHeight, rowHeights[key] ?: minimumRowHeight)
+            val itemHeight = if (effectiveMaxRowHeight == null) requestedHeight else
+                minOf(effectiveMaxRowHeight, requestedHeight)
+            val rowColor = if (rowSelected) colors.selectedRow
+                else if (rowNumber % 2 == 0) colors.row else colors.alternateRow
+            Box(Modifier.width(paneWidth).height(itemHeight).background(rowColor)) {
+                columnNumbers.forEach { columnNumber ->
+                    val column = columns[columnNumber]
+                    val cellSelected = if (isLoading) false else when (selection) {
+                        is BraceTableSelection.Cell -> selection.rowKey == key && selection.columnKey == column.key
+                        is BraceTableSelection.Row -> selection.rowKey == key
+                        is BraceTableSelection.Column -> selection.columnKey == column.key
+                        is BraceTableSelection.Range -> range?.let { (selectedRows, selectedColumns) ->
+                            rowNumber in selectedRows && columnNumber in selectedColumns
+                        } == true
+                        null -> false
+                        is BraceTableSelection.Regions ->
+                            resolvedRegions?.any { it.contains(rowNumber, columnNumber) } == true
+                    }
+                    val cellLoading = loading?.bodyCell(key, column.key) == true
+                    val value = if (cellLoading) "" else column.cellText(row)
+                    var pointerShift by remember(key, column.key) { mutableStateOf(false) }
+                    var pointerAdditive by remember(key, column.key) { mutableStateOf(false) }
+                    val selectCell: () -> Unit = selectCell@{
+                        if (isLoading) return@selectCell
+                        val anchor = validAnchor(when {
+                            pointerShift && selection is BraceTableSelection.Range ->
+                                BraceTableSelection.Cell(selection.anchorRowKey, selection.anchorColumnKey)
+                            pointerShift && selection is BraceTableSelection.Cell -> selection
+                            else -> pendingTouchRangeAnchor
+                        })
+                        if (pointerAdditive) onSelectionChange(BraceTableRegions.add(
+                            selection.takeIf { selectionAnnouncement != null },
+                            BraceTableRegion.Cells(key, column.key)))
+                        else if (anchor == null) onSelectionChange(BraceTableSelection.Cell(key, column.key))
+                        else onSelectionChange(BraceTableSelection.Range(
+                            anchor.rowKey, anchor.columnKey, key, column.key,
+                        ))
+                        pendingTouchRangeAnchor = null
+                        pointerShift = false
+                        pointerAdditive = false
+                        requester.requestFocus()
+                    }
+                    val beginTouchRange: () -> Unit = beginTouchRange@{
+                        if (isLoading) return@beginTouchRange
+                        val anchor = validAnchor(when (selection) {
+                            is BraceTableSelection.Range -> BraceTableSelection.Cell(
+                                selection.anchorRowKey, selection.anchorColumnKey)
+                            is BraceTableSelection.Cell -> selection
+                            else -> null
+                        }) ?: BraceTableSelection.Cell(key, column.key)
+                        pendingTouchRangeAnchor = anchor
+                        onSelectionChange(BraceTableSelection.Range(
+                            anchor.rowKey, anchor.columnKey, key, column.key,
+                        ))
+                        requester.requestFocus()
+                    }
+                    val cell = BraceTableSelection.Cell(key, column.key)
+                    val isEditing = !isLoading && editingEnabled && editingCell == cell && column.editable
+                    val beginEdit: () -> Unit = {
+                        if (!isLoading && editingEnabled && column.editable && editingColumnName == null) {
+                            pendingTouchRangeAnchor = null
+                            onSelectionChange(cell)
+                            onEditingCellChange?.invoke(cell)
+                        }
+                    }
+                    if (cellLoading) {
+                        BraceTableSkeleton(
+                            header = false,
+                            tag = "brace-table-loading-cell:$key:${column.key}",
+                            modifier = Modifier.offset(x = columnIndex.starts[columnNumber] - paneOrigin)
+                                .width(widths[columnNumber]).height(itemHeight),
+                        )
+                    } else if (isEditing) {
+                        composeKey(key, column.key) {
+                            BraceEditableCell(
+                                value = value,
+                                label = editDescription.format(column.title, rowNumber + 1, accessibleRowLabel),
+                                onCommit = { draft ->
+                                    onCellCommit?.invoke(cell, draft)
+                                    finishEditing()
+                                },
+                                onCancel = { finishEditing() },
+                                validate = { draft -> validateCell(cell, draft) },
+                                rowIndex = rowNumber,
+                                columnIndex = columnNumber,
+                                modifier = Modifier.offset(x = columnIndex.starts[columnNumber] - paneOrigin)
+                                    .width(widths[columnNumber]).height(itemHeight)
+                                    .testTag("brace-table-editor:$key:${column.key}"),
+                            )
+                        }
+                    } else {
+                        val visualContent: (@Composable () -> Unit)? =
+                            column.cellContent?.let { custom -> @Composable { custom(row) } }
+                        BraceTableCell(
+                            value = value,
+                            columnTitle = column.title,
+                            rowLabel = accessibleRowLabel,
+                            rowIndex = rowNumber,
+                            columnIndex = columnNumber,
+                            rowKey = key,
+                            columnKey = column.key,
+                            selected = cellSelected,
+                            focused = focused && activeCell == cell,
+                            enabled = !isLoading,
+                            onSelect = selectCell,
+                            onExtendSelection = if (isLoading) null else beginTouchRange,
+                            onAddRegion = if (!isLoading && editingCell == null &&
+                                editingColumnName == null) {{
+                                onSelectionChange(BraceTableRegions.add(
+                                    selection.takeIf { selectionAnnouncement != null },
+                                    BraceTableRegion.Cells(key, column.key)))
+                                requester.requestFocus()
+                            }} else null,
+                            onEdit = if (!isLoading && editingEnabled && column.editable && editingColumnName == null)
+                                beginEdit else null,
+                            modifier = Modifier.offset(x = columnIndex.starts[columnNumber] - paneOrigin)
+                                .width(widths[columnNumber]).height(itemHeight)
+                                .pointerInput(key, column.key) {
+                                    awaitPointerEventScope {
+                                        while (true) {
+                                            val event = awaitPointerEvent(PointerEventPass.Initial)
+                                            if (event.type == PointerEventType.Press) {
+                                                pointerShift = event.keyboardModifiers.isPointerShiftPressed
+                                                pointerAdditive = event.keyboardModifiers.isPointerCtrlPressed ||
+                                                    event.keyboardModifiers.isPointerMetaPressed
+                                            }
+                                        }
+                                    }
+                                },
+                            content = visualContent,
+                            pinState = when {
+                                rowNumber < frozenRows && columnNumber < frozenColumns -> frozenIntersectionState
+                                rowNumber < frozenRows -> frozenRowState
+                                columnNumber < frozenColumns -> frozenColumnState
+                                else -> null
+                            },
+                        )
+                    }
+                }
+            }
+        }
+
+        @Composable
+        fun renderRowHeader(rowNumber: Int, offsetPx: Int, itemSizePx: Int) {
+            if (rowNumber in rows.indices) {
+                val row = rows[rowNumber]
+                val key = rowIndex.keys[rowNumber]
+                val accessibleRowLabel = if (rowLabel === rowKey) key else rowLabel(row)
+                val rowSelected = !isLoading && (
+                    selection == BraceTableSelection.Row(key) ||
+                        resolvedRegions?.any { it.fullRows && rowNumber in it.rows } == true)
+                var pointerAdditive by remember(key) { mutableStateOf(false) }
+                val itemHeight = with(density) { itemSizePx.toDp() }
+                val selectRow: () -> Unit = selectRow@{
+                    if (isLoading) return@selectRow
+                    pendingTouchRangeAnchor = null
+                    onSelectionChange(if (pointerAdditive)
+                        BraceTableRegions.add(selection.takeIf { selectionAnnouncement != null },
+                            BraceTableRegion.Rows(key))
+                    else BraceTableSelection.Row(key))
+                    pointerAdditive = false
+                    requester.requestFocus()
+                }
+                val visualRowHeader: (@Composable () -> Unit)? =
+                    rowHeaderContent?.let { custom -> @Composable { custom(row, rowNumber) } }
+                if (loading?.rowHeader(key) == true) {
+                    BraceTableSkeleton(
+                        header = true,
+                        tag = "brace-table-loading-row:$key",
+                        modifier = Modifier.offset(y = with(density) { offsetPx.toDp() })
+                            .width(rowSelectWidth).height(itemHeight),
+                    )
+                } else BraceRowHeader(
+                    rowLabel = accessibleRowLabel,
+                    rowIndex = rowNumber,
+                    rowKey = key,
+                    selected = rowSelected,
+                    enabled = !isLoading,
+                    onSelect = selectRow,
+                    onAddRegion = if (!isLoading) {{
+                        onSelectionChange(BraceTableRegions.add(
+                            selection.takeIf { selectionAnnouncement != null },
+                            BraceTableRegion.Rows(key)))
+                        requester.requestFocus()
+                    }} else null,
+                    modifier = Modifier.offset(y = with(density) { offsetPx.toDp() })
+                        .width(rowSelectWidth).height(itemHeight)
+                        .captureAdditivePointer { pointerAdditive = it },
+                    content = visualRowHeader,
+                    pinState = if (rowNumber < frozenRows) frozenRowState else null,
+                )
+                if (!isLoading && onRowOrderChange != null && rows.size > 1) {
+                    composeKey("reorder-row:$key") {
+                        BraceTableReorderHandle(
+                            axis = BraceReorderAxis.Row,
+                            id = key,
+                            name = accessibleRowLabel,
+                            index = rowNumber,
+                            count = rows.size,
+                            width = rowReorderWidth,
+                            height = itemHeight,
+                            description = reorderRowDescription,
+                            positionDescription = reorderPositionDescription,
+                            earlierLabel = moveEarlierLabel,
+                            laterLabel = moveLaterLabel,
+                            onMoveTo = { target -> requestRowMove(key, target) },
+                            targetIndexForDrag = { deltaPx ->
+                                val origin = visibleRowTargets.firstOrNull { it.first == rowNumber }
+                                if (origin == null) rowNumber else {
+                                    val targetCenter = origin.second + origin.third / 2f + deltaPx
+                                    visibleRowTargets.filter { it.first in rows.indices }.minByOrNull { visible ->
+                                        abs(visible.second + visible.third / 2f - targetCenter)
+                                    }?.first ?: rowNumber
+                                }
+                            },
+                            onFocusedChange = { focused ->
+                                if (focused) focusedReorderHandle = "row:$key"
+                                else if (focusedReorderHandle == "row:$key") focusedReorderHandle = null
+                            },
+                            restoreFocus = pendingReorderFocus == "row:$key",
+                            onFocusRestored = { pendingReorderFocus = null },
+                            modifier = Modifier.offset(x = rowSelectWidth,
+                                y = with(density) { offsetPx.toDp() }),
+                        )
+                    }
+                }
+                if (!isLoading && onRowHeightChange != null) {
+                    val minimum = if (editingCell?.rowKey == key) editorRowHeight else defaultRowHeight
+                    BraceTableResizeHandle(
+                        axis = BraceResizeAxis.Row,
+                        id = key,
+                        name = accessibleRowLabel,
+                        size = itemHeight,
+                        minimum = minimum,
+                        maximum = effectiveMaxRowHeight,
+                        width = BraceTheme.sizing.touchTarget,
+                        height = itemHeight,
+                        description = rowResizeDescription,
+                        stateLabel = if (effectiveMaxRowHeight == null)
+                            sizeMinDescription.format(itemHeight.value.toInt(), minimum.value.toInt())
+                            else sizeRangeDescription.format(itemHeight.value.toInt(),
+                                minimum.value.toInt(), effectiveMaxRowHeight.value.toInt()),
+                        increaseLabel = increaseSizeLabel,
+                        decreaseLabel = decreaseSizeLabel,
+                        onSizeChange = { onRowHeightChange(key, it) },
+                        onFocusedChange = { resizeHandleFocused = it },
+                        modifier = Modifier.offset(x = rowSelectWidth + rowReorderWidth,
+                            y = with(density) { offsetPx.toDp() }),
+                    )
+                }
+            }
+        }
+
+        Column(Modifier.offset(x = rowHeaderWidth + frozenWidth)
+            .width(scrollViewportWidth).height(height).clipToBounds()
+            .horizontalScroll(viewport.horizontal)) {
+            Column(Modifier.width(maxOf(scrollContentWidth, scrollViewportWidth))) {
+                renderHeaderPane(scrollColumns, frozenWidth,
+                    maxOf(scrollContentWidth, scrollViewportWidth))
+                for (rowNumber in 0 until frozenRows) {
+                    renderRow(rowNumber, scrollColumns, frozenWidth,
+                        maxOf(scrollContentWidth, scrollViewportWidth))
+                }
+                LazyColumn(state = viewport.vertical,
+                    modifier = Modifier.width(maxOf(scrollContentWidth, scrollViewportWidth))
+                        .height(scrollBodyHeight)) {
+                    items(count = rows.size - frozenRows,
+                        key = { index -> rowIndex.keys[index + frozenRows] }) { localIndex ->
+                        renderRow(localIndex + frozenRows, scrollColumns, frozenWidth,
+                            maxOf(scrollContentWidth, scrollViewportWidth))
+                    }
+                }
+            }
+        }
+        if (frozenColumns > 0) {
+            Box(Modifier.align(Alignment.TopStart).offset(x = rowHeaderWidth)
+                .width(frozenWidth).height(height).clipToBounds().zIndex(1f)) {
+                renderHeaderPane(frozenColumnNumbers, 0.dp, frozenWidth)
+                Box(Modifier.offset(y = headerHeight).width(frozenWidth)
+                    .height(frozenHeight).clipToBounds()) {
+                    for (rowNumber in 0 until frozenRows) {
+                        Box(Modifier.offset(y = frozenRowOffsets[rowNumber])) {
+                            renderRow(rowNumber, frozenColumnNumbers, 0.dp, frozenWidth)
+                        }
+                    }
+                }
+                Box(Modifier.offset(y = headerHeight + frozenHeight).width(frozenWidth)
+                    .height(scrollBodyHeight).clipToBounds()) {
+                    visibleRows.forEach { (rowNumber, offsetPx, _) ->
+                        if (rowNumber in frozenRows until rows.size) {
+                            Box(Modifier.offset(y = with(density) { offsetPx.toDp() })) {
+                                renderRow(rowNumber, frozenColumnNumbers, 0.dp, frozenWidth)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // Fixed row headers and corner sit above both horizontal panes.
+        Box(Modifier.align(Alignment.TopStart).width(rowHeaderWidth).height(height)
+            .clipToBounds().zIndex(2f)) {
+            Box(Modifier.offset(y = headerHeight).width(rowHeaderWidth)
+                .height(frozenHeight).clipToBounds()) {
+                for (rowNumber in 0 until frozenRows) {
+                    val offsetPx = with(density) { frozenRowOffsets[rowNumber].roundToPx() }
+                    val sizePx = with(density) { frozenRowHeights[rowNumber].roundToPx() }
+                    renderRowHeader(rowNumber, offsetPx, sizePx)
+                }
+            }
+            Box(Modifier.offset(y = headerHeight + frozenHeight).width(rowHeaderWidth)
+                .height(scrollBodyHeight).clipToBounds()) {
+                visibleRows.forEach { (rowNumber, offsetPx, itemSizePx) ->
+                    renderRowHeader(rowNumber, offsetPx, itemSizePx)
                 }
             }
             val tableSelected = !isLoading && selection is BraceTableSelection.Regions &&

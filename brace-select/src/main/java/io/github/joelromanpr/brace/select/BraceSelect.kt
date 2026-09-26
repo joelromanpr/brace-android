@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -262,7 +263,6 @@ public fun <T> BraceSelect(
                                 .then(if (focused || active) Modifier.border(
                                     if (focused) BraceTheme.sizing.focusRingWidth else BraceTheme.sizing.borderWidth,
                                     colors.focusRing, shape) else Modifier)
-                                .focusRequester(optionFocus.getValue(option.key))
                                 .clearAndSetSemantics {
                                     testTag = "brace-select-option-${option.key}"
                                     contentDescription = listOfNotNull(option.label, option.description)
@@ -275,6 +275,9 @@ public fun <T> BraceSelect(
                                         requestFocus { optionFocus.getValue(option.key).requestFocus() }
                                     }
                                 }
+                                .focusRequester(optionFocus.getValue(option.key))
+                                .onFocusChanged { if (it.isFocused) state.activeKey = option.key }
+                                .focusable(interactionSource = interaction)
                                 .selectable(
                                     selected = selected,
                                     enabled = option.enabled,
@@ -282,7 +285,6 @@ public fun <T> BraceSelect(
                                     interactionSource = interaction,
                                     indication = null,
                                 ) { selectOption(option) }
-                                .onFocusChanged { if (it.isFocused) state.activeKey = option.key }
                                 .padding(horizontal = metrics.optionHorizontalPadding,
                                     vertical = BraceTheme.spacing.sm),
                             verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xxs),

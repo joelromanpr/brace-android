@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
@@ -225,6 +226,9 @@ class BraceSelectTest {
             }
         }
         val first = rule.onNodeWithTag("brace-select-option-alpha")
+        rule.waitUntil(3_000) {
+            first.fetchSemanticsNode().config.getOrNull(SemanticsProperties.Focused) == true
+        }
         first.assertIsFocused().performKeyInput {
             pressKey(Key.DirectionDown)
             pressKey(Key.Spacebar)

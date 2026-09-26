@@ -25,13 +25,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.disabled
-import androidx.compose.ui.semantics.focused
-import androidx.compose.ui.semantics.onClick
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.requestFocus
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.braceandroid.foundation.BraceTheme
@@ -238,15 +233,6 @@ public fun BraceIconButton(
                 if (focused) colors.focusRing else colors.border,
                 shape,
             )
-            .clearAndSetSemantics {
-                contentDescription = label
-                role = Role.Button
-                if (!enabled) disabled() else {
-                    this.focused = focused
-                    onClick(label) { onClick(); true }
-                    requestFocus { focusRequester.requestFocus() }
-                }
-            }
             .clickable(
                 enabled = enabled,
                 role = Role.Button,
@@ -254,7 +240,8 @@ public fun BraceIconButton(
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = onClick,
-            ),
+            )
+            .semantics { contentDescription = label },
         contentAlignment = Alignment.Center,
     ) {
         BraceIcon(

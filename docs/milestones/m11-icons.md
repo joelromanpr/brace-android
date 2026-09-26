@@ -20,7 +20,7 @@
 | Documentation and generated coverage | Passed local `node scripts/build-docs.mjs`, `node --check docs/site/app.js`, and `python3 scripts/generate_coverage.py --check` (147 inventory rows, 27 guides; 0/121 applicable stable). |
 | Maven Local publication and independent consumer | Passed final-diff foundation/core/icons Maven Local publication and independent `verification/consumer-smoke :app:assembleDebug`. The icons AAR includes the per-glyph manifest; Maven metadata includes POM, sources, and KDoc JAR. |
 | 320×640 catalog visual and interaction QA | Passed both Icon and Icon loading examples: size/intent/action count, custom alias, and fallback changes displayed without overlap or horizontal clipping. |
-| Hosted CI, review, and PR merge | Rebased onto merged M10 squash commit `b8dc999`; PR #21 is open and hosted gates are pending. |
+| Hosted CI, review, and PR merge | Rebased onto merged M10 squash commit `b8dc999`; PR #21 is open. Hosted `verify` passed. The first API 34 `instrumented` run found an icon-button native accessibility-node mismatch after all 169 core tests passed; the modifier semantics and bounded node synchronization were corrected and the required rerun is pending. |
 
 ## Limits and next branch
 

@@ -129,6 +129,7 @@ class BraceIconsTest {
         rule.enableAccessibilityChecks()
         button.tryPerformAccessibilityChecks()
         rule.waitForIdle()
+        rule.waitUntil(5_000) { androidNodesForLabel("Confirm changes").size == 1 }
         androidNodesForLabel("Confirm changes").single().let { node ->
             assertTrue(node.isClickable)
             assertTrue(node.isEnabled)
@@ -136,6 +137,7 @@ class BraceIconsTest {
         rule.runOnIdle { enabled.value = false }
         button.assertIsNotEnabled()
         rule.waitForIdle()
+        rule.waitUntil(5_000) { androidNodesForLabel("Confirm changes").size == 1 }
         androidNodesForLabel("Confirm changes").single().let { node ->
             assertFalse(node.isClickable)
             assertFalse(node.isEnabled)

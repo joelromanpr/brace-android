@@ -29,6 +29,17 @@ class BraceTokensTest {
             ).forEach { (text, background) ->
                 assertTrue("text contrast below 4.5", braceContrastRatio(text, background) >= 4.5)
             }
+            val toast = scheme.components.toast
+            listOf(
+                toast.neutralContent to toast.neutralContainer,
+                toast.primaryContent to toast.primaryContainer,
+                toast.successContent to toast.successContainer,
+                toast.warningContent to toast.warningContainer,
+                toast.dangerContent to toast.dangerContainer,
+                scheme.components.tooltip.content to scheme.components.tooltip.container,
+            ).forEach { (text, background) ->
+                assertTrue("feedback text contrast below 4.5", braceContrastRatio(text, background) >= 4.5)
+            }
             val button = scheme.components.button
             listOf(
                 button.primaryContent to button.primaryHoverContainer,

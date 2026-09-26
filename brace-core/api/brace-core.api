@@ -250,6 +250,111 @@ public final class io/github/joelromanpr/brace/core/BraceTagsKt {
 	public static final fun BraceTag (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceTagIntent;Lio/github/joelromanpr/brace/core/BraceTagSize;ZZZZZZZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
 }
 
+public final class io/github/joelromanpr/brace/core/BraceToastDismissReason : java/lang/Enum {
+	public static final field Action Lio/github/joelromanpr/brace/core/BraceToastDismissReason;
+	public static final field Cleared Lio/github/joelromanpr/brace/core/BraceToastDismissReason;
+	public static final field Evicted Lio/github/joelromanpr/brace/core/BraceToastDismissReason;
+	public static final field Manual Lio/github/joelromanpr/brace/core/BraceToastDismissReason;
+	public static final field Timeout Lio/github/joelromanpr/brace/core/BraceToastDismissReason;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceToastDismissReason;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceToastDismissReason;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceToastEntry {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastSpec;J)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lio/github/joelromanpr/brace/core/BraceToastSpec;
+	public final fun component3 ()J
+	public final fun copy (Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastSpec;J)Lio/github/joelromanpr/brace/core/BraceToastEntry;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceToastEntry;Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastSpec;JILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceToastEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getRevision ()J
+	public final fun getSpec ()Lio/github/joelromanpr/brace/core/BraceToastSpec;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceToastIntent : java/lang/Enum {
+	public static final field Danger Lio/github/joelromanpr/brace/core/BraceToastIntent;
+	public static final field Neutral Lio/github/joelromanpr/brace/core/BraceToastIntent;
+	public static final field Primary Lio/github/joelromanpr/brace/core/BraceToastIntent;
+	public static final field Success Lio/github/joelromanpr/brace/core/BraceToastIntent;
+	public static final field Warning Lio/github/joelromanpr/brace/core/BraceToastIntent;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceToastIntent;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceToastIntent;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceToastKt {
+	public static final fun BraceToast (Lio/github/joelromanpr/brace/core/BraceToastSpec;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceToastHost (Lio/github/joelromanpr/brace/core/BraceToastState;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BraceToastPosition;ZLandroidx/compose/runtime/Composer;II)V
+	public static final fun rememberBraceToastState (ILandroidx/compose/runtime/Composer;II)Lio/github/joelromanpr/brace/core/BraceToastState;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceToastPosition : java/lang/Enum {
+	public static final field BottomCenter Lio/github/joelromanpr/brace/core/BraceToastPosition;
+	public static final field BottomEnd Lio/github/joelromanpr/brace/core/BraceToastPosition;
+	public static final field BottomStart Lio/github/joelromanpr/brace/core/BraceToastPosition;
+	public static final field TopCenter Lio/github/joelromanpr/brace/core/BraceToastPosition;
+	public static final field TopEnd Lio/github/joelromanpr/brace/core/BraceToastPosition;
+	public static final field TopStart Lio/github/joelromanpr/brace/core/BraceToastPosition;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceToastPosition;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceToastPosition;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceToastSpec {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastIntent;JZLjava/lang/String;Lkotlin/jvm/functions/Function0;ZLjava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastIntent;JZLjava/lang/String;Lkotlin/jvm/functions/Function0;ZLjava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Lkotlin/jvm/functions/Function1;
+	public final fun component2 ()Lio/github/joelromanpr/brace/core/BraceToastIntent;
+	public final fun component3 ()J
+	public final fun component4 ()Z
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Lkotlin/jvm/functions/Function0;
+	public final fun component7 ()Z
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Lkotlin/jvm/functions/Function2;
+	public final fun copy (Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastIntent;JZLjava/lang/String;Lkotlin/jvm/functions/Function0;ZLjava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)Lio/github/joelromanpr/brace/core/BraceToastSpec;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceToastSpec;Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastIntent;JZLjava/lang/String;Lkotlin/jvm/functions/Function0;ZLjava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceToastSpec;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getActionLabel ()Ljava/lang/String;
+	public final fun getAnnounceAssertively ()Z
+	public final fun getCloseContentDescription ()Ljava/lang/String;
+	public final fun getDurationMillis ()J
+	public final fun getIcon ()Lkotlin/jvm/functions/Function2;
+	public final fun getIntent ()Lio/github/joelromanpr/brace/core/BraceToastIntent;
+	public final fun getMessage ()Ljava/lang/String;
+	public final fun getOnAction ()Lkotlin/jvm/functions/Function0;
+	public final fun getOnDismiss ()Lkotlin/jvm/functions/Function1;
+	public final fun getShowCloseButton ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceToastState {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (I)V
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun clear ()V
+	public final fun dismiss (Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastDismissReason;)Z
+	public static synthetic fun dismiss$default (Lio/github/joelromanpr/brace/core/BraceToastState;Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastDismissReason;ILjava/lang/Object;)Z
+	public final fun getMaxVisible ()I
+	public final fun getVisibleToasts ()Ljava/util/List;
+	public final fun show (Lio/github/joelromanpr/brace/core/BraceToastSpec;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun show$default (Lio/github/joelromanpr/brace/core/BraceToastState;Lio/github/joelromanpr/brace/core/BraceToastSpec;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTooltipKt {
+	public static final fun BraceTooltip (Ljava/lang/String;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;II)V
+}
+
 public final class io/github/joelromanpr/brace/core/ComposableSingletons$BraceDialogKt {
 	public static final field INSTANCE Lio/github/joelromanpr/brace/core/ComposableSingletons$BraceDialogKt;
 	public fun <init> ()V

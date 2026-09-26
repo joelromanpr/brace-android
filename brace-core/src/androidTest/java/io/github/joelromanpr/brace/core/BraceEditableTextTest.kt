@@ -1,5 +1,6 @@
 package io.github.joelromanpr.brace.core
 
+import android.content.res.Configuration
 import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.CompositionLocalProvider
@@ -11,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.InputMode
 import androidx.compose.ui.input.InputModeManager
 import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -30,6 +33,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performKeyInput
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.pressKey
@@ -49,6 +53,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.Locale
 
 @RunWith(AndroidJUnit4::class)
 @OptIn(ExperimentalTestApi::class)
@@ -269,6 +274,123 @@ class BraceEditableTextTest {
         node.assertHasClickAction()
     }
 
+    @Test fun editingSuppressesScreenShortcutAndDisplayRestoresItAfterEscape() {
+        var value by mutableStateOf("Alpha")
+        var refreshes = 0
+        lateinit var inputModeManager: InputModeManager
+        rule.setContent {
+            inputModeManager = LocalInputModeManager.current
+            BraceTheme {
+                BraceShortcutRegistry(
+                    shortcuts = listOf(BraceShortcut("ctrl+r", "Refresh", onKeyDown = { refreshes++ })),
+                ) {
+                    BraceEditableText(
+                        value = value,
+                        onValueChange = { value = it },
+                        label = "Inline title",
+                    )
+                }
+            }
+        }
+        val node = rule.onNodeWithContentDescription("Inline title")
+        node.performClick()
+        rule.runOnIdle { assertTrue(inputModeManager.requestInputMode(InputMode.Keyboard)) }
+        node.assert(hasSetTextAction()).performKeyInput {
+            keyDown(Key.CtrlLeft)
+            pressKey(Key.R)
+            keyUp(Key.CtrlLeft)
+        }
+        rule.runOnIdle { assertEquals(0, refreshes) }
+        node.performKeyInput { pressKey(Key.Escape) }
+        node.assertHasClickAction().assertIsFocused().performKeyInput {
+            keyDown(Key.CtrlLeft)
+            pressKey(Key.R)
+            keyUp(Key.CtrlLeft)
+        }
+        rule.runOnIdle { assertEquals(1, refreshes) }
+    }
+
+    @Test fun movingSelectionDoesNotEmitTextChange() {
+        var value by mutableStateOf("Alpha")
+        var changes = 0
+        rule.setContent {
+            BraceTheme {
+                BraceEditableText(
+                    value = value,
+                    onValueChange = { value = it; changes++ },
+                    label = "Selection title",
+                )
+            }
+        }
+        val node = rule.onNodeWithContentDescription("Selection title")
+        node.performClick()
+        node.performSemanticsAction(SemanticsActions.SetSelection) { setSelection ->
+            setSelection(0, 0, false)
+        }
+        rule.runOnIdle { assertEquals(0, changes) }
+        node.performTextInput("B")
+        rule.runOnIdle {
+            assertEquals("BAlpha", value)
+            assertEquals(1, changes)
+        }
+    }
+
+    @Test fun defaultEditActionUsesSpanishResourceAndOverrideWins() {
+        val baseContext = androidx.test.platform.app.InstrumentationRegistry
+            .getInstrumentation().targetContext
+        val spanishConfiguration = Configuration(baseContext.resources.configuration).apply {
+            setLocale(Locale.forLanguageTag("es"))
+        }
+        val spanishContext = baseContext.createConfigurationContext(spanishConfiguration)
+        rule.setContent {
+            CompositionLocalProvider(
+                LocalContext provides spanishContext,
+                LocalConfiguration provides spanishConfiguration,
+            ) {
+                BraceTheme {
+                    Column {
+                        BraceEditableText("Valor", {}, label = "Título")
+                        BraceEditableText("Listo", {}, label = "Estado", editActionLabel = "Cambiar estado")
+                    }
+                }
+            }
+        }
+        assertEquals(
+            "Editar",
+            rule.onNodeWithContentDescription("Título")
+                .fetchSemanticsNode().config[SemanticsActions.OnClick].label,
+        )
+        assertEquals(
+            "Cambiar estado",
+            rule.onNodeWithContentDescription("Estado")
+                .fetchSemanticsNode().config[SemanticsActions.OnClick].label,
+        )
+    }
+
+    @Test fun disablingUncontrolledEditorDoesNotReopenItOnReenable() {
+        var value by mutableStateOf("Ready")
+        var enabled by mutableStateOf(true)
+        val editingEvents = mutableListOf<Boolean>()
+        rule.setContent {
+            BraceTheme {
+                BraceEditableText(value, { value = it }, label = "Report title", enabled = enabled,
+                    onEditingChange = { editingEvents += it })
+            }
+        }
+        val node = rule.onNodeWithContentDescription("Report title")
+        node.performClick()
+        node.assert(hasSetTextAction())
+        rule.runOnIdle { enabled = false }
+        rule.waitForIdle()
+        node.assertIsNotEnabled().assert(hasSetTextAction().not())
+        rule.runOnIdle { assertEquals(listOf(true, false), editingEvents) }
+        rule.runOnIdle { enabled = true }
+        rule.waitForIdle()
+        node.assert(hasSetTextAction().not())
+        node.performClick()
+        node.assert(hasSetTextAction())
+    }
+
     @Test fun disabledAndHighContrastLargeTextRemainAccessible() {
         rule.setContent {
             val density = LocalDensity.current.density
@@ -307,4 +429,3 @@ class BraceEditableTextTest {
         }
     }
 }
-

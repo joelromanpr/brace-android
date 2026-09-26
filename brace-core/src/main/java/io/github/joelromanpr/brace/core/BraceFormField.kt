@@ -1,18 +1,21 @@
 package io.github.joelromanpr.brace.core
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
@@ -29,7 +32,8 @@ public enum class BraceFormIntent { Default, Primary, Success, Warning, Danger }
  *
  * Apply the modifier supplied to [content] to that control's outer node. It associates the
  * visible label, details, required announcement, and error with the control in TalkBack, and
- * lets a tap on the visible label focus the control. [requiredDescription] must be localized by
+ * lets a tap anywhere in the label's 48dp or larger target focus the control without adding a separate keyboard focus stop.
+ * [requiredDescription] must be localized by
  * the caller when [required] is true. [disabled] dims this wrapper; the caller must also disable
  * the child control. The optional inline layout is used only when the available width is at
  * least 480dp and font scale is at most 1.3, so narrow and large-text layouts remain stacked.
@@ -92,7 +96,11 @@ public fun BraceFormField(
         Column(verticalArrangement = Arrangement.spacedBy(spacing.xxs)) {
             Row(
                 modifier = Modifier
-                    .clickable(enabled = !disabled) { focusRequester.requestFocus() }
+                    .heightIn(min = BraceTheme.sizing.touchTarget)
+                    .widthIn(min = BraceTheme.sizing.touchTarget)
+                    .then(if (disabled) Modifier else Modifier.pointerInput(focusRequester) {
+                        detectTapGestures(onTap = { focusRequester.requestFocus() })
+                    })
                     .clearAndSetSemantics { },
                 horizontalArrangement = Arrangement.spacedBy(spacing.xs),
             ) {

@@ -41,6 +41,7 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.error
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
@@ -60,9 +61,11 @@ public enum class BraceEditableTextIntent { Default, Primary, Success, Warning, 
  * the draft changed, matching the pinned Blueprint 6.18.0 user-facing contract.
  *
  * [isEditing] optionally controls display/edit mode. When non-null, update it from
- * [onEditingChange]; when null the component saves mode itself. Explicit confirm/cancel returns
+ * [onEditingChange]; when null the component saves mode itself and ends the edit session when
+ * disabled so re-enabling does not silently reopen the editor. Explicit confirm/cancel returns
  * focus to the displayed value. Blur leaves focus on the newly focused control.
- * [editActionLabel] is the TalkBack action name and should be localized by the caller.
+ * [editActionLabel] optionally overrides the localized TalkBack edit action name.
+ * While the editor has focus, unrelated [BraceShortcutRegistry] shortcuts are suppressed.
  *
  * Android shows an input-token affordance without relying on web hover. A Compose text field
  * replaces Blueprint's DOM input and textarea. The experimental web alwaysRenderInput option
@@ -90,11 +93,11 @@ public fun BraceEditableText(
     intent: BraceEditableTextIntent = BraceEditableTextIntent.Default,
     supportingText: String? = null,
     errorMessage: String? = null,
-    editActionLabel: String = "Edit",
+    editActionLabel: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
     require(label.isNotBlank()) { "Editable text label must not be blank" }
-    require(editActionLabel.isNotBlank()) { "Edit action label must not be blank" }
+    require(editActionLabel == null || editActionLabel.isNotBlank()) { "Edit action label must not be blank" }
     require(minLines >= 1 && maxLines >= minLines) { "Line bounds must satisfy 1 <= minLines <= maxLines" }
     require(maxLength == null || maxLength >= 0) { "maxLength must be nonnegative" }
 
@@ -156,6 +159,13 @@ public fun BraceEditableText(
         onEditingChange(false)
     }
 
+    LaunchedEffect(enabled, isEditing) {
+        if (!enabled && isEditing == null && internalEditing) {
+            internalEditing = false
+            onEditingChange(false)
+        }
+    }
+
     fun insertNewline() {
         val start = draft.selection.min
         val end = draft.selection.max
@@ -209,6 +219,7 @@ public fun BraceEditableText(
         }
     }
 
+    val resolvedEditActionLabel = editActionLabel ?: stringResource(R.string.brace_editable_text_edit)
     val semantic = BraceTheme.colors.semantic
     val input = BraceTheme.colors.components.input
     val metrics = BraceTheme.componentMetrics.input
@@ -244,12 +255,14 @@ public fun BraceEditableText(
                     value = draft,
                     onValueChange = { next ->
                         if (maxLength == null || next.text.length <= maxLength) {
+                            val changedText = next.text != draft.text
                             draft = next
-                            onValueChange(next.text)
+                            if (changedText) onValueChange(next.text)
                         }
                     },
                     modifier = Modifier
                         .focusRequester(editorRequester)
+                        .braceShortcutEditable()
                         .onFocusChanged { focus ->
                             editorFocused = focus.isFocused
                             if (focus.isFocused) {
@@ -334,7 +347,7 @@ public fun BraceEditableText(
                         if (displayFocused) focusedBorder else intentBorder,
                         shape,
                     )
-                    .clickable(enabled = enabled, onClickLabel = editActionLabel, onClick = ::beginEditing)
+                    .clickable(enabled = enabled, onClickLabel = resolvedEditActionLabel, onClick = ::beginEditing)
                     .semantics(mergeDescendants = true) {
                         contentDescription = label
                         if (hasError) error(errorMessage)
@@ -359,4 +372,3 @@ public fun BraceEditableText(
         }
     }
 }
-

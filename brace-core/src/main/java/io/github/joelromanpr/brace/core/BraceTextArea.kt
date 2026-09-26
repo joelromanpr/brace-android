@@ -30,14 +30,21 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import io.github.braceandroid.foundation.BraceTheme
 
+/** Size of a text-area viewport and its type scale. */
+public enum class BraceTextAreaSize { Small, Medium, Large }
+
 /**
  * A controlled multiline input with a visible token-driven focus and validation state.
  *
  * [value] belongs to the caller and can be saved with `rememberSaveable`. [accessibilityLabel]
- * names the field in TalkBack even when a visible [BraceFormField] label is used. Supply a
- * localized [errorText] whenever [isError] is true. With [autoResize], the field grows from
- * [minLines] to [maxLines] as text wraps; its height is also capped at 60% of the window, after
- * which the text scrolls inside the field. Without [autoResize], the viewport stays at [minLines]
+ * names the field in TalkBack even when a visible [BraceFormField] label is used. An enabled,
+ * writable field automatically suppresses unrelated [BraceShortcutRegistry] commands. [intent]
+ * selects a visual border role; [size] selects token-driven type, padding, and minimum height.
+ * Supply a localized [errorText] whenever [isError] is true. It is announced through field
+ * semantics; show the same message visibly in a surrounding [BraceFormField] or sibling text.
+ * With [autoResize], the field grows
+ * from [minLines] to [maxLines] as text wraps, then stops at 60% of Android's reported screen
+ * height. Longer text scrolls inside the field. Without [autoResize], the viewport stays at [minLines]
  * while the text scrolls. The caller can set [keyboardOptions] and [keyboardActions] for an IME.
  *
  * Blueprint's HTML textarea ref, manual browser resize handle, and async React control mode
@@ -58,6 +65,8 @@ public fun BraceTextArea(
     minLines: Int = 3,
     maxLines: Int = 8,
     autoResize: Boolean = false,
+    intent: BraceFormIntent = BraceFormIntent.Default,
+    size: BraceTextAreaSize = BraceTextAreaSize.Medium,
     fill: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -75,12 +84,39 @@ public fun BraceTextArea(
     val interactionSource = remember { MutableInteractionSource() }
     val focused by interactionSource.collectIsFocusedAsState()
     val textColor = if (enabled) input.content else input.disabledContent
+    val intentBorder = when (intent) {
+        BraceFormIntent.Default -> input.border
+        BraceFormIntent.Primary -> semantic.primary
+        BraceFormIntent.Success -> semantic.success
+        BraceFormIntent.Warning -> semantic.warning
+        BraceFormIntent.Danger -> semantic.danger
+    }
     val borderColor = when {
         isError -> input.errorBorder
+        !enabled -> input.border
         focused -> input.focusedBorder
+        intent != BraceFormIntent.Default -> intentBorder
         else -> input.border
     }
-    val viewportMin = maxOf(BraceTheme.sizing.touchTarget, BraceTheme.densityTokens.controlHeightDp)
+    val textStyle = when (size) {
+        BraceTextAreaSize.Small -> BraceTheme.typography.label
+        BraceTextAreaSize.Medium -> BraceTheme.typography.body
+        BraceTextAreaSize.Large -> BraceTheme.typography.subtitle
+    }
+    val horizontalPadding = when (size) {
+        BraceTextAreaSize.Small -> BraceTheme.spacing.sm
+        BraceTextAreaSize.Medium -> metrics.horizontalPadding
+        BraceTextAreaSize.Large -> metrics.horizontalPadding + BraceTheme.spacing.sm
+    }
+    val verticalPadding = when (size) {
+        BraceTextAreaSize.Small -> BraceTheme.spacing.xs
+        BraceTextAreaSize.Medium -> BraceTheme.spacing.sm
+        BraceTextAreaSize.Large -> BraceTheme.spacing.md
+    }
+    val viewportMin = maxOf(
+        BraceTheme.sizing.touchTarget + if (size == BraceTextAreaSize.Large) BraceTheme.spacing.md else 0.dp,
+        BraceTheme.densityTokens.controlHeightDp,
+    )
     val viewportMax = maxOf(viewportMin, LocalConfiguration.current.screenHeightDp.dp * 0.6f)
     val selectionColors = remember(input.selection, semantic.primary) {
         TextSelectionColors(handleColor = semantic.primary, backgroundColor = input.selection)
@@ -100,6 +136,7 @@ public fun BraceTextArea(
                     borderColor,
                     shape,
                 )
+                .then(if (enabled && !readOnly) Modifier.braceShortcutEditable() else Modifier)
                 .semantics {
                     contentDescription = accessibilityLabel
                     if (isError) error(errorText!!)
@@ -109,7 +146,7 @@ public fun BraceTextArea(
             singleLine = false,
             minLines = minLines,
             maxLines = if (autoResize) maxLines else minLines,
-            textStyle = BraceTheme.typography.body.copy(color = textColor),
+            textStyle = textStyle.copy(color = textColor),
             cursorBrush = SolidColor(semantic.primary),
             interactionSource = interactionSource,
             keyboardOptions = keyboardOptions,
@@ -117,8 +154,8 @@ public fun BraceTextArea(
             decorationBox = { innerTextField ->
                 Box(
                     modifier = Modifier.padding(
-                        horizontal = metrics.horizontalPadding,
-                        vertical = BraceTheme.spacing.sm,
+                        horizontal = horizontalPadding,
+                        vertical = verticalPadding,
                     ),
                     contentAlignment = Alignment.TopStart,
                 ) {
@@ -126,7 +163,7 @@ public fun BraceTextArea(
                         Text(
                             text = placeholder,
                             color = input.placeholder,
-                            style = BraceTheme.typography.body,
+                            style = textStyle,
                         )
                     }
                     innerTextField()

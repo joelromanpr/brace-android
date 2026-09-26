@@ -35,6 +35,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.IntOffset
@@ -95,6 +96,12 @@ import io.github.joelromanpr.brace.core.BraceSection
 import io.github.joelromanpr.brace.core.BraceSectionCard
 import io.github.joelromanpr.brace.core.BraceSwitch
 import io.github.joelromanpr.brace.core.BraceTextField
+import io.github.joelromanpr.brace.core.BraceFormField
+import io.github.joelromanpr.brace.core.BraceFormIntent
+import io.github.joelromanpr.brace.core.BraceTextArea
+import io.github.joelromanpr.brace.core.BraceTextAreaSize
+import io.github.joelromanpr.brace.core.BraceEditableText
+import io.github.joelromanpr.brace.core.BraceEditableTextIntent
 import org.json.JSONObject
 
 /** Interactive catalog whose component names and availability come from the pinned inventory. */
@@ -122,6 +129,15 @@ private val usageExamples = mapOf(
     "core-checkbox" to "BraceCheckbox(checked = checked, onCheckedChange = { checked = it }, label = \"Include archived\")",
     "core-switch" to "BraceSwitch(checked = enabled, onCheckedChange = { enabled = it }, label = \"Notifications\")",
     "core-inputgroup" to "BraceTextField(value = query, onValueChange = { query = it }, label = \"Search\")",
+    "core-formgroup" to """var notes by rememberSaveable { mutableStateOf("") }
+BraceFormField(label = "Case notes", helperText = "Include the event time", required = true, requiredDescription = "Required") { controlModifier ->
+    BraceTextArea(notes, { notes = it }, accessibilityLabel = "Case notes", modifier = controlModifier)
+}""".trimIndent(),
+    "core-textarea" to """var details by rememberSaveable { mutableStateOf("") }
+BraceTextArea(details, { details = it }, accessibilityLabel = "Details", minLines = 2, maxLines = 6,
+    autoResize = true, intent = BraceFormIntent.Primary, size = BraceTextAreaSize.Medium)""".trimIndent(),
+    "core-editabletext" to """var title by rememberSaveable { mutableStateOf("Quarterly report") }
+BraceEditableText(title, { title = it }, label = "Report title", editActionLabel = "Edit report title", onConfirm = { saveTitle(it) })""".trimIndent(),
     "core-card" to "BraceCard(elevation = BraceCardElevation.One, onClick = { open() }) { Text(\"Open project\") }",
     "core-cardlist" to "BraceCardList(items = projects, itemKey = { it.id }, onItemClick = { open(it) }) { project -> Text(project.name) }",
     "core-divider" to "BraceDivider(orientation = BraceDividerOrientation.Horizontal)",
@@ -323,6 +339,121 @@ private fun ComponentSample(
                 BraceTextField(value, { value = it }, "Required project name", isError = value.isBlank(), supportingText = "A name is required")
                 BraceTextField("Read only value", {}, "Read only", readOnly = true)
                 BraceTextField("Unavailable", {}, "Disabled", enabled = false)
+            }
+        }
+        "core-formgroup" -> {
+            var notes by rememberSaveable { mutableStateOf("") }
+            var showError by rememberSaveable { mutableStateOf(false) }
+            var inline by rememberSaveable { mutableStateOf(false) }
+            var disabled by rememberSaveable { mutableStateOf(false) }
+            val error = showError && notes.isBlank()
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton("Validate", onClick = { showError = true })
+                    BraceButton(if (inline) "Stack labels" else "Inline on wide screens",
+                        onClick = { inline = !inline }, variant = BraceButtonVariant.Outline)
+                }
+                BraceButton(if (disabled) "Enable form" else "Disable form",
+                    onClick = { disabled = !disabled }, variant = BraceButtonVariant.Outline)
+                BraceFormField(
+                    label = "Case notes",
+                    helperText = "Include the event time",
+                    errorText = if (error) "Case notes are required" else null,
+                    required = true,
+                    requiredDescription = "Required",
+                    inline = inline,
+                    disabled = disabled,
+                ) { controlModifier ->
+                    BraceTextArea(
+                        value = notes,
+                        onValueChange = { notes = it },
+                        accessibilityLabel = "Case notes",
+                        enabled = !disabled,
+                        isError = error,
+                        errorText = if (error) "Case notes are required" else null,
+                        minLines = 2,
+                        autoResize = true,
+                        modifier = controlModifier,
+                    )
+                }
+            }
+        }
+        "core-textarea" -> {
+            var details by rememberSaveable { mutableStateOf("") }
+            var autoResize by rememberSaveable { mutableStateOf(true) }
+            var readOnly by rememberSaveable { mutableStateOf(false) }
+            var error by rememberSaveable { mutableStateOf(false) }
+            var large by rememberSaveable { mutableStateOf(false) }
+            var success by rememberSaveable { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (autoResize) "Fixed height" else "Auto resize",
+                        onClick = { autoResize = !autoResize }, variant = BraceButtonVariant.Outline)
+                    BraceButton(if (readOnly) "Editable" else "Read only",
+                        onClick = { readOnly = !readOnly }, variant = BraceButtonVariant.Outline)
+                }
+                BraceButton(if (error) "Clear error" else "Show error",
+                    onClick = { error = !error }, variant = BraceButtonVariant.Outline)
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (large) "Medium size" else "Large size",
+                        onClick = { large = !large }, variant = BraceButtonVariant.Outline)
+                    BraceButton(if (success) "Default intent" else "Success intent",
+                        onClick = { success = !success }, variant = BraceButtonVariant.Outline)
+                }
+                BraceTextArea(
+                    value = details,
+                    onValueChange = { details = it },
+                    accessibilityLabel = "Details",
+                    placeholder = "Add details",
+                    readOnly = readOnly,
+                    isError = error,
+                    errorText = if (error) "Review the details" else null,
+                    minLines = 2,
+                    maxLines = 6,
+                    autoResize = autoResize,
+                    size = if (large) BraceTextAreaSize.Large else BraceTextAreaSize.Medium,
+                    intent = if (success) BraceFormIntent.Success else BraceFormIntent.Default,
+                )
+                if (error) Text("Review the details", modifier = Modifier.clearAndSetSemantics {},
+                    color = BraceTheme.colors.semantic.danger, style = BraceTheme.typography.label)
+                BraceTextArea("Unavailable notes", {}, "Disabled notes", enabled = false,
+                    minLines = 2)
+            }
+        }
+        "core-editabletext" -> {
+            var title by rememberSaveable { mutableStateOf("Quarterly report") }
+            var confirmed by rememberSaveable { mutableStateOf("No confirmed edit") }
+            var multiline by rememberSaveable { mutableStateOf(false) }
+            var warning by rememberSaveable { mutableStateOf(false) }
+            var disabled by rememberSaveable { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Tap or focus the value to edit. Escape cancels; Enter confirms.",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BraceEditableText(
+                    value = title,
+                    onValueChange = { title = it },
+                    label = "Report title",
+                    editActionLabel = "Edit report title",
+                    placeholder = "Add a title",
+                    enabled = !disabled,
+                    multiline = multiline,
+                    minLines = if (multiline) 2 else 1,
+                    maxLines = if (multiline) 5 else 1,
+                    intent = if (warning) BraceEditableTextIntent.Warning
+                        else BraceEditableTextIntent.Default,
+                    supportingText = if (multiline) "Control or Command plus Enter confirms" else null,
+                    onConfirm = { confirmed = "Confirmed: $it" },
+                    onCancel = { confirmed = "Canceled edit" },
+                )
+                Text(confirmed, color = BraceTheme.colors.semantic.onSurfaceMuted)
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (multiline) "Single line" else "Multiline",
+                        onClick = { multiline = !multiline }, variant = BraceButtonVariant.Outline)
+                    BraceButton(if (warning) "Default intent" else "Warning intent",
+                        onClick = { warning = !warning }, variant = BraceButtonVariant.Outline)
+                }
+                BraceButton(if (disabled) "Enable editing" else "Disable editing",
+                    onClick = { disabled = !disabled }, variant = BraceButtonVariant.Outline)
             }
         }
         "core-card" -> {

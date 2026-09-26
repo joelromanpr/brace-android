@@ -48,6 +48,8 @@ internal fun TableCatalogSample() {
             { "Team ${(it.id.substringAfter('-').toInt() % 4) + 1}" }, editableName = true),
     ), { it.key }, columnOrder) }
     var selection by rememberBraceTableSelection()
+    var frozenRows by rememberSaveable { mutableStateOf(0) }
+    var frozenColumns by rememberSaveable { mutableStateOf(0) }
     var columnWidths by remember { mutableStateOf<Map<String, androidx.compose.ui.unit.Dp>>(emptyMap()) }
     var rowHeights by remember { mutableStateOf<Map<String, androidx.compose.ui.unit.Dp>>(emptyMap()) }
     val catalogClipboard = LocalClipboardManager.current
@@ -75,8 +77,9 @@ internal fun TableCatalogSample() {
     Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
         Text("Scroll both ways. Tap headers to select a row or column. Ctrl/Cmd+click adds a region, and Ctrl/Cmd+A selects all. Drag or focus the header grips to reorder. Long-press a cell then tap an endpoint for a range; keyboard Shift+arrows extend it. Double-tap an editable cell or column header, press Enter/F2, or use an Edit action. Drag or focus resize grips.",
             color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.body)
-        BraceDataTable(records, { it.id }, tableColumns, selection, { selection = it        }, modifier = Modifier.fillMaxWidth(), height = 260.dp, label = "Cases", rowLabel = { it.case },
+        BraceDataTable(records, { it.id }, tableColumns, selection, { selection = it }, modifier = Modifier.fillMaxWidth(), height = 260.dp, label = "Cases", rowLabel = { it.case },
             rowHeaderContent = { _, index -> Text("R${index + 1}", style = BraceTheme.typography.label) },
+            frozenRows = frozenRows, frozenColumns = frozenColumns,
             onRowOrderChange = { order -> records = BraceTableReorder.applyOrder(records, { it.id }, order) },
             onColumnOrderChange = { order -> columnOrder = order },
             columnWidths = columnWidths,
@@ -119,6 +122,10 @@ internal fun TableCatalogSample() {
             BraceButton("Add review row", onClick = {
                 selection = BraceTableRegions.add(selection, BraceTableRegion.Rows("record-3"))
             }, variant = BraceButtonVariant.Outline)
+            BraceButton("Freeze row", onClick = { frozenRows = if (frozenRows == 0) 1 else 0 },
+                variant = BraceButtonVariant.Outline)
+            BraceButton("Freeze column", onClick = { frozenColumns = if (frozenColumns == 0) 1 else 0 },
+                variant = BraceButtonVariant.Outline)
             BraceButton("Reset sizes", onClick = { columnWidths = emptyMap(); rowHeights = emptyMap() },
                 variant = BraceButtonVariant.Outline)
         }

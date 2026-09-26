@@ -54,6 +54,7 @@ const guideSources = new Map([
   ['docs/milestones/m49-table-loading.md', 'milestone-m49'],
 
 
+
   ['docs/milestones/m22-table-editing.md', 'milestone-m22'],
   ['docs/milestones/m26-table-editable-name.md', 'milestone-m26'],
   ['docs/milestones/m46-table-sorting.md', 'milestone-m46'],
@@ -278,6 +279,7 @@ const componentGuideLinks = [
   ['Loading and status', 'table-loading'],
   ['Selection regions', 'table-regions'],
   ['Reordering', 'table-reordering'],
+  ['Frozen rows and columns', 'table-freezing'],
   ['Selection and resizing', 'table-selection-resize'],
   ['Copying cells', 'table-copying'],
   ['Editing cells', 'table-editing'],
@@ -321,6 +323,7 @@ function guidePage(title, body, sourcePath) {
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142338"><title>${escapeHtml(title)} · Brace Android</title><link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./guide.css"></head>
 <body><a class="skip" href="#main">Skip to content</a><header class="topbar"><a class="brand" href="./index.html" aria-label="Brace Android home"><span class="mark" aria-hidden="true">B</span><span>Brace <b>Android</b></span></a><nav aria-label="Main navigation"><a href="./index.html#examples">App examples</a><a href="./index.html#coverage">Coverage</a><a href="./installation.html">Get started</a><a href="https://github.com/joelromanpr/brace-android">GitHub ↗</a></nav></header><main id="main" class="guide-layout">${navigation}<article class="guide-article"><p class="eyebrow">Brace Android documentation</p>${body}<p class="source-link">${repository ? `Source: <a href="${repository + sourcePath}">${escapeHtml(sourcePath)} ↗</a>` : `Source path: <code>${escapeHtml(sourcePath)}</code> · public repository link pending`}</p></article></main><footer><span>Brace Android · Apache-2.0</span><span>Independent Android design system</span></footer></body></html>`;
+
 
 
 }

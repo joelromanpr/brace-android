@@ -343,12 +343,15 @@ BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, state = 
     "table-cell-selection" to """var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
 BraceDataTable(rows, { it.id }, columns, selection, { selection = it })
 // Tap a cell or header; Shift+arrows extend a rectangular range.""".trimIndent(),
+
     "table-region" to """var selection by rememberBraceTableSelection()
 BraceDataTable(rows, { it.id }, columns, selection, { selection = it })
 BraceButton("Add case", onClick = {
     selection = BraceTableRegions.add(selection, BraceTableRegion.Cells("case-1", "status"))
 })
 // Ctrl/Cmd+A or the corner selects the table; Ctrl/Cmd+click adds a region.""".trimIndent(),
+    "table-freezing" to """BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
+    frozenRows = 1, frozenColumns = 1)""".trimIndent(),
     "table-copying" to "BraceTableClipboard.formatSelection(rows, { it.id }, columns, selection) // Ctrl/Cmd+C also copies in BraceDataTable",
     "table-reordering" to """var rows by remember { mutableStateOf(cases) }
 var columns by remember { mutableStateOf(caseColumns) }
@@ -1599,7 +1602,8 @@ private fun ComponentSample(
         }
 
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
-        "table-cell-selection", "table-region", "table-reordering", "table-column-and-row-resizing", "table-copying",
+        "table-cell-selection", "table-region", "table-reordering", "table-freezing", "table-column-and-row-resizing", "table-copying",
+
         "table-cell", "table-columnheadercell", "table-rowheadercell",
         "table-editablecell", "table-editing", "table-editablename" -> TableCatalogSample()
         "core-h1", "core-h2", "core-h3", "core-h4", "core-h5", "core-h6",
@@ -2510,11 +2514,14 @@ private fun TableSample(id: String) {
         }
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
         "table-cell-selection", "table-region", "table-column-and-row-resizing", "table-copying",
+
         "table-cell", "table-columnheadercell", "table-rowheadercell",
         "table-editablecell", "table-editing", "table-editablename" -> {
             var records by remember { mutableStateOf(List(120) { DemoTableRecord("record-$it", "Case ${1000 + it}", if (it % 3 == 0) "Review" else "Ready") }) }
             var columnTitles by remember { mutableStateOf(mapOf("case" to "Case", "status" to "Status", "owner" to "Owner")) }
             var columnOrder by rememberSaveable { mutableStateOf(arrayListOf("case", "status", "owner")) }
+            var frozenRowCount by rememberSaveable { mutableStateOf(1) }
+            var frozenColumnCount by rememberSaveable { mutableStateOf(1) }
             val tableColumns = remember(columnTitles, columnOrder) {
                 val byKey = listOf(
                     BraceTableColumn<DemoTableRecord>("case", columnTitles.getValue("case"), 140.dp,
@@ -2561,10 +2568,24 @@ private fun TableSample(id: String) {
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
                 Text(if (id == "table-reordering")
                     "Drag row or column grips to reorder visible items, or focus a grip and use arrows/Home/End. TalkBack offers move actions. The order summary updates below."
+                    else if (id == "table-freezing")
+                    "Toggle the leading pinned row and column, then scroll both ways. Frozen cells keep their position and announce their state. Selection and editing still use stable keys."
                     else "Scroll both ways. Tap headers to select a row or column. Ctrl/Cmd+click adds a region; Ctrl/Cmd+A or the corner selects all. Long-press a cell then tap an endpoint for a range; keyboard Shift+arrows extend it. Double-tap a case or status cell, or a header name, to edit. Enter/F2 edits a selected cell or column header; drag or focus resize grips.",
                     color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.body)
+                if (id == "table-freezing") Row(
+                    Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton("Frozen rows: $frozenRowCount", onClick = {
+                        frozenRowCount = if (frozenRowCount == 0) 1 else 0
+                    }, variant = BraceButtonVariant.Outline)
+                    BraceButton("Frozen columns: $frozenColumnCount", onClick = {
+                        frozenColumnCount = if (frozenColumnCount == 0) 1 else 0
+                    }, variant = BraceButtonVariant.Outline)
+                }
                 BraceDataTable(records, { it.id }, tableColumns, selection, { selection = it },
                     modifier = Modifier.fillMaxWidth(), height = 260.dp, label = "Cases", rowLabel = { it.case },
+                    frozenRows = if (id == "table-freezing") frozenRowCount else 0,
+                    frozenColumns = if (id == "table-freezing") frozenColumnCount else 0,
                     rowHeaderContent = { _, index -> Text("R" + (index + 1), style = BraceTheme.typography.label) },
                     columnWidths = columnWidths,
                     onColumnWidthChange = { key, width -> columnWidths = columnWidths + (key to width) },

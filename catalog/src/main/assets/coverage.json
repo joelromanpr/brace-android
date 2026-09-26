@@ -3685,18 +3685,18 @@
       "blueprintName": "Freezing",
       "blueprintUrl": "https://blueprintjs.com/docs/#table/features",
       "sourcePage": "table/features",
-      "braceApi": "BraceTableFreeze",
+      "braceApi": "BraceDataTable.frozenRows / frozenColumns",
       "artifact": "io.github.joelromanpr.brace:brace-table",
-      "behavior": "Freeze leading rows and columns while preserving scrolling and coordinate semantics. Expose row and column context, focused cell and selection; support touch, keyboard, mouse, and TalkBack.",
+      "behavior": "Pin leading row and column positions beside fixed headers while other cells scroll. Keep one accessible cell per coordinate, absolute grid indices, keyboard reveal, selection, and edited values across pane boundaries.",
       "classification": "adaptation",
-      "reason": "Blueprint table behavior is rebuilt with Compose viewport and accessibility primitives.",
-      "milestone": "M6",
+      "reason": "Blueprint numFrozenRows and numFrozenColumns become caller-controlled Compose counts; distinct clipped panes preserve Android touch, keyboard, mouse, and TalkBack targets.",
+      "milestone": "M53",
       "priority": "P1",
-      "status": "planned",
-      "implementation": null,
-      "sample": null,
-      "documentation": null,
-      "tests": null,
+      "status": "in progress",
+      "implementation": "brace-table/src/main/java/io/github/joelromanpr/brace/table/BraceDataTable.kt",
+      "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "documentation": "docs/table-freezing.md",
+      "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableFreezingTest.kt",
       "firstRelease": null,
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx"
     },
@@ -3811,8 +3811,8 @@
         "total": 23,
         "stable": 0,
         "status": {
-          "in progress": 20,
-          "planned": 3
+          "in progress": 21,
+          "planned": 2
         }
       }
     },

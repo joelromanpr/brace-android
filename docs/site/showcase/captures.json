@@ -201,6 +201,50 @@
       "capturedAt": "2026-09-26",
       "pixelWidth": 800,
       "pixelHeight": 600
+    },
+    {
+      "id": "spinner-dark-high-contrast",
+      "inventoryIds": [
+        "core-spinner"
+      ],
+      "image": "showcase/10-spinner-dark-high-contrast.png",
+      "alt": "Brace Spinner with a small indeterminate arc and medium and large 30 percent progress arcs on a dark high-contrast catalog screen",
+      "caption": "Three token sizes and two intents show indeterminate and known progress in dark high contrast.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m17-loading-feedback",
+      "sourceCommit": "3b60da25f21adbf0e10be8b129fbb6c8eb372903",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "format": "phone",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800,
+      "usage": "BraceTheme(mode = BraceColorMode.Dark, contrast = BraceContrast.High) {\n    BraceSpinner(label = \"Loading small records\", size = BraceSpinnerSize.Small)\n    BraceSpinner(label = \"Loading records\", value = 0.3f)\n    BraceSpinner(\n        label = \"Loading large reports\",\n        value = 0.3f,\n        size = BraceSpinnerSize.Large,\n        intent = BraceProgressIntent.Success,\n    )\n}",
+      "theme": "dark",
+      "contrast": "high"
+    },
+    {
+      "id": "skeleton-light",
+      "inventoryIds": [
+        "core-skeleton"
+      ],
+      "image": "showcase/11-skeleton-light.png",
+      "alt": "Three Brace Skeleton placeholder blocks of descending width in the light catalog, with content and shimmer toggle buttons",
+      "caption": "A noninteractive placeholder stack follows token colors and can switch between animated and static loading states.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m17-loading-feedback",
+      "sourceCommit": "3b60da25f21adbf0e10be8b129fbb6c8eb372903",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "format": "phone",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800,
+      "usage": "BraceTheme(mode = BraceColorMode.Light) {\n    BraceSkeleton(label = \"Loading report title\")\n    BraceSkeleton(width = 180.dp)\n    BraceSkeleton(width = 120.dp)\n}",
+      "theme": "light",
+      "contrast": "standard"
     }
   ]
 }

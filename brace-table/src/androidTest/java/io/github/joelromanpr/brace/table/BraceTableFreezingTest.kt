@@ -2,11 +2,15 @@ package io.github.joelromanpr.brace.table
 
 import android.os.Build
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Text
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalDensity
@@ -21,6 +25,7 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performKeyInput
+import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.tryPerformAccessibilityChecks
@@ -28,6 +33,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import io.github.braceandroid.foundation.BraceTheme
 import io.github.braceandroid.foundation.BraceColorMode
 import io.github.braceandroid.foundation.BraceContrast
@@ -138,6 +144,68 @@ class BraceTableFreezingTest {
             rule.enableAccessibilityChecks()
             rule.onNodeWithTag("brace-table-cell:r0:c0").tryPerformAccessibilityChecks()
         }
+    }
+
+    @Test fun clippedBufferColumnCannotReceiveFrozenHeaderDrag() {
+        lateinit var viewport: BraceTableViewport
+        var columns by mutableStateOf(listOf(
+            BraceTableColumn<Record>("c0", "Column 0", 140.dp, { it.label }),
+            BraceTableColumn<Record>("c1", "Column 1", 130.dp, { it.label }),
+            BraceTableColumn<Record>("c2", "Column 2", 130.dp, { it.label }),
+            BraceTableColumn<Record>("c3", "Column 3", 130.dp, { it.label }),
+        ))
+        var reorderCalls = 0
+        rule.setContent {
+            BraceTheme {
+                viewport = rememberBraceTableViewport()
+                BraceDataTable(rows, { it.id }, columns, null, {},
+                    Modifier.width(360.dp), viewport = viewport, height = 220.dp,
+                    frozenColumns = 1, onColumnOrderChange = { order ->
+                        reorderCalls++
+                        columns = BraceTableReorder.applyOrder(columns, { it.key }, order)
+                    })
+            }
+        }
+        val density = InstrumentationRegistry.getInstrumentation().targetContext
+            .resources.displayMetrics.density
+        rule.runOnIdle { runBlocking { viewport.horizontal.scrollTo((130f * density).toInt()) } }
+        rule.waitForIdle()
+        rule.onNodeWithTag("brace-table-reorder-column:c0").performTouchInput {
+            down(Offset(5f * density, center.y))
+            moveBy(Offset(30f * density, 0f))
+            up()
+        }
+        rule.waitForIdle()
+        assertEquals(listOf("c0", "c1", "c2", "c3"), columns.map { it.key })
+        assertEquals(0, reorderCalls)
+    }
+
+    @Test fun statefulCustomCellsFollowRowKeysAcrossFrozenBoundaryAndScroll() {
+        lateinit var viewport: BraceTableViewport
+        var records by mutableStateOf(rows)
+        val observed = mutableMapOf<String, String>()
+        val customColumns = listOf(BraceTableColumn<Record>("c0", "Stateful", 140.dp,
+            { it.label }, cellContent = { row ->
+                val rememberedId = remember { row.id }
+                SideEffect { observed[row.id] = rememberedId }
+                Text(rememberedId)
+            }))
+        rule.setContent {
+            BraceTheme {
+                viewport = rememberBraceTableViewport()
+                BraceDataTable(records, { it.id }, customColumns, null, {},
+                    Modifier.width(300.dp), viewport = viewport, height = 220.dp,
+                    frozenRows = 1, frozenColumns = 1)
+            }
+        }
+        rule.runOnIdle { records = listOf(records[1], records[0]) + records.drop(2) }
+        rule.waitForIdle()
+        assertEquals("r1", observed["r1"])
+        assertEquals("r0", observed["r0"])
+        rule.runOnIdle { runBlocking { viewport.vertical.scrollToItem(8) } }
+        rule.waitForIdle()
+        assertEquals("r9", observed["r9"])
+        assertEquals("r10", observed["r10"])
     }
 
     @Test fun rtlLeadingColumnPinsToLogicalStart() {

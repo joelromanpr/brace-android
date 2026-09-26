@@ -517,6 +517,7 @@ fun <Row> BraceDataTable(
                 (rowHeaderWidth + frozenWidth).roundToPx()
             }).coerceAtLeast(0)
             val nextOffset = when {
+                endPx - startPx >= bodyWidthPx -> startPx
                 startPx < viewport.horizontal.value -> startPx
                 endPx > viewport.horizontal.value + bodyWidthPx -> endPx - bodyWidthPx
                 else -> viewport.horizontal.value
@@ -559,6 +560,7 @@ fun <Row> BraceDataTable(
                 (rowHeaderWidth + frozenWidth).roundToPx()
             }).coerceAtLeast(0)
             val nextOffset = when {
+                endPx - startPx >= bodyWidthPx -> startPx
                 startPx < viewport.horizontal.value -> startPx
                 endPx > viewport.horizontal.value + bodyWidthPx -> endPx - bodyWidthPx
                 else -> viewport.horizontal.value
@@ -721,6 +723,7 @@ fun <Row> BraceDataTable(
                             (rowHeaderWidth + frozenWidth).roundToPx()
                         }).coerceAtLeast(0)
                         val nextOffset = when {
+                            endPx - startPx >= visibleBodyPx -> startPx
                             startPx < viewport.horizontal.value -> startPx
                             endPx > viewport.horizontal.value + visibleBodyPx -> endPx - visibleBodyPx
                             else -> viewport.horizontal.value
@@ -761,10 +764,14 @@ fun <Row> BraceDataTable(
         val visibleColumns = frozenColumnNumbers + scrollColumns
         val bodyHeight = (maxHeight - headerHeight).coerceAtLeast(0.dp)
         val scrollBodyHeight = (bodyHeight - frozenHeight).coerceAtLeast(0.dp)
-        val visibleRows by remember(viewport.vertical, frozenRows) {
+        val visibleRows by remember(viewport.vertical, frozenRows, rows.size) {
             derivedStateOf(structuralEqualityPolicy()) {
-                viewport.vertical.layoutInfo.visibleItemsInfo.map {
-                    Triple(it.index + frozenRows, it.offset, it.size)
+                // Lazy layout info can briefly retain a removed item's old index during
+                // the same frame that caller-owned rows shrink.
+                viewport.vertical.layoutInfo.visibleItemsInfo.mapNotNull { item ->
+                    val rowNumber = item.index + frozenRows
+                    if (rowNumber in rows.indices) Triple(rowNumber, item.offset, item.size)
+                    else null
                 }
             }
         }
@@ -775,10 +782,20 @@ fun <Row> BraceDataTable(
         } + visibleRows.map { (rowNumber, offsetPx, sizePx) ->
             Triple(rowNumber, offsetPx + frozenHeightPx, sizePx)
         }
-        fun columnCenterPx(index: Int): Float {
-            val center = (columnIndex.starts[index] + widths[index] * 0.5f)
-            val scroll = if (index < frozenColumns) 0.dp else scrollDp
-            return with(density) { (center - scroll).toPx() }
+        // A buffered scroll column may be fully clipped behind the frozen pane. Drag
+        // targets must use only the visible intersection of their own pane.
+        fun visibleColumnDragCenterPx(index: Int): Float? {
+            val frozen = index < frozenColumns
+            val scroll = if (frozen) 0.dp else scrollDp
+            val start = columnIndex.starts[index] - scroll
+            val end = start + widths[index]
+            val paneStart = if (frozen) 0.dp else frozenWidth
+            val paneEnd = if (frozen) frozenWidth else
+                (viewportWidth - rowHeaderWidth).coerceAtLeast(frozenWidth)
+            val visibleStart = maxOf(start, paneStart)
+            val visibleEnd = minOf(end, paneEnd)
+            if (visibleEnd <= visibleStart) return null
+            return with(density) { ((visibleStart + visibleEnd) * 0.5f).toPx() }
         }
 
         @Composable
@@ -947,10 +964,15 @@ fun <Row> BraceDataTable(
                                 laterLabel = moveLaterLabel,
                                 onMoveTo = { target -> requestColumnMove(column.key, target) },
                                 targetIndexForDrag = { deltaPx ->
-                                    val targetCenter = columnCenterPx(index) + deltaPx
-                                    visibleColumns.minByOrNull { candidate ->
-                                        abs(columnCenterPx(candidate) - targetCenter)
-                                    } ?: index
+                                    val origin = visibleColumnDragCenterPx(index)
+                                    if (origin == null) index else {
+                                        val targetCenter = origin + deltaPx
+                                        visibleColumns.mapNotNull { candidate ->
+                                            visibleColumnDragCenterPx(candidate)?.let { candidate to it }
+                                        }.minByOrNull { (_, center) ->
+                                            abs(center - targetCenter)
+                                        }?.first ?: index
+                                    }
                                 },
                                 onFocusedChange = { focused ->
                                     if (focused) focusedReorderHandle = "column:${column.key}"
@@ -1263,8 +1285,10 @@ fun <Row> BraceDataTable(
                 renderHeaderPane(scrollColumns, frozenWidth,
                     maxOf(scrollContentWidth, scrollViewportWidth))
                 for (rowNumber in 0 until frozenRows) {
-                    renderRow(rowNumber, scrollColumns, frozenWidth,
-                        maxOf(scrollContentWidth, scrollViewportWidth))
+                    composeKey(rowIndex.keys[rowNumber]) {
+                        renderRow(rowNumber, scrollColumns, frozenWidth,
+                            maxOf(scrollContentWidth, scrollViewportWidth))
+                    }
                 }
                 LazyColumn(state = viewport.vertical,
                     modifier = Modifier.width(maxOf(scrollContentWidth, scrollViewportWidth))
@@ -1284,8 +1308,10 @@ fun <Row> BraceDataTable(
                 Box(Modifier.offset(y = headerHeight).width(frozenWidth)
                     .height(frozenHeight).clipToBounds()) {
                     for (rowNumber in 0 until frozenRows) {
-                        Box(Modifier.offset(y = frozenRowOffsets[rowNumber])) {
-                            renderRow(rowNumber, frozenColumnNumbers, 0.dp, frozenWidth)
+                        composeKey(rowIndex.keys[rowNumber]) {
+                            Box(Modifier.offset(y = frozenRowOffsets[rowNumber])) {
+                                renderRow(rowNumber, frozenColumnNumbers, 0.dp, frozenWidth)
+                            }
                         }
                     }
                 }
@@ -1293,8 +1319,10 @@ fun <Row> BraceDataTable(
                     .height(scrollBodyHeight).clipToBounds()) {
                     visibleRows.forEach { (rowNumber, offsetPx, _) ->
                         if (rowNumber in frozenRows until rows.size) {
-                            Box(Modifier.offset(y = with(density) { offsetPx.toDp() })) {
-                                renderRow(rowNumber, frozenColumnNumbers, 0.dp, frozenWidth)
+                            composeKey(rowIndex.keys[rowNumber]) {
+                                Box(Modifier.offset(y = with(density) { offsetPx.toDp() })) {
+                                    renderRow(rowNumber, frozenColumnNumbers, 0.dp, frozenWidth)
+                                }
                             }
                         }
                     }
@@ -1309,13 +1337,17 @@ fun <Row> BraceDataTable(
                 for (rowNumber in 0 until frozenRows) {
                     val offsetPx = with(density) { frozenRowOffsets[rowNumber].roundToPx() }
                     val sizePx = with(density) { frozenRowHeights[rowNumber].roundToPx() }
-                    renderRowHeader(rowNumber, offsetPx, sizePx)
+                    composeKey(rowIndex.keys[rowNumber]) {
+                        renderRowHeader(rowNumber, offsetPx, sizePx)
+                    }
                 }
             }
             Box(Modifier.offset(y = headerHeight + frozenHeight).width(rowHeaderWidth)
                 .height(scrollBodyHeight).clipToBounds()) {
                 visibleRows.forEach { (rowNumber, offsetPx, itemSizePx) ->
-                    renderRowHeader(rowNumber, offsetPx, itemSizePx)
+                    composeKey(rowIndex.keys[rowNumber]) {
+                        renderRowHeader(rowNumber, offsetPx, itemSizePx)
+                    }
                 }
             }
             val tableSelected = !isLoading && selection is BraceTableSelection.Regions &&

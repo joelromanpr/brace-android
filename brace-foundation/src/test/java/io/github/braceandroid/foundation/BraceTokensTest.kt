@@ -56,6 +56,30 @@ class BraceTokensTest {
     }
 
     @Test
+    fun controlCardStatesKeepReadableTextInEveryTheme() {
+        listOf(
+            BraceTokenDefaults.light,
+            BraceTokenDefaults.dark,
+            BraceTokenDefaults.highContrastLight,
+            BraceTokenDefaults.highContrastDark,
+        ).forEachIndexed { index, scheme ->
+            val card = scheme.components.controlCard
+            val minimum = if (index >= 2) 7.0 else 4.5
+            listOf(
+                card.content to card.container,
+                card.content to card.hoverContainer,
+                card.content to card.pressedContainer,
+                card.selectedContent to card.selectedContainer,
+                card.disabledContent to card.disabledContainer,
+                card.mutedContent to card.container,
+            ).forEach { (text, background) ->
+                assertTrue("control card text contrast below $minimum",
+                    braceContrastRatio(text, background) >= minimum)
+            }
+        }
+    }
+
+    @Test
     fun highContrastBodyTextMeetsSevenToOne() {
         listOf(BraceTokenDefaults.highContrastLight, BraceTokenDefaults.highContrastDark)
             .forEach { scheme ->

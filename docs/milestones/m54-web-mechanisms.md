@@ -24,4 +24,4 @@
 
 `Modifier.onSizeChanged` is an AndroidX Compose API, not a Brace artifact. The CSS mapping does not expose `Classes` constants, and the provider mapping deliberately uses independently scoped existing APIs. Manual TalkBack traversal, physical mouse review, reduced-motion behavior, and full keyboard focus order across all catalog controls remain unverified. The 2× text check covered the scoped provider sample after scrolling, not every catalog entry. No Android instrumentation tests were executed for this mapping slice; existing implementation tests were compiled. Keep these rows in progress pending review.
 
-Review this M54 branch, then continue the table accessibility work on the next branch. The next focused implementation branch is `joelromanpr/m56-table-accessibility`; the larger component plan continues in the [roadmap](../../ROADMAP.md).
+Review this M54 branch, then integrate the table viewport on `joelromanpr/m14-table-viewport`. Its selection, copying, editing, and later accessibility slices remain separate reviewable branches in the [roadmap](../../ROADMAP.md).

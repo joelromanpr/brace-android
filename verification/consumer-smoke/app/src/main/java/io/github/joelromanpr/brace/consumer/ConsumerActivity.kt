@@ -143,6 +143,8 @@ import io.github.joelromanpr.brace.table.BraceTableClipboard
 import io.github.joelromanpr.brace.table.BraceTableCell
 import io.github.joelromanpr.brace.table.BraceColumnHeader
 import io.github.joelromanpr.brace.table.BraceRowHeader
+import io.github.joelromanpr.brace.table.BraceTableLoading
+import io.github.joelromanpr.brace.table.BraceTableState
 import io.github.joelromanpr.brace.table.BraceDataTable
 import io.github.joelromanpr.brace.table.BraceTableColumn
 import io.github.joelromanpr.brace.table.BraceTableSelection
@@ -297,6 +299,17 @@ class ConsumerActivity : ComponentActivity() {
                                 { selectedTable = BraceTableSelection.Cell("ready", "status") },
                                 Modifier.width(120.dp).height(48.dp))
                         }
+                        var tableMode by rememberSaveable { mutableStateOf("ready") }
+                        val tableState: BraceTableState = when (tableMode) {
+                            "loading" -> BraceTableState.Loading(BraceTableLoading(
+                                columnCells = mapOf("status" to true),
+                                columnHeaderOverrides = mapOf("status" to true),
+                            ))
+                            "empty" -> BraceTableState.Empty("No matching imports")
+                            "error" -> BraceTableState.Error("Could not load imports",
+                                onRetry = { tableMode = "ready" })
+                            else -> BraceTableState.Ready
+                        }
                         BraceDataTable(
                             rows = displayedTableRows,
                             rowKey = { it.first },
@@ -336,7 +349,16 @@ class ConsumerActivity : ComponentActivity() {
                             onEditingColumnNameChange = { editingColumnName = it },
                             onColumnNameCommit = { key, value -> if (key == "status") statusColumnTitle = value },
                             validateColumnName = { _, value -> if (value.length < 3) "Too short" else null },
+                            state = tableState,
                         )
+                        Row {
+                            BraceButton("Table ready", onClick = { tableMode = "ready" })
+                            BraceButton("Table loading", onClick = { tableMode = "loading" })
+                        }
+                        Row {
+                            BraceButton("Table empty", onClick = { tableMode = "empty" })
+                            BraceButton("Table error", onClick = { tableMode = "error" })
+                        }
                         BasicText("Table copy: ${BraceTableClipboard.formatSelection(tableRows, { it.first },
                             listOf(BraceTableColumn<Pair<String, String>>("status", "Status", 120.dp, { it.second })), selectedTable) ?: "none"}")
                         BraceTruncatedCell("Long import message with details", Modifier.width(220.dp),

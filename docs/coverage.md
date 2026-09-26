@@ -7,7 +7,7 @@ The inventory follows the pinned source documentation navigation, with nested pu
 
 **Shipped applicable rows: 0/121** (0/94 components; 0/27 capabilities).
 
-Web-specific mappings documented: 0/24. Labs rows: 2 (stable: 0). Full applicable coverage: **no**.
+Web-specific mappings documented: 12/24 (stable: 0). Labs rows: 2 (stable: 0). Full applicable coverage: **no**.
 
 ## Package status
 

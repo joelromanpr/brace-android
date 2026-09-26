@@ -3734,7 +3734,8 @@
     "applicableCapabilities": 27,
     "stableCapabilities": 0,
     "webSpecificMappings": 24,
-    "documentedWebSpecificMappings": 0,
+    "documentedWebSpecificMappings": 12,
+    "stableWebSpecificMappings": 0,
     "labsRows": 2,
     "stableLabsRows": 0,
     "byPackage": {

@@ -7,7 +7,7 @@
 - Reconciled the pinned Blueprint 6.18.0 Classes, ResizeSensor, and BlueprintProvider documentation and source with the existing Compose theme, overlay, and shortcut APIs.
 - Documented why CSS selectors and namespaces, a DOM resize observer wrapper, and a mandatory root React provider do not become separate Android components. The guide gives Compose examples and platform behavior boundaries.
 - Added inventory evidence and interactive catalog demonstrations for token styling, measured size, and scoped theme/overlay/shortcut behavior. The rows retain their M0/M1/M2 roadmap assignments and remain **in progress**, not shipped coverage.
-- Connected the guide and report to the generated Pages source and inventory-driven documentation links.
+- Connected the guide and report to the generated Pages source and inventory-driven documentation links. The generator now counts a web mapping as documented when its inventory row links an existing guide: 12/24 are documented after this slice, while 0/24 are stable.
 
 ## Verification
 

@@ -3,7 +3,7 @@
 ## Source delivered in this branch
 
 - `BraceEditableColumnName` provides a token-driven, saveable single-line header draft with select-all-on-focus, required-name and caller validation, IME Done/Enter commit, Escape cancel, and localized TalkBack actions.
-- `BraceDataTable` has a separate controlled header edit session identified by stable column key. Opted-in headers support selected-column Enter/F2, double-tap/double-click, and an accessibility edit action. Offscreen headers are revealed, the active resize grip yields to the editor, unavailable cell Edit accessibility actions are hidden, and commit/cancel return table focus.
+- `BraceDataTable` has a separate controlled header edit session identified by stable column key. Opted-in headers support selected-column Enter/F2, double-tap/double-click, and an accessibility edit action. Offscreen headers are revealed, the active resize grip yields to the editor, unavailable cell Edit accessibility actions are hidden, switching to another header cannot discard an active draft, and commit/cancel return table focus.
 - The inventory's pinned `EditableName` row is **in progress**. The catalog and independent Maven consumer include the API. Released applicable coverage remains **0/121** until a verified Maven release.
 
 ## Verification

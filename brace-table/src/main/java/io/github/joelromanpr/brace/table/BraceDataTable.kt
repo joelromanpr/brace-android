@@ -531,14 +531,18 @@ fun <Row> BraceDataTable(
                         val column = columns[index]
                         val columnSelected = selection == BraceTableSelection.Column(column.key)
                         val selectColumn: () -> Unit = {
-                            pendingTouchRangeAnchor = null
-                            onSelectionChange(BraceTableSelection.Column(column.key))
-                            requester.requestFocus()
+                            if (editingColumnName == null) {
+                                pendingTouchRangeAnchor = null
+                                onSelectionChange(BraceTableSelection.Column(column.key))
+                                requester.requestFocus()
+                            }
                         }
                         val isNameEditing = nameEditingEnabled &&
                             editingColumnName == column.key && column.editableName
+                        val canBeginNameEdit = nameEditingEnabled && column.editableName &&
+                            editingCell == null && editingColumnName == null
                         val beginNameEdit: () -> Unit = {
-                            if (nameEditingEnabled && column.editableName && editingCell == null) {
+                            if (canBeginNameEdit) {
                                 pendingTouchRangeAnchor = null
                                 onSelectionChange(BraceTableSelection.Column(column.key))
                                 onEditingColumnNameChange?.invoke(column.key)
@@ -568,15 +572,15 @@ fun <Row> BraceDataTable(
                                 .background(if (columnSelected) colors.selectedRow else colors.header)
                                 .border(metrics.gridLineWidth, colors.gridLine)
                                 .pointerSelect("column:${column.key}", null, selectColumn,
-                                    onDoubleTap = if (nameEditingEnabled && column.editableName && editingCell == null)
-                                        beginNameEdit else null)
+                                    onDoubleTap = if (canBeginNameEdit) beginNameEdit else null)
                                 .testTag("brace-table-header:${column.key}")
                                 .clearAndSetSemantics {
                                     collectionItemInfo = CollectionItemInfo(0, 1, index + 1, 1)
                                     selected = columnSelected
                                     contentDescription = headerDescription.format(column.title, index + 1)
-                                    onClick(selectedAction) { selectColumn(); true }
-                                    customActions = if (nameEditingEnabled && column.editableName && editingCell == null)
+                                    if (editingColumnName == null)
+                                        onClick(selectedAction) { selectColumn(); true }
+                                    customActions = if (canBeginNameEdit)
                                         listOf(CustomAccessibilityAction(editColumnNameAction) { beginNameEdit(); true })
                                     else emptyList()
                                 },

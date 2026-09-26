@@ -252,6 +252,32 @@ class BraceTableEditableNameTest {
         assertEquals("status", editing)
     }
 
+    @Test fun anotherHeaderCannotDiscardAnActiveNameDraft() {
+        val editableColumns = listOf(
+            BraceTableColumn<Record>("status", "Status", 140.dp, { it.value }, editableName = true),
+            BraceTableColumn<Record>("owner", "Owner", 140.dp, { it.value }, editableName = true),
+        )
+        var selection: BraceTableSelection? by mutableStateOf(BraceTableSelection.Column("status"))
+        var editing by mutableStateOf<String?>("status")
+        rule.setContent {
+            BraceTheme {
+                BraceDataTable(rows, { it.id }, editableColumns, selection, { selection = it },
+                    Modifier.width(360.dp), height = 200.dp, editingColumnName = editing,
+                    onEditingColumnNameChange = { editing = it }, onColumnNameCommit = { _, _ -> })
+            }
+        }
+        val editor = rule.onNodeWithTag("brace-editable-column-name-input")
+        editor.performTextInput("Draft")
+        val otherHeader = rule.onNodeWithTag("brace-table-header:owner")
+        assertTrue(otherHeader.fetchSemanticsNode().config[SemanticsActions.CustomActions].isEmpty())
+        assertTrue(!otherHeader.fetchSemanticsNode().config.contains(SemanticsActions.OnClick))
+        otherHeader.performTouchInput { doubleClick() }
+        rule.waitForIdle()
+        assertEquals("status", editing)
+        assertEquals(BraceTableSelection.Column("status"), selection)
+        editor.assertTextEquals("Draft").assertIsFocused()
+    }
+
     @Test fun externallyChosenOffscreenHeaderIsRevealed() {
         val many = List(16) { index ->
             BraceTableColumn<Record>("c$index", "Column $index", 120.dp, { it.value }, editableName = true)

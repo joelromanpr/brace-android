@@ -22,6 +22,8 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.collectionItemInfo
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.selected
@@ -43,7 +45,9 @@ import io.github.braceandroid.foundation.BraceTheme
  * range/edit callbacks are also exposed to touch, mouse, and TalkBack here. [enabled]
  * pauses those actions during a controlled table load. [onAddRegion] exposes a separate
  * TalkBack action for adding this cell to a disjoint selection. [pinState] can announce
- * that the cell remains visible in a frozen row, column, or their intersection.
+ * that the cell remains visible in a frozen row, column, or their intersection. [traversalIndex]
+ * lets a parent grid order cells across independently composed panes. When [focused] is true,
+ * [activeCellLabel] is announced alongside any pinned state.
  */
 @Composable
 fun BraceTableCell(
@@ -64,9 +68,12 @@ fun BraceTableCell(
     onAddRegion: (() -> Unit)? = null,
     pinState: String? = null,
     content: (@Composable () -> Unit)? = null,
+    traversalIndex: Float = 0f,
+    activeCellLabel: String? = null,
 ) {
     require(rowIndex >= 0 && columnIndex >= 0) { "Table cell coordinates must be nonnegative" }
     require(rowKey.isNotBlank() && columnKey.isNotBlank()) { "Table cell keys must not be blank" }
+    require(traversalIndex.isFinite()) { "Table traversal index must be finite" }
     val colors = BraceTheme.colors.components.table
     val semantic = BraceTheme.colors.semantic
     val metrics = BraceTheme.componentMetrics.table
@@ -93,11 +100,13 @@ fun BraceTableCell(
                 onExtendSelection, onEdit) else Modifier)
             .clearAndSetSemantics {
                 testTag = "brace-table-cell:$rowKey:$columnKey"
+                this.traversalIndex = traversalIndex
                 collectionItemInfo = CollectionItemInfo(rowIndex + 1, 1, columnIndex + 1, 1)
                 this.selected = selected
                 contentDescription = description
                 if (!enabled) disabled()
-                if (pinState != null) stateDescription = pinState
+                val cellState = listOfNotNull(if (focused) activeCellLabel else null, pinState)
+                if (cellState.isNotEmpty()) stateDescription = cellState.joinToString(", ")
                 if (enabled) onClick(selectLabel) { onSelect(); true }
                 customActions = if (enabled) listOfNotNull(
                     onExtendSelection?.let { action ->
@@ -132,7 +141,8 @@ fun BraceTableCell(
  * [sortActionLabel] announce an optional sort action without changing the selection target.
  * [trailingInset] reserves room for adjacent sort and resize controls.
  * [onAddRegion] exposes a distinct TalkBack selection action. [pinState] announces a
- * frozen column without changing its sort state.
+ * frozen column without changing its sort state. [traversalIndex] orders independently
+ * composed frozen and scrolling panes in a single logical grid.
  */
 @Composable
 fun BraceColumnHeader(
@@ -151,6 +161,7 @@ fun BraceColumnHeader(
     trailingInset: Dp = 0.dp,
     pinState: String? = null,
     onAddRegion: (() -> Unit)? = null,
+    traversalIndex: Float = 0f,
 ) {
     require((sortActionLabel == null) == (onSort == null)) {
         "Sort action and label must be supplied together"
@@ -158,6 +169,7 @@ fun BraceColumnHeader(
     require(trailingInset >= 0.dp) { "Trailing inset cannot be negative" }
     require(columnIndex >= 0) { "Column index must be nonnegative" }
     require(columnKey.isNotBlank()) { "Column key must not be blank" }
+    require(traversalIndex.isFinite()) { "Table traversal index must be finite" }
     val colors = BraceTheme.colors.components.table
     val semantic = BraceTheme.colors.semantic
     val metrics = BraceTheme.componentMetrics.table
@@ -172,6 +184,8 @@ fun BraceColumnHeader(
                 onDoubleTap = if (enabled) onEdit else null)
             .clearAndSetSemantics {
                 testTag = "brace-table-header:$columnKey"
+                this.traversalIndex = traversalIndex
+                heading()
                 collectionItemInfo = CollectionItemInfo(0, 1, columnIndex + 1, 1)
                 this.selected = selected
                 contentDescription = description
@@ -211,7 +225,7 @@ fun BraceColumnHeader(
  * caller, while the table retains keyboard focus and any separate resize handle. [enabled]
  * pauses the selection action during a controlled table load. [onAddRegion] adds this
  * row to a disjoint selection through a separate TalkBack action. [pinState] announces
- * a frozen row.
+ * a frozen row. [traversalIndex] keeps its place before that row's cells in a split pane.
  */
 @Composable
 fun BraceRowHeader(
@@ -225,9 +239,11 @@ fun BraceRowHeader(
     onAddRegion: (() -> Unit)? = null,
     pinState: String? = null,
     content: (@Composable () -> Unit)? = null,
+    traversalIndex: Float = 0f,
 ) {
     require(rowIndex >= 0) { "Row index must be nonnegative" }
     require(rowKey.isNotBlank()) { "Row key must not be blank" }
+    require(traversalIndex.isFinite()) { "Table traversal index must be finite" }
     val colors = BraceTheme.colors.components.table
     val semantic = BraceTheme.colors.semantic
     val metrics = BraceTheme.componentMetrics.table
@@ -240,6 +256,8 @@ fun BraceRowHeader(
             .then(if (enabled) Modifier.pointerSelect(rowKey, null, onSelect) else Modifier)
             .clearAndSetSemantics {
                 testTag = "brace-table-row:$rowKey"
+                this.traversalIndex = traversalIndex
+                heading()
                 collectionItemInfo = CollectionItemInfo(rowIndex + 1, 1, 0, 1)
                 this.selected = selected
                 contentDescription = description

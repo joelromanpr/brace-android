@@ -235,16 +235,17 @@ class BraceTableSelectionResizeTest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val minimumPx = 48f * context.resources.displayMetrics.density
         listOf(
-            context.getString(R.string.brace_table_column_resize, "Column 0"),
-            context.getString(R.string.brace_table_row_resize, "Case 0"),
-        ).forEach { description ->
+            context.getString(R.string.brace_table_column_resize, "Column 0") to true,
+            context.getString(R.string.brace_table_row_resize, "Case 0") to false,
+        ).forEach { (description, decreaseAvailable) ->
             val node = nativeNodeWithDescription(description)
             val bounds = Rect().also { node.getBoundsInScreen(it) }
             assertTrue("resize node must be visible and clickable: $description, actions=${node.actionList}",
                 node.isVisibleToUser && node.isClickable)
             assertEquals("one native click action: $description", 1,
                 node.actionList.count { it.id == AccessibilityNodeInfo.ACTION_CLICK })
-            assertTrue("decrease action must share named node: $description",
+            assertEquals("decrease action matches the current minimum: $description",
+                decreaseAvailable,
                 node.actionList.any { it.label?.toString() == context.getString(R.string.brace_table_decrease_size) })
             assertTrue("native target must be at least 48dp: $description, bounds=$bounds",
                 bounds.width() >= minimumPx - 1 && bounds.height() >= minimumPx - 1)
@@ -269,9 +270,9 @@ class BraceTableSelectionResizeTest {
         handle.assertWidthIsAtLeast(48.dp).assertHeightIsAtLeast(48.dp)
         handle.requestFocus().assertIsFocused().performKeyInput { pressKey(Key.DirectionRight) }
         assertEquals(112.dp, widths["c0"])
-        handle.performClick()
-        assertEquals(112.dp, widths["c0"])
         val semantics = handle.fetchSemanticsNode().config
+        assertTrue("increase action is absent at maximum", !semantics.contains(SemanticsActions.OnClick))
+        assertEquals(112.dp, widths["c0"])
         assertTrue(semantics[SemanticsProperties.ContentDescription].joinToString().contains("Column 0"))
         assertTrue(semantics[SemanticsProperties.StateDescription].contains("maximum 112"))
         rule.runOnIdle { semantics[SemanticsActions.CustomActions].first().action() }

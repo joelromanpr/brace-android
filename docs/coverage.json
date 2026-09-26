@@ -3540,18 +3540,18 @@
       "blueprintName": "Table accessibility",
       "blueprintUrl": "https://blueprintjs.com/docs/#table/features",
       "sourcePage": "table/features",
-      "braceApi": "BraceTableSemantics",
+      "braceApi": "BraceDataTable, BraceTableCell, BraceColumnHeader, BraceRowHeader",
       "artifact": "io.github.joelromanpr.brace:brace-table",
-      "behavior": "Expose table dimensions, cell coordinates, headers, focused and selected state to TalkBack. Expose row and column context, focused cell and selection; support touch, keyboard, mouse, and TalkBack.",
+      "behavior": "Native grid dimensions and logical cell coordinates; row and column heading markers, active cell and selection announcements, frozen-pane traversal order, and bounded sort and resize actions for TalkBack alongside touch, keyboard, and mouse.",
       "classification": "adaptation",
-      "reason": "Blueprint table behavior is rebuilt with Compose viewport and accessibility primitives.",
-      "milestone": "M6",
+      "reason": "Blueprint table behavior is rebuilt with Compose collection, heading, traversal, state, and action semantics. The accessibility surface belongs to the real table and cell APIs, with no separate BraceTableSemantics object.",
+      "milestone": "M56",
       "priority": "P1",
-      "status": "planned",
-      "implementation": null,
-      "sample": null,
-      "documentation": null,
-      "tests": null,
+      "status": "in progress",
+      "implementation": "brace-table/src/main/java/io/github/joelromanpr/brace/table/BraceDataTable.kt",
+      "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "documentation": "docs/table-accessibility.md",
+      "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableAccessibilityTest.kt",
       "firstRelease": null,
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx"
     },
@@ -3788,8 +3788,8 @@
         "total": 23,
         "stable": 0,
         "status": {
-          "in progress": 21,
-          "planned": 2
+          "in progress": 22,
+          "planned": 1
         }
       }
     },

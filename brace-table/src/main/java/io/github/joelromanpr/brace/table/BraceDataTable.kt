@@ -80,6 +80,9 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.collectionItemInfo
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.onClick
@@ -87,6 +90,7 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
@@ -202,7 +206,10 @@ fun rememberBraceTableViewport(): BraceTableViewport {
  * arrows/Home/End, and TalkBack move actions. [frozenRows] and [frozenColumns]
  * pin leading data positions beside the fixed headers; the caller controls both counts.
  * Pinned rows and columns keep one accessible cell per coordinate and preserve absolute
- * grid indices. Choose counts that leave room for at least one scrollable row and column
+ * grid indices. The grid exposes native collection dimensions, row and column headings,
+ * logical row-major TalkBack traversal across panes, and an active-cell announcement that
+ * combines with frozen state. Disabled sort and bounded resize controls expose only available
+ * accessibility actions. Choose counts that leave room for at least one scrollable row and column
  * at the target screen size; oversized pinned panes are clipped by the viewport.
  */
 @Composable
@@ -376,6 +383,7 @@ fun <Row> BraceDataTable(
     val frozenRowState = stringResource(R.string.brace_table_frozen_row)
     val frozenColumnState = stringResource(R.string.brace_table_frozen_column)
     val frozenIntersectionState = stringResource(R.string.brace_table_frozen_row_column)
+    val activeCellState = stringResource(R.string.brace_table_active_cell)
     val columnResizeDescription = stringResource(R.string.brace_table_column_resize)
     val rowResizeDescription = stringResource(R.string.brace_table_row_resize)
     val increaseSizeLabel = stringResource(R.string.brace_table_increase_size)
@@ -735,6 +743,7 @@ fun <Row> BraceDataTable(
             }
             .focusable()
             .semantics {
+                isTraversalGroup = true
                 collectionInfo = CollectionInfo(rowIndex.keys.size + 1, columns.size + 1)
                 contentDescription = tableLabel
                 if (isLoading) {
@@ -781,6 +790,18 @@ fun <Row> BraceDataTable(
                 with(density) { frozenRowHeights[rowNumber].roundToPx() })
         } + visibleRows.map { (rowNumber, offsetPx, sizePx) ->
             Triple(rowNumber, offsetPx + frozenHeightPx, sizePx)
+        }
+        // The four visual panes share one logical screen-reader order. Use viewport-local
+        // ranks so even very large row indexes stay exactly representable as Float.
+        val traversalRows = visibleRowTargets.mapIndexed { rank, target -> target.first to rank }.toMap()
+        val traversalColumns = visibleColumns.mapIndexed { rank, index -> index to rank }.toMap()
+        val traversalStride = (visibleColumns.size + 1) * 4
+        fun traversalOrder(rowNumber: Int, columnNumber: Int, control: Int = 0): Float {
+            val rowRank = if (rowNumber < 0) 0 else 1 +
+                (traversalRows[rowNumber] ?: rowNumber.coerceAtLeast(0))
+            val columnRank = if (columnNumber < 0) 0 else 1 +
+                (traversalColumns[columnNumber] ?: columnNumber.coerceAtLeast(0))
+            return (rowRank * traversalStride + columnRank * 4 + control).toFloat()
         }
         // A buffered scroll column may be fully clipped behind the frozen pane. Drag
         // targets must use only the visible intersection of their own pane.
@@ -896,6 +917,7 @@ fun <Row> BraceDataTable(
                             sortState = if (sortable) sortStateDescription else null,
                             sortActionLabel = if (sortEnabled) sortActionDescription else null,
                             onSort = if (sortEnabled) requestSort else null,
+                            traversalIndex = traversalOrder(-1, index),
                         )
                     }
                     if (sortable && !isNameEditing && !headerLoading) {
@@ -921,12 +943,14 @@ fun <Row> BraceDataTable(
                                 .border(if (sortFocused) BraceTheme.sizing.focusRingWidth
                                     else metrics.gridLineWidth,
                                     if (sortFocused) semantic.focusRing else colors.gridLine)
-                                .clickable(enabled = sortEnabled, role = Role.Button,
+                                .then(if (sortEnabled) Modifier.clickable(role = Role.Button,
                                     interactionSource = sortInteraction, indication = null,
-                                    onClick = requestSort)
+                                    onClick = requestSort) else Modifier)
                                 .clearAndSetSemantics {
                                     testTag = "brace-table-sort:${column.key}"
+                                    traversalIndex = traversalOrder(-1, index, 1)
                                     role = Role.Button
+                                    if (!sortEnabled) disabled()
                                     contentDescription = sortActionDescription
                                     stateDescription = sortStateDescription
                                     if (sortEnabled) onClick(sortActionDescription) {
@@ -974,6 +998,7 @@ fun <Row> BraceDataTable(
                                         }?.first ?: index
                                     }
                                 },
+                                traversalIndex = traversalOrder(-1, index, 2),
                                 onFocusedChange = { focused ->
                                     if (focused) focusedReorderHandle = "column:${column.key}"
                                     else if (focusedReorderHandle == "column:${column.key}")
@@ -1008,6 +1033,7 @@ fun <Row> BraceDataTable(
                             decreaseLabel = decreaseSizeLabel,
                             onSizeChange = { onColumnWidthChange(column.key, it) },
                             onFocusedChange = { resizeHandleFocused = it },
+                            traversalIndex = traversalOrder(-1, index, 3),
                             modifier = Modifier.offset(x = columnIndex.starts[index] - paneOrigin + currentWidth - BraceTheme.sizing.touchTarget),
                         )
                     }
@@ -1128,6 +1154,8 @@ fun <Row> BraceDataTable(
                             columnKey = column.key,
                             selected = cellSelected,
                             focused = focused && activeCell == cell,
+                            activeCellLabel = activeCellState,
+                            traversalIndex = traversalOrder(rowNumber, columnNumber),
                             enabled = !isLoading,
                             onSelect = selectCell,
                             onExtendSelection = if (isLoading) null else beginTouchRange,
@@ -1215,6 +1243,7 @@ fun <Row> BraceDataTable(
                         .captureAdditivePointer { pointerAdditive = it },
                     content = visualRowHeader,
                     pinState = if (rowNumber < frozenRows) frozenRowState else null,
+                    traversalIndex = traversalOrder(rowNumber, -1),
                 )
                 if (!isLoading && onRowOrderChange != null && rows.size > 1) {
                     composeKey("reorder-row:$key") {
@@ -1240,6 +1269,7 @@ fun <Row> BraceDataTable(
                                     }?.first ?: rowNumber
                                 }
                             },
+                            traversalIndex = traversalOrder(rowNumber, -1, 1),
                             onFocusedChange = { focused ->
                                 if (focused) focusedReorderHandle = "row:$key"
                                 else if (focusedReorderHandle == "row:$key") focusedReorderHandle = null
@@ -1271,6 +1301,7 @@ fun <Row> BraceDataTable(
                         decreaseLabel = decreaseSizeLabel,
                         onSizeChange = { onRowHeightChange(key, it) },
                         onFocusedChange = { resizeHandleFocused = it },
+                        traversalIndex = traversalOrder(rowNumber, -1, 2),
                         modifier = Modifier.offset(x = rowSelectWidth + rowReorderWidth,
                             y = with(density) { offsetPx.toDp() }),
                     )
@@ -1280,7 +1311,8 @@ fun <Row> BraceDataTable(
 
         Column(Modifier.offset(x = rowHeaderWidth + frozenWidth)
             .width(scrollViewportWidth).height(height).clipToBounds()
-            .horizontalScroll(viewport.horizontal)) {
+            .horizontalScroll(viewport.horizontal)
+            .semantics { isTraversalGroup = false }) {
             Column(Modifier.width(maxOf(scrollContentWidth, scrollViewportWidth))) {
                 renderHeaderPane(scrollColumns, frozenWidth,
                     maxOf(scrollContentWidth, scrollViewportWidth))
@@ -1292,7 +1324,8 @@ fun <Row> BraceDataTable(
                 }
                 LazyColumn(state = viewport.vertical,
                     modifier = Modifier.width(maxOf(scrollContentWidth, scrollViewportWidth))
-                        .height(scrollBodyHeight)) {
+                        .height(scrollBodyHeight)
+                        .semantics { isTraversalGroup = false }) {
                     items(count = rows.size - frozenRows,
                         key = { index -> rowIndex.keys[index + frozenRows] }) { localIndex ->
                         renderRow(localIndex + frozenRows, scrollColumns, frozenWidth,
@@ -1364,6 +1397,8 @@ fun <Row> BraceDataTable(
                     }) else Modifier)
                     .clearAndSetSemantics {
                         testTag = "brace-table-corner"
+                        traversalIndex = traversalOrder(-1, -1)
+                        heading()
                         collectionItemInfo = CollectionItemInfo(0, 1, 0, 1)
                         contentDescription = selectAllAction
                         selected = tableSelected

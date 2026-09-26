@@ -92,6 +92,8 @@ import io.github.joelromanpr.brace.core.BraceCallout
 import io.github.joelromanpr.brace.core.BraceCalloutIntent
 import io.github.joelromanpr.brace.core.BraceCompoundTag
 import io.github.joelromanpr.brace.core.BraceEmptyState
+import io.github.joelromanpr.brace.core.BraceEntityTitle
+import io.github.joelromanpr.brace.core.BraceEntityTitleStyle
 import io.github.joelromanpr.brace.core.BraceTag
 import io.github.joelromanpr.brace.core.BraceTagIntent
 import io.github.joelromanpr.brace.core.BraceTagInput
@@ -351,6 +353,7 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "core-label" to """BraceFieldLabel("Export format", spokenLabel = "Export format, ${'$'}format") { controlModifier -> BraceButton(format, onClick = { format = "JSON" }, modifier = controlModifier) }""",
     "core-controlgroup" to """BraceControlGroup(fill = true, accessibilityLabel = "Report actions") { Item { controlModifier -> BraceButton("Preview", onClick = ::preview, modifier = controlModifier) }; Item(fill = false) { controlModifier -> BraceButton("Export", onClick = ::export, modifier = controlModifier) } }""",
     "core-numericinput" to "var amount by rememberSaveable { mutableStateOf(\"0.2\") }; BraceNumericField(value = amount, onValueChange = { amount = it }, label = \"Amount\", min = 0.0, max = 100.0, stepSize = 1.0, majorStepSize = 10.0, minorStepSize = 0.1)",
+    "core-entitytitle" to """BraceEntityTitle(title = "Quarterly report", subtitle = "Updated today", icon = { Text("◆") }, tags = { BraceTag("Draft") }, onTitleClick = { openReport() })""".trimIndent(),
     "core-card" to "BraceCard(elevation = BraceCardElevation.One, onClick = { open() }) { Text(\"Open project\") }",
     "core-cardlist" to "BraceCardList(items = projects, itemKey = { it.id }, onItemClick = { open(it) }) { project -> Text(project.name) }",
     "core-divider" to "BraceDivider(orientation = BraceDividerOrientation.Horizontal)",
@@ -1537,6 +1540,35 @@ private fun ComponentSample(
                     variant = BraceButtonVariant.Outline)
                 BraceNumericField("4", {}, label = "Read only", readOnly = true)
                 BraceNumericField("", {}, label = "Disabled", enabled = false)
+            }
+        }
+        "core-entitytitle" -> {
+            var loading by rememberSaveable { mutableStateOf(false) }
+            var wide by rememberSaveable { mutableStateOf(false) }
+            var prominent by rememberSaveable { mutableStateOf(false) }
+            var opens by rememberSaveable { mutableStateOf(0) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceEntityTitle(
+                    title = "Quarterly operations and risk report",
+                    subtitle = "Edited today by the analysis team",
+                    modifier = Modifier.width(if (wide) 320.dp else 190.dp),
+                    icon = { Text("◆", color = BraceTheme.colors.components.entityTitle.icon) },
+                    tags = { BraceTag("Draft"); BraceTag("Priority", intent = BraceTagIntent.Primary) },
+                    style = if (prominent) BraceEntityTitleStyle.Title else BraceEntityTitleStyle.Body,
+                    ellipsize = true,
+                    fill = true,
+                    loading = loading,
+                    onTitleClick = { opens++ },
+                )
+                Text("Opened $opens times", color = BraceTheme.colors.semantic.onSurfaceMuted)
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (loading) "Show content" else "Show loading",
+                        onClick = { loading = !loading }, variant = BraceButtonVariant.Outline)
+                    BraceButton(if (wide) "Narrow row" else "Widen row",
+                        onClick = { wide = !wide }, variant = BraceButtonVariant.Outline)
+                }
+                BraceButton(if (prominent) "Body title" else "Prominent title",
+                    onClick = { prominent = !prominent }, variant = BraceButtonVariant.Outline)
             }
         }
         "core-card" -> {

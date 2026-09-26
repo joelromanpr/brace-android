@@ -162,6 +162,20 @@ public final class io/github/joelromanpr/brace/core/BraceEmptyStateLayout : java
 	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceEmptyStateLayout;
 }
 
+public final class io/github/joelromanpr/brace/core/BraceEntityTitleKt {
+	public static final fun BraceEntityTitle (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lio/github/joelromanpr/brace/core/BraceEntityTitleStyle;ZZZLkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceEntityTitleStyle : java/lang/Enum {
+	public static final field Body Lio/github/joelromanpr/brace/core/BraceEntityTitleStyle;
+	public static final field Display Lio/github/joelromanpr/brace/core/BraceEntityTitleStyle;
+	public static final field Subtitle Lio/github/joelromanpr/brace/core/BraceEntityTitleStyle;
+	public static final field Title Lio/github/joelromanpr/brace/core/BraceEntityTitleStyle;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceEntityTitleStyle;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceEntityTitleStyle;
+}
+
 public final class io/github/joelromanpr/brace/core/BraceFeedbackKt {
 	public static final fun BraceCallout (Ljava/lang/String;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BraceCalloutIntent;ZZZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;ZLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
 	public static final fun BraceEmptyState (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lio/github/joelromanpr/brace/core/BraceEmptyStateIconSize;ZLio/github/joelromanpr/brace/core/BraceEmptyStateLayout;Lkotlin/jvm/functions/Function2;ZLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V

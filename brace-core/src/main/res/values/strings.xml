@@ -54,4 +54,6 @@
     <string name="brace_tree_collapsed">Collapsed</string>
     <string name="brace_tree_select">Select node</string>
     <string name="brace_tree_node_position">%1$s, level %2$d, item %3$d of %4$d</string>
+    <string name="brace_entity_title_loading">Loading entity</string>
+    <string name="brace_entity_title_open">Open %1$s</string>
 </resources>

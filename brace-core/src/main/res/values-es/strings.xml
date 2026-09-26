@@ -54,4 +54,6 @@
     <string name="brace_tree_collapsed">Contraído</string>
     <string name="brace_tree_select">Seleccionar nodo</string>
     <string name="brace_tree_node_position">%1$s, nivel %2$d, elemento %3$d de %4$d</string>
+    <string name="brace_entity_title_loading">Cargando entidad</string>
+    <string name="brace_entity_title_open">Abrir %1$s</string>
 </resources>

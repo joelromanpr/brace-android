@@ -29,4 +29,5 @@
     <string name="brace_shortcut_spoken_plus">Plus</string>
     <string name="brace_shortcut_spoken_minus">Minus</string>
     <string name="brace_shortcut_spoken_question">Question mark</string>
+    <string name="brace_editable_text_edit">Edit</string>
 </resources>

@@ -29,6 +29,9 @@ import io.github.joelromanpr.brace.core.BraceContextMenuPopup
 import io.github.joelromanpr.brace.core.BraceDialog
 import io.github.joelromanpr.brace.core.BraceDrawer
 import io.github.joelromanpr.brace.core.BraceDrawerPosition
+import io.github.joelromanpr.brace.core.BraceEditableText
+import io.github.joelromanpr.brace.core.BraceFormField
+import io.github.joelromanpr.brace.core.BraceFormIntent
 import io.github.joelromanpr.brace.core.BraceMenu
 import io.github.joelromanpr.brace.core.BraceMenuIntent
 import io.github.joelromanpr.brace.core.BraceMenuItem
@@ -41,6 +44,8 @@ import io.github.joelromanpr.brace.core.BraceShortcutLabel
 import io.github.joelromanpr.brace.core.BraceShortcutRegistry
 import io.github.joelromanpr.brace.core.BraceShortcutScope
 import io.github.joelromanpr.brace.core.BraceTextField
+import io.github.joelromanpr.brace.core.BraceTextArea
+import io.github.joelromanpr.brace.core.BraceTextAreaSize
 import io.github.joelromanpr.brace.core.braceShortcuts
 import io.github.joelromanpr.brace.core.rememberBraceShortcutRegistryState
 import io.github.joelromanpr.brace.core.BraceTag
@@ -73,6 +78,8 @@ class ConsumerActivity : ComponentActivity() {
                     }
                 }
                 var search by remember { mutableStateOf("") }
+                var caseNotes by remember { mutableStateOf("") }
+                var reportTitle by remember { mutableStateOf("Quarterly report") }
                 val shortcutState = rememberBraceShortcutRegistryState()
                 val toasts = rememberBraceToastState()
                 Box(Modifier.fillMaxSize()) {
@@ -131,6 +138,30 @@ class ConsumerActivity : ComponentActivity() {
                                 }
                                 BraceShortcutLabel("Ctrl+R", spokenLabel = "Control plus R")
                                 BraceTextField(search, { search = it }, "Search")
+                                BraceFormField(
+                                    label = "Case notes",
+                                    helperText = "Include the event time",
+                                    required = true,
+                                    requiredDescription = "Required",
+                                ) { controlModifier ->
+                                    BraceTextArea(
+                                        value = caseNotes,
+                                        onValueChange = { caseNotes = it },
+                                        accessibilityLabel = "Case notes",
+                                        modifier = controlModifier,
+                                        minLines = 2,
+                                        maxLines = 6,
+                                        autoResize = true,
+                                        intent = BraceFormIntent.Primary,
+                                        size = BraceTextAreaSize.Medium,
+                                    )
+                                }
+                                BraceEditableText(
+                                    value = reportTitle,
+                                    onValueChange = { reportTitle = it },
+                                    label = "Report title",
+                                    editActionLabel = "Edit report title",
+                                )
                             }
                         }
                         BraceTooltip(

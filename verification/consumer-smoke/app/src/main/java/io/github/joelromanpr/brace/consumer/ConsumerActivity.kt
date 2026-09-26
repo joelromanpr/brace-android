@@ -6,11 +6,15 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.unit.IntOffset
 import io.github.braceandroid.foundation.BraceTheme
 import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
@@ -20,6 +24,8 @@ import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceCallout
 import io.github.joelromanpr.brace.core.BraceCalloutIntent
 import io.github.joelromanpr.brace.core.BraceCard
+import io.github.joelromanpr.brace.core.BraceContextMenu
+import io.github.joelromanpr.brace.core.BraceContextMenuPopup
 import io.github.joelromanpr.brace.core.BraceDialog
 import io.github.joelromanpr.brace.core.BraceDrawer
 import io.github.joelromanpr.brace.core.BraceDrawerPosition
@@ -30,6 +36,13 @@ import io.github.joelromanpr.brace.core.BraceOverlayHost
 import io.github.joelromanpr.brace.core.BracePopover
 import io.github.joelromanpr.brace.core.BraceProgressBar
 import io.github.joelromanpr.brace.core.BraceSection
+import io.github.joelromanpr.brace.core.BraceShortcut
+import io.github.joelromanpr.brace.core.BraceShortcutLabel
+import io.github.joelromanpr.brace.core.BraceShortcutRegistry
+import io.github.joelromanpr.brace.core.BraceShortcutScope
+import io.github.joelromanpr.brace.core.BraceTextField
+import io.github.joelromanpr.brace.core.braceShortcuts
+import io.github.joelromanpr.brace.core.rememberBraceShortcutRegistryState
 import io.github.joelromanpr.brace.core.BraceTag
 import io.github.joelromanpr.brace.core.BraceToastHost
 import io.github.joelromanpr.brace.core.BraceToastIntent
@@ -48,6 +61,19 @@ class ConsumerActivity : ComponentActivity() {
                 var alertOpen by remember { mutableStateOf(false) }
                 var drawerOpen by remember { mutableStateOf(false) }
                 var popoverOpen by remember { mutableStateOf(false) }
+                var contextOpen by remember { mutableStateOf(false) }
+                var pointMenuOpen by remember { mutableStateOf(false) }
+                val pointMenuTrigger = remember { FocusRequester() }
+                var hadPointMenuOpen by remember { mutableStateOf(false) }
+                LaunchedEffect(pointMenuOpen) {
+                    if (pointMenuOpen) hadPointMenuOpen = true
+                    else if (hadPointMenuOpen) {
+                        pointMenuTrigger.requestFocus()
+                        hadPointMenuOpen = false
+                    }
+                }
+                var search by remember { mutableStateOf("") }
+                val shortcutState = rememberBraceShortcutRegistryState()
                 val toasts = rememberBraceToastState()
                 Box(Modifier.fillMaxSize()) {
                     Column {
@@ -64,6 +90,48 @@ class ConsumerActivity : ComponentActivity() {
                             BraceMenuItem("Edit project", onClick = { dialogOpen = true })
                             BraceMenuItem("Delete report", onClick = { alertOpen = true },
                                 intent = BraceMenuIntent.Danger)
+                        }
+                        BraceContextMenu(
+                            expanded = contextOpen,
+                            onExpandedChange = { contextOpen = it },
+                            title = "Report actions",
+                            targetIsFocusable = true,
+                            target = { targetModifier -> BraceButton("Context actions", onClick = {}, modifier = targetModifier) },
+                        ) { dismiss ->
+                            BraceMenuItem("Open report", onClick = { count++; dismiss() })
+                        }
+                        BraceButton("Open point menu", onClick = { pointMenuOpen = true },
+                            modifier = Modifier.focusRequester(pointMenuTrigger))
+                        BraceContextMenuPopup(
+                            expanded = pointMenuOpen,
+                            onDismissRequest = { pointMenuOpen = false },
+                            targetOffset = IntOffset(80, 220),
+                            title = "More actions",
+                        ) { dismiss ->
+                            BraceMenuItem("Refresh", onClick = { count++; dismiss() })
+                        }
+                        BraceShortcutRegistry(
+                            shortcuts = listOf(BraceShortcut("ctrl+r", "Refresh records", spokenComboLabel = "Control plus R",
+                                onKeyDown = { count++ })),
+                            discoveryTitle = "Keyboard shortcuts",
+                            state = shortcutState,
+                        ) {
+                            Column {
+                                BraceButton("Show shortcuts", onClick = { shortcutState.showDiscovery() })
+                                BraceShortcutScope(shortcuts = listOf(
+                                    BraceShortcut("ctrl+e", "Export here", onKeyDown = { count++ }),
+                                    BraceShortcut("ctrl+g", "Global export", global = true,
+                                        onKeyDown = { count++ }),
+                                )) {
+                                    BraceButton("Export", onClick = { count++ })
+                                }
+                                Column(Modifier.braceShortcuts(listOf(BraceShortcut("ctrl+k",
+                                    "Find records", onKeyDown = { count++ })))) {
+                                    BraceButton("Find", onClick = { count++ })
+                                }
+                                BraceShortcutLabel("Ctrl+R", spokenLabel = "Control plus R")
+                                BraceTextField(search, { search = it }, "Search")
+                            }
                         }
                         BraceTooltip(
                             text = "Imports include archived records",

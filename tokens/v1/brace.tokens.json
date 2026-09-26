@@ -470,6 +470,11 @@
       "container": "{semantic.inverseSurface}",
       "content": "{semantic.onInverseSurface}",
       "border": "{semantic.borderStrong}"
+    },
+    "shortcut": {
+      "container": "{semantic.surfaceInset}",
+      "content": "{semantic.onSurface}",
+      "border": "{semantic.borderStrong}"
     }
   },
   "componentMetricsDp": {
@@ -546,6 +551,11 @@
       "cornerRadius": 5,
       "contentPadding": 8,
       "maxWidth": 280
+    },
+    "shortcut": {
+      "cornerRadius": 4,
+      "horizontalPadding": 6,
+      "verticalPadding": 2
     }
   }
 }

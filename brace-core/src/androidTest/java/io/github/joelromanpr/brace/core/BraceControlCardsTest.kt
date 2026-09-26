@@ -1,8 +1,11 @@
 package io.github.joelromanpr.brace.core
 
+import android.graphics.Rect
 import android.os.Build
+import android.view.accessibility.AccessibilityNodeInfo
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,6 +16,8 @@ import androidx.compose.ui.input.InputMode
 import androidx.compose.ui.input.InputModeManager
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toPixelMap
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.semantics.Role
@@ -27,6 +32,7 @@ import androidx.compose.ui.test.assertHeightIsAtLeast
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertWidthIsAtLeast
+import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.junit4.StateRestorationTester
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -43,6 +49,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import io.github.braceandroid.foundation.BraceColorMode
 import io.github.braceandroid.foundation.BraceContrast
 import io.github.braceandroid.foundation.BraceDensity
@@ -53,6 +60,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalTestApi::class)
 @RunWith(AndroidJUnit4::class)
@@ -190,5 +198,106 @@ class BraceControlCardsTest {
         }
         if (Build.VERSION.SDK_INT >= 34)
             rule.onNodeWithContentDescription("Include archived").tryPerformAccessibilityChecks()
+    }
+
+    @Test fun callerSmallModifierKeepsTheWholeCardTarget() {
+        rule.setContent { BraceTheme {
+            BraceSwitchCard(false, {}, "Small setting", modifier = Modifier.size(24.dp))
+        } }
+        rule.onNodeWithContentDescription("Small setting")
+            .assertWidthIsAtLeast(48.dp).assertHeightIsAtLeast(48.dp)
+    }
+
+    @Test fun switchThumbMirrorsItsPhysicalPositionInRtl() {
+        var checked by mutableStateOf(false)
+        var thumb = Color.Unspecified
+        var leftThumbPx = 0
+        var rightThumbPx = 0
+        rule.setContent { BraceTheme {
+            val d = LocalDensity.current.density
+            val card = BraceTheme.componentMetrics.controlCard
+            val switch = BraceTheme.componentMetrics.switch
+            val target = BraceTheme.sizing.touchTarget
+            leftThumbPx = ((card.contentPadding.value +
+                (target.value - switch.trackWidth.value) / 2f +
+                switch.thumbRadius.value + switch.thumbInset.value) * d).roundToInt()
+            rightThumbPx = ((card.contentPadding.value +
+                (target.value + switch.trackWidth.value) / 2f -
+                switch.thumbRadius.value - switch.thumbInset.value) * d).roundToInt()
+            thumb = BraceTheme.colors.components.switch.thumb
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                BraceSwitchCard(checked, { checked = it }, "RTL setting")
+            }
+        } }
+        val card = rule.onNodeWithContentDescription("RTL setting")
+        val off = card.captureToImage().toPixelMap()
+        val y = off.height / 2
+        rule.runOnIdle { checked = true }
+        val on = card.captureToImage().toPixelMap()
+        fun near(actual: Color): Boolean =
+            kotlin.math.abs(actual.red - thumb.red) < 0.08f &&
+            kotlin.math.abs(actual.green - thumb.green) < 0.08f &&
+            kotlin.math.abs(actual.blue - thumb.blue) < 0.08f
+        assertTrue("RTL off thumb should be right", near(off[rightThumbPx, y]))
+        assertFalse("RTL off left should be track", near(off[leftThumbPx, y]))
+        assertTrue("RTL on thumb should be left", near(on[leftThumbPx, y]))
+        assertFalse("RTL on right should be track", near(on[rightThumbPx, y]))
+    }
+
+    @Test fun nativeNamedActionAndDisabledStateStayOnTheirCardNodes() {
+        var checked by mutableStateOf(false)
+        var selected by mutableStateOf("soup")
+        rule.setContent { BraceTheme { Column {
+            BraceSwitchCard(checked, { checked = it }, "Sync reports")
+            BraceCheckboxCard(true, {}, "Locked archive", enabled = false)
+            BraceRadioCardGroup(options, selected, { selected = it }, "Lunch special")
+        } } }
+        prepareNativeInput()
+        val switchNode = nativeNodesForLabel("Sync reports").single()
+        val bounds = Rect()
+        switchNode.getBoundsInScreen(bounds)
+        val density = InstrumentationRegistry.getInstrumentation().targetContext.resources.displayMetrics.density
+        assertTrue("native width=${bounds.width()} density=$density", bounds.width() / density >= 48f)
+        assertTrue("native height=${bounds.height()} density=$density", bounds.height() / density >= 48f)
+        assertEquals(1, switchNode.actionList.count { it.id == AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.id })
+        assertTrue(switchNode.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.id))
+        rule.runOnIdle { assertTrue(checked) }
+        val disabled = nativeNodesForLabel("Locked archive").single()
+        assertFalse(disabled.isEnabled)
+        assertEquals(0, disabled.actionList.count { it.id == AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.id })
+        val radio = nativeNodesForLabel("Sandwich").single()
+        assertTrue(radio.isEnabled)
+        assertEquals(1, radio.actionList.count { it.id == AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.id })
+        assertTrue(radio.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.id))
+        rule.runOnIdle { assertEquals("sandwich", selected) }
+    }
+
+    private fun prepareNativeInput() {
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        rule.waitUntil(10_000) {
+            val root = automation.rootInActiveWindow ?: return@waitUntil false
+            val warning = root.findAccessibilityNodeInfosByText(
+                "This app was built for an older version of Android")
+            if (warning.isNotEmpty()) {
+                root.findAccessibilityNodeInfosByText("OK")
+                    .firstOrNull { it.text?.toString() == "OK" && it.isClickable }
+                    ?.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                false
+            } else root.packageName?.toString()?.startsWith("io.github.joelromanpr.brace.core") == true
+        }
+    }
+
+    private fun nativeNodesForLabel(label: String): List<AccessibilityNodeInfo> {
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        val roots = automation.windows.mapNotNull { it.root }
+            .ifEmpty { listOfNotNull(automation.rootInActiveWindow) }
+        val matches = mutableListOf<AccessibilityNodeInfo>()
+        fun visit(node: AccessibilityNodeInfo) {
+            if (!node.refresh()) return
+            if (node.contentDescription?.toString() == label) matches += node
+            for (index in 0 until node.childCount) node.getChild(index)?.let(::visit)
+        }
+        roots.forEach(::visit)
+        return matches
     }
 }

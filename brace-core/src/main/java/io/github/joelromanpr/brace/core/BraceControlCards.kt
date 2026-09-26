@@ -304,15 +304,16 @@ private fun ControlCard(
             when (kind) {
                 ControlCardKind.Switch -> Canvas(Modifier.size(switchMetrics.trackWidth, switchMetrics.trackHeight)) {
                     drawRoundRect(
-                        color = if (!enabled) switchColors.disabledTrack else if (checked)
+                        color = if (!enabled) colors.disabledSwitchTrack else if (checked)
                             switchColors.checkedTrack else switchColors.uncheckedTrack,
                         cornerRadius = CornerRadius(size.height / 2),
                     )
                     val radius = switchMetrics.thumbRadius.toPx()
+                    val thumbAtRight = checked == (layoutDirection == LayoutDirection.Ltr)
                     drawCircle(
-                        color = if (enabled) switchColors.thumb else switchColors.disabledThumb,
+                        color = if (enabled) switchColors.thumb else colors.disabledSwitchThumb,
                         radius = radius,
-                        center = Offset(if (checked) size.width - radius - switchMetrics.thumbInset.toPx()
+                        center = Offset(if (thumbAtRight) size.width - radius - switchMetrics.thumbInset.toPx()
                             else radius + switchMetrics.thumbInset.toPx(), size.height / 2),
                     )
                 }

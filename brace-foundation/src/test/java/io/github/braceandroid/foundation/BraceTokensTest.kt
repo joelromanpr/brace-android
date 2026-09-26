@@ -76,6 +76,10 @@ class BraceTokensTest {
                 assertTrue("control card text contrast below $minimum",
                     braceContrastRatio(text, background) >= minimum)
             }
+            assertTrue("disabled switch track blends into card",
+                braceContrastRatio(card.disabledSwitchTrack, card.disabledContainer) >= 3.0)
+            assertTrue("disabled switch thumb blends into track",
+                braceContrastRatio(card.disabledSwitchThumb, card.disabledSwitchTrack) >= 3.0)
         }
     }
 
@@ -113,6 +117,6 @@ class BraceTokensTest {
         assertTrue(BraceTokenDefaults.compact.controlHeightDp < BraceTokenDefaults.comfortable.controlHeightDp)
         assertTrue(BraceTokenDefaults.sizing.touchTarget >= BraceTokenDefaults.compact.controlHeightDp)
         assertEquals(0, BraceTokenDefaults.motion.withoutAnimation().normal)
-        assertEquals("1.1.0", BraceTokenDefaults.version)
+        assertEquals("1.2.0", BraceTokenDefaults.version)
     }
 }

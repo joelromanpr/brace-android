@@ -45,4 +45,12 @@
     <string name="brace_range_invalid">Ingresa una fecha válida</string>
     <string name="brace_range_unavailable">Fecha no disponible</string>
     <string name="brace_range_overlapping">La fecha de inicio no puede ser posterior a la fecha de fin</string>
+    <string name="brace_zone_choose">Seleccionar zona horaria</string>
+    <string name="brace_zone_search">Buscar zonas horarias</string>
+    <string name="brace_zone_empty">No hay zonas horarias coincidentes</string>
+    <string name="brace_zone_selected">Seleccionada</string>
+    <string name="brace_zone_local">Zona horaria local</string>
+    <string name="brace_zone_expanded">Expandido</string>
+    <string name="brace_zone_collapsed">Contraído</string>
+    <string name="brace_zone_position">%1$d de %2$d: %3$s</string>
 </resources>

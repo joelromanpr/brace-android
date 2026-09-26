@@ -133,6 +133,8 @@ import io.github.joelromanpr.brace.table.BraceTableClipboard
 import io.github.joelromanpr.brace.table.BraceDataTable
 import io.github.joelromanpr.brace.table.BraceTableColumn
 import io.github.joelromanpr.brace.table.BraceTableSelection
+import io.github.joelromanpr.brace.table.BraceTableSortDirection
+import io.github.joelromanpr.brace.table.rememberBraceTableSortState
 import org.json.JSONObject
 import java.util.Locale
 
@@ -199,6 +201,18 @@ BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
     editingColumnName = editingName, onEditingColumnNameChange = { editingName = it },
     onColumnNameCommit = { key, title -> titles = titles + (key to title) })""".trimIndent(),
     "table-column-and-row-resizing" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, columnWidths = widths, onColumnWidthChange = { key, width -> widths = widths + (key to width) }, rowHeights = heights, onRowHeightChange = { key, height -> heights = heights + (key to height) })",
+    "table-sorting" to """val sort = rememberBraceTableSortState()
+val displayed = remember(rows, sort.value) {
+    val order = sort.value
+    if (order == null) rows else rows.withIndex().sortedWith { a, b ->
+        val comparison = a.value.name.compareTo(b.value.name)
+        val directed = if (order.direction == BraceTableSortDirection.Ascending) comparison else -comparison
+        if (directed == 0) a.index.compareTo(b.index) else directed
+    }.map { it.value }
+}
+val columns = listOf(BraceTableColumn<Record>("name", "Name", 160.dp, { it.name }, sortable = true))
+BraceDataTable(displayed, { it.id }, columns, selection, { selection = it },
+    sort = sort.value, onSortChange = { sort.value = it })""".trimIndent(),
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-checkbox" to "BraceCheckbox(checked = checked, onCheckedChange = { checked = it }, label = \"Include archived\")",
     "core-switch" to "BraceSwitch(checked = enabled, onCheckedChange = { enabled = it }, label = \"Notifications\")",
@@ -526,6 +540,46 @@ private fun ComponentSample(
                     style = BraceTheme.typography.body)
                 BraceDateField(null, {}, label = "Unavailable date", enabled = false,
                     locale = Locale.US)
+            }
+        }
+        "table-sorting" -> {
+            val source = remember { listOf(
+                DemoTableRecord("b", "Beta", "Ready"),
+                DemoTableRecord("a", "Alpha", "Review"),
+                DemoTableRecord("c", "Alpha", "Ready"),
+            ) }
+            val sort = rememberBraceTableSortState()
+            var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
+            var width by remember { mutableStateOf(160.dp) }
+            val columns = remember { listOf(
+                BraceTableColumn<DemoTableRecord>("case", "Case", 160.dp, { it.case }, sortable = true),
+                BraceTableColumn<DemoTableRecord>("status", "Status", 160.dp, { it.status }, sortable = true),
+            ) }
+            val visible = remember(source, sort.value) {
+                val current = sort.value
+                if (current == null) source else source.withIndex().sortedWith { a, b ->
+                    val comparison = when (current.key) {
+                        "case" -> a.value.case.compareTo(b.value.case)
+                        else -> a.value.status.compareTo(b.value.status)
+                    }
+                    val directed = if (current.direction == BraceTableSortDirection.Ascending)
+                        comparison else -comparison
+                    if (directed == 0) a.index.compareTo(b.index) else directed
+                }.map { it.value }
+            }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Tap a sort arrow to cycle ascending, descending, and unsorted. Header names still select columns; the resize grip remains separate.",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BraceDataTable(visible, { it.id }, columns, selection, { selection = it },
+                    modifier = Modifier.fillMaxWidth(), height = 240.dp, label = "Sortable cases",
+                    rowLabel = { it.case }, sort = sort.value,
+                    onSortChange = { sort.value = it },
+                    columnWidths = mapOf("case" to width),
+                    onColumnWidthChange = { key, next -> if (key == "case") width = next })
+                Text("Sort: ${sort.value?.let { "${it.key} ${it.direction.name}" } ?: "Original order"}",
+                    color = BraceTheme.colors.semantic.onSurface)
+                Text("First: ${visible.first().case} · Selected: ${selection ?: "none"}",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
             }
         }
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",

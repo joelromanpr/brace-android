@@ -27,4 +27,10 @@
     <string name="brace_table_edit_column_name_description">Editar %1$s, fila de encabezado, columna %2$d</string>
     <string name="brace_table_column_name_required">El nombre de la columna es obligatorio</string>
     <string name="brace_table_invalid_value">Valor no válido</string>
+    <string name="brace_table_sort_ascending">Ordenar %1$s de forma ascendente</string>
+    <string name="brace_table_sort_descending">Ordenar %1$s de forma descendente</string>
+    <string name="brace_table_clear_sort">Quitar el orden de %1$s</string>
+    <string name="brace_table_sorted_ascending">Orden ascendente</string>
+    <string name="brace_table_sorted_descending">Orden descendente</string>
+    <string name="brace_table_unsorted">Sin ordenar</string>
 </resources>

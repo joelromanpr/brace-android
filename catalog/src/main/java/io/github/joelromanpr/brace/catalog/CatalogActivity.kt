@@ -104,7 +104,12 @@ import io.github.joelromanpr.brace.core.BraceTextArea
 import io.github.joelromanpr.brace.core.BraceTextAreaSize
 import io.github.joelromanpr.brace.core.BraceEditableText
 import io.github.joelromanpr.brace.core.BraceEditableTextIntent
+import io.github.joelromanpr.brace.core.BraceNumericField
+import io.github.joelromanpr.brace.core.BraceNumericButtonPosition
+import io.github.joelromanpr.brace.core.BraceNumericFieldSize
+import io.github.joelromanpr.brace.core.BraceNumericIntent
 import org.json.JSONObject
+import java.util.Locale
 
 /** Interactive catalog whose component names and availability come from the pinned inventory. */
 class CatalogActivity : ComponentActivity() {
@@ -142,6 +147,7 @@ BraceTextArea(details, { details = it }, accessibilityLabel = "Details", minLine
 BraceEditableText(title, { title = it }, label = "Report title", editActionLabel = "Edit report title", onConfirm = { saveTitle(it) })""".trimIndent(),
     "core-label" to """BraceFieldLabel("Export format", spokenLabel = "Export format, ${'$'}format") { controlModifier -> BraceButton(format, onClick = { format = "JSON" }, modifier = controlModifier) }""",
     "core-controlgroup" to """BraceControlGroup(fill = true, accessibilityLabel = "Report actions") { Item { controlModifier -> BraceButton("Preview", onClick = ::preview, modifier = controlModifier) }; Item(fill = false) { controlModifier -> BraceButton("Export", onClick = ::export, modifier = controlModifier) } }""",
+    "core-numericinput" to "var amount by rememberSaveable { mutableStateOf(\"0.2\") }; BraceNumericField(value = amount, onValueChange = { amount = it }, label = \"Amount\", min = 0.0, max = 100.0, stepSize = 1.0, majorStepSize = 10.0, minorStepSize = 0.1)",
     "core-card" to "BraceCard(elevation = BraceCardElevation.One, onClick = { open() }) { Text(\"Open project\") }",
     "core-cardlist" to "BraceCardList(items = projects, itemKey = { it.id }, onItemClick = { open(it) }) { project -> Text(project.name) }",
     "core-divider" to "BraceDivider(orientation = BraceDividerOrientation.Horizontal)",
@@ -497,6 +503,44 @@ private fun ComponentSample(
                     }
                 }
                 Text("Last action: $lastAction", color = BraceTheme.colors.semantic.onSurface)
+            }
+        }
+        "core-numericinput" -> {
+            var amount by rememberSaveable { mutableStateOf("0.2") }
+            var german by rememberSaveable { mutableStateOf(false) }
+            var clamp by rememberSaveable { mutableStateOf(false) }
+            var atStart by rememberSaveable { mutableStateOf(false) }
+            var lastStep by rememberSaveable { mutableStateOf("No button step yet") }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Type a partial draft, use ↑/↓, Shift/Alt + arrow, or the 48dp step buttons.",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BraceNumericField(
+                    value = amount,
+                    onValueChange = { amount = it },
+                    label = "Amount",
+                    min = 0.0,
+                    max = 20.0,
+                    locale = if (german) Locale.GERMANY else Locale.US,
+                    clampValueOnBlur = clamp,
+                    buttonPosition = if (atStart) BraceNumericButtonPosition.Start else BraceNumericButtonPosition.End,
+                    intent = BraceNumericIntent.Primary,
+                    size = BraceNumericFieldSize.Medium,
+                    supportingText = "Normal ±1 · Shift ±10 · Alt ±0.1",
+                    onButtonClick = { lastStep = "Button selected $it" },
+                )
+                Text("Draft: $amount · $lastStep", color = BraceTheme.colors.semantic.onSurface)
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (german) "English decimal" else "German decimal", onClick = {
+                        german = !german
+                        amount = if (german) "0,2" else "0.2"
+                    }, intent = BraceButtonIntent.Secondary)
+                    BraceButton(if (clamp) "Clamp off" else "Clamp on", onClick = { clamp = !clamp },
+                        intent = BraceButtonIntent.Secondary)
+                }
+                BraceButton(if (atStart) "Buttons at end" else "Buttons at start", onClick = { atStart = !atStart },
+                    variant = BraceButtonVariant.Outline)
+                BraceNumericField("4", {}, label = "Read only", readOnly = true)
+                BraceNumericField("", {}, label = "Disabled", enabled = false)
             }
         }
         "core-card" -> {

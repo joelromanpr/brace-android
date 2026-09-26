@@ -1,0 +1,15 @@
+<resources>
+    <string name="brace_date_previous_month">Mois précédent</string>
+    <string name="brace_date_next_month">Mois suivant</string>
+    <string name="brace_date_previous_year">Année précédente</string>
+    <string name="brace_date_next_year">Année suivante</string>
+    <string name="brace_date_choose_month">Choisir le mois et l’année</string>
+    <string name="brace_date_today">Aujourd’hui</string>
+    <string name="brace_date_clear">Effacer</string>
+    <string name="brace_date_selected">Sélectionné</string>
+    <string name="brace_date_current_day">Aujourd’hui</string>
+    <string name="brace_date_open_calendar">Ouvrir le calendrier pour %1$s</string>
+    <string name="brace_date_invalid">Saisissez une date valide</string>
+    <string name="brace_date_out_of_range">Date indisponible</string>
+    <string name="brace_date_calendar_title">Choisir une date</string>
+</resources>

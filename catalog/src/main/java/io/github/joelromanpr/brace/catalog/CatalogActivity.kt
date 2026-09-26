@@ -51,6 +51,13 @@ import io.github.joelromanpr.brace.core.BraceButtonVariant
 import io.github.joelromanpr.brace.core.BraceCheckbox
 import io.github.joelromanpr.brace.core.BraceControlGroup
 import io.github.joelromanpr.brace.core.BraceFieldLabel
+import io.github.joelromanpr.brace.core.BraceRadio
+import io.github.joelromanpr.brace.core.BraceRadioGroup
+import io.github.joelromanpr.brace.core.BraceRadioOption
+import io.github.joelromanpr.brace.core.BraceSegmentedControl
+import io.github.joelromanpr.brace.core.BraceSegmentedOption
+import io.github.joelromanpr.brace.core.BraceSegmentedIntent
+import io.github.joelromanpr.brace.core.BraceSegmentedSize
 import io.github.joelromanpr.brace.core.BraceCard
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbItem
@@ -70,6 +77,9 @@ import io.github.joelromanpr.brace.core.BraceCardList
 import io.github.joelromanpr.brace.core.BraceDivider
 import io.github.joelromanpr.brace.core.BraceDividerOrientation
 import io.github.joelromanpr.brace.core.BraceProgressBar
+import io.github.joelromanpr.brace.core.BraceSpinner
+import io.github.joelromanpr.brace.core.BraceSpinnerSize
+import io.github.joelromanpr.brace.core.BraceSkeleton
 import io.github.joelromanpr.brace.core.BraceMenu
 import io.github.joelromanpr.brace.core.BraceMenuPopup
 import io.github.joelromanpr.brace.core.BraceMenuItem
@@ -129,6 +139,11 @@ import io.github.joelromanpr.brace.core.BraceLinkButton
 import io.github.joelromanpr.brace.core.BraceLinkColor
 import io.github.joelromanpr.brace.core.BraceLinkDestination
 import io.github.joelromanpr.brace.core.BraceLinkUnderline
+import io.github.joelromanpr.brace.datetime.BraceDateField
+import io.github.joelromanpr.brace.datetime.BraceDatePicker
+import io.github.joelromanpr.brace.datetime.BraceDateShortcut
+import java.time.LocalDate
+import java.time.YearMonth
 import org.json.JSONObject
 import java.util.Locale
 
@@ -178,6 +193,9 @@ Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
     "core-anchorbutton" to "BraceLinkButton(\"Open reports\", BraceLinkDestination.Action(\"Reports\") { navigateToReports() })",
     "core-checkbox" to "BraceCheckbox(checked = checked, onCheckedChange = { checked = it }, label = \"Include archived\")",
     "core-switch" to "BraceSwitch(checked = enabled, onCheckedChange = { enabled = it }, label = \"Notifications\")",
+    "core-radio" to "BraceRadio(selected = meal == \"soup\", onSelect = { meal = \"soup\" }, label = \"Soup\")",
+    "core-radiogroup" to "BraceRadioGroup(options = listOf(BraceRadioOption(\"soup\", \"Soup\"), BraceRadioOption(\"salad\", \"Salad\")), selectedValue = meal, onValueChange = { meal = it }, label = \"Lunch special\")",
+    "core-segmentedcontrol" to "BraceSegmentedControl(options = listOf(BraceSegmentedOption(\"list\", \"List\"), BraceSegmentedOption(\"grid\", \"Grid\")), value = layout, onValueChange = { layout = it }, label = \"Layout\")",
     "core-inputgroup" to "BraceTextField(value = query, onValueChange = { query = it }, label = \"Search\")",
     "core-formgroup" to """var notes by rememberSaveable { mutableStateOf("") }
 BraceFormField(label = "Case notes", helperText = "Include the event time", required = true, requiredDescription = "Required") { controlModifier ->
@@ -195,6 +213,8 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "core-cardlist" to "BraceCardList(items = projects, itemKey = { it.id }, onItemClick = { open(it) }) { project -> Text(project.name) }",
     "core-divider" to "BraceDivider(orientation = BraceDividerOrientation.Horizontal)",
     "core-progressbar" to "BraceProgressBar(label = \"Uploading files\", value = progress, intent = BraceProgressIntent.Primary)",
+    "core-spinner" to "BraceSpinner(label = \"Loading records\", value = progress, size = BraceSpinnerSize.Large)",
+    "core-skeleton" to "BraceSkeleton(label = \"Loading report title\"); BraceSkeleton(width = 180.dp)",
     "core-section" to "BraceSection(title = \"Projects\", collapsible = true) { Text(\"Section content\") }",
     "core-sectioncard" to "BraceSectionCard { Text(\"Project settings\") }",
     "core-breadcrumbs" to "BraceBreadcrumbs(listOf(BraceBreadcrumb(\"Home\", onClick = { home() }), BraceBreadcrumb(\"Projects\")))",
@@ -232,6 +252,8 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "core-tooltip" to "BraceTooltip(text = \"Imports include archived records\", target = { BraceButton(\"Import help\", onClick = {}) })",
     "core-toast" to "val toasts = rememberBraceToastState(); Box(Modifier.fillMaxSize()) { BraceButton(\"Save\", onClick = { toasts.show(BraceToastSpec(\"Saved\", intent = BraceToastIntent.Success)) }); BraceToastHost(toasts) }",
     "core-overlaytoaster" to "val toasts = rememberBraceToastState(); Box(Modifier.fillMaxSize()) { BraceButton(\"Notify\", onClick = { toasts.show(BraceToastSpec(\"Ready\"), key = \"status\") }); BraceToastHost(toasts, position = BraceToastPosition.BottomEnd) }",
+    "datetime-datepicker" to "var day by rememberSaveable { mutableStateOf<String?>(null) }; BraceDatePicker(day?.let(LocalDate::parse), { day = it?.toString() }, locale = Locale.US)",
+    "datetime-dateinput" to "var day by rememberSaveable { mutableStateOf<String?>(null) }; BraceDateField(day?.let(LocalDate::parse), { day = it?.toString() }, label = \"Due date\", locale = Locale.US)",
 
 )
 
@@ -458,6 +480,50 @@ private fun ComponentSample(
                     variant = BraceButtonVariant.Outline)
             }
         }
+        "datetime-datepicker" -> {
+            var selected by rememberSaveable { mutableStateOf<String?>("2026-09-18") }
+            val start = LocalDate.of(2026, 9, 1)
+            val end = LocalDate.of(2026, 10, 31)
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Weekends unavailable · September–October 2026",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted,
+                    style = BraceTheme.typography.label)
+                BraceDatePicker(
+                    value = selected?.let(LocalDate::parse),
+                    onValueChange = { selected = it?.toString() },
+                    locale = Locale.US,
+                    minDate = start,
+                    maxDate = end,
+                    isDateEnabled = { it.dayOfWeek.value <= 5 },
+                    shortcuts = listOf(BraceDateShortcut("End of month", LocalDate.of(2026, 9, 30))),
+                    initialMonth = YearMonth.of(2026, 9),
+                )
+                Text("Selected: ${selected ?: "none"}",
+                    color = BraceTheme.colors.semantic.onSurface,
+                    style = BraceTheme.typography.body)
+            }
+        }
+        "datetime-dateinput" -> {
+            var selected by rememberSaveable { mutableStateOf<String?>(null) }
+            var errors by rememberSaveable { mutableStateOf(0) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceDateField(
+                    value = selected?.let(LocalDate::parse),
+                    onValueChange = { selected = it?.toString() },
+                    label = "Due date",
+                    locale = Locale.US,
+                    minDate = LocalDate.of(2026, 1, 1),
+                    maxDate = LocalDate.of(2027, 12, 31),
+                    supportingText = "Use your locale's short date format",
+                    onInvalidInput = { errors++ },
+                )
+                Text("Selected: ${selected ?: "none"} · invalid entries: $errors",
+                    color = BraceTheme.colors.semantic.onSurface,
+                    style = BraceTheme.typography.body)
+                BraceDateField(null, {}, label = "Unavailable date", enabled = false,
+                    locale = Locale.US)
+            }
+        }
         "core-button" -> {
             var count by rememberSaveable { mutableStateOf(0) }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
@@ -538,6 +604,43 @@ private fun ComponentSample(
             var checked by rememberSaveable { mutableStateOf(false) }
             Column { BraceCheckbox(checked, { checked = it }, "Include archived")
                 BraceCheckbox(false, {}, "Disabled choice", enabled = false) }
+        }
+        "core-radio" -> {
+            var meal by rememberSaveable { mutableStateOf("soup") }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xs)) {
+                BraceRadio(meal == "soup", { meal = "soup" }, "Soup", description = "Vegetarian")
+                BraceRadio(meal == "sandwich", { meal = "sandwich" }, "Sandwich")
+                BraceRadio(false, {}, "Unavailable", enabled = false)
+            }
+        }
+        "core-radiogroup" -> {
+            var meal by rememberSaveable { mutableStateOf("soup") }
+            BraceRadioGroup(
+                options = listOf(
+                    BraceRadioOption("soup", "Soup", description = "Vegetarian"),
+                    BraceRadioOption("salad", "Salad", enabled = false),
+                    BraceRadioOption("sandwich", "Sandwich"),
+                ),
+                selectedValue = meal, onValueChange = { meal = it }, label = "Lunch special",
+            )
+        }
+        "core-segmentedcontrol" -> {
+            var layout by rememberSaveable { mutableStateOf("list") }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceSegmentedControl(
+                    options = listOf(
+                        BraceSegmentedOption("list", "List"),
+                        BraceSegmentedOption("grid", "Grid", enabled = false),
+                        BraceSegmentedOption("gallery", "Gallery"),
+                    ),
+                    value = layout, onValueChange = { layout = it }, label = "Layout",
+                    fill = true, intent = BraceSegmentedIntent.Primary,
+                )
+                BraceSegmentedControl(
+                    options = listOf(BraceSegmentedOption("day", "Day"), BraceSegmentedOption("week", "Week")),
+                    value = "day", onValueChange = {}, label = "Small size", size = BraceSegmentedSize.Small,
+                )
+            }
         }
         "core-switch" -> {
             var checked by rememberSaveable { mutableStateOf(true) }
@@ -783,6 +886,37 @@ private fun ComponentSample(
                 BraceButton("Advance upload", onClick = { progress = (progress + 0.15f).coerceAtMost(1f) })
                 BraceProgressBar(label = "Waiting for response", value = null, intent = BraceProgressIntent.Warning)
                 BraceProgressBar(label = "Unavailable task", value = 0.6f, enabled = false)
+            }
+        }
+        "core-spinner" -> {
+            var progress by rememberSaveable { mutableStateOf(0.3f) }
+            var determinate by rememberSaveable { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
+                    BraceSpinner("Loading small records", size = BraceSpinnerSize.Small)
+                    BraceSpinner("Loading records", if (determinate) progress else null)
+                    BraceSpinner("Loading large reports", if (determinate) progress else null,
+                        size = BraceSpinnerSize.Large, intent = BraceProgressIntent.Success)
+                }
+                Text(if (determinate) "Progress: ${(progress * 100).toInt()}%" else "Indeterminate",
+                    color = BraceTheme.colors.semantic.onSurface)
+                BraceButton("Toggle known progress", onClick = { determinate = !determinate })
+                BraceButton("Advance", onClick = { progress = (progress + 0.2f).coerceAtMost(1f) })
+            }
+        }
+        "core-skeleton" -> {
+            var loading by rememberSaveable { mutableStateOf(true) }
+            var animated by rememberSaveable { mutableStateOf(true) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                if (loading) {
+                    BraceSkeleton(label = "Loading report title", animated = animated)
+                    BraceSkeleton(width = 180.dp, animated = animated)
+                    BraceSkeleton(width = 120.dp, animated = animated)
+                } else {
+                    Text("Quarterly report is ready", color = BraceTheme.colors.semantic.onSurface)
+                }
+                BraceButton("Toggle content", onClick = { loading = !loading })
+                BraceButton("Toggle shimmer", onClick = { animated = !animated })
             }
         }
         "core-section" -> {

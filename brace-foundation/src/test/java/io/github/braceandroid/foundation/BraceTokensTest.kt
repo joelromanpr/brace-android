@@ -38,6 +38,9 @@ class BraceTokensTest {
                 toast.dangerContent to toast.dangerContainer,
                 scheme.components.tooltip.content to scheme.components.tooltip.container,
                 scheme.components.shortcut.content to scheme.components.shortcut.container,
+                scheme.components.buttonGroup.content to scheme.components.buttonGroup.hoverContainer,
+                scheme.components.buttonGroup.content to scheme.components.buttonGroup.pressedContainer,
+                scheme.components.buttonGroup.selectedContent to scheme.components.buttonGroup.selectedContainer,
             ).forEach { (text, background) ->
                 assertTrue("feedback text contrast below 4.5", braceContrastRatio(text, background) >= 4.5)
             }
@@ -82,6 +85,8 @@ class BraceTokensTest {
         assertEquals(overridden.primarySubtle, components.callout.primaryContainer)
         assertEquals(overridden.selection, components.select.selectedContainer)
         assertEquals(Color.Red, components.select.focusRing)
+        assertEquals(Color.Red, components.buttonGroup.focusRing)
+        assertEquals(overridden.selection, components.buttonGroup.selectedContainer)
     }
 
     @Test
@@ -89,6 +94,6 @@ class BraceTokensTest {
         assertTrue(BraceTokenDefaults.compact.controlHeightDp < BraceTokenDefaults.comfortable.controlHeightDp)
         assertTrue(BraceTokenDefaults.sizing.touchTarget >= BraceTokenDefaults.compact.controlHeightDp)
         assertEquals(0, BraceTokenDefaults.motion.withoutAnimation().normal)
-        assertEquals("1.1.0", BraceTokenDefaults.version)
+        assertEquals("1.2.0", BraceTokenDefaults.version)
     }
 }

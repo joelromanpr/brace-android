@@ -14,7 +14,7 @@ Web-specific mappings documented: 0/24. Labs rows: 2 (stable: 0). Full applicabl
 | Blueprint package | Rows | Stable | Planned | In progress | Experimental |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | colors | 1 | 0 | 0 | 1 | 0 |
-| core | 108 | 0 | 46 | 62 | 0 |
+| core | 108 | 0 | 45 | 63 | 0 |
 | datetime | 6 | 0 | 6 | 0 | 0 |
 | icons | 2 | 0 | 1 | 1 | 0 |
 | labs | 2 | 0 | 2 | 0 | 0 |
@@ -29,7 +29,7 @@ Web-specific mappings documented: 0/24. Labs rows: 2 (stable: 0). Full applicabl
 | --- | --- | --- | --- | --- | --- | --- |
 | [AnchorButton](https://blueprintjs.com/docs/#core/components/buttons) ([pinned source](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/button/buttons.mdx)) | `BraceLinkButton` / `io.github.joelromanpr.brace:brace-core` | Open a URI or navigation destination through an app callback, with link semantics and accessible activation. Expose a button or link role, enabled state, visible focus, and touch, keyboard, and mouse activation. | adaptation: HTML anchor attributes become Android navigation or URI actions. | M1 / P1 | planned | — |
 | [Button](https://blueprintjs.com/docs/#core/components/buttons) ([pinned source](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/button/buttons.mdx)) | `BraceButton` / `io.github.joelromanpr.brace:brace-core` | Button component with intent-based styling, icons, and loading states. Expose a button or link role, enabled state, visible focus, and touch, keyboard, and mouse activation. | direct | M1 / P1 | in progress | [code](../brace-core/src/main/java/io/github/joelromanpr/brace/core/BraceButton.kt), [sample](../catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt), [docs](../docs/core-components.md), [tests](../brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceCoreInteractionTest.kt) |
-| [ButtonGroup](https://blueprintjs.com/docs/#core/components/button-group) ([pinned source](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/button/button-group.mdx)) | `BraceButtonGroup` / `io.github.joelromanpr.brace:brace-core` | Arranges multiple buttons in a horizontal or vertical group. Expose a button or link role, enabled state, visible focus, and touch, keyboard, and mouse activation. | direct | M1 / P1 | planned | — |
+| [ButtonGroup](https://blueprintjs.com/docs/#core/components/button-group) ([pinned source](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/button/button-group.mdx)) | `BraceButtonGroup` / `io.github.joelromanpr.brace:brace-core` | Connected horizontal or vertical native actions with separate button semantics, keyboard and mouse activation, visible focus, controlled selected/loading/disabled states, RTL order, and at least 48 dp targets. | adaptation: Blueprint CSS flex, inherited class styling, border z-index, and HTML wrappers map to token-driven Compose layout and independent action semantics. Vertical fill stretches width without requesting infinite height in scrolling parents. | M43 / P1 | in progress | [code](../brace-core/src/main/java/io/github/joelromanpr/brace/core/BraceButtonGroup.kt), [sample](../catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt), [docs](../docs/button-group.md), [tests](../brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceButtonGroupTest.kt) |
 
 ### Content
 

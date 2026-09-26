@@ -48,6 +48,10 @@ import io.github.braceandroid.foundation.BraceTheme
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceButtonVariant
+import io.github.joelromanpr.brace.core.BraceButtonGroup
+import io.github.joelromanpr.brace.core.BraceButtonGroupAction
+import io.github.joelromanpr.brace.core.BraceButtonGroupSize
+import io.github.joelromanpr.brace.core.BraceButtonGroupVariant
 import io.github.joelromanpr.brace.core.BraceCheckbox
 import io.github.joelromanpr.brace.core.BraceControlGroup
 import io.github.joelromanpr.brace.core.BraceFieldLabel
@@ -169,6 +173,14 @@ Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
     visible.forEach { option -> BraceButton(option.label, onClick = { state.activeKey = option.key }) }
 }""".trimIndent(),
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
+    "core-buttongroup" to """var selected by rememberSaveable { mutableStateOf("List") }
+BraceButtonGroup(
+    actions = listOf(
+        BraceButtonGroupAction("list", "List", onClick = { selected = "List" }, selected = selected == "List"),
+        BraceButtonGroupAction("grid", "Grid", onClick = { selected = "Grid" }, selected = selected == "Grid"),
+    ),
+    fill = true, accessibilityLabel = "Display mode",
+)""".trimIndent(),
     "core-checkbox" to "BraceCheckbox(checked = checked, onCheckedChange = { checked = it }, label = \"Include archived\")",
     "core-switch" to "BraceSwitch(checked = enabled, onCheckedChange = { enabled = it }, label = \"Notifications\")",
     "core-inputgroup" to "BraceTextField(value = query, onValueChange = { query = it }, label = \"Search\")",
@@ -449,6 +461,58 @@ private fun ComponentSample(
                     color = BraceTheme.colors.semantic.onSurfaceMuted)
                 BraceButton("Clear", onClick = { selectedKey = null; state.query = "" },
                     variant = BraceButtonVariant.Outline)
+            }
+        }
+        "core-buttongroup" -> {
+            var selected by rememberSaveable { mutableStateOf("list") }
+            var vertical by rememberSaveable { mutableStateOf(false) }
+            var variant by rememberSaveable { mutableStateOf(BraceButtonGroupVariant.Solid) }
+            var large by rememberSaveable { mutableStateOf(false) }
+            var canShare by rememberSaveable { mutableStateOf(true) }
+            var count by rememberSaveable { mutableStateOf(0) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceButtonGroup(
+                    actions = listOf(
+                        BraceButtonGroupAction("list", "List", onClick = { selected = "list"; count++ },
+                            selected = selected == "list"),
+                        BraceButtonGroupAction("grid", "Grid", onClick = { selected = "grid"; count++ },
+                            selected = selected == "grid"),
+                        BraceButtonGroupAction("share", "Share", onClick = { count++ },
+                            enabled = canShare, intent = BraceButtonIntent.Primary),
+                    ),
+                    fill = true,
+                    vertical = vertical,
+                    variant = variant,
+                    size = if (large) BraceButtonGroupSize.Large else BraceButtonGroupSize.Small,
+                    accessibilityLabel = "Report actions",
+                )
+                Text("Selected: $selected · actions: $count", color = BraceTheme.colors.semantic.onSurface)
+                BraceButtonGroup(
+                    actions = listOf(
+                        BraceButtonGroupAction("search", "Search records", onClick = { count++ },
+                            showLabel = false, leadingIcon = { BraceIcon(BraceIcons.Search, null) }),
+                        BraceButtonGroupAction("close", "Close search", onClick = { count++ },
+                            showLabel = false, leadingIcon = { BraceIcon(BraceIcons.Close, null) }),
+                    ),
+                    variant = BraceButtonGroupVariant.Outline,
+                    accessibilityLabel = "Icon actions",
+                )
+                Row(Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xs)) {
+                    BraceButton(if (vertical) "Horizontal" else "Vertical", onClick = { vertical = !vertical },
+                        variant = BraceButtonVariant.Outline)
+                    BraceButton("Variant: ${variant.name}", onClick = {
+                        variant = when (variant) {
+                            BraceButtonGroupVariant.Solid -> BraceButtonGroupVariant.Outline
+                            BraceButtonGroupVariant.Outline -> BraceButtonGroupVariant.Minimal
+                            BraceButtonGroupVariant.Minimal -> BraceButtonGroupVariant.Solid
+                        }
+                    }, variant = BraceButtonVariant.Outline)
+                    BraceButton(if (large) "Small" else "Large", onClick = { large = !large },
+                        variant = BraceButtonVariant.Outline)
+                    BraceButton(if (canShare) "Disable share" else "Enable share", onClick = { canShare = !canShare },
+                        variant = BraceButtonVariant.Outline)
+                }
             }
         }
         "core-button" -> {

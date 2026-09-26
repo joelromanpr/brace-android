@@ -12,6 +12,7 @@ const guideSources = new Map([
   ['docs/theming.md', 'theming'],
   ['docs/compatibility.md', 'compatibility'],
   ['docs/core-components.md', 'core-components'],
+  ['docs/button-group.md', 'button-group'],
   ['docs/content-feedback.md', 'content-feedback'],
   ['docs/navigation-feedback.md', 'navigation-feedback'],
   ['docs/overlays.md', 'overlays'],
@@ -37,6 +38,7 @@ const guideSources = new Map([
   ['docs/milestones/m11-icons.md', 'milestone-m11'],
   ['docs/milestones/m12-select-query.md', 'milestone-m12'],
   ['docs/milestones/m25-top-bar.md', 'milestone-m25'],
+  ['docs/milestones/m43-button-group.md', 'milestone-m43'],
   ['CONTRIBUTING.md', 'contributing'],
   ['docs/attribution.md', 'attribution'],
 ]);

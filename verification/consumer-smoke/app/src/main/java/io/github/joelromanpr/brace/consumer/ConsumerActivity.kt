@@ -27,6 +27,8 @@ import io.github.joelromanpr.brace.core.BraceTopBarTitle
 import io.github.joelromanpr.brace.core.BraceTopBarDivider
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
+import io.github.joelromanpr.brace.core.BraceButtonGroup
+import io.github.joelromanpr.brace.core.BraceButtonGroupAction
 import io.github.joelromanpr.brace.core.BraceCallout
 import io.github.joelromanpr.brace.core.BraceCalloutIntent
 import io.github.joelromanpr.brace.core.BraceCard
@@ -139,6 +141,15 @@ class ConsumerActivity : ComponentActivity() {
                                 BraceButton("Export", onClick = { count++ }, modifier = controlModifier)
                             }
                         }
+                        BraceButtonGroup(
+                            actions = listOf(
+                                BraceButtonGroupAction("inspect", "Inspect", onClick = { count++ }),
+                                BraceButtonGroupAction("share", "Share", onClick = { count++ },
+                                    intent = BraceButtonIntent.Primary),
+                            ),
+                            fill = true,
+                            accessibilityLabel = "Report commands",
+                        )
                         BraceNumericField(amount, { amount = it }, label = "Amount",
                             min = 0.0, max = 100.0, minorStepSize = 0.1)
                         BraceCallout(title = "Ready", intent = BraceCalloutIntent.Success)

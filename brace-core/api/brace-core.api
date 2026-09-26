@@ -1,0 +1,27 @@
+public final class io/github/joelromanpr/brace/core/BraceButtonIntent : java/lang/Enum {
+	public static final field Danger Lio/github/joelromanpr/brace/core/BraceButtonIntent;
+	public static final field Primary Lio/github/joelromanpr/brace/core/BraceButtonIntent;
+	public static final field Secondary Lio/github/joelromanpr/brace/core/BraceButtonIntent;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceButtonIntent;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceButtonIntent;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceButtonKt {
+	public static final fun BraceButton (Ljava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;ZZLio/github/joelromanpr/brace/core/BraceButtonIntent;Lio/github/joelromanpr/brace/core/BraceButtonVariant;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceButtonVariant : java/lang/Enum {
+	public static final field Outline Lio/github/joelromanpr/brace/core/BraceButtonVariant;
+	public static final field Solid Lio/github/joelromanpr/brace/core/BraceButtonVariant;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceButtonVariant;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceButtonVariant;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceInputsKt {
+	public static final fun BraceCheckbox (ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;II)V
+	public static final fun BraceSwitch (ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;II)V
+	public static final fun BraceTextField (Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;ZZZLandroidx/compose/foundation/text/KeyboardOptions;Landroidx/compose/ui/text/input/VisualTransformation;Landroidx/compose/runtime/Composer;III)V
+}
+

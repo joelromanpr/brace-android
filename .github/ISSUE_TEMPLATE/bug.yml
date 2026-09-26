@@ -1,0 +1,44 @@
+name: Bug report
+description: Report a reproducible Brace Android defect.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Before filing
+      options:
+        - label: I searched existing issues and checked the coverage inventory for component status.
+          required: true
+  - type: input
+    id: component
+    attributes:
+      label: Component or inventory ID
+      placeholder: core.button
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Brace, Android, Kotlin, and Compose versions
+      placeholder: "Brace 0.1.0-SNAPSHOT; Android 35; Kotlin 2.2.20"
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps or minimal code
+      description: Remove credentials and private data.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#142338">
+    <meta name="description" content="Brace Android documentation and the auditable Blueprint coverage inventory.">
+    <title>Brace Android · Compose for complex applications</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="Brace Android home"><span class="mark" aria-hidden="true">B</span><span>Brace <b>Android</b></span></a>
+      <nav aria-label="Main navigation">
+        <a href="#coverage">Coverage</a>
+        <a href="#get-started">Get started</a>
+        <a href="https://github.com/joelromanpr/brace-android">GitHub ↗</a>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Open-source Jetpack Compose design system</p>
+          <h1 id="hero-title">Clarity for complex Android interfaces.</h1>
+          <p class="lede">Brace is being built for dense, keyboard-capable, accessible application UI. Explore the pinned Blueprint comparison and see what is implemented, in progress, and planned.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#coverage">Explore coverage <span aria-hidden="true">→</span></a>
+            <a class="button secondary" href="./installation.html">Installation guide <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+        <div class="hero-panel" aria-label="Coverage status preview">
+          <div class="panel-head"><span class="live-dot" aria-hidden="true"></span> Inventory driven</div>
+          <div class="panel-line"><span>Source</span><strong>Blueprint stable pin</strong></div>
+          <div class="panel-line"><span>Platform</span><strong>Android · Compose</strong></div>
+          <div class="panel-line"><span>Availability</span><strong>Per component row</strong></div>
+          <div class="panel-foot">A planned API is never shown as shipped.</div>
+        </div>
+      </section>
+
+      <section class="coverage section" id="coverage" aria-labelledby="coverage-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">Pinned scope · generated from inventory</p><h2 id="coverage-title">Component coverage</h2></div>
+          <a class="text-link" href="https://github.com/joelromanpr/brace-android/blob/main/docs/coverage.md">Read the full coverage ledger ↗</a>
+        </div>
+        <p class="section-intro">Every listed component comes from the <a href="https://github.com/joelromanpr/brace-android/blob/main/BLUEPRINT_BASELINE.md">pinned Blueprint baseline</a> and machine-readable inventory. Status labels describe current evidence, not the long-term goal. Experimental Blueprint rows are tracked separately.</p>
+        <p class="baseline" id="baseline">Loading pinned baseline…</p>
+        <div class="stats" id="stats" aria-label="Coverage counts" aria-live="polite"></div>
+        <div class="filters" role="group" aria-label="Filter inventory">
+          <label class="search-label" for="search">Search components<input id="search" type="search" placeholder="Name, family, or Brace API" autocomplete="off"></label>
+          <label for="package">Blueprint package<select id="package"><option value="">All packages</option></select></label>
+          <label for="status">Status<select id="status"><option value="">All statuses</option></select></label>
+          <label for="kind">Android mapping<select id="kind"><option value="">All mappings</option></select></label>
+        </div>
+        <p class="result-count" id="result-count" aria-live="polite">Loading components…</p>
+        <div class="components" id="components"></div>
+      </section>
+
+      <section class="section get-started" id="get-started" aria-labelledby="start-title">
+        <div class="section-heading"><div><p class="eyebrow">Developer guides</p><h2 id="start-title">Start with the source.</h2></div><a class="text-link" href="./milestone-m1.html">M1 milestone report ↗</a></div>
+        <div class="guide-grid">
+          <a class="guide" href="./installation.html"><span class="guide-number">01</span><h3>Installation</h3><p>Local Maven setup and planned artifact coordinates.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./theming.html"><span class="guide-number">02</span><h3>Theming</h3><p>Tokens, variants, density, and Material 3 interoperability.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./contributing.html"><span class="guide-number">03</span><h3>Contributing</h3><p>Claim an inventory row and build an accessible component.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+    </main>
+    <footer><span>Brace Android · Apache-2.0</span><span>Independent Android design system · <a href="./compatibility.html">Compatibility policy</a></span></footer>
+  </body>
+</html>

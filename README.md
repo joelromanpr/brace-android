@@ -1,1 +1,58 @@
-# brace-android
+# Brace Android
+
+An open-source Jetpack Compose design system for complex, data-dense Android apps. Brace has its own tokens, visual language, and Android behavior. The long-term comparison target is the public user-facing surface of [Palantir Blueprint](https://github.com/palantir/blueprint), pinned to [`@blueprintjs/core@6.18.0`](BLUEPRINT_BASELINE.md) at commit `a60d4c92257612808fbfac81cfeee4fcba91a8b4`. Blueprint is a web toolkit; the [inventory](docs/coverage.md) records Android adaptations and web-specific mappings explicitly. Brace is independent of Palantir.
+
+## Coverage
+
+<!-- coverage:begin -->
+**Released coverage: 0/121 applicable rows** (0/94 components; 0/27 capabilities). Web-specific mappings: 0/24. Labs tracked separately: 2 rows. Full applicable parity: no.
+<!-- coverage:end -->
+
+[Browse every row and its evidence](docs/coverage.md) · [Machine-readable inventory](inventory/blueprint-components.json) · [Roadmap](ROADMAP.md)
+
+The first source milestone contains versioned platform-neutral design tokens, a generated Kotlin token API, `BraceTheme`, an interactive inventory-driven catalog, a documentation site source, and a first set of actions and form controls. These APIs remain **in progress** until release evidence is recorded. Blueprint parity is a project goal, not a current claim. Select, date/time, icons, and the data table are planned work in the pinned inventory.
+
+## Try the source build
+
+Requires JDK 21 and Android SDK 36. The Gradle wrapper uses 8.14.3; the build pins AGP 8.13.2, Kotlin/Compose compiler 2.2.20, Compose BOM 2025.08.00, and minSdk 26.
+
+```sh
+./gradlew :catalog:assembleDebug
+./gradlew build lint checkTokenGeneration checkInventory apiCheck
+```
+
+The catalog APK is `catalog/build/outputs/apk/debug/catalog-debug.apk`. It lists component names and availability from the generated inventory asset, with runnable examples for implemented controls and runtime light/dark, high-contrast, brand, density, and motion controls. The [core component guide](docs/core-components.md) documents APIs, states, accessibility, and current limits.
+
+No Maven Central release has been published. To try the local snapshot, publish the foundation and core AARs to Maven Local, then compile the [independent consumer sample](verification/consumer-smoke/README.md):
+
+```sh
+./gradlew :brace-foundation:publishToMavenLocal :brace-core:publishToMavenLocal
+./gradlew -p verification/consumer-smoke :app:assembleDebug
+```
+
+The consumer uses `io.github.joelromanpr.brace:brace-core:0.1.0-SNAPSHOT` from `mavenLocal()`. The core artifact exposes foundation transitively. The [installation guide](docs/installation.md) has complete dependency snippets and the supported toolchain. Maven Central publishing is a manual, protected maintainer action after a verified release tag.
+
+## A Compose screen
+
+```kotlin
+var projectName by rememberSaveable { mutableStateOf("") }
+var includeArchived by rememberSaveable { mutableStateOf(false) }
+
+BraceTheme {
+    Column {
+        BraceTextField(projectName, { projectName = it }, label = "Project name")
+        BraceCheckbox(includeArchived, { includeArchived = it }, label = "Include archived")
+        BraceButton(label = "Save", onClick = { save(projectName, includeArchived) })
+    }
+}
+```
+
+Theme tokens support light, dark, and high-contrast schemes, brand colors, scoped overrides, compact/comfortable density, and reduced motion. See [theming](docs/theming.md) for the token contract and Material 3 interoperability.
+
+## Documentation and contribution
+
+The GitHub Pages source is in `docs/site`, built by `node scripts/build-docs.mjs`. Its intended address is [joelromanpr.github.io/brace-android](https://joelromanpr.github.io/brace-android/); Pages must be enabled before that URL is treated as live. Coverage counts on both the site and this README come from the pinned inventory and are checked in CI.
+
+[Contributing](CONTRIBUTING.md) · [Code of conduct](CODE_OF_CONDUCT.md) · [Security](SECURITY.md) · [Support](SUPPORT.md) · [Governance](GOVERNANCE.md) · [Maintainer guide](MAINTAINERS.md) · [Attribution](docs/attribution.md)
+
+Apache-2.0 licensed; see [LICENSE](LICENSE).

@@ -1,0 +1,98 @@
+name: Release to Maven Central
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Signed annotated release tag on main, for example v0.1.0
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  verify-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      commit_sha: ${{ steps.check.outputs.commit_sha }}
+      version: ${{ steps.check.outputs.version }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Verify signed annotated tag and main ancestry
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$ ]] || { echo 'Invalid semantic version tag'; exit 1; }
+          ref_json=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG")
+          [[ "$(jq -r '.object.type' <<<"$ref_json")" == tag ]] || { echo 'Tag must be annotated'; exit 1; }
+          tag_sha=$(jq -r '.object.sha' <<<"$ref_json")
+          tag_json=$(gh api "repos/$GITHUB_REPOSITORY/git/tags/$tag_sha")
+          [[ "$(jq -r '.tag' <<<"$tag_json")" == "$TAG" ]] || exit 1
+          [[ "$(jq -r '.verification.verified' <<<"$tag_json")" == true ]] || { echo 'GitHub does not verify this tag signature'; exit 1; }
+          [[ "$(jq -r '.object.type' <<<"$tag_json")" == commit ]] || exit 1
+          commit_sha=$(jq -r '.object.sha' <<<"$tag_json")
+          git fetch origin main
+          git merge-base --is-ancestor "$commit_sha" origin/main || { echo 'Tag commit is not on main'; exit 1; }
+          echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
+          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+  stage:
+    needs: verify-tag
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: maven-central
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.verify-tag.outputs.commit_sha }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+      - name: Install Android SDK platform
+        run: sdkmanager 'platforms;android-36'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Verify protected release environment is configured
+        env:
+          RELEASE_ENV_READY: ${{ secrets.MAVEN_CENTRAL_ENVIRONMENT_READY }}
+        shell: bash
+        run: |
+          [[ "$RELEASE_ENV_READY" == configured ]] || { echo "Maven Central environment gate is not configured"; exit 1; }
+      - name: Verify signing and Central Portal credentials are present
+        env:
+          CENTRAL_USER: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          SIGNING_KEY: ${{ secrets.SIGNING_IN_MEMORY_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_IN_MEMORY_KEY_PASSWORD }}
+        shell: bash
+        run: |
+          [[ -n "$CENTRAL_USER" && -n "$CENTRAL_PASSWORD" && -n "$SIGNING_KEY" && -n "$SIGNING_PASSWORD" ]] || { echo 'Release credentials are missing'; exit 1; }
+      - name: Verify aligned artifact versions
+        env:
+          EXPECTED_VERSION: ${{ needs.verify-tag.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for module in brace-foundation brace-core; do
+            actual=$(./gradlew -PreleaseVersion="$EXPECTED_VERSION" -q ":$module:properties" --console=plain | awk '/^version: / {print $2; exit}')
+            [[ "$actual" == "$EXPECTED_VERSION" ]] || { echo "$module version $actual does not match $EXPECTED_VERSION"; exit 1; }
+          done
+      - name: Verify release commit
+        env:
+          RELEASE_VERSION: ${{ needs.verify-tag.outputs.version }}
+        run: ./gradlew -PreleaseVersion="$RELEASE_VERSION" build lint checkTokenGeneration checkInventory apiCheck --stacktrace
+      - name: Stage signed artifacts in Maven Central Portal
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_IN_MEMORY_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_IN_MEMORY_KEY_PASSWORD }}
+          RELEASE_VERSION: ${{ needs.verify-tag.outputs.version }}
+        run: ./gradlew -PreleaseVersion="$RELEASE_VERSION" publishToMavenCentral --stacktrace

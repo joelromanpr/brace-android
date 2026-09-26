@@ -1,0 +1,2 @@
+gradlew.bat text eol=crlf
+brace-*/api/*.api whitespace=-blank-at-eof

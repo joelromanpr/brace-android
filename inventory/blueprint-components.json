@@ -3473,7 +3473,7 @@
       "behavior": "Copy a controlled cell, row, column, or rectangular range to the Android plain-text clipboard with Ctrl/Meta+C or a TalkBack action; expose a public tab-separated formatter for app toolbars.",
       "classification": "adaptation",
       "reason": "Blueprint clipboard hooks and browser copy events become an Android system clipboard action and a plain-text formatter. HTML clipboard output and disjoint regions remain planned.",
-      "milestone": "M6",
+      "milestone": "M21",
       "priority": "P1",
       "status": "in progress",
       "implementation": "brace-table/src/main/java/io/github/joelromanpr/brace/table/BraceTableClipboard.kt",

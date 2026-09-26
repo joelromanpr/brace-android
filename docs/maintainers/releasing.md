@@ -29,4 +29,4 @@ Verify each artifact and its sources/docs files on Maven Central. Build a clean 
 
 ## Hotfix
 
-Reproduce against the latest released tag. Implement a focused fix with tests on a topic branch, merge to `main`, update the patch changelog/version, and run the same release gates. If other unreleased changes on `main` prevent an isolated hotfix, create a temporary maintenance branch from the tag, document the exception, and merge or cherry-pick the fix back to `main` immediately afterward. Do not create a permanent `develop` branch.
+Reproduce against the latest released tag. Implement a focused fix with tests on a topic branch, merge to `main`, update the patch changelog/version, and run the same release gates. The release workflow requires the signed tag to point to the reviewed tip of `main`. If unrelated work on `main` cannot ship in the hotfix, prepare a temporary maintenance branch from the latest release tag and review its tests. A separate reviewed workflow change must then explicitly authorize that branch commit; the standard workflow will refuse it. Merge or cherry-pick the fix back to `main` afterward. Do not create a permanent `develop` branch.

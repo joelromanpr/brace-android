@@ -12,7 +12,9 @@ const guideSources = new Map([
   ['docs/theming.md', 'theming'],
   ['docs/compatibility.md', 'compatibility'],
   ['docs/core-components.md', 'core-components'],
+  ['docs/content-feedback.md', 'content-feedback'],
   ['docs/milestones/m1-foundation-core.md', 'milestone-m1'],
+  ['docs/milestones/m2-content-feedback.md', 'milestone-m2'],
   ['CONTRIBUTING.md', 'contributing'],
   ['docs/attribution.md', 'attribution'],
 ]);
@@ -117,7 +119,7 @@ function renderMarkdown(source, sourcePath) {
 function guidePage(title, body, sourcePath) {
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142338"><title>${escapeHtml(title)} · Brace Android</title><link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./guide.css"></head>
-<body><a class="skip" href="#main">Skip to content</a><header class="topbar"><a class="brand" href="./index.html" aria-label="Brace Android home"><span class="mark" aria-hidden="true">B</span><span>Brace <b>Android</b></span></a><nav aria-label="Main navigation"><a href="./index.html#coverage">Coverage</a><a href="./installation.html">Get started</a><a href="https://github.com/joelromanpr/brace-android">GitHub ↗</a></nav></header><main id="main" class="guide-layout"><aside class="guide-nav" aria-label="Documentation"><span>Documentation</span><a href="./installation.html">Installation</a><a href="./theming.html">Theming</a><a href="./compatibility.html">Compatibility</a><a href="./core-components.html">Core components</a><a href="./milestone-m1.html">M1 report</a><a href="./contributing.html">Contributing</a><a href="./attribution.html">Attribution</a><a href="./index.html#coverage">Coverage inventory</a></aside><article class="guide-article"><p class="eyebrow">Brace Android documentation</p>${body}<p class="source-link">Source: <a href="${repository + sourcePath}">${escapeHtml(sourcePath)} ↗</a></p></article></main><footer><span>Brace Android · Apache-2.0</span><span>Independent Android design system</span></footer></body></html>`;
+<body><a class="skip" href="#main">Skip to content</a><header class="topbar"><a class="brand" href="./index.html" aria-label="Brace Android home"><span class="mark" aria-hidden="true">B</span><span>Brace <b>Android</b></span></a><nav aria-label="Main navigation"><a href="./index.html#coverage">Coverage</a><a href="./installation.html">Get started</a><a href="https://github.com/joelromanpr/brace-android">GitHub ↗</a></nav></header><main id="main" class="guide-layout"><aside class="guide-nav" aria-label="Documentation"><span>Documentation</span><a href="./installation.html">Installation</a><a href="./theming.html">Theming</a><a href="./compatibility.html">Compatibility</a><a href="./core-components.html">Core components</a><a href="./content-feedback.html">Content and feedback</a><a href="./milestone-m1.html">M1 report</a><a href="./milestone-m2.html">M2 report</a><a href="./contributing.html">Contributing</a><a href="./attribution.html">Attribution</a><a href="./index.html#coverage">Coverage inventory</a></aside><article class="guide-article"><p class="eyebrow">Brace Android documentation</p>${body}<p class="source-link">Source: <a href="${repository + sourcePath}">${escapeHtml(sourcePath)} ↗</a></p></article></main><footer><span>Brace Android · Apache-2.0</span><span>Independent Android design system</span></footer></body></html>`;
 }
 
 await rm(siteOutput, { recursive: true, force: true });

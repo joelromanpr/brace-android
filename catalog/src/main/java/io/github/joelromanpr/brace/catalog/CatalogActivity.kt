@@ -43,6 +43,15 @@ import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceButtonVariant
 import io.github.joelromanpr.brace.core.BraceCheckbox
+import io.github.joelromanpr.brace.core.BraceCard
+import io.github.joelromanpr.brace.core.BraceCardElevation
+import io.github.joelromanpr.brace.core.BraceCardList
+import io.github.joelromanpr.brace.core.BraceDivider
+import io.github.joelromanpr.brace.core.BraceDividerOrientation
+import io.github.joelromanpr.brace.core.BraceProgressBar
+import io.github.joelromanpr.brace.core.BraceProgressIntent
+import io.github.joelromanpr.brace.core.BraceSection
+import io.github.joelromanpr.brace.core.BraceSectionCard
 import io.github.joelromanpr.brace.core.BraceSwitch
 import io.github.joelromanpr.brace.core.BraceTextField
 import org.json.JSONObject
@@ -72,6 +81,12 @@ private val usageExamples = mapOf(
     "core-checkbox" to "BraceCheckbox(checked = checked, onCheckedChange = { checked = it }, label = \"Include archived\")",
     "core-switch" to "BraceSwitch(checked = enabled, onCheckedChange = { enabled = it }, label = \"Notifications\")",
     "core-inputgroup" to "BraceTextField(value = query, onValueChange = { query = it }, label = \"Search\")",
+    "core-card" to "BraceCard(elevation = BraceCardElevation.One, onClick = { open() }) { Text(\"Open project\") }",
+    "core-cardlist" to "BraceCardList(items = projects, itemKey = { it.id }, onItemClick = { open(it) }) { project -> Text(project.name) }",
+    "core-divider" to "BraceDivider(orientation = BraceDividerOrientation.Horizontal)",
+    "core-progressbar" to "BraceProgressBar(label = \"Uploading files\", value = progress, intent = BraceProgressIntent.Primary)",
+    "core-section" to "BraceSection(title = \"Projects\", collapsible = true) { Text(\"Section content\") }",
+    "core-sectioncard" to "BraceSectionCard { Text(\"Project settings\") }",
 )
 
 @Composable
@@ -221,6 +236,57 @@ private fun ComponentSample(id: String) {
                 BraceTextField(value, { value = it }, "Required project name", isError = value.isBlank(), supportingText = "A name is required")
                 BraceTextField("Read only value", {}, "Read only", readOnly = true)
                 BraceTextField("Unavailable", {}, "Disabled", enabled = false)
+            }
+        }
+        "core-card" -> {
+            var selected by rememberSaveable { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceCard(elevation = BraceCardElevation.One, onClick = { selected = !selected }, selected = selected) {
+                    Text("Project overview", color = BraceTheme.colors.semantic.onSurface, style = BraceTheme.typography.subtitle)
+                    Text("Tap, click, or press Enter to select", color = BraceTheme.colors.semantic.onSurfaceMuted)
+                }
+                BraceCard(enabled = false, onClick = {}) { Text("Unavailable card", color = BraceTheme.colors.semantic.disabledContent) }
+            }
+        }
+        "core-cardlist" -> {
+            var selected by rememberSaveable { mutableStateOf("Analysis") }
+            BraceCardList(
+                items = listOf("Analysis", "Operations", "Reports"),
+                itemKey = { it },
+                isSelected = { it == selected },
+                onItemClick = { selected = it },
+            ) { name -> Text(name, color = if (name == selected) BraceTheme.colors.semantic.onSelection else BraceTheme.colors.semantic.onSurface) }
+        }
+        "core-divider" -> {
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Overview", color = BraceTheme.colors.semantic.onSurface)
+                BraceDivider()
+                Text("Metrics", color = BraceTheme.colors.semantic.onSurface)
+                Row(Modifier.height(56.dp)) {
+                    Text("Left", color = BraceTheme.colors.semantic.onSurface)
+                    BraceDivider(orientation = BraceDividerOrientation.Vertical)
+                    Text("Right", color = BraceTheme.colors.semantic.onSurface)
+                }
+            }
+        }
+        "core-progressbar" -> {
+            var progress by rememberSaveable { mutableStateOf(0.35f) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
+                BraceProgressBar(label = "Uploading files", value = progress)
+                BraceButton("Advance upload", onClick = { progress = (progress + 0.15f).coerceAtMost(1f) })
+                BraceProgressBar(label = "Waiting for response", value = null, intent = BraceProgressIntent.Warning)
+                BraceProgressBar(label = "Unavailable task", value = 0.6f, enabled = false)
+            }
+        }
+        "core-section" -> {
+            BraceSection(title = "Projects", subtitle = "Three active workspaces", collapsible = true) {
+                BraceSectionCard { Text("Tap the heading to collapse", color = BraceTheme.colors.semantic.onSurface) }
+            }
+        }
+        "core-sectioncard" -> {
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceSectionCard { Text("Padded content", color = BraceTheme.colors.semantic.onSurface) }
+                BraceSectionCard(padded = false) { Text("Edge to edge content", color = BraceTheme.colors.semantic.onSurface) }
             }
         }
     }

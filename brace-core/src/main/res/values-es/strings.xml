@@ -1,0 +1,6 @@
+<resources>
+    <string name="brace_section_expand">Expandir sección</string>
+    <string name="brace_section_collapse">Contraer sección</string>
+    <string name="brace_section_expanded">Expandida</string>
+    <string name="brace_section_collapsed">Contraída</string>
+</resources>

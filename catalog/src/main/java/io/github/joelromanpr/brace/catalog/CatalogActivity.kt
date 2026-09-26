@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
@@ -28,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -139,6 +141,7 @@ import org.json.JSONObject
 import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 
 /** Interactive catalog whose component names and availability come from the pinned inventory. */
 class CatalogActivity : ComponentActivity() {
@@ -359,15 +362,28 @@ private fun Detail(entry: CatalogEntry, onBack: () -> Unit) {
     val clipboard = LocalClipboardManager.current
     val toasts = remember(entry.id) { BraceToastState() }
     var toastPosition by rememberSaveable(entry.id) { mutableStateOf(BraceToastPosition.BottomEnd) }
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    val hasLiveSample = entry.id in usageExamples
+    val showNextIconJump = entry.id == "icons-next-glyph-catalog" && hasLiveSample
+    // Back, title, status, jump, behavior, optional reason, source, and sample heading.
+    val liveSampleIndex = 7 + (if (entry.reason.isNotBlank()) 1 else 0)
     Box(Modifier.fillMaxSize()) {
-      LazyColumn(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
+      LazyColumn(Modifier.fillMaxSize(), state = listState, verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
         item { BraceButton("← All components", onClick = onBack, variant = BraceButtonVariant.Outline) }
         item { Text(entry.name, color = semantic.onSurface, style = BraceTheme.typography.title) }
         item { Text("${entry.status} · ${entry.classification} · ${entry.family}", color = semantic.onSurfaceMuted, style = BraceTheme.typography.label) }
+        if (showNextIconJump) {
+            item {
+                BraceButton("Jump to live icon sample", onClick = {
+                    scope.launch { listState.scrollToItem(liveSampleIndex) }
+                }, variant = BraceButtonVariant.Outline)
+            }
+        }
         item { Text(entry.behavior, color = semantic.onSurface, style = BraceTheme.typography.body) }
         if (entry.reason.isNotBlank()) item { Text(entry.reason, color = semantic.onSurfaceMuted, style = BraceTheme.typography.body) }
         item { Text("Blueprint source: ${entry.url}", color = semantic.onSurfaceMuted, style = BraceTheme.typography.label) }
-        if (entry.id in usageExamples) {
+        if (hasLiveSample) {
             item { Text("Interactive states", color = semantic.onSurface, style = BraceTheme.typography.subtitle) }
             item {
                 ComponentSample(entry.id, toasts, toastPosition) { toastPosition = it }

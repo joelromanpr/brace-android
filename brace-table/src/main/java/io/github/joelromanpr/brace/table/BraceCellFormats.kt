@@ -47,6 +47,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
@@ -143,8 +144,9 @@ public fun BraceTruncatedCell(
         horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xs),
         verticalAlignment = Alignment.CenterVertically) {
         Text(visible, modifier = Modifier.weight(1f).clearAndSetSemantics {
+            testTag = "brace-truncated-preview"
             contentDescription = value
-        }.testTag("brace-truncated-preview"),
+        },
             color = textColor ?: semantic.onSurface, style = resolvedStyle, maxLines = maxLines,
             softWrap = !preformatted, overflow = TextOverflow.Ellipsis,
             onTextLayout = { result ->

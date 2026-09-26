@@ -29,6 +29,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -107,6 +108,7 @@ sealed interface BraceTableState {
 @Composable
 internal fun BraceTableSkeleton(
     header: Boolean,
+    tag: String,
     modifier: Modifier = Modifier,
 ) {
     val colors = BraceTheme.colors.components.table
@@ -115,7 +117,7 @@ internal fun BraceTableSkeleton(
     Box(
         modifier.background(if (header) colors.header else colors.row)
             .border(metrics.gridLineWidth, colors.gridLine)
-            .clearAndSetSemantics {},
+            .clearAndSetSemantics { testTag = tag },
         contentAlignment = Alignment.CenterStart,
     ) {
         Box(
@@ -164,8 +166,8 @@ internal fun BraceTableStatusPanel(
                 color = semantic.onSurfaceMuted, style = BraceTheme.typography.label)
             Text(
                 message,
-                modifier = Modifier.testTag("brace-table-status-message")
-                    .clearAndSetSemantics {
+                modifier = Modifier.clearAndSetSemantics {
+                        testTag = "brace-table-status-message"
                         contentDescription = "$label, $message"
                         liveRegion = if (state is BraceTableState.Error) LiveRegionMode.Assertive
                             else LiveRegionMode.Polite

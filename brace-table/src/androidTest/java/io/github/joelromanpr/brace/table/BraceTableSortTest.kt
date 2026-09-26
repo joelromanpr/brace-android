@@ -20,6 +20,7 @@ import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.click
 import androidx.compose.ui.test.assertHeightIsAtLeast
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsFocused
@@ -82,7 +83,7 @@ class BraceTableSortTest {
             automation.serviceInfo = info
         }
         repeat(25) {
-            val roots = automation.windows.mapNotNull { it.root } + listOfNotNull(automation.rootInActiveWindow)
+            val roots = listOfNotNull(automation.rootInActiveWindow) + automation.windows.mapNotNull { it.root }
             fun find(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
                 if (node.contentDescription?.toString() == description) return node
                 for (index in 0 until node.childCount) node.getChild(index)?.let { child ->
@@ -247,6 +248,7 @@ class BraceTableSortTest {
         rule.runOnIdle { assertTrue(actions.single { it.label == "Clear sorting for Name" }.action()) }
         rule.waitForIdle()
         assertEquals(null, sort)
+
         if (Build.VERSION.SDK_INT >= 34) {
             rule.enableAccessibilityChecks()
             rule.onNodeWithTag("brace-table-sort:name").tryPerformAccessibilityChecks()

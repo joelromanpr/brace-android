@@ -17,9 +17,8 @@ import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assert
-import androidx.compose.ui.test.assertDoesNotExist
-import androidx.compose.ui.test.assertExists
 import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertHeightIsAtLeast
 import androidx.compose.ui.test.junit4.accessibility.enableAccessibilityChecks
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -47,6 +46,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@OptIn(ExperimentalTestApi::class)
 @RunWith(AndroidJUnit4::class)
 class BraceTableLoadingTest {
     @get:Rule val rule = createComposeRule()
@@ -119,6 +119,9 @@ class BraceTableLoadingTest {
                 SemanticsProperties.StateDescription, "Loading table",
             ),
         )
+        rule.onNodeWithTag("brace-table-cell:r0:status").assertIsNotEnabled()
+        rule.onNodeWithTag("brace-table-header:name").assertIsNotEnabled()
+        rule.onNodeWithTag("brace-table-row:r1").assertIsNotEnabled()
         val exposedCell = rule.onNodeWithTag("brace-table-cell:r0:status").fetchSemanticsNode()
         assertFalse(exposedCell.config.contains(SemanticsActions.OnClick))
         assertFalse(exposedCell.config[SemanticsProperties.Selected])

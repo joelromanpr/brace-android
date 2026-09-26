@@ -360,6 +360,7 @@ class ConsumerActivity : ComponentActivity() {
                             state = tableState,
                             onRowOrderChange = { keys ->
                                 tableRows = BraceTableReorder.applyOrder(tableRows, { it.first }, keys)
+                                tableSort.value = null
                             },
                             onColumnOrderChange = { tableColumnOrder = it },
                         )

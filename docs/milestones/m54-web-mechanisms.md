@@ -1,6 +1,6 @@
 # M54: web mechanisms in Compose
 
-**Status:** source slice on `joelromanpr/m54-web-mechanisms`; review, Gradle validation, device validation, and release pending. The [generated coverage ledger](../coverage.md) remains authoritative. No row is stable and no Maven Central version has shipped.
+**Status:** validated source slice on `joelromanpr/m54-web-mechanisms`; review and release pending. The [generated coverage ledger](../coverage.md) remains authoritative. No row is stable and no Maven Central version has shipped.
 
 ## Scope delivered in source
 
@@ -16,12 +16,12 @@
 | Pinned Blueprint source review | Read the Classes, ResizeSensor, and BlueprintProvider MDX and provider source at commit `a60d4c92257612808fbfac81cfeee4fcba91a8b4`. |
 | Inventory generation and `--check` | Passed: 147 rows, 0/121 applicable rows stable; no row was marked stable. |
 | Documentation site build and JavaScript syntax | Passed: 33 guides, including this report and the mapping guide; `node --check` passed for the generator and catalog site script. |
-| Gradle compile, lint, API check, and catalog install | Not run in this documentation slice while the shared Gradle/device lane is occupied. |
-| Device accessibility and interaction | Not run. Existing theme, overlay, and shortcut tests belong to their implementation slices; the new catalog combinations still need a focused review. |
+| Gradle compile, lint, API, token, inventory, and catalog install | Passed offline: catalog/foundation/core compile and lint, `checkTokenGeneration`, `checkInventory`, `apiCheck` (234 tasks); catalog assembly and foundation/core Android test compilation (137 tasks). Installed the catalog on API 36. |
+| Device accessibility and interaction | On a 320 × 640 API 36 emulator, inspected light and dark high-contrast CSS samples; toggled the button state; observed ResizeSensor sample width change 144 → 224 px; opened and dismissed the scoped overlay and shortcut guide; tabbed to a preview control and sent Ctrl+R, incrementing its counter from 0 to 1. Checked a visible 2× text layout and Arabic RTL catalog mirroring. Existing theme and shortcut Android test sources compiled; their device tests were not rerun in this slice. |
 | Hosted CI, review, and release | Pending. |
 
 ## Known limits and next branch
 
-`Modifier.onSizeChanged` is an AndroidX Compose API, not a Brace artifact. The CSS mapping does not expose `Classes` constants, and the provider mapping deliberately uses independently scoped existing APIs. The catalog sample must still be compiled and inspected on a small phone at large text and in RTL, light/dark/high-contrast modes, with touch, keyboard, mouse, and TalkBack. Static documentation checks alone cannot validate those interactions.
+`Modifier.onSizeChanged` is an AndroidX Compose API, not a Brace artifact. The CSS mapping does not expose `Classes` constants, and the provider mapping deliberately uses independently scoped existing APIs. Manual TalkBack traversal, physical mouse review, reduced-motion behavior, and full keyboard focus order across all catalog controls remain unverified. The 2× text check covered the scoped provider sample after scrolling, not every catalog entry. No Android instrumentation tests were executed for this mapping slice; existing implementation tests were compiled. Keep these rows in progress pending review.
 
-Complete the pending compile and device review on this M54 branch, and apply any findings here before review. The next focused implementation branch is `joelromanpr/m56-table-accessibility`; the larger component plan continues in the [roadmap](../../ROADMAP.md).
+Review this M54 branch, then continue the table accessibility work on the next branch. The next focused implementation branch is `joelromanpr/m56-table-accessibility`; the larger component plan continues in the [roadmap](../../ROADMAP.md).

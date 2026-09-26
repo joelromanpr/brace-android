@@ -43,6 +43,7 @@ import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.requestFocus
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
@@ -68,6 +69,7 @@ internal fun BraceTableReorderHandle(
     onMoveTo: (Int) -> Unit,
     targetIndexForDrag: (Float) -> Int,
     onFocusedChange: (Boolean) -> Unit,
+    traversalIndex: Float = 0f,
     restoreFocus: Boolean = false,
     onFocusRestored: () -> Unit = {},
     modifier: Modifier = Modifier,
@@ -143,6 +145,7 @@ internal fun BraceTableReorderHandle(
             .clickable(onClickLabel = primaryLabel) { moveTo(primaryTarget) }
             .clearAndSetSemantics {
                 testTag = "brace-table-reorder-${axis.name.lowercase()}:$id"
+                this.traversalIndex = traversalIndex
                 contentDescription = description.format(name)
                 stateDescription = positionDescription.format(index + 1, count)
                 liveRegion = LiveRegionMode.Polite

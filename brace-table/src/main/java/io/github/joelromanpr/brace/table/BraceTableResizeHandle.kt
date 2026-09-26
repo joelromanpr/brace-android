@@ -34,10 +34,12 @@ import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.focused
 import androidx.compose.ui.semantics.requestFocus
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
@@ -63,6 +65,7 @@ internal fun BraceTableResizeHandle(
     decreaseLabel: String,
     onSizeChange: (Dp) -> Unit,
     onFocusedChange: (Boolean) -> Unit,
+    traversalIndex: Float = 0f,
     modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
@@ -71,6 +74,8 @@ internal fun BraceTableResizeHandle(
     val colors = BraceTheme.colors.components.table
     val semantic = BraceTheme.colors.semantic
     val step = BraceTheme.spacing.md
+    val canIncrease = maximum == null || size < maximum
+    val canDecrease = size > minimum
     val latestSize by rememberUpdatedState(size)
     val latestChange by rememberUpdatedState(onSizeChange)
     var focused by remember(axis, id) { mutableStateOf(false) }
@@ -117,18 +122,22 @@ internal fun BraceTableResizeHandle(
                     },
                 )
             }
-            .clickable(onClickLabel = increaseLabel) { update(latestSize + step) }
+            .then(if (canIncrease) Modifier.clickable(onClickLabel = increaseLabel) {
+                update(latestSize + step)
+            } else Modifier)
             .clearAndSetSemantics {
                 testTag = "brace-table-resize-${axis.name.lowercase()}:$id"
+                this.traversalIndex = traversalIndex
                 contentDescription = description.format(name)
                 stateDescription = stateLabel
+                if (!canIncrease && !canDecrease) disabled()
                 this.focused = focused
                 requestFocus { focusRequester.requestFocus(); true }
-                onClick(increaseLabel) { update(latestSize + step); true }
-                customActions = listOf(CustomAccessibilityAction(decreaseLabel) {
+                if (canIncrease) onClick(increaseLabel) { update(latestSize + step); true }
+                customActions = if (canDecrease) listOf(CustomAccessibilityAction(decreaseLabel) {
                     update(latestSize - step)
                     true
-                })
+                }) else emptyList()
             },
         contentAlignment = Alignment.Center,
     ) {

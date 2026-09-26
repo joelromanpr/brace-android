@@ -46,6 +46,7 @@
     <string name="brace_table_sorted_ascending">Orden ascendente</string>
     <string name="brace_table_sorted_descending">Orden descendente</string>
     <string name="brace_table_unsorted">Sin ordenar</string>
+    <string name="brace_table_active_cell">Celda activa</string>
     <string name="brace_table_frozen_row">Fila fija</string>
     <string name="brace_table_frozen_column">Columna fija</string>
     <string name="brace_table_frozen_row_column">Fila y columna fijas</string>

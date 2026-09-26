@@ -46,6 +46,7 @@
     <string name="brace_table_sorted_ascending">Sorted ascending</string>
     <string name="brace_table_sorted_descending">Sorted descending</string>
     <string name="brace_table_unsorted">Not sorted</string>
+    <string name="brace_table_active_cell">Active cell</string>
     <string name="brace_table_frozen_row">Frozen row</string>
     <string name="brace_table_frozen_column">Frozen column</string>
     <string name="brace_table_frozen_row_column">Frozen row and column</string>

@@ -226,6 +226,7 @@ import io.github.joelromanpr.brace.table.BraceJsonFormatter
 import io.github.joelromanpr.brace.table.BraceRevealMode
 import io.github.joelromanpr.brace.table.BraceTableLoading
 import io.github.joelromanpr.brace.table.BraceTableState
+
 import org.json.JSONObject
 import java.util.Locale
 import kotlinx.coroutines.Dispatchers
@@ -348,7 +349,17 @@ BraceButton("Add case", onClick = {
     selection = BraceTableRegions.add(selection, BraceTableRegion.Cells("case-1", "status"))
 })
 // Ctrl/Cmd+A or the corner selects the table; Ctrl/Cmd+click adds a region.""".trimIndent(),
+    "table-reordering" to """BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
+    onRowOrderChange = { keys -> rows = BraceTableReorder.applyOrder(rows, { it.id }, keys) },
+    onColumnOrderChange = { keys -> columns = BraceTableReorder.applyOrder(columns, { it.key }, keys) })""".trimIndent(),
     "table-copying" to "BraceTableClipboard.formatSelection(rows, { it.id }, columns, selection) // Ctrl/Cmd+C also copies in BraceDataTable",
+    "table-reordering" to """var rows by remember { mutableStateOf(cases) }
+var columns by remember { mutableStateOf(caseColumns) }
+var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
+BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
+    onRowOrderChange = { keys -> rows = BraceTableReorder.applyOrder(rows, { it.id }, keys) },
+    onColumnOrderChange = { keys -> columns = BraceTableReorder.applyOrder(columns, { it.key }, keys) })
+// Drag a grip, focus it and use arrows/Home/End, or use TalkBack move actions.""".trimIndent(),
     "table-editablecell" to """var editing by remember { mutableStateOf<BraceTableSelection.Cell?>(null) }
 val columns = listOf(BraceTableColumn<Record>("title", "Title", 160.dp, { it.title }, editable = true))
 BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
@@ -1590,7 +1601,7 @@ private fun ComponentSample(
             }
         }
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
-        "table-cell-selection", "table-region", "table-column-and-row-resizing", "table-copying",
+        "table-cell-selection", "table-region", "table-reordering", "table-column-and-row-resizing", "table-copying", "table-reordering",
         "table-cell", "table-columnheadercell", "table-rowheadercell",
         "table-editablecell", "table-editing", "table-editablename" -> TableCatalogSample()
         "core-h1", "core-h2", "core-h3", "core-h4", "core-h5", "core-h6",
@@ -1607,6 +1618,7 @@ private fun ComponentSample(
                         onClick = { summer = !summer }, variant = BraceButtonVariant.Outline)
                     BraceButton(if (showLocal) "Local first" else "Alphabetical",
                         onClick = { showLocal = !showLocal }, variant = BraceButtonVariant.Outline)
+
                 }
                 BraceButton("Display: ${displayMode.name}",
                     onClick = { displayName = BraceTimeZoneDisplay.entries[

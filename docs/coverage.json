@@ -3613,18 +3613,18 @@
       "blueprintName": "Reordering",
       "blueprintUrl": "https://blueprintjs.com/docs/#table/features",
       "sourcePage": "table/features",
-      "braceApi": "BraceTableReorder",
+      "braceApi": "BraceTableReorder; BraceDataTable.onRowOrderChange; BraceDataTable.onColumnOrderChange",
       "artifact": "io.github.joelromanpr.brace:brace-table",
-      "behavior": "Reorder rows and columns with pointer and keyboard actions and announce results. Expose row and column context, focused cell and selection; support touch, keyboard, mouse, and TalkBack.",
+      "behavior": "Controlled complete-key-order callbacks for single row and column moves. Separate 48dp header grips support visible-target touch/mouse drag, focused arrows/Home/End, RTL, and TalkBack move actions with position announcements; selection keys and viewport identity remain stable.",
       "classification": "adaptation",
-      "reason": "Blueprint table behavior is rebuilt with Compose viewport and accessibility primitives.",
-      "milestone": "M6",
+      "reason": "Blueprint DOM drag/index callbacks become immutable key-order requests owned by the Android screen. Single-item visible-target drag is implemented; contiguous multi-item drag and edge auto-scroll remain open.",
+      "milestone": "M51",
       "priority": "P1",
-      "status": "planned",
-      "implementation": null,
-      "sample": null,
-      "documentation": null,
-      "tests": null,
+      "status": "in progress",
+      "implementation": "brace-table/src/main/java/io/github/joelromanpr/brace/table/BraceTableReorder.kt",
+      "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "documentation": "docs/table-reordering.md",
+      "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableReorderTest.kt",
       "firstRelease": null,
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx"
     },
@@ -3811,8 +3811,8 @@
         "total": 23,
         "stable": 0,
         "status": {
-          "in progress": 19,
-          "planned": 4
+          "in progress": 20,
+          "planned": 3
         }
       }
     },

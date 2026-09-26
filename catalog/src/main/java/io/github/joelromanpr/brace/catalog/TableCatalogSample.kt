@@ -24,6 +24,7 @@ import io.github.joelromanpr.brace.table.BraceTableClipboard
 import io.github.joelromanpr.brace.table.BraceTableSelection
 import io.github.joelromanpr.brace.table.BraceTableRegion
 import io.github.joelromanpr.brace.table.BraceTableRegions
+import io.github.joelromanpr.brace.table.BraceTableReorder
 import io.github.joelromanpr.brace.table.rememberBraceTableSelection
 
 private data class DemoTableRecord(val id: String, val case: String, val status: String)
@@ -33,7 +34,8 @@ private data class DemoTableRecord(val id: String, val case: String, val status:
 internal fun TableCatalogSample() {
     var records by remember { mutableStateOf(List(120) { DemoTableRecord("record-$it", "Case ${1000 + it}", if (it % 3 == 0) "Review" else "Ready") }) }
     var columnTitles by remember { mutableStateOf(mapOf("case" to "Case", "status" to "Status", "owner" to "Owner")) }
-    val tableColumns = remember(columnTitles) { listOf(
+    var columnOrder by remember { mutableStateOf(listOf("case", "status", "owner")) }
+    val tableColumns = remember(columnTitles, columnOrder) { BraceTableReorder.applyOrder(listOf(
         BraceTableColumn<DemoTableRecord>("case", columnTitles.getValue("case"), 140.dp,
             { it.case }, editable = true, editableName = true),
         BraceTableColumn<DemoTableRecord>("status", columnTitles.getValue("status"), 130.dp,
@@ -44,7 +46,7 @@ internal fun TableCatalogSample() {
                 style = BraceTheme.typography.label) }),
         BraceTableColumn<DemoTableRecord>("owner", columnTitles.getValue("owner"), 130.dp,
             { "Team ${(it.id.substringAfter('-').toInt() % 4) + 1}" }, editableName = true),
-    ) }
+    ), { it.key }, columnOrder) }
     var selection by rememberBraceTableSelection()
     var columnWidths by remember { mutableStateOf<Map<String, androidx.compose.ui.unit.Dp>>(emptyMap()) }
     var rowHeights by remember { mutableStateOf<Map<String, androidx.compose.ui.unit.Dp>>(emptyMap()) }
@@ -71,10 +73,12 @@ internal fun TableCatalogSample() {
         null -> "None"
     }
     Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-        Text("Scroll both ways. Tap headers to select a row or column. Ctrl/Cmd+click adds a region, and Ctrl/Cmd+A selects all. Long-press a cell then tap an endpoint for a range; keyboard Shift+arrows extend it. Double-tap an editable cell or column header, press Enter/F2, or use an Edit action. Drag or focus resize grips.",
+        Text("Scroll both ways. Tap headers to select a row or column. Ctrl/Cmd+click adds a region, and Ctrl/Cmd+A selects all. Drag or focus the header grips to reorder. Long-press a cell then tap an endpoint for a range; keyboard Shift+arrows extend it. Double-tap an editable cell or column header, press Enter/F2, or use an Edit action. Drag or focus resize grips.",
             color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.body)
         BraceDataTable(records, { it.id }, tableColumns, selection, { selection = it        }, modifier = Modifier.fillMaxWidth(), height = 260.dp, label = "Cases", rowLabel = { it.case },
             rowHeaderContent = { _, index -> Text("R${index + 1}", style = BraceTheme.typography.label) },
+            onRowOrderChange = { order -> records = BraceTableReorder.applyOrder(records, { it.id }, order) },
+            onColumnOrderChange = { order -> columnOrder = order },
             columnWidths = columnWidths,
             onColumnWidthChange = { key, width -> columnWidths = columnWidths + (key to width) },
             rowHeights = rowHeights,

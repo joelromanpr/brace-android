@@ -156,6 +156,7 @@ import io.github.joelromanpr.brace.table.BraceJsonFormatter
 import io.github.joelromanpr.brace.table.BraceRevealMode
 import io.github.joelromanpr.brace.table.BraceTableRegion
 import io.github.joelromanpr.brace.table.BraceTableRegions
+import io.github.joelromanpr.brace.table.BraceTableReorder
 import io.github.joelromanpr.brace.table.rememberBraceTableViewport
 import androidx.compose.ui.unit.dp
 
@@ -291,6 +292,15 @@ class ConsumerActivity : ComponentActivity() {
                             )))
                         }
                         var tableColumnWidth by remember { mutableStateOf(160.dp) }
+                        var tableColumnOrder by remember { mutableStateOf(listOf("status", "payload")) }
+                        val tableColumns = tableColumnOrder.map { key ->
+                            if (key == "status") BraceTableColumn<Pair<String, String>>("status", statusColumnTitle, 160.dp,
+                                { it.second }, editable = true, editableName = true, sortable = true)
+                            else BraceTableColumn<Pair<String, String>>("payload", "Payload", 160.dp,
+                                { BraceJsonFormatter.format(mapOf("status" to it.second)) },
+                                cellContent = { row -> BraceJsonCell(mapOf("status" to row.second),
+                                    maxCharacters = 12, revealMode = BraceRevealMode.Never) })
+                        }
                         var tableRowHeight by remember { mutableStateOf(64.dp) }
                         val tableViewport = rememberBraceTableViewport()
                         Row {
@@ -318,14 +328,7 @@ class ConsumerActivity : ComponentActivity() {
                         BraceDataTable(
                             rows = displayedTableRows,
                             rowKey = { it.first },
-                            columns = listOf(
-                                BraceTableColumn<Pair<String, String>>("status", statusColumnTitle, 160.dp,
-                                    { it.second }, editable = true, editableName = true, sortable = true),
-                                BraceTableColumn<Pair<String, String>>("payload", "Payload", 160.dp,
-                                    { BraceJsonFormatter.format(mapOf("status" to it.second)) },
-                                    cellContent = { row -> BraceJsonCell(mapOf("status" to row.second),
-                                        maxCharacters = 12, revealMode = BraceRevealMode.Never) }),
-                            ),
+                            columns = tableColumns,
                             selection = selectedTable,
                             onSelectionChange = { selectedTable = it },
                             viewport = tableViewport,
@@ -336,7 +339,7 @@ class ConsumerActivity : ComponentActivity() {
                             rowHeaderContent = { _, index ->
                                 BasicText("R" + (index + 1),
                                     style = BraceTheme.typography.label.copy(
-                                        color = if (selectedTable == BraceTableSelection.Row(tableRows[index].first))
+                                        color = if (selectedTable == BraceTableSelection.Row(displayedTableRows[index].first))
                                             BraceTheme.colors.semantic.onSelection
                                         else BraceTheme.colors.components.table.headerContent))
                             },
@@ -355,7 +358,12 @@ class ConsumerActivity : ComponentActivity() {
                             onColumnNameCommit = { key, value -> if (key == "status") statusColumnTitle = value },
                             validateColumnName = { _, value -> if (value.length < 3) "Too short" else null },
                             state = tableState,
+                            onRowOrderChange = { keys ->
+                                tableRows = BraceTableReorder.applyOrder(tableRows, { it.first }, keys)
+                            },
+                            onColumnOrderChange = { tableColumnOrder = it },
                         )
+                        BasicText("Table order: ${tableRows.joinToString { it.first }} / ${tableColumnOrder.joinToString()}")
                         Row {
                             BraceButton("Table ready", onClick = { tableMode = "ready" })
                             BraceButton("Table loading", onClick = { tableMode = "loading" })

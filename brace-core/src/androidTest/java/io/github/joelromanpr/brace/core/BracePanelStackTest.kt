@@ -1,5 +1,6 @@
 package io.github.joelromanpr.brace.core
 
+import android.graphics.Rect
 import android.os.Build
 import android.view.accessibility.AccessibilityNodeInfo
 import androidx.activity.compose.BackHandler
@@ -20,10 +21,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
-import androidx.compose.ui.test.assertDoesNotExist
-import androidx.compose.ui.test.assertExists
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsAtLeast
 import androidx.compose.ui.test.assertIsFocused
@@ -31,8 +31,6 @@ import androidx.compose.ui.test.assertWidthIsAtLeast
 import androidx.compose.ui.test.junit4.StateRestorationTester
 import androidx.compose.ui.test.junit4.accessibility.enableAccessibilityChecks
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNode
-import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -126,7 +124,11 @@ class BracePanelStackTest {
         rule.onNodeWithText("Try closing root").performClick()
         assertEquals(0, closes)
         rule.onNodeWithText("Open details").performClick()
+        rule.waitUntil(5_000) { rule.onNodeWithText("Close details").fetchSemanticsNode()
+            .config.getOrNull(SemanticsProperties.Focused) == true }
         rule.onNodeWithText("Close details").assertIsFocused().performClick()
+        rule.waitUntil(5_000) { rule.onNodeWithText("Try closing root").fetchSemanticsNode()
+            .config.getOrNull(SemanticsProperties.Focused) == true }
         rule.onNodeWithText("Try closing root").assertIsFocused()
         rule.runOnIdle {
             assertEquals(listOf(root), stack)
@@ -161,32 +163,42 @@ class BracePanelStackTest {
         rule.onNodeWithText("Count 1").assertExists()
     }
 
+    @OptIn(ExperimentalTestApi::class)
     @Test fun keyboardEscapeAndAndroidBackPopTopPanel() {
         lateinit var inputMode: InputModeManager
+        lateinit var state: BracePanelStackState
         var hostBacks = 0
         rule.setContent {
             inputMode = LocalInputModeManager.current
             BackHandler { hostBacks++ }
             BraceTheme {
-                val state = rememberBracePanelStackState(root)
+                state = rememberBracePanelStackState(root)
                 BracePanelStack(state, Modifier.height(220.dp)) {
                     if (panel.id == "root") BraceButton("Open settings", onClick = { openPanel(details) })
                     else BraceButton("Details action", onClick = {})
                 }
             }
         }
+        prepareNativeInput()
         rule.runOnIdle { assertTrue(inputMode.requestInputMode(InputMode.Keyboard)) }
         rule.onNodeWithText("Open settings").performClick()
+        rule.waitUntil(5_000) { rule.onNodeWithContentDescription("Back to Workspaces")
+            .fetchSemanticsNode().config.getOrNull(SemanticsProperties.Focused) == true }
         rule.onNodeWithContentDescription("Back to Workspaces")
             .assertIsFocused().performKeyInput { pressKey(Key.Escape) }
         rule.onNodeWithText("Open settings").assertExists()
         rule.onNodeWithText("Workspaces").assertIsFocused()
         assertEquals(0, hostBacks)
         rule.onNodeWithText("Open settings").performClick()
+        rule.runOnIdle { assertEquals(details, state.activePanel) }
         InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand("input keyevent 4").use { parcel ->
             FileInputStream(parcel.fileDescriptor).use { it.readBytes() }
         }
-        rule.waitUntil(5_000) { rule.onAllNodesWithText("Open settings").fetchSemanticsNodes().isNotEmpty() }
+        runCatching { rule.waitUntil(5_000) { state.stack.size == 1 || hostBacks > 0 } }
+            .getOrElse { cause -> throw AssertionError(
+                "Android Back did not reach panel or host: stack=${state.stack}, hostBacks=$hostBacks, ${nativeTreeSummary()}",
+                cause,
+            ) }
         rule.onNodeWithText("Open settings").assertExists()
         assertEquals(0, hostBacks)
         InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand("input keyevent 4").use { parcel ->
@@ -229,14 +241,27 @@ class BracePanelStackTest {
                 }
             }
         }
+        prepareNativeInput()
         rule.onNodeWithText("Open project").performClick()
-        rule.waitUntil(5_000) { nativeNodesForLabel("Back to Workspaces").size == 1 }
+        val density = InstrumentationRegistry.getInstrumentation().targetContext.resources.displayMetrics.density
+        runCatching {
+            rule.waitUntil(15_000) {
+                nativeNodesForLabel("Back to Workspaces").singleOrNull()?.let { candidate ->
+                    val visibleBounds = Rect()
+                    candidate.getBoundsInScreen(visibleBounds)
+                    visibleBounds.width() / density >= 48f && visibleBounds.height() / density >= 48f
+                } == true
+            }
+        }.getOrElse { cause ->
+            throw AssertionError("Back node did not settle at 48 dp: ${nativeTreeSummary()}", cause)
+        }
         val node = nativeNodesForLabel("Back to Workspaces").single()
         assertTrue(node.isClickable)
         assertEquals(1, node.actionList.count { it.id == AccessibilityNodeInfo.ACTION_CLICK })
-        val density = InstrumentationRegistry.getInstrumentation().targetContext.resources.displayMetrics.density
-        assertTrue(node.boundsInScreen.width() / density >= 48f)
-        assertTrue(node.boundsInScreen.height() / density >= 48f)
+        val bounds = Rect()
+        node.getBoundsInScreen(bounds)
+        assertTrue("native width=${bounds.width()} density=$density bounds=$bounds", bounds.width() / density >= 48f)
+        assertTrue("native height=${bounds.height()} density=$density bounds=$bounds", bounds.height() / density >= 48f)
         if (Build.VERSION.SDK_INT >= 34) {
             rule.enableAccessibilityChecks()
             rule.onNodeWithContentDescription("Back to Workspaces").tryPerformAccessibilityChecks()
@@ -247,15 +272,51 @@ class BracePanelStackTest {
         assertFalse(nativeNodesForLabel("Back to Workspaces").isNotEmpty())
     }
 
+    private fun prepareNativeInput() {
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        rule.waitUntil(10_000) {
+            val root = automation.rootInActiveWindow ?: return@waitUntil false
+            val warning = root.findAccessibilityNodeInfosByText(
+                "This app was built for an older version of Android",
+            )
+            if (warning.isNotEmpty()) {
+                root.findAccessibilityNodeInfosByText("OK")
+                    .firstOrNull { it.text?.toString() == "OK" && it.isClickable }
+                    ?.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                false
+            } else root.packageName?.toString()?.startsWith("io.github.joelromanpr.brace.core") == true
+        }
+    }
+
     private fun nativeNodesForLabel(label: String): List<AccessibilityNodeInfo> {
-        val rootNode = InstrumentationRegistry.getInstrumentation().uiAutomation.rootInActiveWindow
-            ?: return emptyList()
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        val roots = automation.windows.mapNotNull { it.root }
+            .ifEmpty { listOfNotNull(automation.rootInActiveWindow) }
         val matches = mutableListOf<AccessibilityNodeInfo>()
         fun visit(node: AccessibilityNodeInfo) {
             if (node.contentDescription?.toString() == label) matches += node
             for (index in 0 until node.childCount) node.getChild(index)?.let(::visit)
         }
-        visit(rootNode)
+        roots.forEach(::visit)
         return matches
+    }
+
+    private fun nativeTreeSummary(): String {
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        val roots = automation.windows.mapNotNull { it.root }
+            .ifEmpty { listOfNotNull(automation.rootInActiveWindow) }
+        val descriptions = mutableListOf<String>()
+        fun visit(node: AccessibilityNodeInfo) {
+            if (descriptions.size >= 80) return
+            val text = node.text?.toString().orEmpty()
+            val label = node.contentDescription?.toString().orEmpty()
+            if (text.isNotEmpty() || label.isNotEmpty() || node.isClickable) {
+                descriptions += "${node.packageName}/${node.className} text=$text label=$label " +
+                    "clickable=${node.isClickable} enabled=${node.isEnabled}"
+            }
+            for (index in 0 until node.childCount) node.getChild(index)?.let(::visit)
+        }
+        roots.forEach(::visit)
+        return "windows=${automation.windows.size}, roots=${roots.size}, nodes=$descriptions"
     }
 }

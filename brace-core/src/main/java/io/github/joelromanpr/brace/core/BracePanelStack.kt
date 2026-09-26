@@ -67,6 +67,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.focused
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.paneTitle
@@ -268,9 +269,14 @@ private fun BracePanelStackContent(
     LaunchedEffect(active.id, showHeader) {
         val targetKey = active.id to showHeader
         if (focusedTarget != targetKey) {
-            withFrameNanos { }
-            requestFocus.requestFocus()
-            focusedTarget = targetKey
+            repeat(4) {
+                withFrameNanos { }
+                val accepted = requestFocus.requestFocus()
+                if (accepted) {
+                    focusedTarget = targetKey
+                    return@LaunchedEffect
+                }
+            }
         }
     }
     val canClose = stack.size > 1
@@ -454,6 +460,7 @@ private fun PanelBackButton(
             .clearAndSetSemantics {
                 contentDescription = label
                 role = Role.Button
+                this.focused = focused
                 onClick(label) { onBack(); true }
                 if (focusRequester != null) requestFocus { focusRequester.requestFocus() }
             }

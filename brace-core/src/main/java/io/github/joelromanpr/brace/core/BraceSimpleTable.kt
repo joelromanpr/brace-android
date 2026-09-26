@@ -136,7 +136,7 @@ public fun BraceSimpleTable(
         collectionInfo = CollectionInfo(rows.size + 1, columns.size)
         contentDescription = label
         isTraversalGroup = true
-    }.testTag("brace-simple-table")) {
+    }) {
         val minimums = columns.map { it.minWidth ?: BraceTheme.sizing.tableMinColumnWidth }
         val minimumTotal = minimums.fold(BraceTheme.spacing.none) { sum, width -> sum + width }
         val extra = (maxWidth - minimumTotal).coerceAtLeast(BraceTheme.spacing.none) / columns.size

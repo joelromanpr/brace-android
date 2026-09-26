@@ -21,6 +21,7 @@ import androidx.compose.ui.test.assertWidthIsAtLeast
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.junit4.accessibility.enableAccessibilityChecks
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performKeyInput
@@ -64,7 +65,7 @@ class BraceSimpleTableTest {
                     interactive = true, selectedRowKey = "beta", onRowClick = { activations++ })
             }
         }
-        rule.onNodeWithTag("brace-simple-table")
+        rule.onNodeWithContentDescription("Jobs")
             .assert(SemanticsMatcher.expectValue(SemanticsProperties.CollectionInfo,
                 CollectionInfo(3, 2)))
         rule.onNodeWithTag("brace-simple-table-header:name")

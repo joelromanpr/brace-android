@@ -108,6 +108,14 @@ import io.github.joelromanpr.brace.core.BraceNumericField
 import io.github.joelromanpr.brace.core.BraceNumericButtonPosition
 import io.github.joelromanpr.brace.core.BraceNumericFieldSize
 import io.github.joelromanpr.brace.core.BraceNumericIntent
+import io.github.joelromanpr.brace.icons.BraceIcon
+import io.github.joelromanpr.brace.icons.BraceIconByName
+import io.github.joelromanpr.brace.icons.BraceIconButton
+import io.github.joelromanpr.brace.icons.BraceIconIntent
+import io.github.joelromanpr.brace.icons.BraceIconRegistry
+import io.github.joelromanpr.brace.icons.BraceIconRegistryProvider
+import io.github.joelromanpr.brace.icons.BraceIconSize
+import io.github.joelromanpr.brace.icons.BraceIcons
 import org.json.JSONObject
 import java.util.Locale
 
@@ -132,6 +140,14 @@ private data class CatalogEntry(
 )
 
 private val usageExamples = mapOf(
+    "core-icon" to """BraceIcon(BraceIcons.Info, contentDescription = null, intent = BraceIconIntent.Primary)
+BraceIconButton(BraceIcons.Search, label = "Search records", onClick = { openSearch() })""".trimIndent(),
+    "icons-icon-loading" to """val custom = remember(customVector) {
+    BraceIconRegistry.Default.register("workspace-mark", customVector)
+}
+BraceIconRegistryProvider(custom) {
+    BraceIconByName(iconNameFromData, contentDescription = "Record status", fallback = BraceIcons.Help)
+}""".trimIndent(),
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-checkbox" to "BraceCheckbox(checked = checked, onCheckedChange = { checked = it }, label = \"Include archived\")",
     "core-switch" to "BraceSwitch(checked = enabled, onCheckedChange = { enabled = it }, label = \"Notifications\")",
@@ -321,6 +337,63 @@ private fun ComponentSample(
     onToastPositionChange: (BraceToastPosition) -> Unit,
 ) {
     when (id) {
+        "core-icon" -> {
+            var large by rememberSaveable { mutableStateOf(false) }
+            var danger by rememberSaveable { mutableStateOf(false) }
+            var activations by rememberSaveable { mutableStateOf(0) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("The symbols beside labels are decorative; the icon action has its own spoken label.",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
+                    BraceIcon(BraceIcons.Search, null,
+                        size = if (large) BraceIconSize.Large else BraceIconSize.Small,
+                        intent = if (danger) BraceIconIntent.Danger else BraceIconIntent.Primary)
+                    Text("Search", color = BraceTheme.colors.semantic.onSurface)
+                    BraceIcon(BraceIcons.Warning, null, intent = BraceIconIntent.Warning)
+                    Text("Warning", color = BraceTheme.colors.semantic.onSurface)
+                }
+                BraceIconButton(BraceIcons.Check, "Confirm icon action",
+                    onClick = { activations++ })
+                BraceIconButton(BraceIcons.Close, "Unavailable icon action",
+                    onClick = {}, enabled = false)
+                Text("Activated $activations times", color = BraceTheme.colors.semantic.onSurfaceMuted)
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (large) "Small icons" else "Large icons",
+                        onClick = { large = !large }, variant = BraceButtonVariant.Outline)
+                    BraceButton(if (danger) "Primary" else "Danger",
+                        onClick = { danger = !danger }, variant = BraceButtonVariant.Outline)
+                }
+            }
+        }
+        "icons-icon-loading" -> {
+            var iconName by rememberSaveable { mutableStateOf("search") }
+            val registry = remember {
+                BraceIconRegistry.Default.register("custom-check",
+                    BraceIconRegistry.Default.resolve("check"))
+            }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceTextField(iconName, { iconName = it }, "Runtime icon name",
+                    placeholder = "Try custom-check or an unknown name")
+                BraceIconRegistryProvider(registry) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                        BraceIconByName(iconName,
+                            contentDescription = if (registry.find(iconName) == null)
+                                "Unknown icon; showing help" else "Preview: $iconName",
+                            size = BraceIconSize.Large)
+                        Text(if (registry.find(iconName) == null) "Fallback: help" else "Found: $iconName",
+                            color = BraceTheme.colors.semantic.onSurface)
+                    }
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton("Custom", onClick = { iconName = "custom-check" },
+                        variant = BraceButtonVariant.Outline)
+                    BraceButton("Fallback", onClick = { iconName = "missing" },
+                        variant = BraceButtonVariant.Outline)
+                }
+                Text("Bundled: ${BraceIconRegistry.Default.names.sorted().joinToString()}",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+            }
+        }
         "core-button" -> {
             var count by rememberSaveable { mutableStateOf(0) }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {

@@ -379,6 +379,12 @@
       "content": "{semantic.onSurface}",
       "border": "{semantic.border}"
     },
+    "topBar": {
+      "container": "{semantic.surfaceRaised}",
+      "title": "{semantic.onSurface}",
+      "border": "{semantic.borderStrong}",
+      "divider": "{semantic.borderStrong}"
+    },
     "menu": {
       "container": "{semantic.surfaceRaised}",
       "itemContent": "{semantic.onSurface}",
@@ -503,6 +509,13 @@
     "card": {
       "cornerRadius": 8,
       "contentPadding": 16
+    },
+    "topBar": {
+      "minHeight": 56,
+      "horizontalPadding": 16,
+      "verticalPadding": 4,
+      "groupGap": 8,
+      "dividerHeight": 24
     },
     "menu": {
       "cornerRadius": 8,

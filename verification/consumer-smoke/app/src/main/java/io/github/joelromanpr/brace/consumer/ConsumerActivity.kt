@@ -21,6 +21,10 @@ import io.github.braceandroid.foundation.BraceTheme
 import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbs
+import io.github.joelromanpr.brace.core.BraceTopBar
+import io.github.joelromanpr.brace.core.BraceTopBarGroup
+import io.github.joelromanpr.brace.core.BraceTopBarTitle
+import io.github.joelromanpr.brace.core.BraceTopBarDivider
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceCallout
@@ -107,6 +111,15 @@ class ConsumerActivity : ComponentActivity() {
                 val toasts = rememberBraceToastState()
                 Box(Modifier.fillMaxSize()) {
                     Column {
+                        BraceTopBar(
+                            startContent = { BraceTopBarGroup {
+                                BraceTopBarTitle("Imports")
+                                BraceTopBarDivider()
+                            } },
+                            endContent = { BraceTopBarGroup {
+                                BraceButton("Refresh", onClick = { count++ })
+                            } },
+                        )
                         BraceCard {
                             BraceButton(label = "Saved $count", onClick = { count++ })
                         }

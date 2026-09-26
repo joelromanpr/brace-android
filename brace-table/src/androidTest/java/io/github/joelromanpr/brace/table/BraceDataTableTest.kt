@@ -101,9 +101,11 @@ class BraceDataTableTest {
 
     @Test fun virtualizesBothAxesAndKeepsHeadersFixed() {
         lateinit var viewport: BraceTableViewport
+        var pixelsPerDp = 1f
         var selection: BraceTableSelection? = null
         rule.setContent {
             BraceTheme {
+                pixelsPerDp = LocalDensity.current.density
                 viewport = rememberBraceTableViewport()
                 BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
                     Modifier.width(320.dp), viewport = viewport, height = 240.dp)
@@ -115,7 +117,8 @@ class BraceDataTableTest {
         val cornerBefore = rule.onNodeWithTag("brace-table-row:r0").fetchSemanticsNode().boundsInRoot.left
         val headerBefore = rule.onNodeWithTag("brace-table-header:c0").fetchSemanticsNode().boundsInRoot.top
 
-        rule.runOnIdle { runBlocking { viewport.horizontal.scrollTo(790) } }
+        // ScrollState offsets are pixels; the target column positions above are dp.
+        rule.runOnIdle { runBlocking { viewport.horizontal.scrollTo((790f * pixelsPerDp).toInt()) } }
         rule.waitForIdle()
         rule.onNodeWithTag("brace-table-cell:r0:c0").assertDoesNotExist()
         rule.onNodeWithTag("brace-table-cell:r0:c9").assertExists()
@@ -135,16 +138,18 @@ class BraceDataTableTest {
 
     @Test fun rowHeadersStayAlignedWithCellsAfterPartialVerticalScroll() {
         lateinit var viewport: BraceTableViewport
+        var pixelsPerDp = 1f
         rule.setContent {
             BraceTheme {
+                pixelsPerDp = LocalDensity.current.density
                 viewport = rememberBraceTableViewport()
                 BraceDataTable(rows, { it.id }, columns, null, {},
                     Modifier.width(320.dp), viewport = viewport, height = 240.dp)
             }
         }
         rule.runOnIdle { runBlocking {
-            viewport.horizontal.scrollTo(430)
-            viewport.vertical.scrollToItem(50, scrollOffset = 17)
+            viewport.horizontal.scrollTo((430f * pixelsPerDp).toInt())
+            viewport.vertical.scrollToItem(50, scrollOffset = (17f * pixelsPerDp).toInt())
         } }
         rule.waitForIdle()
         for (index in 50..52) {

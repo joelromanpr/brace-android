@@ -116,6 +116,10 @@ import io.github.joelromanpr.brace.icons.BraceIconRegistry
 import io.github.joelromanpr.brace.icons.BraceIconRegistryProvider
 import io.github.joelromanpr.brace.icons.BraceIconSize
 import io.github.joelromanpr.brace.icons.BraceIcons
+import io.github.joelromanpr.brace.select.BraceSelect
+import io.github.joelromanpr.brace.select.BraceSelectOption
+import io.github.joelromanpr.brace.select.rememberBraceQueryListState
+import io.github.joelromanpr.brace.select.braceQueryNavigation
 import org.json.JSONObject
 import java.util.Locale
 
@@ -147,6 +151,18 @@ BraceIconButton(BraceIcons.Search, label = "Search records", onClick = { openSea
 }
 BraceIconRegistryProvider(custom) {
     BraceIconByName(iconNameFromData, contentDescription = "Record status", fallback = BraceIcons.Help)
+}""".trimIndent(),
+    "select-select" to """var selectedKey by rememberSaveable { mutableStateOf<String?>(null) }
+var expanded by rememberSaveable { mutableStateOf(false) }
+val options = listOf(BraceSelectOption("east", "east", "East"), BraceSelectOption("west", "west", "West"))
+BraceSelect(options, selectedKey, { selectedKey = it.key }, expanded, { expanded = it }, label = "Region")""".trimIndent(),
+    "select-querylist" to """val state = rememberBraceQueryListState()
+val options = listOf(BraceSelectOption("east", "east", "East"), BraceSelectOption("west", "west", "West"))
+val visible = state.filter(options)
+Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
+    onActivate = { state.activeKey = it }, onDismiss = { state.query = "" })) {
+    BraceTextField(state.query, { state.query = it }, label = "Filter regions")
+    visible.forEach { option -> BraceButton(option.label, onClick = { state.activeKey = option.key }) }
 }""".trimIndent(),
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-checkbox" to "BraceCheckbox(checked = checked, onCheckedChange = { checked = it }, label = \"Include archived\")",
@@ -392,6 +408,39 @@ private fun ComponentSample(
                 }
                 Text("Bundled: ${BraceIconRegistry.Default.names.sorted().joinToString()}",
                     color = BraceTheme.colors.semantic.onSurfaceMuted)
+            }
+        }
+        "select-select", "select-querylist" -> {
+            var selectedKey by rememberSaveable { mutableStateOf<String?>(null) }
+            var expanded by rememberSaveable { mutableStateOf(false) }
+            val state = rememberBraceQueryListState()
+            val choices = listOf(
+                BraceSelectOption("east", "east", "East", description = "Eastern region"),
+                BraceSelectOption("west", "west", "West", description = "Western region"),
+                BraceSelectOption("central", "central", "Central", enabled = false),
+            )
+            val queryKeys = state.filter(choices).filter { it.enabled }.map { it.key }
+            Column(
+                modifier = if (id == "select-querylist") Modifier.braceQueryNavigation(state, queryKeys,
+                    onActivate = { selectedKey = it; state.activeKey = it },
+                    onDismiss = { state.query = "" }) else Modifier,
+                verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm),
+            ) {
+                if (id == "select-select") {
+                    BraceSelect(choices, selectedKey, { selectedKey = it.key }, expanded,
+                        { expanded = it }, label = "Region", state = state)
+                    BraceSelect(choices, "west", {}, false, {}, label = "Unavailable", enabled = false)
+                } else {
+                    BraceTextField(state.query, { state.query = it }, label = "Filter regions")
+                    state.filter(choices).forEach { option ->
+                        BraceButton(option.label, onClick = { state.activeKey = option.key; selectedKey = option.key },
+                            enabled = option.enabled, variant = BraceButtonVariant.Outline)
+                    }
+                }
+                Text("Selected: ${selectedKey ?: "none"} · Query: ${state.query}",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BraceButton("Clear", onClick = { selectedKey = null; state.query = "" },
+                    variant = BraceButtonVariant.Outline)
             }
         }
         "core-button" -> {

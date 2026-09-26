@@ -19,4 +19,5 @@ rootProject.name = "brace-android"
 include(":brace-foundation")
 include(":brace-core")
 include(":brace-icons")
+include(":brace-select")
 include(":catalog")

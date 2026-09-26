@@ -65,6 +65,9 @@ import io.github.joelromanpr.brace.icons.BraceIconButton
 import io.github.joelromanpr.brace.icons.BraceIconRegistry
 import io.github.joelromanpr.brace.icons.BraceIconRegistryProvider
 import io.github.joelromanpr.brace.icons.BraceIcons
+import io.github.joelromanpr.brace.select.BraceSelect
+import io.github.joelromanpr.brace.select.BraceSelectOption
+import io.github.joelromanpr.brace.select.rememberBraceQueryListState
 
 /** Compiles against Maven coordinates only, with no dependency on the source checkout. */
 class ConsumerActivity : ComponentActivity() {
@@ -97,6 +100,9 @@ class ConsumerActivity : ComponentActivity() {
                     BraceIconRegistry.Default.register("custom-check",
                         BraceIconRegistry.Default.resolve("check"))
                 }
+                var regionKey by remember { mutableStateOf<String?>(null) }
+                var regionExpanded by remember { mutableStateOf(false) }
+                val regionQuery = rememberBraceQueryListState()
                 val shortcutState = rememberBraceShortcutRegistryState()
                 val toasts = rememberBraceToastState()
                 Box(Modifier.fillMaxSize()) {
@@ -199,6 +205,16 @@ class ConsumerActivity : ComponentActivity() {
                                     onValueChange = { reportTitle = it },
                                     label = "Report title",
                                     editActionLabel = "Edit report title",
+                                )
+                                BraceSelect(
+                                    options = listOf(BraceSelectOption("east", "east", "East"),
+                                        BraceSelectOption("west", "west", "West")),
+                                    selectedKey = regionKey,
+                                    onSelect = { regionKey = it.key },
+                                    expanded = regionExpanded,
+                                    onExpandedChange = { regionExpanded = it },
+                                    label = "Region",
+                                    state = regionQuery,
                                 )
                             }
                         }

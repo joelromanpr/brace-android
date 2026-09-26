@@ -23,6 +23,7 @@ dependencies {
     implementation("io.github.joelromanpr.brace:brace-foundation:0.1.0-SNAPSHOT")
     implementation("io.github.joelromanpr.brace:brace-core:0.1.0-SNAPSHOT")
     implementation("io.github.joelromanpr.brace:brace-icons:0.1.0-SNAPSHOT")
+    implementation("io.github.joelromanpr.brace:brace-select:0.1.0-SNAPSHOT")
 }
 ```
 

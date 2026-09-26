@@ -22,10 +22,11 @@ dependencyResolutionManagement {
 dependencies {
     implementation("io.github.joelromanpr.brace:brace-foundation:0.1.0-SNAPSHOT")
     implementation("io.github.joelromanpr.brace:brace-core:0.1.0-SNAPSHOT")
+    implementation("io.github.joelromanpr.brace:brace-icons:0.1.0-SNAPSHOT")
 }
 ```
 
-After the first release, remove `mavenLocal()` and use the released version from Maven Central. All public Brace artifacts use the same version. The source build currently targets Android SDK 36 and Android 26 as its minimum; verify the release's compatibility table before adoption.
+The icons artifact is optional for apps that need Brace vectors or a scoped registry; core does not pull the icon artwork transitively. After the first release, remove `mavenLocal()` and use the released version from Maven Central. All public Brace artifacts use the same version. The source build currently targets Android SDK 36 and Android 26 as its minimum; verify the release's compatibility table before adoption.
 
 The catalog app is a separate Android application in this repository. Run `./gradlew :catalog:assembleDebug` to inspect examples. The [coverage page](coverage.md) distinguishes implemented components from planned ones.
 

@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -58,6 +59,12 @@ import io.github.joelromanpr.brace.core.BraceToastIntent
 import io.github.joelromanpr.brace.core.BraceToastSpec
 import io.github.joelromanpr.brace.core.BraceTooltip
 import io.github.joelromanpr.brace.core.rememberBraceToastState
+import io.github.joelromanpr.brace.icons.BraceIcon
+import io.github.joelromanpr.brace.icons.BraceIconByName
+import io.github.joelromanpr.brace.icons.BraceIconButton
+import io.github.joelromanpr.brace.icons.BraceIconRegistry
+import io.github.joelromanpr.brace.icons.BraceIconRegistryProvider
+import io.github.joelromanpr.brace.icons.BraceIcons
 
 /** Compiles against Maven coordinates only, with no dependency on the source checkout. */
 class ConsumerActivity : ComponentActivity() {
@@ -85,6 +92,11 @@ class ConsumerActivity : ComponentActivity() {
                 var caseNotes by remember { mutableStateOf("") }
                 var reportTitle by remember { mutableStateOf("Quarterly report") }
                 var amount by rememberSaveable { mutableStateOf("0.2") }
+                var iconName by remember { mutableStateOf("search") }
+                val iconRegistry = remember {
+                    BraceIconRegistry.Default.register("custom-check",
+                        BraceIconRegistry.Default.resolve("check"))
+                }
                 val shortcutState = rememberBraceShortcutRegistryState()
                 val toasts = rememberBraceToastState()
                 Box(Modifier.fillMaxSize()) {
@@ -111,6 +123,14 @@ class ConsumerActivity : ComponentActivity() {
                         BraceNumericField(amount, { amount = it }, label = "Amount",
                             min = 0.0, max = 100.0, minorStepSize = 0.1)
                         BraceCallout(title = "Ready", intent = BraceCalloutIntent.Success)
+                        BraceIconRegistryProvider(iconRegistry) {
+                            Row {
+                                BraceIcon(BraceIcons.Info, contentDescription = null)
+                                BraceIconByName(iconName, contentDescription = "Status icon")
+                                BraceIconButton(BraceIcons.Search, label = "Search records",
+                                    onClick = { iconName = "custom-check" })
+                            }
+                        }
                         BraceMenu {
                             BraceMenuItem("Edit project", onClick = { dialogOpen = true })
                             BraceMenuItem("Delete report", onClick = { alertOpen = true },

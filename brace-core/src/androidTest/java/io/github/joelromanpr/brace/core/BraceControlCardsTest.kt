@@ -9,9 +9,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.InputMode
+import androidx.compose.ui.input.InputModeManager
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.state.ToggleableState
@@ -79,6 +82,21 @@ class BraceControlCardsTest {
         rule.runOnIdle { assertFalse(checked) }
     }
 
+    @Test fun switchCardActivatesWithSpaceAndEnterFromKeyboardFocus() {
+        var checked by mutableStateOf(false)
+        lateinit var inputMode: InputModeManager
+        rule.setContent {
+            inputMode = LocalInputModeManager.current
+            BraceTheme { BraceSwitchCard(checked, { checked = it }, "Keyboard setting") }
+        }
+        rule.runOnIdle { inputMode.requestInputMode(InputMode.Keyboard) }
+        val card = rule.onNodeWithContentDescription("Keyboard setting")
+        card.requestFocus().assertIsFocused().performKeyInput { pressKey(Key.Spacebar) }
+        rule.runOnIdle { assertTrue(checked) }
+        card.performKeyInput { pressKey(Key.Enter) }
+        rule.runOnIdle { assertFalse(checked) }
+    }
+
     @Test fun checkboxMixedStateRequestsCheckedAndDisabledCardDoesNotToggle() {
         var checked by mutableStateOf(false)
         var mixed by mutableStateOf(true)
@@ -124,6 +142,21 @@ class BraceControlCardsTest {
         rule.onNodeWithContentDescription("Sandwich").assert(chosen(true)).assertIsFocused()
         rule.onNodeWithContentDescription("Soup. Vegetarian").performTouchInput { click() }
         rule.runOnIdle { assertEquals("soup", selected) }
+    }
+
+    @Test fun selectedRadioCardIsTheOnlyTabStopInItsGroup() {
+        lateinit var inputMode: InputModeManager
+        rule.setContent {
+            inputMode = LocalInputModeManager.current
+            BraceTheme { Column {
+                BraceRadioCardGroup(options, "soup", {}, "Lunch special")
+                BraceButton("After group", onClick = {})
+            } }
+        }
+        rule.runOnIdle { inputMode.requestInputMode(InputMode.Keyboard) }
+        rule.onNodeWithContentDescription("Soup. Vegetarian").requestFocus().assertIsFocused()
+            .performKeyInput { pressKey(Key.Tab) }
+        rule.onNodeWithContentDescription("After group").assertIsFocused()
     }
 
     @Test fun controlledRadioSelectionRestoresThroughActivityState() {

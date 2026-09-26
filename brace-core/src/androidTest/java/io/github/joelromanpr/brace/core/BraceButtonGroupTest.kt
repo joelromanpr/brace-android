@@ -8,8 +8,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.input.InputMode
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
@@ -95,8 +98,10 @@ class BraceButtonGroupTest {
         var first = 0
         var second = 0
         lateinit var inputMode: androidx.compose.ui.input.InputModeManager
+        lateinit var focusManager: FocusManager
         rule.setContent {
             inputMode = LocalInputModeManager.current
+            focusManager = LocalFocusManager.current
             BraceTheme {
                 Column {
                     BraceButtonGroup(
@@ -112,7 +117,8 @@ class BraceButtonGroupTest {
         rule.runOnIdle { assertTrue(inputMode.requestInputMode(InputMode.Keyboard)) }
         rule.onNodeWithContentDescription("First").requestFocus().assertIsFocused()
             .performKeyInput { pressKey(Key.Enter) }
-        rule.onNodeWithContentDescription("Second").requestFocus().assertIsFocused()
+        rule.runOnIdle { assertTrue(focusManager.moveFocus(FocusDirection.Next)) }
+        rule.onNodeWithContentDescription("Second").assertIsFocused()
             .performKeyInput { pressKey(Key.Spacebar) }
         rule.onNodeWithContentDescription("First").performMouseInput { click() }
         assertEquals(2, first)

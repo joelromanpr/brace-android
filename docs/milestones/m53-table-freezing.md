@@ -6,7 +6,7 @@
 
 - Caller-controlled `frozenRows` and `frozenColumns` pin leading data positions beside fixed headers. Four clipped panes share the same logical row and column keys; the frozen intersection is composed once.
 - Table-owned keyboard navigation and editing reveal scrollable targets while pinned targets stay in place. Selection, copy, sort, resize, loading, and reorder callbacks retain their existing contracts.
-- Frozen row, column, and intersection states are announced by localized cell/header semantics. The catalog and Maven consumer demonstrate runtime counts.
+- Frozen row, column, and intersection states are announced by localized cell/header semantics. The catalog demonstrates runtime toggles; the Maven consumer compiles explicit counts.
 - The pinned Blueprint inventory's `table-freezing` capability row is updated, with implementation, sample, documentation, and instrumented-test links.
 
 ## Verification

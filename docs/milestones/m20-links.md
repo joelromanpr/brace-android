@@ -1,6 +1,6 @@
 # M20 delivery slice: Link and AnchorButton
 
-**Status:** source branch rebased onto M11 main `e03bde9` in `joelromanpr/m20-links`. The Link and AnchorButton rows remain **in progress**, `firstRelease` is null, and generated stable coverage remains **0/121** applicable rows. Post-rebase local build, API, device, and Maven consumer gates passed; hosted checks and manual TalkBack review remain. No Maven Central release is claimed.
+**Status:** source branch rebased onto M11 main `e03bde9` in `joelromanpr/m20-links`. The Link and AnchorButton rows remain **in progress**, `firstRelease` is null, and generated stable coverage remains **0/121** applicable rows. Post-rebase local build, API, device, Maven consumer, and hosted checks passed; manual TalkBack review remains. No Maven Central release is claimed.
 
 ## Scope
 
@@ -19,8 +19,8 @@
 | Post-M11 build, lint, API, and catalog | `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` passed with **378 tasks**. Generated API baselines stayed current; icon and Link samples compiled together. |
 | Post-M11 Maven Local and independent consumer | Foundation, core, and icons each published an AAR, sources JAR, Javadoc JAR, POM, and Gradle module metadata. The separate `verification/consumer-smoke :app:assembleDebug` resolved those Maven coordinates and passed (**37 tasks**). |
 | Catalog visual and manual TalkBack | The prior 320 × 640 light and dark high-contrast review found no clipping or overlap; Action and URI examples updated their status. Post-M11 visual review and manual TalkBack remain. |
-| Hosted CI and review | Draft PR #28 was green before the native semantics fix. Hosted checks must rerun on the rebased branch; no remote publication attempted. |
+| Hosted CI and review | On rebased source head `40b5d25`, [verify](https://github.com/joelromanpr/brace-android/actions/runs/36244078237/job/108409883030) and [instrumented](https://github.com/joelromanpr/brace-android/actions/runs/36244078237/job/108409883184) passed. Code scanning reported a skipped job. No remote publication attempted. |
 
 ## Remaining work
 
-Link semantics are a localized announcement and click label because Compose UI 1.9 lacks a public link role. Inline link spans inside a paragraph are still planned; `BraceLink` is currently a standalone 48 dp control. `BraceLinkButton` shares the current Button styles, which do not include Blueprint's minimal button, success/warning button intents, button size/fill/alignment, or a progress indicator. Browser-only anchor attributes and target behaviors are represented by Android URI/app actions rather than separate components. The next concrete integration step is hosted checks and manual accessibility review for `joelromanpr/m20-links`; remaining pinned rows stay planned or in progress as recorded by the generated ledger.
+Link semantics are a localized announcement and click label because Compose UI 1.9 lacks a public link role. Inline link spans inside a paragraph are still planned; `BraceLink` is currently a standalone 48 dp control. `BraceLinkButton` shares the current Button styles, which do not include Blueprint's minimal button, success/warning button intents, button size/fill/alignment, or a progress indicator. Browser-only anchor attributes and target behaviors are represented by Android URI/app actions rather than separate components. The next concrete integration step is review and manual accessibility assessment for `joelromanpr/m20-links`; remaining pinned rows stay planned or in progress as recorded by the generated ledger.

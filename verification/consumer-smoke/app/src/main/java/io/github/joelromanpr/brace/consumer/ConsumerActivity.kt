@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
 import io.github.braceandroid.foundation.BraceTheme
 import io.github.joelromanpr.brace.datetime.BraceDatePicker
 import io.github.joelromanpr.brace.datetime.BraceDateRange
@@ -36,6 +37,9 @@ import kotlinx.coroutines.withContext
 import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbs
+import io.github.joelromanpr.brace.core.BraceTree
+import io.github.joelromanpr.brace.core.BraceTreeNode
+import io.github.joelromanpr.brace.core.rememberBraceTreeState
 import io.github.joelromanpr.brace.core.BraceTopBar
 import io.github.joelromanpr.brace.core.BraceTopBarGroup
 import io.github.joelromanpr.brace.core.BraceTopBarTitle
@@ -158,6 +162,7 @@ class ConsumerActivity : ComponentActivity() {
                 var reportingZone by remember { mutableStateOf<ZoneId?>(null) }
                 val shortcutState = rememberBraceShortcutRegistryState()
                 val toasts = rememberBraceToastState()
+                val tree = rememberBraceTreeState(initialExpandedKeys = setOf("projects"))
                 Box(Modifier.fillMaxSize()) {
                     Column {
                         BraceTopBar(
@@ -204,6 +209,13 @@ class ConsumerActivity : ComponentActivity() {
                         BraceLink("Open reports", BraceLinkDestination.Action("Reports") { count++ })
                         BraceLinkButton("Open guide", BraceLinkDestination.Uri("https://example.org/guide", "Guide"),
                             onOpenUri = { count++ })
+                        BraceTree(
+                            nodes = listOf(BraceTreeNode("projects", "Projects", children = listOf(
+                                BraceTreeNode("imports", "Imports"), BraceTreeNode("exports", "Exports")))),
+                            expandedKeys = tree.expandedKeys, onExpandedKeysChange = { tree.expandedKeys = it },
+                            selectedKeys = tree.selectedKeys, onSelectedKeysChange = { tree.selectedKeys = it },
+                            label = "Workspace tree", maxHeight = 160.dp,
+                        )
                         BraceTag("Active")
                         BraceFieldLabel("Export format", spokenLabel = "Export format, CSV") { controlModifier ->
                             BraceButton("CSV", onClick = {}, modifier = controlModifier)

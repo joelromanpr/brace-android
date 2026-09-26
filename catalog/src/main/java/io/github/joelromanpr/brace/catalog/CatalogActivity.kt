@@ -77,6 +77,8 @@ import io.github.joelromanpr.brace.core.BraceMenuDivider
 import io.github.joelromanpr.brace.core.BraceOverlay
 import io.github.joelromanpr.brace.core.BraceOverlayHost
 import io.github.joelromanpr.brace.core.BraceDialog
+import io.github.joelromanpr.brace.core.BraceDialogStep
+import io.github.joelromanpr.brace.core.BraceStepDialog
 import io.github.joelromanpr.brace.core.BraceDrawer
 import io.github.joelromanpr.brace.core.BraceDrawerPosition
 import io.github.joelromanpr.brace.core.BracePopover
@@ -212,6 +214,24 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "core-dialog" to "BraceDialog(open = open, onDismissRequest = { open = false }, title = \"Edit project\", actions = { BraceButton(\"Save\", onClick = save) }) { Text(\"Details\") }",
     "core-dialogbody" to "BraceDialogBody { Text(\"Scrollable details\") }",
     "core-dialogfooter" to "BraceDialogActions { BraceButton(\"Save\", onClick = save) }",
+    "core-multistepdialog" to """var open by rememberSaveable { mutableStateOf(false) }
+var step by rememberSaveable { mutableStateOf("details") }
+var name by rememberSaveable { mutableStateOf("") }
+val launcher = remember { FocusRequester() }
+BraceButton("Create report", onClick = { step = "details"; open = true },
+    modifier = Modifier.focusRequester(launcher))
+BraceStepDialog(open, step, { next, _ -> step = next }, { open = false },
+    onComplete = { save(name); open = false }, title = "Create report",
+    focusReturnRequester = launcher, steps = listOf(
+        BraceDialogStep("details", "Details", validate = { name.isNotBlank() }) {
+            BraceTextField(name, { name = it }, label = "Report name")
+        },
+        BraceDialogStep("review", "Review") { Text(name) },
+    ))""".trimIndent(),
+    "core-dialogstep" to """BraceDialogStep("details", "Details",
+    validate = { name.isNotBlank() }) {
+    BraceTextField(name, { name = it }, label = "Report name")
+}""".trimIndent(),
     "core-alert" to "BraceAlertDialog(open = open, title = \"Delete report?\", onConfirm = delete, onCancel = cancel, confirmIntent = BraceButtonIntent.Danger)",
     "core-drawer" to "BraceDrawer(open = open, onDismissRequest = { open = false }, title = \"Filters\", position = BraceDrawerPosition.End) { Text(\"Filter options\") }",
     "core-popover" to "BracePopover(expanded = open, onDismissRequest = { open = false }, target = { BraceButton(\"Filters\", onClick = { open = true }) }, title = \"Filter options\") { Text(\"Filter options\") }",
@@ -1034,6 +1054,44 @@ private fun ComponentSample(
                 BraceButton("Clear notifications", onClick = { toasts.clear() },
                     variant = BraceButtonVariant.Outline)
                 Text(lastEvent, color = BraceTheme.colors.semantic.onSurfaceMuted)
+            }
+        }
+        "core-multistepdialog", "core-dialogstep" -> {
+            var open by rememberSaveable { mutableStateOf(false) }
+            var step by rememberSaveable { mutableStateOf("details") }
+            var reportName by rememberSaveable { mutableStateOf("") }
+            var error by rememberSaveable { mutableStateOf(false) }
+            var waiting by rememberSaveable { mutableStateOf(false) }
+            var saved by rememberSaveable { mutableStateOf(false) }
+            val launcher = remember { FocusRequester() }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceButton("Create report", onClick = {
+                    step = "details"; error = false; saved = false; open = true
+                }, modifier = Modifier.focusRequester(launcher))
+                Text(if (saved) "Saved: $reportName" else "No report saved",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BraceStepDialog(
+                    open = open,
+                    selectedStepId = step,
+                    onStepChange = { next, _ -> step = next },
+                    onDismissRequest = { open = false },
+                    onComplete = { saved = true; open = false },
+                    title = "Create report",
+                    focusReturnRequester = launcher,
+                    steps = listOf(
+                        BraceDialogStep("details", "Details", canAdvance = !waiting,
+                            validate = { error = reportName.isBlank(); !error }) {
+                            BraceTextField(reportName, { reportName = it; error = false },
+                                label = "Report name", isError = error,
+                                supportingText = if (error) "Enter a name to continue" else null)
+                            BraceButton(if (waiting) "Finish waiting" else "Simulate waiting",
+                                onClick = { waiting = !waiting }, intent = BraceButtonIntent.Secondary)
+                        },
+                        BraceDialogStep("review", "Review", description = "Check the report name") {
+                            Text("Name: $reportName", color = BraceTheme.colors.semantic.onSurface)
+                        },
+                    ),
+                )
             }
         }
         "core-dialog", "core-dialogbody", "core-dialogfooter", "core-alert" -> {

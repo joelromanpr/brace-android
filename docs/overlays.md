@@ -60,6 +60,8 @@ BraceAlertDialog(
 
 `BraceAlertDialog` requires an explicit confirmation action and a separate optional cancel callback. Back and outside-touch cancellation are disabled by default; callers can opt in only when a cancel callback exists. Loading suppresses repeated confirmation and cancellation. Label defaults are English, so applications should supply localized button text. The confirm button currently supports Brace primary, secondary, and danger intents; Blueprint success and warning intent treatments remain follow-up work.
 
+For sequential forms, use [Step dialogs](step-dialog.md) and the caller-owned `BraceDialogStep` list.
+
 ## Acceptance status
 
 This slice is not released. Core Android tests cover focus return, nested outside-touch order, dismissal flags, menu key movement, large text scrolling, and 48 dp targets. Back dismissal is wired through `DialogProperties` and was verified manually by opening the installed catalog Overlay2 sample and sending `adb shell input keyevent 4`; the instrumentation Activity still cannot deliver this key to the dialog, so its automated Back case is explicitly skipped. Manual TalkBack, mouse, and representative light/dark/high-contrast review remain. See the [coverage ledger](coverage.md) for each row and its current evidence.

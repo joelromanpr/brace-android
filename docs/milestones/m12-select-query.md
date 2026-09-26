@@ -1,6 +1,6 @@
 # M12 delivery slice: Select and QueryList
 
-**Status:** source implementation in progress. These two pinned rows belong to roadmap phase **M3 selects**. No Maven Central version has shipped; released applicable coverage remains **0/121**.
+**Status:** source implementation in progress on `joelromanpr/m12-select-query`, rebased onto merged M11 main `e03bde9`. These two pinned rows belong to roadmap phase **M3 selects**. No Maven Central version has shipped; released applicable coverage remains **0/121**.
 
 ## Scope
 
@@ -12,10 +12,10 @@
 
 | Gate | Result |
 | --- | --- |
-| Token generation, inventory, docs, API and local build/lint | Passed on the reviewed diff: `build lint checkTokenGeneration checkInventory apiCheck` (467 actionable Gradle tasks), with a separately generated and checked select API baseline. Token and coverage checks passed; the site builds 147 inventory rows and 29 guides. |
-| Focused API 36 Compose interaction and accessibility tests | Passed **14/14** on API 36 with zero failures, errors, or skips. This includes validation, viewport navigation, rapid Down then Space activation, IME composition guard, localized trigger expansion state, and real Android accessibility nodes for enabled and disabled popup options. Earlier behavior remains covered: filtering, custom predicate, controlled selection, restoration, touch/mouse, RTL high contrast, large text, 48dp targets, and automated Compose accessibility. A real composing-text InputConnection integration test remains open. |
-| Maven Local artifact and separate consumer | Passed on the reviewed diff: aligned foundation/core/icons/select Maven Local artifacts with sources, KDoc JAR, POM, and Gradle metadata; the independent consumer assembled from Maven coordinates only. |
-| 320dp catalog visual and touch checks | Select detail and open popup visually inspected at 320 × 640 dp; the popup repositioned above the software keyboard without clipping its options. Touch selection updated the sample and dismissed the popup. Hardware keyboard and TalkBack manual review remain. |
+| Token generation, inventory, docs, API and local build/lint | Passed after the M11 squash rebase: `build lint checkTokenGeneration checkInventory apiCheck` (467 actionable Gradle tasks), including the select API baseline. Token generation, coverage, JSON/JS syntax, conflict markers, and docs checks also pass; the site builds 147 inventory rows and 29 guides. |
+| Focused API 36 Compose interaction and accessibility tests | Passed **14/14** after the rebase on API 36 with zero failures, errors, or skips. This includes validation, viewport navigation, rapid Down then Space activation, IME composition guard, localized trigger expansion state, and real Android accessibility nodes for enabled and disabled popup options. Earlier behavior remains covered: filtering, custom predicate, controlled selection, restoration, touch/mouse, RTL high contrast, large text, 48dp targets, and automated Compose accessibility. A real composing-text InputConnection integration test remains open. |
+| Maven Local artifact and separate consumer | Passed after the rebase: aligned foundation/core/icons/select Maven Local artifacts with sources, KDoc JAR, POM, and Gradle metadata (156 Gradle tasks); the independent consumer assembled from Maven coordinates only with `:app:assembleDebug --offline` (37 tasks). |
+| 320dp catalog visual and touch checks | After the rebase, Select and QueryList details were visually inspected at 320 × 640 dp and labeled in progress. Select search narrowed to West; the popup repositioned above the software keyboard with the option fully visible, and touch selection updated the controlled value and dismissed the popup. QueryList touch selection updated its controlled value. Hardware keyboard and TalkBack manual review remain. |
 | Hosted CI, review, and release | Pending. |
 
 ## Known limits and next branch

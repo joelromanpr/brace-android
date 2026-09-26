@@ -39,6 +39,7 @@ const guideSources = new Map([
   ['docs/web-mechanisms.md', 'web-mechanisms'],
   ['docs/links.md', 'links'],
   ['docs/time-zone-select.md', 'time-zone-select'],
+  ['docs/panel-stack.md', 'panel-stack'],
   ['docs/milestones/m1-foundation-core.md', 'milestone-m1'],
   ['docs/milestones/m2-content-feedback.md', 'milestone-m2'],
   ['docs/milestones/m3-navigation-feedback.md', 'milestone-m3'],
@@ -66,6 +67,7 @@ const guideSources = new Map([
   ['docs/milestones/m57-icon-large-text.md', 'milestone-m57'],
   ['docs/milestones/m34-timezone-select.md', 'milestone-m34'],
   ['docs/milestones/m59-visual-catalog.md', 'milestone-m59'],
+  ['docs/milestones/m32-panel-stack.md', 'milestone-m32'],
   ['CONTRIBUTING.md', 'contributing'],
   ['docs/attribution.md', 'attribution'],
 ]);

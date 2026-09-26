@@ -39,4 +39,5 @@
     <string name="brace_link_description">%1$s, link to %2$s</string>
     <string name="brace_link_button_description">%1$s, opens %2$s</string>
     <string name="brace_link_open">Open %1$s</string>
+    <string name="brace_panel_stack_back_to">Back to %1$s</string>
 </resources>

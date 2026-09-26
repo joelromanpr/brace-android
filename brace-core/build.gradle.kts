@@ -36,6 +36,7 @@ dependencies {
     api(libs.compose.ui)
     api(libs.compose.foundation)
     implementation(libs.compose.material3)
+    implementation(libs.androidx.activity.compose)
 
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.compose.ui.test.junit4)

@@ -1,6 +1,6 @@
 # M17: Spinner and Skeleton loading feedback
 
-**Status:** source slice merged with current main `a88429c` (including the live GitHub Pages visual showcase) in `joelromanpr/m17-loading-feedback`. The pinned Blueprint Spinner and Skeleton rows remain **in progress**, `firstRelease` is null, and generated stable coverage is **0/121** applicable rows. No Maven Central release is claimed.
+**Status:** source slice merged with current main `f288abd` (including the M13 date picker/date field and the live GitHub Pages visual showcase) in `joelromanpr/m17-loading-feedback`. The pinned Blueprint Spinner and Skeleton rows remain **in progress**, `firstRelease` is null, and generated stable coverage is **0/121** applicable rows. No Maven Central release is claimed.
 
 ## Included in this branch
 
@@ -13,11 +13,11 @@
 
 | Gate | Result |
 | --- | --- |
-| Current post-M19 static checks | Passed on the current merged tree: token generation and coverage `--check`, JavaScript syntax, documentation build (**147 inventory rows, 11 real catalog captures, 36 guides**), and Git whitespace/conflict checks. M12 Select/QueryList, M19 Radio/SegmentedControl, M25 TopBar, and M17 Spinner/Skeleton remain in tokens, inventory, catalog, docs, and the independent consumer. |
-| Current build, lint, API, and catalog | `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` passed on the post-M19 merged tree: **467 tasks**, no failures. |
-| Current API 36 device tests | `BraceLoadingTest` passed **5/5** after the M19 integration with no failures or skips (71 tasks, 24s). This covers progress semantics, reduced-motion pixels, sizing/intents, large text, RTL, high contrast, and automated accessibility checks. |
-| Current Maven consumer | Four aligned snapshot artifacts published into an isolated Maven Local directory with AAR, sources, Javadoc, POM, and Gradle metadata (156 tasks). The independent coordinate-only consumer assembled from that directory (37 tasks). |
-| Current hosted checks | Pending for the final gallery head. The earlier evidence below does not validate the post-M19 integrated tree. |
+| Current post-M13 static checks | Passed on the current merged tree: token generation and coverage `--check`, JavaScript syntax, documentation build (**147 inventory rows, 11 real catalog captures, 38 guides**), and Git whitespace/conflict checks. M12 Select/QueryList, M13 DatePicker/DateField, M19 Radio/SegmentedControl, M25 TopBar, and M17 Spinner/Skeleton remain in tokens, inventory, catalog, docs, and the independent consumer. |
+| Current build, lint, API, and catalog | `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` passed on the post-M13 merged tree: **563 tasks**, no failures. |
+| Current API 36 device tests | `BraceLoadingTest` passed **5/5** after the M13 integration with no failures or skips (71 tasks, 24s). This covers progress semantics, reduced-motion pixels, sizing/intents, large text, RTL, high contrast, and automated accessibility checks. |
+| Current Maven consumer | Five aligned snapshot artifacts (foundation, core, icons, select, datetime) published into a fresh isolated Maven Local directory with AAR, sources, Javadoc, POM, and Gradle metadata (**193 tasks**). The independent coordinate-only consumer assembled from that directory (**37 tasks**). |
+| Current hosted checks | Pending for the post-M13 integrated head. On previous post-M19 head `1e7314c`, [verify](https://github.com/joelromanpr/brace-android/actions/runs/36277546022/job/108503126272), [instrumented API 34](https://github.com/joelromanpr/brace-android/actions/runs/36277546022/job/108503126096), and [CodeQL](https://github.com/joelromanpr/brace-android/actions/runs/36277545915/job/108503085513) passed; that run does not validate the post-M13 tree. |
 | Current visual review | On API 36 at 400 × 800, Spinner showed determinate progress in dark high contrast and Skeleton showed a loading placeholder stack in light mode. Both fresh emulator captures are linked to the exact source commit in the Pages manifest. Chrome verified all 11 cards, the new source links, the high-contrast filter, and no horizontal overflow at 375 px. |
 | Prior post-M11 static checks | Passed on the earlier M11 rebased tree: token generation and coverage `--check`, JavaScript syntax, documentation build (147 inventory rows, 29 guides), and Git whitespace/conflict checks. |
 | Prior post-M11 build, lint, API, and catalog | `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` passed with **377 tasks**. Generated API baselines and icon/loading catalog samples compiled together. |

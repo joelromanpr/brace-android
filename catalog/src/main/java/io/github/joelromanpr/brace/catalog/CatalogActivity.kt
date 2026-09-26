@@ -134,6 +134,11 @@ import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
 import io.github.joelromanpr.brace.select.braceQueryNavigation
+import io.github.joelromanpr.brace.datetime.BraceDateField
+import io.github.joelromanpr.brace.datetime.BraceDatePicker
+import io.github.joelromanpr.brace.datetime.BraceDateShortcut
+import java.time.LocalDate
+import java.time.YearMonth
 import org.json.JSONObject
 import java.util.Locale
 
@@ -240,6 +245,8 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "core-tooltip" to "BraceTooltip(text = \"Imports include archived records\", target = { BraceButton(\"Import help\", onClick = {}) })",
     "core-toast" to "val toasts = rememberBraceToastState(); Box(Modifier.fillMaxSize()) { BraceButton(\"Save\", onClick = { toasts.show(BraceToastSpec(\"Saved\", intent = BraceToastIntent.Success)) }); BraceToastHost(toasts) }",
     "core-overlaytoaster" to "val toasts = rememberBraceToastState(); Box(Modifier.fillMaxSize()) { BraceButton(\"Notify\", onClick = { toasts.show(BraceToastSpec(\"Ready\"), key = \"status\") }); BraceToastHost(toasts, position = BraceToastPosition.BottomEnd) }",
+    "datetime-datepicker" to "var day by rememberSaveable { mutableStateOf<String?>(null) }; BraceDatePicker(day?.let(LocalDate::parse), { day = it?.toString() }, locale = Locale.US)",
+    "datetime-dateinput" to "var day by rememberSaveable { mutableStateOf<String?>(null) }; BraceDateField(day?.let(LocalDate::parse), { day = it?.toString() }, label = \"Due date\", locale = Locale.US)",
 
 )
 
@@ -464,6 +471,50 @@ private fun ComponentSample(
                     color = BraceTheme.colors.semantic.onSurfaceMuted)
                 BraceButton("Clear", onClick = { selectedKey = null; state.query = "" },
                     variant = BraceButtonVariant.Outline)
+            }
+        }
+        "datetime-datepicker" -> {
+            var selected by rememberSaveable { mutableStateOf<String?>("2026-09-18") }
+            val start = LocalDate.of(2026, 9, 1)
+            val end = LocalDate.of(2026, 10, 31)
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Weekends unavailable · September–October 2026",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted,
+                    style = BraceTheme.typography.label)
+                BraceDatePicker(
+                    value = selected?.let(LocalDate::parse),
+                    onValueChange = { selected = it?.toString() },
+                    locale = Locale.US,
+                    minDate = start,
+                    maxDate = end,
+                    isDateEnabled = { it.dayOfWeek.value <= 5 },
+                    shortcuts = listOf(BraceDateShortcut("End of month", LocalDate.of(2026, 9, 30))),
+                    initialMonth = YearMonth.of(2026, 9),
+                )
+                Text("Selected: ${selected ?: "none"}",
+                    color = BraceTheme.colors.semantic.onSurface,
+                    style = BraceTheme.typography.body)
+            }
+        }
+        "datetime-dateinput" -> {
+            var selected by rememberSaveable { mutableStateOf<String?>(null) }
+            var errors by rememberSaveable { mutableStateOf(0) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceDateField(
+                    value = selected?.let(LocalDate::parse),
+                    onValueChange = { selected = it?.toString() },
+                    label = "Due date",
+                    locale = Locale.US,
+                    minDate = LocalDate.of(2026, 1, 1),
+                    maxDate = LocalDate.of(2027, 12, 31),
+                    supportingText = "Use your locale's short date format",
+                    onInvalidInput = { errors++ },
+                )
+                Text("Selected: ${selected ?: "none"} · invalid entries: $errors",
+                    color = BraceTheme.colors.semantic.onSurface,
+                    style = BraceTheme.typography.body)
+                BraceDateField(null, {}, label = "Unavailable date", enabled = false,
+                    locale = Locale.US)
             }
         }
         "core-button" -> {

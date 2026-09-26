@@ -21,6 +21,7 @@ import io.github.joelromanpr.brace.icons.BraceIconName
 import io.github.joelromanpr.brace.icons.BraceIconRegistry
 import io.github.joelromanpr.brace.icons.BraceIconSize
 import io.github.joelromanpr.brace.icons.BraceIcons
+import java.util.Collections
 import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 import org.json.JSONObject
@@ -147,7 +148,7 @@ public class BraceBlueprintNextIconPack private constructor(
                 val icon = icons.getJSONObject(index)
                 val name = icon.getString("name")
                 val tags = icon.getJSONArray("tags")
-                val tagList = List(tags.length()) { tags.getString(it) }
+                val tagList = Collections.unmodifiableList(List(tags.length()) { tags.getString(it) })
                 val filled = if (icon.isNull("filled")) null else glyph(icon.getJSONObject("filled"))
                 val entry = Entry(
                     BraceBlueprintNextIconMetadata(name, tagList, filled != null),

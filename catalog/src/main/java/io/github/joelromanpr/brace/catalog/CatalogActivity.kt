@@ -178,6 +178,7 @@ val pack by produceState<BraceBlueprintNextIconPack?>(null, context) {
     value = withContext(Dispatchers.IO) { BraceBlueprintNextIconPack.load(context) }
 }
 pack?.let { icons ->
+    val iconNameFromData = "magnifying-glass"
     BraceBlueprintNextIcon(icons, BraceBlueprintNextIconNames.MagnifyingGlass,
         contentDescription = null, variant = BraceBlueprintNextIconVariant.Filled)
     BraceBlueprintNextIconByName(icons, iconNameFromData,
@@ -518,7 +519,7 @@ private fun ComponentSample(
                 Text("Icon action activated $actions times", color = BraceTheme.colors.semantic.onSurfaceMuted)
                 Text("Legacy search → ${loadedPack.nextNameForLegacy("search")?.value}",
                     color = BraceTheme.colors.semantic.onSurfaceMuted)
-                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
                     BraceButton(if (filled) "Outlined artwork" else "Filled artwork",
                         onClick = { filled = !filled }, variant = BraceButtonVariant.Outline)
                     BraceButton("Try fallback", onClick = { chosen = "not-in-pack" },

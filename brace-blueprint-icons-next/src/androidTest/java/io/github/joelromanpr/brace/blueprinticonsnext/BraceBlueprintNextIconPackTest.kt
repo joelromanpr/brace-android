@@ -100,6 +100,9 @@ class BraceBlueprintNextIconPackTest {
         assertEquals("circle-plus", pack.nextNameForLegacy("add")?.value)
         assertNull(pack.nextNameForLegacy("not-a-legacy-name"))
         assertTrue(pack.search("magnifying").any { it.name == "magnifying-glass" })
+        val tags = pack.metadata("magnifying-glass")!!.tags
+        assertTrue(runCatching { (tags as MutableList<String>).add("tampered") }.isFailure)
+        assertFalse(pack.search("tampered").any { it.name == "magnifying-glass" })
         assertEquals(3, pack.search("", 3).size)
         assertTrue(runCatching { pack.search("", -1) }.isFailure)
         assertFalse(pack.metadata("chevron-right")!!.hasFilled)

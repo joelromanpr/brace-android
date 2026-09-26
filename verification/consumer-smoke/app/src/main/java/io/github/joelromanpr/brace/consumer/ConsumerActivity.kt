@@ -37,6 +37,8 @@ import io.github.joelromanpr.brace.core.BraceFieldLabel
 import io.github.joelromanpr.brace.core.BraceDialog
 import io.github.joelromanpr.brace.core.BraceDrawer
 import io.github.joelromanpr.brace.core.BraceDrawerPosition
+import io.github.joelromanpr.brace.core.BraceDropdown
+import io.github.joelromanpr.brace.core.BraceDropdownOption
 import io.github.joelromanpr.brace.core.BraceEditableText
 import io.github.joelromanpr.brace.core.BraceFormField
 import io.github.joelromanpr.brace.core.BraceFormIntent
@@ -99,6 +101,7 @@ class ConsumerActivity : ComponentActivity() {
                 var caseNotes by remember { mutableStateOf("") }
                 var reportTitle by remember { mutableStateOf("Quarterly report") }
                 var amount by rememberSaveable { mutableStateOf("0.2") }
+                var exportFormat by rememberSaveable { mutableStateOf<String?>(null) }
                 var iconName by remember { mutableStateOf("search") }
                 val iconRegistry = remember {
                     BraceIconRegistry.Default.register("custom-check",
@@ -139,6 +142,11 @@ class ConsumerActivity : ComponentActivity() {
                                 BraceButton("Export", onClick = { count++ }, modifier = controlModifier)
                             }
                         }
+                        BraceDropdown(
+                            options = listOf(BraceDropdownOption("csv", "CSV"), BraceDropdownOption("json", "JSON")),
+                            selectedValue = exportFormat, onValueChange = { exportFormat = it },
+                            label = "Export format",
+                        )
                         BraceNumericField(amount, { amount = it }, label = "Amount",
                             min = 0.0, max = 100.0, minorStepSize = 0.1)
                         BraceCallout(title = "Ready", intent = BraceCalloutIntent.Success)

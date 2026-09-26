@@ -35,4 +35,5 @@
     <string name="brace_numeric_range">Minimum %1$s, maximum %2$s</string>
     <string name="brace_numeric_minimum">Minimum %1$s</string>
     <string name="brace_numeric_maximum">Maximum %1$s</string>
+    <string name="brace_dropdown_placeholder">Choose an option</string>
 </resources>

@@ -4,4 +4,6 @@ Changes to released public artifacts are recorded here using [Semantic Versionin
 
 ## Unreleased
 
+- Add the in-progress token-driven `BraceDropdown` Android adaptation for pinned Blueprint HTMLSelect, with a controlled option model, catalog, docs, and interaction tests.
+
 - Established the pinned scope and foundations for Brace Android.

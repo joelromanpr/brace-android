@@ -79,6 +79,9 @@ import io.github.joelromanpr.brace.core.BraceOverlayHost
 import io.github.joelromanpr.brace.core.BraceDialog
 import io.github.joelromanpr.brace.core.BraceDrawer
 import io.github.joelromanpr.brace.core.BraceDrawerPosition
+import io.github.joelromanpr.brace.core.BraceDropdown
+import io.github.joelromanpr.brace.core.BraceDropdownOption
+import io.github.joelromanpr.brace.core.BraceDropdownSize
 import io.github.joelromanpr.brace.core.BracePopover
 import io.github.joelromanpr.brace.core.BracePopoverPlacement
 import io.github.joelromanpr.brace.core.BraceContextMenu
@@ -183,6 +186,13 @@ BraceTextArea(details, { details = it }, accessibilityLabel = "Details", minLine
 BraceEditableText(title, { title = it }, label = "Report title", editActionLabel = "Edit report title", onConfirm = { saveTitle(it) })""".trimIndent(),
     "core-label" to """BraceFieldLabel("Export format", spokenLabel = "Export format, ${'$'}format") { controlModifier -> BraceButton(format, onClick = { format = "JSON" }, modifier = controlModifier) }""",
     "core-controlgroup" to """BraceControlGroup(fill = true, accessibilityLabel = "Report actions") { Item { controlModifier -> BraceButton("Preview", onClick = ::preview, modifier = controlModifier) }; Item(fill = false) { controlModifier -> BraceButton("Export", onClick = ::export, modifier = controlModifier) } }""",
+    "core-htmlselect" to """var region by rememberSaveable { mutableStateOf<String?>(null) }
+BraceDropdown(
+    options = listOf(BraceDropdownOption("east", "East"), BraceDropdownOption("west", "West")),
+    selectedValue = region,
+    onValueChange = { region = it },
+    label = "Region",
+)""".trimIndent(),
     "core-numericinput" to "var amount by rememberSaveable { mutableStateOf(\"0.2\") }; BraceNumericField(value = amount, onValueChange = { amount = it }, label = \"Amount\", min = 0.0, max = 100.0, stepSize = 1.0, majorStepSize = 10.0, minorStepSize = 0.1)",
     "core-card" to "BraceCard(elevation = BraceCardElevation.One, onClick = { open() }) { Text(\"Open project\") }",
     "core-cardlist" to "BraceCardList(items = projects, itemKey = { it.id }, onItemClick = { open(it) }) { project -> Text(project.name) }",
@@ -449,6 +459,40 @@ private fun ComponentSample(
                     color = BraceTheme.colors.semantic.onSurfaceMuted)
                 BraceButton("Clear", onClick = { selectedKey = null; state.query = "" },
                     variant = BraceButtonVariant.Outline)
+            }
+        }
+        "core-htmlselect" -> {
+            var selected by rememberSaveable { mutableStateOf<String?>(null) }
+            var minimal by rememberSaveable { mutableStateOf(false) }
+            var large by rememberSaveable { mutableStateOf(false) }
+            var disabled by rememberSaveable { mutableStateOf(false) }
+            val choices = listOf(
+                BraceDropdownOption("east", "East"),
+                BraceDropdownOption("west", "West"),
+                BraceDropdownOption("central", "Central", enabled = false),
+            )
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceDropdown(
+                    options = choices, selectedValue = selected,
+                    onValueChange = { selected = it }, label = "Region",
+                    enabled = !disabled, minimal = minimal,
+                    size = if (large) BraceDropdownSize.Large else BraceDropdownSize.Medium,
+                    placeholder = "Choose a region",
+                    isError = selected == null,
+                    supportingText = if (selected == null) "Choose a region to continue" else "Selected value: $selected",
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (minimal) "Filled" else "Minimal", onClick = { minimal = !minimal },
+                        variant = BraceButtonVariant.Outline)
+                    BraceButton(if (large) "Medium" else "Large", onClick = { large = !large },
+                        variant = BraceButtonVariant.Outline)
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (disabled) "Enable" else "Disable", onClick = { disabled = !disabled },
+                        variant = BraceButtonVariant.Outline)
+                    BraceButton("Clear", onClick = { selected = null },
+                        variant = BraceButtonVariant.Outline)
+                }
             }
         }
         "core-button" -> {

@@ -57,6 +57,11 @@ import io.github.joelromanpr.brace.core.BraceTextField
 import io.github.joelromanpr.brace.core.BraceTextArea
 import io.github.joelromanpr.brace.core.BraceTextAreaSize
 import io.github.joelromanpr.brace.core.BraceNumericField
+import io.github.joelromanpr.brace.core.BraceRadio
+import io.github.joelromanpr.brace.core.BraceRadioGroup
+import io.github.joelromanpr.brace.core.BraceRadioOption
+import io.github.joelromanpr.brace.core.BraceSegmentedControl
+import io.github.joelromanpr.brace.core.BraceSegmentedOption
 import io.github.joelromanpr.brace.core.braceShortcuts
 import io.github.joelromanpr.brace.core.rememberBraceShortcutRegistryState
 import io.github.joelromanpr.brace.core.BraceTag
@@ -109,6 +114,8 @@ class ConsumerActivity : ComponentActivity() {
                 var regionKey by remember { mutableStateOf<String?>(null) }
                 var regionExpanded by remember { mutableStateOf(false) }
                 val regionQuery = rememberBraceQueryListState()
+                var meal by remember { mutableStateOf("soup") }
+                var layout by remember { mutableStateOf("list") }
                 val shortcutState = rememberBraceShortcutRegistryState()
                 val toasts = rememberBraceToastState()
                 Box(Modifier.fillMaxSize()) {
@@ -145,6 +152,15 @@ class ConsumerActivity : ComponentActivity() {
                         }
                         BraceNumericField(amount, { amount = it }, label = "Amount",
                             min = 0.0, max = 100.0, minorStepSize = 0.1)
+                        BraceRadio(selected = meal == "soup", onSelect = { meal = "soup" }, label = "Soup")
+                        BraceRadioGroup(
+                            options = listOf(BraceRadioOption("soup", "Soup"), BraceRadioOption("salad", "Salad")),
+                            selectedValue = meal, onValueChange = { meal = it }, label = "Lunch special",
+                        )
+                        BraceSegmentedControl(
+                            options = listOf(BraceSegmentedOption("list", "List"), BraceSegmentedOption("grid", "Grid")),
+                            value = layout, onValueChange = { layout = it }, label = "Layout",
+                        )
                         BraceCallout(title = "Ready", intent = BraceCalloutIntent.Success)
                         BraceIconRegistryProvider(iconRegistry) {
                             Row {

@@ -1,6 +1,6 @@
 # M17: Spinner and Skeleton loading feedback
 
-**Status:** source slice merged with current main `b412d49` (including the live GitHub Pages visual showcase) in `joelromanpr/m17-loading-feedback`. The pinned Blueprint Spinner and Skeleton rows remain **in progress**, `firstRelease` is null, and generated stable coverage is **0/121** applicable rows. No Maven Central release is claimed.
+**Status:** source slice merged with current main `a88429c` (including the live GitHub Pages visual showcase) in `joelromanpr/m17-loading-feedback`. The pinned Blueprint Spinner and Skeleton rows remain **in progress**, `firstRelease` is null, and generated stable coverage is **0/121** applicable rows. No Maven Central release is claimed.
 
 ## Included in this branch
 
@@ -13,11 +13,11 @@
 
 | Gate | Result |
 | --- | --- |
-| Current post-Pages static checks | Passed on the current merged tree: token generation and coverage `--check`, JavaScript syntax, documentation build (**147 inventory rows, 11 real catalog captures, 32 guides**), and Git whitespace/conflict checks. M12 Select/QueryList, M25 TopBar, and M17 Spinner/Skeleton remain in tokens, inventory, catalog, docs, and the independent consumer. |
-| Current build, lint, API, and catalog | `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` passed on the post-Pages merged tree: **467 tasks**, no failures. |
+| Current post-M19 static checks | Passed on the current merged tree: token generation and coverage `--check`, JavaScript syntax, documentation build (**147 inventory rows, 11 real catalog captures, 32 guides**), and Git whitespace/conflict checks. M12 Select/QueryList, M19 Radio/SegmentedControl, M25 TopBar, and M17 Spinner/Skeleton remain in tokens, inventory, catalog, docs, and the independent consumer. |
+| Current build, lint, API, and catalog | `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` passed on the post-M19 merged tree: **467 tasks**, no failures. |
 | Current API 36 device tests | `BraceLoadingTest` passed **5/5** with no failures or skips (71 tasks, 21s). This covers progress semantics, reduced-motion pixels, sizing/intents, large text, RTL, high contrast, and automated accessibility checks. |
 | Current Maven consumer | Four aligned snapshot artifacts published into an isolated Maven Local directory with AAR, sources, Javadoc, POM, and Gradle metadata (156 tasks). The independent coordinate-only consumer assembled from that directory (37 tasks). |
-| Current hosted checks | Pending for the final gallery head. The earlier evidence below does not validate the post-Pages integrated tree. |
+| Current hosted checks | Pending for the final gallery head. The earlier evidence below does not validate the post-M19 integrated tree. |
 | Current visual review | On API 36 at 400 × 800, Spinner showed determinate progress in dark high contrast and Skeleton showed a loading placeholder stack in light mode. Both fresh emulator captures are linked to the exact source commit in the Pages manifest. |
 | Prior post-M11 static checks | Passed on the earlier M11 rebased tree: token generation and coverage `--check`, JavaScript syntax, documentation build (147 inventory rows, 29 guides), and Git whitespace/conflict checks. |
 | Prior post-M11 build, lint, API, and catalog | `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` passed with **377 tasks**. Generated API baselines and icon/loading catalog samples compiled together. |

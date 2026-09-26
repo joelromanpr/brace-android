@@ -24,4 +24,4 @@
 
 `Modifier.onSizeChanged` is an AndroidX Compose API, not a Brace artifact. The CSS mapping does not expose `Classes` constants, and the provider mapping deliberately uses independently scoped existing APIs. The catalog sample must still be compiled and inspected on a small phone at large text and in RTL, light/dark/high-contrast modes, with touch, keyboard, mouse, and TalkBack. Static documentation checks alone cannot validate those interactions.
 
-After this branch's pending compile and device review, the next focused branch is `joelromanpr/m55-web-mechanisms-validation` for any fixes found by that review. The larger component plan continues with the remaining core and table rows in the [roadmap](../../ROADMAP.md).
+Complete the pending compile and device review on this M54 branch, and apply any findings here before review. The next focused implementation branch is `joelromanpr/m56-table-accessibility`; the larger component plan continues in the [roadmap](../../ROADMAP.md).

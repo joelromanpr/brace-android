@@ -252,7 +252,7 @@ class BraceTableEditableNameTest {
             }
         }
         assertTrue(rule.onNodeWithTag("brace-table-header:read-only").fetchSemanticsNode()
-            .config[SemanticsActions.CustomActions].isEmpty())
+            .config[SemanticsActions.CustomActions].none { it.label == "Edit column name" })
         rule.onNodeWithTag("brace-table-header:read-only").performMouseInput { doubleClick() }
         assertEquals(null, editing)
         rule.onNodeWithTag("brace-table-header:status").performMouseInput { doubleClick() }
@@ -337,8 +337,8 @@ class BraceTableEditableNameTest {
         assertEquals(0, resizeCount)
         assertEquals(180.dp, width)
         rule.onNodeWithTag("brace-table-resize-column:status").assertExists()
-        assertEquals(2, rule.onNodeWithTag("brace-table-cell:r0:status").fetchSemanticsNode()
-            .config[SemanticsActions.CustomActions].size) // Cell Edit returns after header cancel.
+        assertEquals(3, rule.onNodeWithTag("brace-table-cell:r0:status").fetchSemanticsNode()
+            .config[SemanticsActions.CustomActions].size) // Range, add-region, and Edit return after cancel.
     }
 
     @Test fun removedEditableColumnClosesStaleSessionWithoutCommit() {

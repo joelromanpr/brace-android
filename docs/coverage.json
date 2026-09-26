@@ -3373,18 +3373,18 @@
       "blueprintName": "Region",
       "blueprintUrl": "https://blueprintjs.com/docs/#table/api",
       "sourcePage": "table/api",
-      "braceApi": "BraceTableRegion",
+      "braceApi": "BraceTableRegion; BraceTableSelection.Regions; BraceTableRegions; rememberBraceTableSelection",
       "artifact": "io.github.joelromanpr.brace:brace-table",
-      "behavior": "Represent cell, row, column, and whole-table selections in a saveable value type. Expose row and column context, focused cell and selection; support touch, keyboard, mouse, and TalkBack.",
+      "behavior": "Controlled stable-key cell, full-row, full-column, whole-table, and disjoint regions. The corner and Ctrl/Cmd+A select all; modifier-click and TalkBack actions add regions. Selected cells and full-axis headers expose semantics; saveable state, keyboard navigation, and sparse TSV copying use current row/column order.",
       "classification": "adaptation",
-      "reason": "Blueprint region factories become Kotlin value types.",
-      "milestone": "M6",
+      "reason": "Blueprint index intervals and mutable region utilities become immutable Kotlin key-based values; keys follow host sorting, stale bounds suppress partial highlights/copy, and disjoint clipboard data uses sparse TSV.",
+      "milestone": "M50",
       "priority": "P1",
-      "status": "planned",
-      "implementation": null,
-      "sample": null,
-      "documentation": null,
-      "tests": null,
+      "status": "in progress",
+      "implementation": "brace-table/src/main/java/io/github/joelromanpr/brace/table/BraceTableRegion.kt",
+      "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "documentation": "docs/table-regions.md",
+      "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableRegionTest.kt",
       "firstRelease": null,
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx"
     },
@@ -3811,8 +3811,8 @@
         "total": 23,
         "stable": 0,
         "status": {
-          "in progress": 18,
-          "planned": 5
+          "in progress": 19,
+          "planned": 4
         }
       }
     },

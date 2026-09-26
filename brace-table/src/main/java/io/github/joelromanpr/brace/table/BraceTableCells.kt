@@ -39,7 +39,8 @@ import io.github.braceandroid.foundation.BraceTheme
  * row number is one-based. [rowKey] and [columnKey] must remain stable as data moves. The
  * parent [BraceDataTable] owns keyboard navigation and viewport focus; [onSelect] and optional
  * range/edit callbacks are also exposed to touch, mouse, and TalkBack here. [enabled]
- * pauses those actions during a controlled table load.
+ * pauses those actions during a controlled table load. [onAddRegion] exposes a separate
+ * TalkBack action for adding this cell to a disjoint selection.
  */
 @Composable
 fun BraceTableCell(
@@ -57,6 +58,7 @@ fun BraceTableCell(
     enabled: Boolean = true,
     onExtendSelection: (() -> Unit)? = null,
     onEdit: (() -> Unit)? = null,
+    onAddRegion: (() -> Unit)? = null,
     content: (@Composable () -> Unit)? = null,
 ) {
     require(rowIndex >= 0 && columnIndex >= 0) { "Table cell coordinates must be nonnegative" }
@@ -75,6 +77,7 @@ fun BraceTableCell(
     val selectLabel = stringResource(R.string.brace_table_select)
     val extendLabel = stringResource(R.string.brace_table_extend_range)
     val editLabel = stringResource(R.string.brace_table_edit)
+    val addRegionLabel = stringResource(R.string.brace_table_add_region)
     val description = stringResource(R.string.brace_table_cell_description, columnTitle,
         rowIndex + 1, rowLabel, value)
     Box(
@@ -95,6 +98,9 @@ fun BraceTableCell(
                     },
                     onEdit?.let { action ->
                         CustomAccessibilityAction(editLabel) { action(); true }
+                    },
+                    onAddRegion?.let { action ->
+                        CustomAccessibilityAction(addRegionLabel) { action(); true }
                     },
                 ) else emptyList()
             },
@@ -118,6 +124,7 @@ fun BraceTableCell(
  * Set [enabled] false while another header editor owns interaction. [sortState] and
  * [sortActionLabel] announce an optional sort action without changing the selection target.
  * [trailingInset] reserves room for adjacent sort and resize controls.
+ * [onAddRegion] exposes a distinct TalkBack selection action.
  */
 @Composable
 fun BraceColumnHeader(
@@ -134,6 +141,7 @@ fun BraceColumnHeader(
     sortActionLabel: String? = null,
     onSort: (() -> Unit)? = null,
     trailingInset: Dp = 0.dp,
+    onAddRegion: (() -> Unit)? = null,
 ) {
     require((sortActionLabel == null) == (onSort == null)) {
         "Sort action and label must be supplied together"
@@ -146,6 +154,7 @@ fun BraceColumnHeader(
     val metrics = BraceTheme.componentMetrics.table
     val selectLabel = stringResource(R.string.brace_table_select)
     val editLabel = stringResource(R.string.brace_table_edit_column_name)
+    val addRegionLabel = stringResource(R.string.brace_table_add_region)
     val description = stringResource(R.string.brace_table_column_description, title, columnIndex + 1)
     Box(
         modifier.background(if (selected) colors.selectedRow else colors.header)
@@ -164,6 +173,9 @@ fun BraceColumnHeader(
                     },
                     (if (enabled) onSort else null)?.let { action ->
                         CustomAccessibilityAction(requireNotNull(sortActionLabel)) { action(); true }
+                    },
+                    (if (enabled) onAddRegion else null)?.let { action ->
+                        CustomAccessibilityAction(addRegionLabel) { action(); true }
                     },
                 )
             },
@@ -185,7 +197,8 @@ fun BraceColumnHeader(
  * Fixed row header used by [BraceDataTable]. [rowLabel] is announced with the one-based row
  * number even when [content] replaces the visible ordinal. Selection is controlled by the
  * caller, while the table retains keyboard focus and any separate resize handle. [enabled]
- * pauses the selection action during a controlled table load.
+ * pauses the selection action during a controlled table load. [onAddRegion] adds this
+ * row to a disjoint selection through a separate TalkBack action.
  */
 @Composable
 fun BraceRowHeader(
@@ -196,6 +209,7 @@ fun BraceRowHeader(
     onSelect: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    onAddRegion: (() -> Unit)? = null,
     content: (@Composable () -> Unit)? = null,
 ) {
     require(rowIndex >= 0) { "Row index must be nonnegative" }
@@ -204,6 +218,7 @@ fun BraceRowHeader(
     val semantic = BraceTheme.colors.semantic
     val metrics = BraceTheme.componentMetrics.table
     val selectLabel = stringResource(R.string.brace_table_select)
+    val addRegionLabel = stringResource(R.string.brace_table_add_region)
     val description = stringResource(R.string.brace_table_row_description, rowIndex + 1, rowLabel)
     Box(
         modifier.background(if (selected) colors.selectedRow else colors.header)
@@ -214,6 +229,9 @@ fun BraceRowHeader(
                 this.selected = selected
                 contentDescription = description
                 if (enabled) onClick(selectLabel) { onSelect(); true }
+                customActions = if (enabled && onAddRegion != null)
+                    listOf(CustomAccessibilityAction(addRegionLabel) { onAddRegion(); true })
+                else emptyList()
             },
         contentAlignment = Alignment.Center,
     ) {

@@ -274,6 +274,7 @@ const componentGuideLinks = [
   ['Data tables', 'table-viewport'],
   ['Cells and headers', 'table-cells'],
   ['Loading and status', 'table-loading'],
+  ['Selection regions', 'table-regions'],
   ['Selection and resizing', 'table-selection-resize'],
   ['Copying cells', 'table-copying'],
   ['Editing cells', 'table-editing'],

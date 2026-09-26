@@ -342,6 +342,12 @@ BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, state = 
     "table-cell-selection" to """var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
 BraceDataTable(rows, { it.id }, columns, selection, { selection = it })
 // Tap a cell or header; Shift+arrows extend a rectangular range.""".trimIndent(),
+    "table-region" to """var selection by rememberBraceTableSelection()
+BraceDataTable(rows, { it.id }, columns, selection, { selection = it })
+BraceButton("Add case", onClick = {
+    selection = BraceTableRegions.add(selection, BraceTableRegion.Cells("case-1", "status"))
+})
+// Ctrl/Cmd+A or the corner selects the table; Ctrl/Cmd+click adds a region.""".trimIndent(),
     "table-copying" to "BraceTableClipboard.formatSelection(rows, { it.id }, columns, selection) // Ctrl/Cmd+C also copies in BraceDataTable",
     "table-editablecell" to """var editing by remember { mutableStateOf<BraceTableSelection.Cell?>(null) }
 val columns = listOf(BraceTableColumn<Record>("title", "Title", 160.dp, { it.title }, editable = true))
@@ -1584,7 +1590,7 @@ private fun ComponentSample(
             }
         }
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
-        "table-cell-selection", "table-column-and-row-resizing", "table-copying",
+        "table-cell-selection", "table-region", "table-column-and-row-resizing", "table-copying",
         "table-cell", "table-columnheadercell", "table-rowheadercell",
         "table-editablecell", "table-editing", "table-editablename" -> TableCatalogSample()
         "core-h1", "core-h2", "core-h3", "core-h4", "core-h5", "core-h6",

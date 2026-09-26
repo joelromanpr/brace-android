@@ -30,6 +30,7 @@ dependencies {
     implementation(project(":brace-core"))
     implementation(project(":brace-icons"))
     implementation(project(":brace-blueprint-icons"))
+    implementation(project(":brace-blueprint-icons-next"))
     implementation(project(":brace-select"))
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)

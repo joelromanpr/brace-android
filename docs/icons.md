@@ -1,6 +1,6 @@
 # Icons and icon loading
 
-This `brace-icons` source slice maps the pinned Blueprint 6.18.0 [Icon component](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/icon/icon.mdx) and [icon loading](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/src/loading-icons.mdx) capabilities (`@blueprintjs/icons` 6.13.0 at that commit) to Compose. Both inventory rows remain **in progress**. The separate opt-in [Blueprint glyph pack](#optional-blueprint-glyph-pack) is **in progress** with all 706 names from the pinned icons package. `brace-icons` continues to bundle only 11 original Brace drawings. No Maven Central version has shipped.
+This `brace-icons` source slice maps the pinned Blueprint 6.18.0 [Icon component](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/icon/icon.mdx) and [icon loading](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/src/loading-icons.mdx) capabilities (`@blueprintjs/icons` 6.13.0 at that commit) to Compose. Both inventory rows remain **in progress**. The separate opt-in [legacy Blueprint glyph pack](#optional-legacy-blueprint-glyph-pack) is **in progress** with all 706 legacy names. The pinned package also publishes a distinct [next-generation glyph pack](#optional-next-generation-blueprint-glyph-pack) with 695 outlined names and 386 filled variants; its own inventory row is **in progress**. `brace-icons` continues to bundle only 11 original Brace drawings. No Maven Central version has shipped.
 
 ## Install and use
 
@@ -49,9 +49,9 @@ BraceIconRegistryProvider(customRegistry) {
 
 Blueprint's React static imports, JavaScript dynamic chunks and loader options, SVG/DOM wrapper props, CSS icon fonts, and `tagName` have no independent Android API. Compose `ImageVector`, `Modifier`, composition scoping, and Android semantics provide the native behavior. The pinned `Icon` props for intent and size map to Brace semantic tint and dp sizing; browser effects and HTML attributes remain application-specific Compose drawing or modifiers.
 
-## Optional Blueprint glyph pack
+## Optional legacy Blueprint glyph pack
 
-`brace-blueprint-icons` is an **opt-in**, aligned-version artifact. It does not replace `brace-icons` or change `BraceIconRegistry.Default`. It imports the 706 names in pinned `@blueprintjs/icons` 6.13.0, with distinct 16px and 20px SVG paths. Add it only when the complete pinned artwork is needed:
+`brace-blueprint-icons` is an **opt-in**, aligned-version artifact. It does not replace `brace-icons` or change `BraceIconRegistry.Default`. It imports the 706 legacy names in pinned `@blueprintjs/icons` 6.13.0, with distinct 16px and 20px SVG paths. Add it only when the complete pinned legacy artwork is needed:
 
 ```kotlin
 implementation("io.github.joelromanpr.brace:brace-blueprint-icons:0.1.0-SNAPSHOT")
@@ -86,10 +86,37 @@ BraceIconButton(BraceBlueprintIconNames.Search, label = "Search records",
 
 `find` returns null for an unknown name; `BraceBlueprintIconByName` shows Brace's original Help glyph as a fallback. Give that fallback an accurate spoken description. Decorative glyphs use `contentDescription = null`; informative glyphs require a localized nonblank description. A glyph alone is not an action. To make an icon-only action, register the selected vector in a scoped `BraceIconRegistry` and render `BraceIconButton` with a localized label; its target remains at least 48dp and provides keyboard focus. Do not use icon appearance alone to communicate status. The static artwork has no animation and needs no reduced-motion substitution. At large text scales, keep a readable text label near informative glyphs.
 
-The [pack manifest](../brace-blueprint-icons/src/main/assets/brace-blueprint-icons.json) records every pinned name, metadata, exact path/viewBox, and original SVG SHA-256 for both sizes, plus hashes of the upstream metadata and license. [The generator](../scripts/generate_blueprint_icons.py) checks all 706 SVGs against a pinned Blueprint checkout with `--check --upstream /path/to/checkout`; CI checks committed assets and generated Kotlin with `--check`. The [copied Apache-2.0 license](../brace-blueprint-icons/src/main/assets/blueprint-icons-LICENSE.txt) and [attribution/modification notice](../brace-blueprint-icons/src/main/assets/blueprint-icons-ATTRIBUTION.txt) ship in the AAR. Search tags and artwork remain Blueprint's licensed material. See the [M35 report](milestones/m35-blueprint-icon-pack.md) for test results and open review gates.
+The [pack manifest](../brace-blueprint-icons/src/main/assets/brace-blueprint-icons.json) records every pinned name, metadata, exact path/viewBox, and original SVG SHA-256 for both sizes, plus hashes of the upstream metadata and license. [The generator](../scripts/generate_blueprint_icons.py) checks all 1,412 legacy SVGs against a pinned Blueprint checkout with `--check --upstream /path/to/checkout`; CI checks committed assets and generated Kotlin with `--check`. The [copied Apache-2.0 license](../brace-blueprint-icons/src/main/assets/blueprint-icons-LICENSE.txt) and [attribution/modification notice](../brace-blueprint-icons/src/main/assets/blueprint-icons-ATTRIBUTION.txt) ship in the AAR. Search tags and artwork remain Blueprint's licensed material. See the [M35 report](milestones/m35-blueprint-icon-pack.md) for test results and open review gates.
+
+## Optional next-generation Blueprint glyph pack
+
+The same pinned `@blueprintjs/icons` 6.13.0 package publishes a public `@blueprintjs/icons/next` subpath. Its canonical catalog differs materially from the 706 legacy names: **695 outlined 16px glyphs**, **386 additional filled 16px variants**, and a pinned **706-name legacy-to-next mapping**. Of the canonical next names, 466 do not occur in the legacy catalog. Use the separate, aligned `brace-blueprint-icons-next` artifact to include this artwork; neither it nor the legacy pack changes the 11 original Brace vectors. This source slice is **in progress**, with no Maven Central release.
+
+```kotlin
+implementation("io.github.joelromanpr.brace:brace-blueprint-icons-next:0.1.0-SNAPSHOT")
+```
+
+Load its 762 KB packaged manifest once off the UI thread, then retain the immutable pack. `find` returns the exact requested outlined or filled variant and returns null when a glyph has no filled form. The composable draws the outlined form of a known icon if its filled form is absent; an unknown name uses the original Brace Help glyph. Give that unknown fallback an accurate spoken description. Type-safe constants, runtime lookup, metadata/tag search, cache identity and 706 legacy migration names are available:
+
+```kotlin
+val pack = withContext(Dispatchers.IO) { BraceBlueprintNextIconPack.load(context) }
+val migrated = pack.nextNameForLegacy("search") // magnifying-glass
+val filled = pack.find(BraceBlueprintNextIconNames.MagnifyingGlass,
+    BraceBlueprintNextIconVariant.Filled)
+BraceTheme {
+    BraceBlueprintNextIcon(pack, BraceBlueprintNextIconNames.MagnifyingGlass,
+        contentDescription = "Search symbol", variant = BraceBlueprintNextIconVariant.Filled,
+        intent = BraceIconIntent.Primary)
+}
+val results = pack.search("magnifying", limit = 20)
+```
+
+Decorative glyphs use a null description; informative glyphs require a localized nonblank one. For icon-only actions, register the chosen vector in a scoped `BraceIconRegistry` and use `BraceIconButton` for a named, focusable 48dp target. Theme color, brand, high contrast, explicit RTL mirroring, and reduced-motion behavior match the legacy pack. The 695 outlined SVGs include an empty `blank` and a 17×16 `cube-pen` viewBox. The source's one `<rect height="16"/>` has default width zero and draws no pixels; the generated Compose path omits that inert element.
+
+The [next manifest](../brace-blueprint-icons-next/src/main/assets/brace-blueprint-icons-next.json) records pinned metadata, source hashes, every SVG path/viewBox, and the migration mapping. [The generator](../scripts/generate_blueprint_next_icons.py) checks all 1,081 SVG bytes against a pinned Blueprint checkout with `--check --upstream /path/to/checkout`; CI checks committed output without a checkout. The [Apache-2.0 license copy](../brace-blueprint-icons-next/src/main/assets/blueprint-icons-next-LICENSE.txt) and [attribution/modification notice](../brace-blueprint-icons-next/src/main/assets/blueprint-icons-next-ATTRIBUTION.txt) ship in the AAR. The [M55 report](milestones/m55-blueprint-next-icons.md) records verification and open gates.
 
 ## Artwork, license, and verification
 
-All 11 bundled vector paths in [BundledVectors.kt](../brace-icons/src/main/java/io/github/joelromanpr/brace/icons/BundledVectors.kt) were drawn for Brace Android. They are licensed under this repository's [Apache-2.0 LICENSE](../LICENSE). The [artifact asset manifest](../brace-icons/src/main/assets/brace-icons-manifest.json) records each name, source, author, and license and ships in the AAR. No Blueprint path is copied into `brace-icons`. The optional `brace-blueprint-icons` artifact contains licensed path data and the separate attribution described above. Apps registering other third-party artwork own its license and attribution.
+All 11 bundled vector paths in [BundledVectors.kt](../brace-icons/src/main/java/io/github/joelromanpr/brace/icons/BundledVectors.kt) were drawn for Brace Android. They are licensed under this repository's [Apache-2.0 LICENSE](../LICENSE). The [artifact asset manifest](../brace-icons/src/main/assets/brace-icons-manifest.json) records each name, source, author, and license and ships in the AAR. No Blueprint path is copied into `brace-icons`. The optional `brace-blueprint-icons` and `brace-blueprint-icons-next` artifacts contain licensed path data and the separate attributions described above. Apps registering other third-party artwork own its license and attribution.
 
 Focused tests cover manifest/registry parity, immutable custom registration, runtime fallback, decorative and announced semantics, sizing, an accessible high-contrast icon button, and RTL mirroring. The [M11 report](milestones/m11-icons.md) records results and pending gates. Manual TalkBack, hardware keyboard, mouse, and cross-device review remain required before a stable row or release is claimed.

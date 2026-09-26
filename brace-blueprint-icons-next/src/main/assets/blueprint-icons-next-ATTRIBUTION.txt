@@ -1,0 +1,13 @@
+Blueprint next-generation icon artwork and metadata
+Copyright Palantir Technologies, Inc.
+Licensed under Apache License 2.0; see blueprint-icons-next-LICENSE.txt in this AAR.
+
+Pinned source: palantir/blueprint commit a60d4c92257612808fbfac81cfeee4fcba91a8b4,
+@blueprintjs/icons 6.13.0, public @blueprintjs/icons/next subpath.
+Source files: packages/icons/icons-next.json, packages/icons/icons-name-map.json,
+resources/icons/next/outlined/*.svg, resources/icons/next/filled/*.svg.
+
+Brace Android transcribes SVG viewBox and path data into a compact JSON manifest and
+converts the paths to Compose ImageVectors at runtime. The one source rect with no
+width in filled magnifying-glass-lines.svg has zero width and draws no pixels; it is
+omitted from the vector path. This artwork remains distinct from Brace's original icons.

@@ -5,7 +5,7 @@ An open-source Jetpack Compose design system for complex, data-dense Android app
 ## Coverage
 
 <!-- coverage:begin -->
-**Released coverage: 0/121 applicable rows** (0/94 components; 0/27 capabilities). Web-specific mappings: 0/24. Labs tracked separately: 2 rows. Full applicable parity: no.
+**Released coverage: 0/122 applicable rows** (0/94 components; 0/28 capabilities). Web-specific mappings: 0/24. Labs tracked separately: 2 rows. Full applicable parity: no.
 <!-- coverage:end -->
 
 [Browse every row and its evidence](docs/coverage.md) · [Machine-readable inventory](inventory/blueprint-components.json) · [Roadmap](ROADMAP.md)
@@ -26,11 +26,11 @@ The catalog APK is `catalog/build/outputs/apk/debug/catalog-debug.apk`. It lists
 No Maven Central release has been published. To try the local snapshot, publish the foundation, core, icons, optional Blueprint icons, and select AARs to Maven Local, then compile the [independent consumer sample](verification/consumer-smoke/README.md):
 
 ```sh
-./gradlew :brace-foundation:publishToMavenLocal :brace-core:publishToMavenLocal :brace-icons:publishToMavenLocal :brace-blueprint-icons:publishToMavenLocal :brace-select:publishToMavenLocal
+./gradlew :brace-foundation:publishToMavenLocal :brace-core:publishToMavenLocal :brace-icons:publishToMavenLocal :brace-blueprint-icons:publishToMavenLocal :brace-blueprint-icons-next:publishToMavenLocal :brace-select:publishToMavenLocal
 ./gradlew -p verification/consumer-smoke :app:assembleDebug
 ```
 
-The consumer uses aligned `brace-core`, `brace-icons`, `brace-blueprint-icons`, and `brace-select` Maven Local coordinates at `0.1.0-SNAPSHOT`. Core exposes foundation transitively; icons can be added separately without bundling artwork into core. The [installation guide](docs/installation.md) has complete dependency snippets and the supported toolchain. Maven Central publishing is a manual, protected maintainer action after a verified release tag.
+The consumer uses aligned `brace-core`, `brace-icons`, `brace-blueprint-icons`, `brace-blueprint-icons-next`, and `brace-select` Maven Local coordinates at `0.1.0-SNAPSHOT`. Core exposes foundation transitively; icons can be added separately without bundling artwork into core. The [installation guide](docs/installation.md) has complete dependency snippets and the supported toolchain. Maven Central publishing is a manual, protected maintainer action after a verified release tag.
 
 ## A Compose screen
 

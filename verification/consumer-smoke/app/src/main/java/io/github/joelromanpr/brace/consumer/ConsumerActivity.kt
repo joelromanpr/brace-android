@@ -10,6 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -48,6 +49,7 @@ import io.github.joelromanpr.brace.core.BraceShortcutScope
 import io.github.joelromanpr.brace.core.BraceTextField
 import io.github.joelromanpr.brace.core.BraceTextArea
 import io.github.joelromanpr.brace.core.BraceTextAreaSize
+import io.github.joelromanpr.brace.core.BraceNumericField
 import io.github.joelromanpr.brace.core.braceShortcuts
 import io.github.joelromanpr.brace.core.rememberBraceShortcutRegistryState
 import io.github.joelromanpr.brace.core.BraceTag
@@ -82,6 +84,7 @@ class ConsumerActivity : ComponentActivity() {
                 var search by remember { mutableStateOf("") }
                 var caseNotes by remember { mutableStateOf("") }
                 var reportTitle by remember { mutableStateOf("Quarterly report") }
+                var amount by rememberSaveable { mutableStateOf("0.2") }
                 val shortcutState = rememberBraceShortcutRegistryState()
                 val toasts = rememberBraceToastState()
                 Box(Modifier.fillMaxSize()) {
@@ -105,6 +108,8 @@ class ConsumerActivity : ComponentActivity() {
                                 BraceButton("Export", onClick = { count++ }, modifier = controlModifier)
                             }
                         }
+                        BraceNumericField(amount, { amount = it }, label = "Amount",
+                            min = 0.0, max = 100.0, minorStepSize = 0.1)
                         BraceCallout(title = "Ready", intent = BraceCalloutIntent.Success)
                         BraceMenu {
                             BraceMenuItem("Edit project", onClick = { dialogOpen = true })

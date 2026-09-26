@@ -230,6 +230,39 @@ public final class io/github/joelromanpr/brace/core/BraceMenuSize : java/lang/En
 	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceMenuSize;
 }
 
+public final class io/github/joelromanpr/brace/core/BraceNumericButtonPosition : java/lang/Enum {
+	public static final field End Lio/github/joelromanpr/brace/core/BraceNumericButtonPosition;
+	public static final field None Lio/github/joelromanpr/brace/core/BraceNumericButtonPosition;
+	public static final field Start Lio/github/joelromanpr/brace/core/BraceNumericButtonPosition;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceNumericButtonPosition;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceNumericButtonPosition;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceNumericFieldKt {
+	public static final fun BraceNumericField (Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;ZZZLjava/lang/String;Ljava/lang/Double;Ljava/lang/Double;DLjava/lang/Double;Ljava/lang/Double;Ljava/util/Locale;ZZZZLio/github/joelromanpr/brace/core/BraceNumericButtonPosition;Lio/github/joelromanpr/brace/core/BraceNumericFieldSize;Lio/github/joelromanpr/brace/core/BraceNumericIntent;ZZLjava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;IIII)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceNumericFieldSize : java/lang/Enum {
+	public static final field Large Lio/github/joelromanpr/brace/core/BraceNumericFieldSize;
+	public static final field Medium Lio/github/joelromanpr/brace/core/BraceNumericFieldSize;
+	public static final field Small Lio/github/joelromanpr/brace/core/BraceNumericFieldSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceNumericFieldSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceNumericFieldSize;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceNumericIntent : java/lang/Enum {
+	public static final field Danger Lio/github/joelromanpr/brace/core/BraceNumericIntent;
+	public static final field Default Lio/github/joelromanpr/brace/core/BraceNumericIntent;
+	public static final field Primary Lio/github/joelromanpr/brace/core/BraceNumericIntent;
+	public static final field Success Lio/github/joelromanpr/brace/core/BraceNumericIntent;
+	public static final field Warning Lio/github/joelromanpr/brace/core/BraceNumericIntent;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceNumericIntent;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceNumericIntent;
+}
+
 public final class io/github/joelromanpr/brace/core/BraceOverlayKt {
 	public static final fun BraceOverlay (ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZZLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
 	public static final fun BraceOverlayHost (Lio/github/joelromanpr/brace/core/BraceOverlayState;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V

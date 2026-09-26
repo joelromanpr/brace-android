@@ -30,4 +30,9 @@
     <string name="brace_shortcut_spoken_minus">Minus</string>
     <string name="brace_shortcut_spoken_question">Question mark</string>
     <string name="brace_editable_text_edit">Edit</string>
+    <string name="brace_numeric_increment">Increase %1$s</string>
+    <string name="brace_numeric_decrement">Decrease %1$s</string>
+    <string name="brace_numeric_range">Minimum %1$s, maximum %2$s</string>
+    <string name="brace_numeric_minimum">Minimum %1$s</string>
+    <string name="brace_numeric_maximum">Maximum %1$s</string>
 </resources>

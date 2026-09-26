@@ -18,7 +18,7 @@ Install JDK 21 and Android SDK platform 36. Accept the Android SDK licenses, set
 ```sh
 ./gradlew build
 ./gradlew lint
-./gradlew checkTokenGeneration checkInventory apiCheck
+./gradlew checkTokenGeneration checkBlueprintIconGeneration checkInventory apiCheck
 ```
 
 Build the catalog with `./gradlew :catalog:assembleDebug`. The repository does not commit SDK paths or signing secrets. CI is the final source of truth for the supported toolchain; check the version catalog and CI workflow before changing local versions.
@@ -39,6 +39,10 @@ Automated Compose accessibility checks should run where the test environment sup
 ## Tokens and generated files
 
 Edit versioned platform-neutral token sources first, then regenerate Kotlin output. Do not hand-edit generated tokens. Token changes need a rationale, before/after catalog views in relevant themes and densities, and contrast or touch-target evidence where applicable. Run `checkTokenGeneration` before opening the pull request.
+
+## Pinned Blueprint icon artwork
+
+The 11 original Brace vectors in `brace-icons` remain independent. The optional `brace-blueprint-icons` artifact holds licensed Blueprint paths from the exact commit in `BLUEPRINT_BASELINE.md`. To refresh that pack for a newly approved baseline, update the baseline and run `python3 scripts/generate_blueprint_icons.py --upstream /path/to/pinned/blueprint`, then `python3 scripts/generate_blueprint_icons.py --check --upstream /path/to/pinned/blueprint`. Review the SVG and metadata hashes, Apache-2.0 license/attribution, generated Kotlin names, both artwork resolutions, and the inventory row. Do not hand-edit the generated manifest or names. CI runs `checkBlueprintIconGeneration` against committed files; include the pinned upstream audit in PR evidence.
 
 ## Pull requests and review
 

@@ -1,6 +1,6 @@
 # M11 delivery slice: icon foundation
 
-**Status:** source and review in progress on `joelromanpr/m11-icons`. The pinned core Icon and icons loading rows are **in progress**; the 500+ glyph catalog is **planned**. There is no stable coverage or Maven Central release from this branch. The [generated ledger](../coverage.md) owns the counts.
+**Historical M11 snapshot:** source and review were in progress on `joelromanpr/m11-icons` when this report was written. The optional 706-name glyph catalog now has its own [M35 report](m35-blueprint-icon-pack.md) and remains in progress. At the M11 cut, the pinned core Icon and icon loading rows were **in progress**, and the glyph catalog was **planned**. There is no stable coverage or Maven Central release from this branch. The [generated ledger](../coverage.md) owns the counts.
 
 ## Scope
 

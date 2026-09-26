@@ -82,14 +82,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for module in brace-foundation brace-core brace-icons brace-select; do
+          for module in brace-foundation brace-core brace-icons brace-blueprint-icons brace-select; do
             actual=$(./gradlew -PreleaseVersion="$EXPECTED_VERSION" -q ":$module:properties" --console=plain | awk '/^version: / {print $2; exit}')
             [[ "$actual" == "$EXPECTED_VERSION" ]] || { echo "$module version $actual does not match $EXPECTED_VERSION"; exit 1; }
           done
       - name: Verify release commit
         env:
           RELEASE_VERSION: ${{ needs.verify-tag.outputs.version }}
-        run: ./gradlew -PreleaseVersion="$RELEASE_VERSION" build lint checkTokenGeneration checkInventory apiCheck --stacktrace
+        run: ./gradlew -PreleaseVersion="$RELEASE_VERSION" build lint checkTokenGeneration checkBlueprintIconGeneration checkInventory apiCheck --stacktrace
       - name: Stage signed artifacts in Maven Central Portal
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}

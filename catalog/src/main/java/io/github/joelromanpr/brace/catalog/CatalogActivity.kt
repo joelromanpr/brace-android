@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -120,12 +121,19 @@ import io.github.joelromanpr.brace.icons.BraceIconRegistry
 import io.github.joelromanpr.brace.icons.BraceIconRegistryProvider
 import io.github.joelromanpr.brace.icons.BraceIconSize
 import io.github.joelromanpr.brace.icons.BraceIcons
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIcon
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconByName
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconNames
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconPack
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconResolution
 import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
 import io.github.joelromanpr.brace.select.braceQueryNavigation
 import org.json.JSONObject
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /** Interactive catalog whose component names and availability come from the pinned inventory. */
 class CatalogActivity : ComponentActivity() {
@@ -150,6 +158,16 @@ private data class CatalogEntry(
 private val usageExamples = mapOf(
     "core-icon" to """BraceIcon(BraceIcons.Info, contentDescription = null, intent = BraceIconIntent.Primary)
 BraceIconButton(BraceIcons.Search, label = "Search records", onClick = { openSearch() })""".trimIndent(),
+    "icons-icon-glyph-catalog" to """val context = LocalContext.current
+val pack by produceState<BraceBlueprintIconPack?>(null, context) {
+    value = withContext(Dispatchers.IO) { BraceBlueprintIconPack.load(context) }
+}
+pack?.let { icons ->
+    BraceBlueprintIcon(icons, BraceBlueprintIconNames.Search, contentDescription = null)
+    BraceBlueprintIconByName(icons, iconNameFromData, contentDescription = "Selected icon",
+        resolution = BraceBlueprintIconResolution.Px16)
+    val matchingNames = icons.search("map", limit = 20)
+}""".trimIndent(),
     "icons-icon-loading" to """val custom = remember(customVector) {
     BraceIconRegistry.Default.register("workspace-mark", customVector)
 }
@@ -386,6 +404,58 @@ private fun ComponentSample(
                         onClick = { large = !large }, variant = BraceButtonVariant.Outline)
                     BraceButton(if (danger) "Primary" else "Danger",
                         onClick = { danger = !danger }, variant = BraceButtonVariant.Outline)
+                }
+            }
+        }
+        "icons-icon-glyph-catalog" -> {
+            val context = LocalContext.current
+            val pack by produceState<BraceBlueprintIconPack?>(null, context) {
+                value = withContext(Dispatchers.IO) { BraceBlueprintIconPack.load(context) }
+            }
+            val loadedPack = pack ?: run {
+                Text("Loading licensed icon artwork", color = BraceTheme.colors.semantic.onSurfaceMuted)
+                return
+            }
+            var query by rememberSaveable { mutableStateOf("map") }
+            var chosen by rememberSaveable { mutableStateOf("map") }
+            var use16 by rememberSaveable { mutableStateOf(false) }
+            var activations by rememberSaveable { mutableStateOf(0) }
+            val actionRegistry = remember(loadedPack) {
+                BraceIconRegistry.empty().register(BraceBlueprintIconNames.Search,
+                    loadedPack.find(BraceBlueprintIconNames.Search)!!)
+            }
+            val available = loadedPack.find(chosen) != null
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Opt-in Blueprint artwork · ${loadedPack.size} pinned names · Apache-2.0",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BraceTextField(query, { query = it }, "Search glyph names and tags")
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceBlueprintIconByName(loadedPack, chosen,
+                        if (available) "${loadedPack.metadata(chosen)?.displayName} icon" else "Unknown icon, help shown",
+                        size = BraceIconSize.Large,
+                        resolution = if (use16) BraceBlueprintIconResolution.Px16
+                            else BraceBlueprintIconResolution.Px20,
+                        intent = BraceIconIntent.Primary)
+                    Text(if (available) chosen else "Unknown: $chosen", color = BraceTheme.colors.semantic.onSurface)
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceBlueprintIcon(loadedPack, BraceBlueprintIconNames.ChevronRight, null,
+                        mirrorInRtl = true, intent = BraceIconIntent.Primary)
+                    Text("Directional artwork mirrors in RTL", color = BraceTheme.colors.semantic.onSurface)
+                }
+                BraceIconButton(BraceBlueprintIconNames.Search, "Search with Blueprint icon",
+                    onClick = { activations++ }, registry = actionRegistry)
+                Text("Icon action activated $activations times",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (use16) "Use 20px artwork" else "Use 16px artwork",
+                        onClick = { use16 = !use16 }, variant = BraceButtonVariant.Outline)
+                    BraceButton("Try fallback", onClick = { chosen = "not-in-pack" },
+                        variant = BraceButtonVariant.Outline)
+                }
+                loadedPack.search(query, limit = 8).forEach { glyph ->
+                    BraceButton("${glyph.displayName} · ${glyph.name}", onClick = { chosen = glyph.name },
+                        variant = BraceButtonVariant.Outline)
                 }
             }
         }

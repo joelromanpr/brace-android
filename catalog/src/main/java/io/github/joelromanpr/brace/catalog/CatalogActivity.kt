@@ -322,6 +322,12 @@ BraceJsonCell(payload, modifier = Modifier.width(220.dp), maxCharacters = 24)
 // cellContent = { row -> BraceJsonCell(row.payload, revealMode = BraceRevealMode.Never) }""".trimIndent(),
     "table-table" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it })",
     "table-column" to "BraceTableColumn<Record>(\"name\", \"Name\", 140.dp, { it.name })",
+    "table-cell" to """BraceTableColumn<Record>("status", "Status", 140.dp,
+    cellText = { it.status }, cellContent = { row -> Text("● " + row.status) })""",
+    "table-columnheadercell" to """BraceTableColumn<Record>("status", "Status", 140.dp,
+    cellText = { it.status }, headerContent = { Text("◆ Status") })""",
+    "table-rowheadercell" to """BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
+    rowLabel = { it.name }, rowHeaderContent = { _, index -> Text("R" + (index + 1)) })""",
     "table-viewport-rendering" to "val viewport = rememberBraceTableViewport(); BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, viewport = viewport)",
     "table-fixed-headers" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // row and column headers stay visible",
     "table-keyboard-navigation" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // arrows/Home/End/Page; Shift extends a range",
@@ -1518,6 +1524,7 @@ private fun ComponentSample(
         }
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
         "table-cell-selection", "table-column-and-row-resizing", "table-copying",
+        "table-cell", "table-columnheadercell", "table-rowheadercell",
         "table-editablecell", "table-editing", "table-editablename" -> TableCatalogSample()
         "core-h1", "core-h2", "core-h3", "core-h4", "core-h5", "core-h6",
         "core-blockquote", "core-code", "core-pre", "core-ol", "core-ul" -> SemanticContentSample(id)

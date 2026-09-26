@@ -34,7 +34,11 @@ internal fun TableCatalogSample() {
         BraceTableColumn<DemoTableRecord>("case", columnTitles.getValue("case"), 140.dp,
             { it.case }, editable = true, editableName = true),
         BraceTableColumn<DemoTableRecord>("status", columnTitles.getValue("status"), 130.dp,
-            { it.status }, editable = true, editableName = true),
+            { it.status },
+            cellContent = { row -> Text("● ${row.status}", style = BraceTheme.typography.body) },
+            editable = true, editableName = true,
+            headerContent = { Text("◆ ${columnTitles.getValue("status")}",
+                style = BraceTheme.typography.label) }),
         BraceTableColumn<DemoTableRecord>("owner", columnTitles.getValue("owner"), 130.dp,
             { "Team ${(it.id.substringAfter('-').toInt() % 4) + 1}" }, editableName = true),
     ) }
@@ -88,6 +92,7 @@ internal fun TableCatalogSample() {
                 }
             }
         }, modifier = Modifier.fillMaxWidth(), height = 260.dp, label = "Cases", rowLabel = { it.case },
+            rowHeaderContent = { _, index -> Text("R${index + 1}", style = BraceTheme.typography.label) },
             columnWidths = columnWidths,
             onColumnWidthChange = { key, width -> columnWidths = columnWidths + (key to width) },
             rowHeights = rowHeights,

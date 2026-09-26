@@ -129,6 +129,7 @@ import io.github.joelromanpr.brace.datetime.BraceDatePicker
 import io.github.joelromanpr.brace.datetime.BraceDateShortcut
 import java.time.LocalDate
 import java.time.YearMonth
+import io.github.joelromanpr.brace.table.BraceTableClipboard
 import io.github.joelromanpr.brace.table.BraceDataTable
 import io.github.joelromanpr.brace.table.BraceTableColumn
 import io.github.joelromanpr.brace.table.BraceTableSelection
@@ -184,6 +185,7 @@ Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
     "table-fixed-headers" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // row and column headers stay visible",
     "table-keyboard-navigation" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // Shift+arrows extend a range",
     "table-cell-selection" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // Cell, Row, Column, or Range",
+    "table-copying" to "BraceTableClipboard.formatSelection(rows, { it.id }, columns, selection) // Ctrl/Cmd+C also copies in BraceDataTable",
     "table-column-and-row-resizing" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, columnWidths = widths, onColumnWidthChange = { key, width -> widths = widths + (key to width) }, rowHeights = heights, onRowHeightChange = { key, height -> heights = heights + (key to height) })",
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-checkbox" to "BraceCheckbox(checked = checked, onCheckedChange = { checked = it }, label = \"Include archived\")",
@@ -515,7 +517,7 @@ private fun ComponentSample(
             }
         }
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
-        "table-cell-selection", "table-column-and-row-resizing" -> {
+        "table-cell-selection", "table-column-and-row-resizing", "table-copying" -> {
             val records = remember { List(120) { DemoTableRecord("record-$it", "Case ${1000 + it}", if (it % 3 == 0) "Review" else "Ready") } }
             val tableColumns = remember { listOf(
                 BraceTableColumn<DemoTableRecord>("case", "Case", 140.dp, { it.case }),
@@ -529,6 +531,8 @@ private fun ComponentSample(
             var extentColumn by rememberSaveable { mutableStateOf("") }
             var columnWidths by remember { mutableStateOf<Map<String, androidx.compose.ui.unit.Dp>>(emptyMap()) }
             var rowHeights by remember { mutableStateOf<Map<String, androidx.compose.ui.unit.Dp>>(emptyMap()) }
+            val catalogClipboard = LocalClipboardManager.current
+            var copiedPreview by remember { mutableStateOf<String?>(null) }
             val selection = when (selectedKind) {
                 "cell" -> BraceTableSelection.Cell(selectedRow, selectedColumn)
                 "row" -> BraceTableSelection.Row(selectedRow)
@@ -574,6 +578,14 @@ private fun ComponentSample(
                     BraceButton("Reset sizes", onClick = { columnWidths = emptyMap(); rowHeights = emptyMap() },
                         variant = BraceButtonVariant.Outline)
                 }
+                BraceButton("Copy selected cells", onClick = {
+                    BraceTableClipboard.formatSelection(records, { it.id }, tableColumns, selection)?.let { value ->
+                        catalogClipboard.setText(AnnotatedString(value))
+                        copiedPreview = value.replace("\n", " ↵ ").take(80)
+                    }
+                }, enabled = selection != null, variant = BraceButtonVariant.Outline)
+                copiedPreview?.let { Text("Copied: $it", color = BraceTheme.colors.semantic.onSurfaceMuted,
+                    style = BraceTheme.typography.body) }
             }
         }
         "core-button" -> {

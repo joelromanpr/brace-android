@@ -3470,16 +3470,16 @@
       "sourcePage": "table/features",
       "braceApi": "BraceTableClipboard",
       "artifact": "io.github.joelromanpr.brace:brace-table",
-      "behavior": "Copy selected data as text using Ctrl or Meta plus C and an accessible menu action. Expose row and column context, focused cell and selection; support touch, keyboard, mouse, and TalkBack.",
+      "behavior": "Copy a controlled cell, row, column, or rectangular range to the Android plain-text clipboard with Ctrl/Meta+C or a TalkBack action; expose a public tab-separated formatter for app toolbars.",
       "classification": "adaptation",
-      "reason": "Blueprint table behavior is rebuilt with Compose viewport and accessibility primitives.",
+      "reason": "Blueprint clipboard hooks and browser copy events become an Android system clipboard action and a plain-text formatter. HTML clipboard output and disjoint regions remain planned.",
       "milestone": "M6",
       "priority": "P1",
-      "status": "planned",
-      "implementation": null,
-      "sample": null,
-      "documentation": null,
-      "tests": null,
+      "status": "in progress",
+      "implementation": "brace-table/src/main/java/io/github/joelromanpr/brace/table/BraceTableClipboard.kt",
+      "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "documentation": "docs/table-copying.md",
+      "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableClipboardTest.kt",
       "firstRelease": null,
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx"
     },
@@ -3788,8 +3788,8 @@
         "total": 23,
         "stable": 0,
         "status": {
-          "in progress": 7,
-          "planned": 16
+          "in progress": 8,
+          "planned": 15
         }
       }
     },

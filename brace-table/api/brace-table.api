@@ -1,0 +1,51 @@
+public final class io/github/joelromanpr/brace/table/BraceDataTableKt {
+	public static final fun BraceDataTable-f8-ukHw (Ljava/util/List;Lkotlin/jvm/functions/Function1;Ljava/util/List;Lio/github/joelromanpr/brace/table/BraceTableSelection;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/table/BraceTableViewport;FLjava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
+	public static final fun rememberBraceTableViewport (Landroidx/compose/runtime/Composer;I)Lio/github/joelromanpr/brace/table/BraceTableViewport;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableColumn {
+	public static final field $stable I
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getCellContent ()Lkotlin/jvm/functions/Function3;
+	public final fun getCellText ()Lkotlin/jvm/functions/Function1;
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public final fun getWidth-D9Ej5fM ()F
+}
+
+public abstract interface class io/github/joelromanpr/brace/table/BraceTableSelection {
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableSelection$Cell : io/github/joelromanpr/brace/table/BraceTableSelection {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lio/github/joelromanpr/brace/table/BraceTableSelection$Cell;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/table/BraceTableSelection$Cell;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/joelromanpr/brace/table/BraceTableSelection$Cell;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColumnKey ()Ljava/lang/String;
+	public final fun getRowKey ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableSelection$Row : io/github/joelromanpr/brace/table/BraceTableSelection {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lio/github/joelromanpr/brace/table/BraceTableSelection$Row;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/table/BraceTableSelection$Row;Ljava/lang/String;ILjava/lang/Object;)Lio/github/joelromanpr/brace/table/BraceTableSelection$Row;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRowKey ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableViewport {
+	public static final field $stable I
+	public final fun getHorizontal ()Landroidx/compose/foundation/ScrollState;
+	public final fun getVertical ()Landroidx/compose/foundation/lazy/LazyListState;
+}
+

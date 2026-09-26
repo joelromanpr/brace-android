@@ -1,0 +1,9 @@
+<resources>
+    <string name="brace_table_default_label">Tabla de datos</string>
+    <string name="brace_table_row_header">Fila</string>
+    <string name="brace_table_select">Seleccionar</string>
+    <string name="brace_table_empty">Sin filas</string>
+    <string name="brace_table_row_description">Fila %1$d, %2$s</string>
+    <string name="brace_table_cell_description">%1$s, fila %2$d (%3$s), %4$s</string>
+    <string name="brace_table_column_description">%1$s, columna %2$d</string>
+</resources>

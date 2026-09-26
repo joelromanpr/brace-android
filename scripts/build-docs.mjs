@@ -25,6 +25,8 @@ const guideSources = new Map([
   ['docs/select-query.md', 'select-query'],
   ['docs/top-bar.md', 'top-bar'],
   ['docs/datetime-picker-input.md', 'datetime-picker-input'],
+  ['docs/table-viewport.md', 'table-viewport'],
+  ['docs/milestones/m14-table-viewport.md', 'milestone-m14'],
   ['docs/milestones/m1-foundation-core.md', 'milestone-m1'],
   ['docs/milestones/m2-content-feedback.md', 'milestone-m2'],
   ['docs/milestones/m3-navigation-feedback.md', 'milestone-m3'],

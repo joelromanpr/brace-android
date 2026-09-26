@@ -129,8 +129,13 @@ import io.github.joelromanpr.brace.datetime.BraceDatePicker
 import io.github.joelromanpr.brace.datetime.BraceDateShortcut
 import java.time.LocalDate
 import java.time.YearMonth
+import io.github.joelromanpr.brace.table.BraceDataTable
+import io.github.joelromanpr.brace.table.BraceTableColumn
+import io.github.joelromanpr.brace.table.BraceTableSelection
 import org.json.JSONObject
 import java.util.Locale
+
+private data class DemoTableRecord(val id: String, val case: String, val status: String)
 
 /** Interactive catalog whose component names and availability come from the pinned inventory. */
 class CatalogActivity : ComponentActivity() {
@@ -173,6 +178,11 @@ Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
     BraceTextField(state.query, { state.query = it }, label = "Filter regions")
     visible.forEach { option -> BraceButton(option.label, onClick = { state.activeKey = option.key }) }
 }""".trimIndent(),
+    "table-table" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it })",
+    "table-column" to "BraceTableColumn<Record>(\"name\", \"Name\", 140.dp, { it.name })",
+    "table-viewport-rendering" to "val viewport = rememberBraceTableViewport(); BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, viewport = viewport)",
+    "table-fixed-headers" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // row and column headers stay visible",
+    "table-keyboard-navigation" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // arrows, Home/End, Page Up/Down",
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-checkbox" to "BraceCheckbox(checked = checked, onCheckedChange = { checked = it }, label = \"Include archived\")",
     "core-switch" to "BraceSwitch(checked = enabled, onCheckedChange = { enabled = it }, label = \"Notifications\")",
@@ -500,6 +510,35 @@ private fun ComponentSample(
                     style = BraceTheme.typography.body)
                 BraceDateField(null, {}, label = "Unavailable date", enabled = false,
                     locale = Locale.US)
+            }
+        }
+        "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation" -> {
+            val records = remember { List(120) { DemoTableRecord("record-$it", "Case ${1000 + it}", if (it % 3 == 0) "Review" else "Ready") } }
+            val tableColumns = remember { listOf(
+                BraceTableColumn<DemoTableRecord>("case", "Case", 140.dp, { it.case }),
+                BraceTableColumn<DemoTableRecord>("status", "Status", 130.dp, { it.status }),
+                BraceTableColumn<DemoTableRecord>("owner", "Owner", 130.dp, { "Team ${(it.id.substringAfter('-').toInt() % 4) + 1}" }),
+            ) }
+            var selectedRow by rememberSaveable { mutableStateOf<String?>(null) }
+            var selectedColumn by rememberSaveable { mutableStateOf<String?>(null) }
+            val selection = when {
+                selectedRow == null -> null
+                selectedColumn == null -> BraceTableSelection.Row(selectedRow!!)
+                else -> BraceTableSelection.Cell(selectedRow!!, selectedColumn!!)
+            }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Scroll in both directions. Tap a cell or row number; focus the table for arrow keys.",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.body)
+                BraceDataTable(records, { it.id }, tableColumns, selection, {
+                    when (it) {
+                        is BraceTableSelection.Cell -> { selectedRow = it.rowKey; selectedColumn = it.columnKey }
+                        is BraceTableSelection.Row -> { selectedRow = it.rowKey; selectedColumn = null }
+                    }
+                }, modifier = Modifier.fillMaxWidth(), height = 260.dp, label = "Cases", rowLabel = { it.case })
+                Text("Selection: ${selection ?: "None"}", color = BraceTheme.colors.semantic.onSurface,
+                    style = BraceTheme.typography.body)
+                BraceButton("Clear selection", onClick = { selectedRow = null; selectedColumn = null },
+                    variant = BraceButtonVariant.Outline)
             }
         }
         "core-button" -> {

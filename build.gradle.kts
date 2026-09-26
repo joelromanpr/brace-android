@@ -39,3 +39,9 @@ tasks.register<Exec>("checkLinkContrast") {
 }
 
 tasks.named("checkTokenGeneration") { dependsOn("checkLinkContrast") }
+
+tasks.register<Exec>("checkBlueprintIconGeneration") {
+    description = "Checks the pinned Blueprint glyph manifest and generated Kotlin names."
+    group = "verification"
+    commandLine("python3", "scripts/generate_blueprint_icons.py", "--check")
+}

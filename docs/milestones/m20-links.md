@@ -1,6 +1,6 @@
 # M20 delivery slice: Link and AnchorButton
 
-**Status:** draft source branch integrated with `main` at `8fffe5d` (through M17 Spinner/Skeleton, M13 DatePicker/DateField, and the live visual gallery) in `joelromanpr/m20-links`. The Link and AnchorButton rows remain **in progress**, `firstRelease` is null, and generated stable coverage remains **0/121** applicable rows. No Maven Central release is claimed.
+**Status:** draft source branch integrated with `main` at `286d04e` (through M17 Spinner/Skeleton, M13 DatePicker/DateField, M35 Blueprint icons, M54 web mappings, and the live visual gallery) in `joelromanpr/m20-links`. The Link and AnchorButton rows remain **in progress**, `firstRelease` is null, and generated stable coverage remains **0/121** applicable rows. No Maven Central release is claimed.
 
 ## Scope
 
@@ -14,13 +14,13 @@
 | Gate | Result |
 | --- | --- |
 | Pinned Blueprint source and inventory review | Reviewed Link and AnchorButton docs/source from `@blueprintjs/core@6.18.0`, commit `a60d4c92257612808fbfac81cfeee4fcba91a8b4`. |
-| Current static inventory and Pages checks | Passed after M17 integration: token and coverage generation `--check`, `node scripts/build-docs.mjs` (**147 rows, 11 real catalog captures, 40 guides**), `node --check docs/site/app.js`, Link contrast check, and Git whitespace/conflict checks. M13 datetime, M17 loading, M19 radio/segmented, and M20 links remain in the combined ledger, catalog, and guides. |
-| Current build, lint, API, and catalog | `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` passed **564 tasks** on the integrated tree. |
-| Current API 36 focused device tests | `BraceLinkTest` passed **10/10**, zero failures or skips (**71 tasks**), after M17 integration. It covers URI and action routing, disabled/loading suppression, accessible click node, touch bounds, keyboard focus, RTL, large text, dark high contrast, and automated accessibility checks. |
+| Current static inventory and Pages checks | Passed after M54 integration: token and coverage generation `--check`, `node scripts/build-docs.mjs` (**147 rows, 11 real catalog captures, 43 guides**), `node --check docs/site/app.js`, Link contrast check, and Git whitespace/conflict checks. M13 datetime, M17 loading, M19 radio/segmented, and M20 links remain in the combined ledger, catalog, and guides. |
+| Current build, lint, API, and catalog | `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` passed **564 tasks** on the earlier M17-integrated tree. The M54-integrated gate is pending. |
+| Current API 36 focused device tests | `BraceLinkTest` passed **10/10**, zero failures or skips (**71 tasks**), after M17 integration; this source remains unchanged in the M54 merge. It covers URI and action routing, disabled/loading suppression, accessible click node, touch bounds, keyboard focus, RTL, large text, dark high contrast, and automated accessibility checks. |
 | Current Maven Local and independent consumer | Foundation, core, icons, select, and datetime each published an AAR, sources JAR, Javadoc JAR, POM, and Gradle module metadata into a fresh isolated Maven Local repository (**193 tasks**). The separate coordinate-only consumer assembled (**37 tasks**). |
 | Earlier broad core device results | On the pre-M17 M12/M25-based head, the full core suite finished **182 tests**, zero failures, and one known native Back injection skip in `BraceOverlayTest.deviceBackDismissesTopmostOverlay`. This is historical evidence, not a current full-suite claim. |
 | Catalog visual and manual TalkBack | The earlier 320 × 640 light and dark high-contrast review found no clipping or overlap; Action and URI examples updated their status. Post-M17 visual review and manual TalkBack remain. |
-| Hosted CI | Required hosted checks are pending for this newly integrated draft head. Earlier M11-based head `40b5d25` passed [verify](https://github.com/joelromanpr/brace-android/actions/runs/36244078237/job/108409883030) and [instrumented](https://github.com/joelromanpr/brace-android/actions/runs/36244078237/job/108409883184); those results do not validate the current tree. |
+| Hosted CI | Required hosted checks are pending for this newly integrated draft head. The previous M17-integrated draft head `aefc4dc` passed verify, API34 instrumented, and CodeQL; this does not validate the M54-integrated tree. Earlier M11-based head `40b5d25` passed [verify](https://github.com/joelromanpr/brace-android/actions/runs/36244078237/job/108409883030) and [instrumented](https://github.com/joelromanpr/brace-android/actions/runs/36244078237/job/108409883184); those results do not validate the current tree. |
 
 ## Remaining work
 

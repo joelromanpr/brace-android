@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -26,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -33,12 +35,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import io.github.braceandroid.foundation.BraceBrandColors
 import io.github.braceandroid.foundation.BraceColorMode
 import io.github.braceandroid.foundation.BraceContrast
@@ -130,6 +134,11 @@ import io.github.joelromanpr.brace.icons.BraceIconRegistry
 import io.github.joelromanpr.brace.icons.BraceIconRegistryProvider
 import io.github.joelromanpr.brace.icons.BraceIconSize
 import io.github.joelromanpr.brace.icons.BraceIcons
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIcon
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconByName
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconNames
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconPack
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconResolution
 import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
@@ -146,6 +155,8 @@ import java.time.LocalDate
 import java.time.YearMonth
 import org.json.JSONObject
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /** Interactive catalog whose component names and availability come from the pinned inventory. */
 class CatalogActivity : ComponentActivity() {
@@ -170,6 +181,16 @@ private data class CatalogEntry(
 private val usageExamples = mapOf(
     "core-icon" to """BraceIcon(BraceIcons.Info, contentDescription = null, intent = BraceIconIntent.Primary)
 BraceIconButton(BraceIcons.Search, label = "Search records", onClick = { openSearch() })""".trimIndent(),
+    "icons-icon-glyph-catalog" to """val context = LocalContext.current
+val pack by produceState<BraceBlueprintIconPack?>(null, context) {
+    value = withContext(Dispatchers.IO) { BraceBlueprintIconPack.load(context) }
+}
+pack?.let { icons ->
+    BraceBlueprintIcon(icons, BraceBlueprintIconNames.Search, contentDescription = null)
+    BraceBlueprintIconByName(icons, iconNameFromData, contentDescription = "Selected icon",
+        resolution = BraceBlueprintIconResolution.Px16)
+    val matchingNames = icons.search("map", limit = 20)
+}""".trimIndent(),
     "icons-icon-loading" to """val custom = remember(customVector) {
     BraceIconRegistry.Default.register("workspace-mark", customVector)
 }
@@ -187,6 +208,22 @@ Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
     onActivate = { state.activeKey = it }, onDismiss = { state.query = "" })) {
     BraceTextField(state.query, { state.query = it }, label = "Filter regions")
     visible.forEach { option -> BraceButton(option.label, onClick = { state.activeKey = option.key }) }
+}""".trimIndent(),
+    "core-css-utility-classes" to """val semantic = BraceTheme.colors.semantic
+Box(Modifier.background(semantic.surface).padding(BraceTheme.spacing.md)) {
+    BraceButton("Retry", onClick = ::retry, variant = BraceButtonVariant.Outline)
+}""".trimIndent(),
+    "core-resizesensor" to """var measured by remember { mutableStateOf(IntSize.Zero) }
+Box(Modifier.onSizeChanged { measured = it }) { Text("Measured content") }
+Text("Width: ${'$'}{measured.width} px")""".trimIndent(),
+    "core-blueprintprovider" to """var open by rememberSaveable { mutableStateOf(false) }
+BraceTheme {
+    BraceShortcutRegistry(listOf(BraceShortcut("ctrl+r", "Refresh", onKeyDown = ::refresh))) {
+        BraceOverlayHost(rememberBraceOverlayState()) {
+            WorkspaceContent()
+            BraceOverlay(open, { open = false }, title = "Details") { DetailsContent() }
+        }
+    }
 }""".trimIndent(),
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-link" to "BraceLink(\"Read guide\", BraceLinkDestination.Uri(\"https://example.org/guide\", \"Guide\"))",
@@ -390,6 +427,97 @@ private fun ComponentSample(
     onToastPositionChange: (BraceToastPosition) -> Unit,
 ) {
     when (id) {
+        "core-css-utility-classes" -> {
+            var outlined by rememberSaveable { mutableStateOf(false) }
+            val semantic = BraceTheme.colors.semantic
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Typed parameters and scoped tokens replace CSS class names.",
+                    color = semantic.onSurfaceMuted, style = BraceTheme.typography.body)
+                Box(Modifier.background(semantic.surface).padding(BraceTheme.spacing.md)) {
+                    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                        Text("Token-styled content", color = semantic.onSurface,
+                            style = BraceTheme.typography.subtitle)
+                        BraceButton(
+                            if (outlined) "Outlined action" else "Solid action",
+                            onClick = { outlined = !outlined },
+                            variant = if (outlined) BraceButtonVariant.Outline else BraceButtonVariant.Solid,
+                        )
+                    }
+                }
+                Text("Try the app-wide theme, contrast, brand, and density controls above.",
+                    color = semantic.onSurfaceMuted, style = BraceTheme.typography.label)
+            }
+        }
+        "core-resizesensor" -> {
+            var wide by rememberSaveable { mutableStateOf(false) }
+            var measured by remember { mutableStateOf(IntSize.Zero) }
+            val semantic = BraceTheme.colors.semantic
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceButton(if (wide) "Narrow preview" else "Widen preview",
+                    onClick = { wide = !wide }, variant = BraceButtonVariant.Outline)
+                Box(
+                    Modifier
+                        .width(if (wide) 224.dp else 144.dp)
+                        .onSizeChanged { measured = it }
+                        .background(semantic.surface)
+                        .padding(BraceTheme.spacing.md),
+                ) {
+                    Text("Measured content", color = semantic.onSurface,
+                        style = BraceTheme.typography.body)
+                }
+                Text("Measured: ${measured.width} × ${measured.height} px",
+                    color = semantic.onSurfaceMuted, style = BraceTheme.typography.label)
+            }
+        }
+        "core-blueprintprovider" -> {
+            var localHighContrast by rememberSaveable { mutableStateOf(false) }
+            var detailsOpen by rememberSaveable { mutableStateOf(false) }
+            var refreshed by rememberSaveable { mutableStateOf(0) }
+            val shortcutState = rememberBraceShortcutRegistryState()
+            val overlayState = rememberBraceOverlayState()
+            BraceShortcutRegistry(
+                shortcuts = listOf(
+                    BraceShortcut("ctrl+r", "Refresh local preview", group = "Preview",
+                        onKeyDown = { refreshed++ }),
+                ),
+                state = shortcutState,
+                discoveryTitle = "Preview shortcuts",
+            ) {
+                BraceOverlayHost(overlayState) {
+                    BraceTheme(
+                        contrast = if (localHighContrast) BraceContrast.High else BraceContrast.Standard,
+                    ) {
+                        val semantic = BraceTheme.colors.semantic
+                        Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                            Text("This preview has its own theme and screen behavior scope.",
+                                color = semantic.onSurface, style = BraceTheme.typography.body)
+                            BraceButton(
+                                if (localHighContrast) "Standard local contrast" else "High local contrast",
+                                onClick = { localHighContrast = !localHighContrast },
+                                variant = BraceButtonVariant.Outline,
+                            )
+                            BraceButton("Open scoped overlay", onClick = { detailsOpen = true })
+                            BraceButton("Show shortcut guide",
+                                onClick = shortcutState::showDiscovery,
+                                variant = BraceButtonVariant.Outline)
+                            Text("Ctrl+R refreshes while a preview control has focus · $refreshed",
+                                color = semantic.onSurfaceMuted, style = BraceTheme.typography.label)
+                        }
+                        BraceOverlay(
+                            open = detailsOpen,
+                            onDismissRequest = { detailsOpen = false },
+                            title = "Scoped details",
+                        ) {
+                            Column(Modifier.padding(BraceTheme.spacing.md)) {
+                                Text("Scoped details", color = BraceTheme.colors.semantic.onSurface,
+                                    style = BraceTheme.typography.subtitle)
+                                BraceButton("Close", onClick = { detailsOpen = false })
+                            }
+                        }
+                    }
+                }
+            }
+        }
         "core-icon" -> {
             var large by rememberSaveable { mutableStateOf(false) }
             var danger by rememberSaveable { mutableStateOf(false) }
@@ -415,6 +543,58 @@ private fun ComponentSample(
                         onClick = { large = !large }, variant = BraceButtonVariant.Outline)
                     BraceButton(if (danger) "Primary" else "Danger",
                         onClick = { danger = !danger }, variant = BraceButtonVariant.Outline)
+                }
+            }
+        }
+        "icons-icon-glyph-catalog" -> {
+            val context = LocalContext.current
+            val pack by produceState<BraceBlueprintIconPack?>(null, context) {
+                value = withContext(Dispatchers.IO) { BraceBlueprintIconPack.load(context) }
+            }
+            val loadedPack = pack ?: run {
+                Text("Loading licensed icon artwork", color = BraceTheme.colors.semantic.onSurfaceMuted)
+                return
+            }
+            var query by rememberSaveable { mutableStateOf("map") }
+            var chosen by rememberSaveable { mutableStateOf("map") }
+            var use16 by rememberSaveable { mutableStateOf(false) }
+            var activations by rememberSaveable { mutableStateOf(0) }
+            val actionRegistry = remember(loadedPack) {
+                BraceIconRegistry.empty().register(BraceBlueprintIconNames.Search,
+                    loadedPack.find(BraceBlueprintIconNames.Search)!!)
+            }
+            val available = loadedPack.find(chosen) != null
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Opt-in Blueprint artwork · ${loadedPack.size} pinned names · Apache-2.0",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BraceTextField(query, { query = it }, "Search glyph names and tags")
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceBlueprintIconByName(loadedPack, chosen,
+                        if (available) "${loadedPack.metadata(chosen)?.displayName} icon" else "Unknown icon, help shown",
+                        size = BraceIconSize.Large,
+                        resolution = if (use16) BraceBlueprintIconResolution.Px16
+                            else BraceBlueprintIconResolution.Px20,
+                        intent = BraceIconIntent.Primary)
+                    Text(if (available) chosen else "Unknown: $chosen", color = BraceTheme.colors.semantic.onSurface)
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceBlueprintIcon(loadedPack, BraceBlueprintIconNames.ChevronRight, null,
+                        mirrorInRtl = true, intent = BraceIconIntent.Primary)
+                    Text("Directional artwork mirrors in RTL", color = BraceTheme.colors.semantic.onSurface)
+                }
+                BraceIconButton(BraceBlueprintIconNames.Search, "Search with Blueprint icon",
+                    onClick = { activations++ }, registry = actionRegistry)
+                Text("Icon action activated $activations times",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (use16) "Use 20px artwork" else "Use 16px artwork",
+                        onClick = { use16 = !use16 }, variant = BraceButtonVariant.Outline)
+                    BraceButton("Try fallback", onClick = { chosen = "not-in-pack" },
+                        variant = BraceButtonVariant.Outline)
+                }
+                loadedPack.search(query, limit = 8).forEach { glyph ->
+                    BraceButton("${glyph.displayName} · ${glyph.name}", onClick = { chosen = glyph.name },
+                        variant = BraceButtonVariant.Outline)
                 }
             }
         }

@@ -58,7 +58,7 @@ jobs:
           df -h /
       - name: Compile instrumentation APKs before launching the emulator
         run: |
-          ./gradlew :brace-icons:assembleDebugAndroidTest :brace-blueprint-icons:assembleDebugAndroidTest :brace-blueprint-icons-next:assembleDebugAndroidTest :brace-foundation:assembleDebugAndroidTest :brace-core:assembleDebugAndroidTest :brace-select:assembleDebugAndroidTest --no-parallel --stacktrace
+          ./gradlew :brace-icons:assembleDebugAndroidTest :brace-blueprint-icons:assembleDebugAndroidTest :brace-blueprint-icons-next:assembleDebugAndroidTest :brace-foundation:assembleDebugAndroidTest :brace-core:assembleDebugAndroidTest :brace-select:assembleDebugAndroidTest :brace-datetime:assembleDebugAndroidTest --no-parallel --stacktrace
           ./gradlew --stop
       - name: Enable KVM for the Android emulator
         run: |
@@ -76,4 +76,4 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           # One emulator cannot host multiple module instrumentation APKs concurrently.
-          script: ./gradlew :brace-icons:connectedDebugAndroidTest :brace-blueprint-icons:connectedDebugAndroidTest :brace-blueprint-icons-next:connectedDebugAndroidTest :brace-foundation:connectedDebugAndroidTest :brace-core:connectedDebugAndroidTest :brace-select:connectedDebugAndroidTest --no-parallel -Dorg.gradle.jvmargs="-Xmx2048m -Dfile.encoding=UTF-8" --stacktrace
+          script: ./gradlew :brace-icons:connectedDebugAndroidTest :brace-blueprint-icons:connectedDebugAndroidTest :brace-blueprint-icons-next:connectedDebugAndroidTest :brace-foundation:connectedDebugAndroidTest :brace-core:connectedDebugAndroidTest :brace-select:connectedDebugAndroidTest :brace-datetime:connectedDebugAndroidTest --no-parallel -Dorg.gradle.jvmargs="-Xmx2048m -Dfile.encoding=UTF-8" --stacktrace

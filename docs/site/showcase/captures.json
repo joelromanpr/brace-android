@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 1,
+  "captures": [
+    {
+      "id": "catalog-light",
+      "inventoryIds": [
+        "core-theme-variables"
+      ],
+      "image": "showcase/01-catalog-light.png",
+      "alt": "Brace Android catalog in light mode, with theme controls, component search, and in-progress availability labels",
+      "caption": "The Android catalog reads the pinned inventory and exposes runtime theme controls and honest availability labels.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m58-table-formatting",
+      "sourceCommit": "90795a21317d7a17383d33732e42cfb436092188",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var dark by rememberSaveable { mutableStateOf(false) }\nBraceTheme(\n    mode = if (dark) BraceColorMode.Dark else BraceColorMode.Light,\n    density = BraceDensity.Comfortable,\n) {\n    BraceButton(if (dark) \"Dark\" else \"Light\", onClick = { dark = !dark })\n}",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
+    },
+    {
+      "id": "button-light",
+      "inventoryIds": [
+        "core-button"
+      ],
+      "image": "showcase/02-button-light.png",
+      "alt": "Brace Button samples in light mode: primary Save, danger Delete, and outlined Secondary actions",
+      "caption": "Intent-driven Button states in the light theme, rendered by the in-progress core catalog sample.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m58-table-formatting",
+      "sourceCommit": "90795a21317d7a17383d33732e42cfb436092188",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var saves by rememberSaveable { mutableIntStateOf(0) }\nBraceTheme(mode = BraceColorMode.Light) {\n    BraceButton(\"Save ($saves)\", onClick = { saves++ })\n    BraceButton(\"Delete\", onClick = {}, intent = BraceButtonIntent.Danger)\n    BraceButton(\"Secondary\", onClick = {}, variant = BraceButtonVariant.Outline)\n}",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
+    },
+    {
+      "id": "button-dark-high-contrast",
+      "inventoryIds": [
+        "core-button",
+        "core-theme-variables"
+      ],
+      "image": "showcase/03-button-dark-high-contrast.png",
+      "alt": "The same Brace Button samples on a black dark high-contrast surface",
+      "caption": "The live catalog switches the same Button states to dark high-contrast tokens at runtime.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m58-table-formatting",
+      "sourceCommit": "90795a21317d7a17383d33732e42cfb436092188",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "BraceTheme(mode = BraceColorMode.Dark, contrast = BraceContrast.High) {\n    BraceButton(\"Save\", onClick = {})\n    BraceButton(\"Delete\", onClick = {}, intent = BraceButtonIntent.Danger)\n}",
+      "format": "phone",
+      "theme": "dark",
+      "contrast": "high",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
+    },
+    {
+      "id": "dialog-dark",
+      "inventoryIds": [
+        "core-dialog"
+      ],
+      "image": "showcase/04-dialog-dark.png",
+      "alt": "Brace Edit project dialog in dark mode with project details and Cancel and Save actions",
+      "caption": "A native Compose dialog with a header, body, and persistent actions in dark mode.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m58-table-formatting",
+      "sourceCommit": "90795a21317d7a17383d33732e42cfb436092188",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var open by rememberSaveable { mutableStateOf(true) }\nBraceTheme(mode = BraceColorMode.Dark) {\n    BraceDialog(\n        open = open,\n        onDismissRequest = { open = false },\n        title = \"Edit project\",\n        actions = { BraceButton(\"Save\", onClick = { open = false }) },\n    ) { Text(\"Project details\") }\n}",
+      "format": "phone",
+      "theme": "dark",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
+    },
+    {
+      "id": "select-open-light",
+      "inventoryIds": [
+        "select-select"
+      ],
+      "image": "showcase/05-select-open-light.png",
+      "alt": "Open Brace Select popup with search field, East and West choices, disabled Central choice, and Android keyboard",
+      "caption": "A searchable single Select exposes option descriptions and a disabled state with the Android keyboard open.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m58-table-formatting",
+      "sourceCommit": "90795a21317d7a17383d33732e42cfb436092188",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var selectedKey by rememberSaveable { mutableStateOf<String?>(null) }\nvar expanded by rememberSaveable { mutableStateOf(false) }\nval options = listOf(\n    BraceSelectOption(\"east\", \"east\", \"East\"),\n    BraceSelectOption(\"west\", \"west\", \"West\"),\n)\nBraceSelect(\n    options = options,\n    selectedKey = selectedKey,\n    onSelect = { selectedKey = it.key },\n    expanded = expanded,\n    onExpandedChange = { expanded = it },\n    label = \"Region\",\n)",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
+    },
+    {
+      "id": "table-light",
+      "inventoryIds": [
+        "table-table"
+      ],
+      "image": "showcase/06-table-light.png",
+      "alt": "Brace DataTable viewport in light mode with fixed headers, row labels, and Case 1001 selected",
+      "caption": "The in-progress DataTable renders a bounded viewport with fixed headers and controlled cell selection.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m58-table-formatting",
+      "sourceCommit": "90795a21317d7a17383d33732e42cfb436092188",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "data class CaseRow(val id: String, val name: String)\nval rows = listOf(CaseRow(\"1\", \"Case 1000\"), CaseRow(\"2\", \"Case 1001\"))\nval columns = listOf(\n    BraceTableColumn<CaseRow>(\"name\", \"Case\", 160.dp, cellText = { it.name }),\n)\nvar selection by rememberBraceTableSelection()\nBraceDataTable(\n    rows = rows,\n    rowKey = { it.id },\n    columns = columns,\n    selection = selection,\n    onSelectionChange = { selection = it },\n    label = \"Cases\",\n)",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
+    },
+    {
+      "id": "datepicker-light",
+      "inventoryIds": [
+        "datetime-datepicker"
+      ],
+      "image": "showcase/07-datepicker-light.png",
+      "alt": "Brace DatePicker showing September 2026 with selected September 18, disabled weekends, and month shortcut",
+      "caption": "A locale-aware DatePicker with weekday selection, disabled weekends, and an end-of-month shortcut.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m13-datetime-picker",
+      "sourceCommit": "ac121b394c3b2d81dc487653172ba805f2fddbeb",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var selected by rememberSaveable { mutableStateOf<String?>(\"2026-09-18\") }\nBraceDatePicker(\n    value = selected?.let(LocalDate::parse),\n    onValueChange = { selected = it?.toString() },\n    locale = Locale.US,\n    minDate = LocalDate.of(2026, 9, 1),\n    maxDate = LocalDate.of(2026, 10, 31),\n    isDateEnabled = { it.dayOfWeek.value <= 5 },\n    shortcuts = listOf(BraceDateShortcut(\"End of month\", LocalDate.of(2026, 9, 30))),\n    initialMonth = YearMonth.of(2026, 9),\n)",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
+    },
+    {
+      "id": "icons-next-light",
+      "inventoryIds": [
+        "icons-icon-glyph-catalog"
+      ],
+      "image": "showcase/08-icons-next-light.png",
+      "alt": "Brace opt-in Blueprint next icon sample showing filled magnifying glass, directional chevron, and searchable glyph names",
+      "caption": "The opt-in /next artwork on draft M55 previews one subset of the pinned icon glyph catalog. The main inventory row remains planned.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m55-blueprint-next-icons",
+      "sourceCommit": "26c62885cb670a6c3f6df8e93936bf32792e05c4",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "val context = LocalContext.current\nval pack by produceState<BraceBlueprintNextIconPack?>(null, context) {\n    value = withContext(Dispatchers.IO) { BraceBlueprintNextIconPack.load(context) }\n}\npack?.let { loaded ->\n    BraceBlueprintNextIcon(\n        loaded,\n        BraceBlueprintNextIconNames.MagnifyingGlass,\n        contentDescription = null,\n        variant = BraceBlueprintNextIconVariant.Filled,\n    )\n}",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
+    },
+    {
+      "id": "table-wide-light",
+      "inventoryIds": [
+        "table-table",
+        "table-fixed-headers",
+        "table-cell-selection"
+      ],
+      "image": "showcase/09-table-wide-light.png",
+      "alt": "Wide Brace DataTable showing Case, Status, and Owner columns with fixed headers and selected Case 1001 cell",
+      "caption": "A wider emulator viewport shows three columns, fixed headers, controlled selection, and table actions together.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m58-table-formatting",
+      "sourceCommit": "90795a21317d7a17383d33732e42cfb436092188",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "data class CaseRow(val id: String, val name: String)\nval rows = listOf(CaseRow(\"1\", \"Case 1000\"), CaseRow(\"2\", \"Case 1001\"))\nval columns = listOf(\n    BraceTableColumn<CaseRow>(\"name\", \"Case\", 160.dp, cellText = { it.name }),\n)\nvar selection by rememberBraceTableSelection()\nBraceDataTable(\n    rows = rows,\n    rowKey = { it.id },\n    columns = columns,\n    selection = selection,\n    onSelectionChange = { selection = it },\n    label = \"Cases\",\n)",
+      "format": "landscape",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 800,
+      "pixelHeight": 600
+    },
+    {
+      "id": "spinner-dark-high-contrast",
+      "inventoryIds": [
+        "core-spinner"
+      ],
+      "image": "showcase/10-spinner-dark-high-contrast.png",
+      "alt": "Brace Spinner with a small indeterminate arc and medium and large 30 percent progress arcs on a dark high-contrast catalog screen",
+      "caption": "Three token sizes and two intents show indeterminate and known progress in dark high contrast.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m17-loading-feedback",
+      "sourceCommit": "3b60da25f21adbf0e10be8b129fbb6c8eb372903",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "format": "phone",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800,
+      "usage": "BraceTheme(mode = BraceColorMode.Dark, contrast = BraceContrast.High) {\n    BraceSpinner(label = \"Loading small records\", size = BraceSpinnerSize.Small)\n    BraceSpinner(label = \"Loading records\", value = 0.3f)\n    BraceSpinner(\n        label = \"Loading large reports\",\n        value = 0.3f,\n        size = BraceSpinnerSize.Large,\n        intent = BraceProgressIntent.Success,\n    )\n}",
+      "theme": "dark",
+      "contrast": "high"
+    },
+    {
+      "id": "skeleton-light",
+      "inventoryIds": [
+        "core-skeleton"
+      ],
+      "image": "showcase/11-skeleton-light.png",
+      "alt": "Three Brace Skeleton placeholder blocks of descending width in the light catalog, with content and shimmer toggle buttons",
+      "caption": "A noninteractive placeholder stack follows token colors and can switch between animated and static loading states.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m17-loading-feedback",
+      "sourceCommit": "3b60da25f21adbf0e10be8b129fbb6c8eb372903",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "format": "phone",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800,
+      "usage": "BraceTheme(mode = BraceColorMode.Light) {\n    BraceSkeleton(label = \"Loading report title\")\n    BraceSkeleton(width = 180.dp)\n    BraceSkeleton(width = 120.dp)\n}",
+      "theme": "light",
+      "contrast": "standard"
+    }
+  ]
+}

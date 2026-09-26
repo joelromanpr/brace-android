@@ -52,8 +52,8 @@ mavenPublishing {
     publishToMavenCentral(automaticRelease = false)
     if (providers.gradleProperty("signingInMemoryKey").isPresent) signAllPublications()
     pom {
-        name.set("Brace Blueprint Icon Pack")
-        description.set("Optional Apache-2.0 Blueprint 6.18.0 pinned glyph pack for Brace Android.")
+        name.set("Brace Blueprint Legacy Icon Pack")
+        description.set("Optional Apache-2.0 Blueprint 6.18.0 pinned legacy glyph pack for Brace Android.")
         inceptionYear.set("2026")
         url.set("https://github.com/joelromanpr/brace-android")
         licenses {

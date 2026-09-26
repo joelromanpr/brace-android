@@ -26,10 +26,13 @@ dependencies {
     implementation("io.github.joelromanpr.brace:brace-blueprint-icons:0.1.0-SNAPSHOT")
     implementation("io.github.joelromanpr.brace:brace-blueprint-icons-next:0.1.0-SNAPSHOT")
     implementation("io.github.joelromanpr.brace:brace-select:0.1.0-SNAPSHOT")
+    implementation("io.github.joelromanpr.brace:brace-datetime:0.1.0-SNAPSHOT")
 }
 ```
 
 `brace-icons` is optional for apps that need Brace vectors or a scoped registry; `brace-blueprint-icons` is a further opt-in artifact for 706 licensed legacy Blueprint glyphs; `brace-blueprint-icons-next` separately carries the pinned public `/next` artwork (695 outlined names and 386 filled variants). Core does not pull icon artwork transitively. After the first release, remove `mavenLocal()` and use the released version from Maven Central. All public Brace artifacts use the same version. The source build currently targets Android SDK 36 and Android 26 as its minimum; verify the release's compatibility table before adoption.
+
+The datetime artifact depends on core and foundation transitively. Add only the artifacts whose APIs you use.
 
 The catalog app is a separate Android application in this repository. Run `./gradlew :catalog:assembleDebug` to inspect examples. The [coverage page](coverage.md) distinguishes implemented components from planned ones.
 

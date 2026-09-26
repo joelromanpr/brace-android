@@ -878,16 +878,16 @@
       "sourcePage": "core/components/overflow-list",
       "braceApi": "BraceOverflowList",
       "artifact": "io.github.joelromanpr.brace:brace-core",
-      "behavior": "OverflowList takes a generic list of items and renders as many items as can fit inside its container. It automatically collapses items that don't fit into available space. Expose the current destination and ordered focus; support touch, keyboard, and TalkBack navigation.",
+      "behavior": "Width-adaptive generic row. Collapse items from logical start or end while preserving item order; keep a caller-defined minimum visible; expose a labeled, keyboard, touch, and TalkBack reachable overflow trigger and ordered hidden actions. Notify after layout only when the hidden items change.",
       "classification": "adaptation",
-      "reason": "Measure available Compose constraints rather than DOM layout.",
-      "milestone": "M2",
+      "reason": "Compose subcomposition measures item slots against parent constraints, replacing DOM ResizeObserver and observeParents. HTML tag, style, and nav wrapper props map to Modifier and semantics. The caller supplies native actions and accessible overflow content; a trigger-only measurement slot avoids duplicate popup windows.",
+      "milestone": "M29",
       "priority": "P1",
-      "status": "planned",
-      "implementation": null,
-      "sample": null,
-      "documentation": null,
-      "tests": null,
+      "status": "in progress",
+      "implementation": "brace-core/src/main/java/io/github/joelromanpr/brace/core/BraceOverflowList.kt",
+      "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "documentation": "docs/overflow-list.md",
+      "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceOverflowListTest.kt",
       "firstRelease": null,
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/overflow-list/overflow-list.mdx"
     },
@@ -3749,8 +3749,8 @@
         "total": 108,
         "stable": 0,
         "status": {
-          "in progress": 58,
-          "planned": 50
+          "in progress": 59,
+          "planned": 49
         }
       },
       "datetime": {

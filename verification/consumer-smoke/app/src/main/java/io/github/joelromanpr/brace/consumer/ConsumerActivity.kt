@@ -14,6 +14,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.IntOffset
@@ -21,6 +23,8 @@ import io.github.braceandroid.foundation.BraceTheme
 import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbs
+import io.github.joelromanpr.brace.core.BraceOverflowCollapseFrom
+import io.github.joelromanpr.brace.core.BraceOverflowList
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceCallout
@@ -37,6 +41,7 @@ import io.github.joelromanpr.brace.core.BraceEditableText
 import io.github.joelromanpr.brace.core.BraceFormField
 import io.github.joelromanpr.brace.core.BraceFormIntent
 import io.github.joelromanpr.brace.core.BraceMenu
+import io.github.joelromanpr.brace.core.BraceMenuPopup
 import io.github.joelromanpr.brace.core.BraceMenuIntent
 import io.github.joelromanpr.brace.core.BraceMenuItem
 import io.github.joelromanpr.brace.core.BraceOverlayHost
@@ -79,6 +84,7 @@ class ConsumerActivity : ComponentActivity() {
                 var popoverOpen by remember { mutableStateOf(false) }
                 var contextOpen by remember { mutableStateOf(false) }
                 var pointMenuOpen by remember { mutableStateOf(false) }
+                var overflowMenuOpen by rememberSaveable { mutableStateOf(false) }
                 val pointMenuTrigger = remember { FocusRequester() }
                 var hadPointMenuOpen by remember { mutableStateOf(false) }
                 LaunchedEffect(pointMenuOpen) {
@@ -108,6 +114,25 @@ class ConsumerActivity : ComponentActivity() {
                             BraceProgressBar(label = "Import progress", value = 0.5f)
                         }
                         BraceBreadcrumbs(listOf(BraceBreadcrumb("Home", onClick = {}), BraceBreadcrumb("Imports")))
+                        BraceOverflowList(
+                            items = listOf("Overview", "Pipeline", "Failures", "History"),
+                            itemKey = { it },
+                            modifier = Modifier.width(180.dp),
+                            collapseFrom = BraceOverflowCollapseFrom.Start,
+                            minVisibleItems = 1,
+                            navigationLabel = "Import sections",
+                            visibleItem = { section, _ -> BraceButton(section, onClick = { count++ }) },
+                            overflowContent = { hidden ->
+                                BraceMenuPopup(
+                                    expanded = overflowMenuOpen,
+                                    onDismissRequest = { overflowMenuOpen = false },
+                                    anchor = { BraceButton("More ${hidden.size}", onClick = { overflowMenuOpen = true }) },
+                                ) {
+                                    hidden.forEach { section -> BraceMenuItem(section, onClick = { count++ }) }
+                                }
+                            },
+                            overflowMeasureContent = { hidden -> BraceButton("More ${hidden.size}", onClick = {}) },
+                        )
                         BraceTag("Active")
                         BraceFieldLabel("Export format", spokenLabel = "Export format, CSV") { controlModifier ->
                             BraceButton("CSV", onClick = {}, modifier = controlModifier)

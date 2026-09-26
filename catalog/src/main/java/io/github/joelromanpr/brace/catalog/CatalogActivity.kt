@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -55,6 +56,8 @@ import io.github.joelromanpr.brace.core.BraceCard
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbItem
 import io.github.joelromanpr.brace.core.BraceBreadcrumbs
+import io.github.joelromanpr.brace.core.BraceOverflowCollapseFrom
+import io.github.joelromanpr.brace.core.BraceOverflowList
 import io.github.joelromanpr.brace.core.BraceCallout
 import io.github.joelromanpr.brace.core.BraceCalloutIntent
 import io.github.joelromanpr.brace.core.BraceCompoundTag
@@ -172,6 +175,7 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "core-sectioncard" to "BraceSectionCard { Text(\"Project settings\") }",
     "core-breadcrumbs" to "BraceBreadcrumbs(listOf(BraceBreadcrumb(\"Home\", onClick = { home() }), BraceBreadcrumb(\"Projects\")))",
     "core-breadcrumb" to "BraceBreadcrumbItem(label = \"Home\", onClick = { home() })",
+    "core-overflowlist" to """BraceOverflowList(items = sections, itemKey = { it.id }, collapseFrom = BraceOverflowCollapseFrom.Start, navigationLabel = "Report sections", visibleItem = { section, _ -> BraceButton(section.title, onClick = { open(section) }) }, overflowContent = { hidden -> BraceMenuPopup(expanded, { expanded = false }, anchor = { BraceButton("More ${'$'}{hidden.size}", onClick = { expanded = true }) }) { hidden.forEach { section -> BraceMenuItem(section.title, onClick = { open(section) }) } } }, overflowMeasureContent = { hidden -> BraceButton("More ${'$'}{hidden.size}", onClick = {}) })""",
     "core-tag" to "BraceTag(label = \"Finance\", intent = BraceTagIntent.Primary, onRemove = { removeFilter() })",
     "core-compoundtag" to "BraceCompoundTag(label = \"Status\", value = \"Active\", onRemove = { clearStatus() })",
     "core-callout" to "BraceCallout(title = \"Saved\", intent = BraceCalloutIntent.Success) { Text(\"Your changes are ready.\") }",
@@ -677,6 +681,49 @@ private fun ComponentSample(
                     BraceBreadcrumb("Dashboard"),
                 ))
                 Text("Opened: $destination", color = BraceTheme.colors.semantic.onSurfaceMuted)
+            }
+        }
+        "core-overflowlist" -> {
+            var narrow by rememberSaveable { mutableStateOf(true) }
+            var collapseFromStart by rememberSaveable { mutableStateOf(true) }
+            var keepTrigger by rememberSaveable { mutableStateOf(false) }
+            var expanded by rememberSaveable { mutableStateOf(false) }
+            var selected by rememberSaveable { mutableStateOf("Overview") }
+            var hiddenCount by rememberSaveable { mutableStateOf(0) }
+            val sections = listOf("Overview", "Analysis", "Forecast", "Exports")
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceButton(if (narrow) "Widen parent" else "Narrow parent", onClick = { narrow = !narrow },
+                    variant = BraceButtonVariant.Outline)
+                BraceButton(if (collapseFromStart) "Collapse from end" else "Collapse from start",
+                    onClick = { collapseFromStart = !collapseFromStart }, variant = BraceButtonVariant.Outline)
+                BraceButton(if (keepTrigger) "Hide empty trigger" else "Keep empty trigger",
+                    onClick = { keepTrigger = !keepTrigger }, variant = BraceButtonVariant.Outline)
+                BraceOverflowList(
+                    items = sections,
+                    itemKey = { it },
+                    modifier = if (narrow) Modifier.width(180.dp) else Modifier.fillMaxWidth(),
+                    collapseFrom = if (collapseFromStart) BraceOverflowCollapseFrom.Start else BraceOverflowCollapseFrom.End,
+                    minVisibleItems = 1,
+                    alwaysRenderOverflow = keepTrigger,
+                    navigationLabel = "Report sections",
+                    onOverflow = { hidden -> hiddenCount = hidden.size; if (hidden.isEmpty()) expanded = false },
+                    visibleItem = { section, _ ->
+                        BraceButton(section, onClick = { selected = section }, variant = BraceButtonVariant.Outline)
+                    },
+                    overflowContent = { hidden ->
+                        BraceMenuPopup(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                            anchor = { BraceButton("More ${hidden.size}", onClick = { expanded = true }) },
+                        ) {
+                            hidden.forEach { section -> BraceMenuItem(section, onClick = { selected = section }) }
+                        }
+                    },
+                    overflowMeasureContent = { hidden ->
+                        BraceButton("More ${hidden.size}", onClick = {})
+                    },
+                )
+                Text("Opened: $selected · Hidden: $hiddenCount", color = BraceTheme.colors.semantic.onSurface)
             }
         }
         "core-breadcrumb" -> {

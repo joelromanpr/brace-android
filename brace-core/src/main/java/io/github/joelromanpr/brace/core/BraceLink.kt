@@ -30,6 +30,8 @@ import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.focused
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.requestFocus
+import androidx.compose.ui.semantics.text
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import io.github.braceandroid.foundation.BraceContrast
 import io.github.braceandroid.foundation.BraceDensity
@@ -143,6 +145,7 @@ public fun BraceLink(
             })
             .clearAndSetSemantics {
                 contentDescription = description
+                text = AnnotatedString(label)
                 if (!enabled) disabled() else {
                     this.focused = focused
                     onClick(openLabel) { openDestination(); true }

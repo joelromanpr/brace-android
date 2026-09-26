@@ -32,8 +32,10 @@ import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.focused
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.requestFocus
+import androidx.compose.ui.semantics.text
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import io.github.braceandroid.foundation.BraceTheme
 
@@ -125,6 +127,7 @@ public fun BraceButton(
             .focusRequester(focusRequester)
             .clearAndSetSemantics {
                 contentDescription = accessibilityLabel ?: label
+                if (!loading) text = AnnotatedString(label)
                 role = Role.Button
                 if (loading) stateDescription = loadingDescription
                 if (!enabled || loading) disabled() else {

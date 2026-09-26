@@ -51,6 +51,13 @@ import io.github.braceandroid.foundation.BraceContrast
 import io.github.braceandroid.foundation.BraceDensity
 import io.github.braceandroid.foundation.BraceMotion
 import io.github.braceandroid.foundation.BraceTheme
+import io.github.joelromanpr.brace.core.BraceBlockquote
+import io.github.joelromanpr.brace.core.BraceCode
+import io.github.joelromanpr.brace.core.BraceCodeBlock
+import io.github.joelromanpr.brace.core.BraceHeading
+import io.github.joelromanpr.brace.core.BraceHeadingLevel
+import io.github.joelromanpr.brace.core.BraceOrderedList
+import io.github.joelromanpr.brace.core.BraceUnorderedList
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceButtonVariant
@@ -269,6 +276,17 @@ BraceTheme {
         }
     }
 }""".trimIndent(),
+    "core-h1" to """BraceHeading("Summary", level = BraceHeadingLevel.One)""",
+    "core-h2" to """BraceHeading("Projects", level = BraceHeadingLevel.Two)""",
+    "core-h3" to """BraceHeading("Recent activity", level = BraceHeadingLevel.Three)""",
+    "core-h4" to """BraceHeading("Details", level = BraceHeadingLevel.Four)""",
+    "core-h5" to """BraceHeading("Metadata", level = BraceHeadingLevel.Five)""",
+    "core-h6" to """BraceHeading("Footnotes", level = BraceHeadingLevel.Six)""",
+    "core-blockquote" to """BraceBlockquote("A decision needs evidence.", citation = "— Design note")""",
+    "core-code" to """BraceCode("val ready = true")""",
+    "core-pre" to """BraceCodeBlock("val rows = listOf(1, 2, 3)\nrows.forEach(::println)")""",
+    "core-ol" to """BraceOrderedList(listOf("Open record", "Review fields", "Save changes"))""",
+    "core-ul" to """BraceUnorderedList(listOf("Keyboard navigation", "TalkBack labels"))""",
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-link" to "BraceLink(\"Read guide\", BraceLinkDestination.Uri(\"https://example.org/guide\", \"Guide\"))",
     "core-anchorbutton" to "BraceLinkButton(\"Open reports\", BraceLinkDestination.Action(\"Reports\") { navigateToReports() })",
@@ -944,6 +962,28 @@ private fun ComponentSample(
         "datetime-timepicker" -> TimePickerSample()
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
         "table-cell-selection", "table-column-and-row-resizing" -> TableCatalogSample()
+        "core-h1", "core-h2", "core-h3", "core-h4", "core-h5", "core-h6" -> {
+            val level = when (id) {
+                "core-h1" -> BraceHeadingLevel.One
+                "core-h2" -> BraceHeadingLevel.Two
+                "core-h3" -> BraceHeadingLevel.Three
+                "core-h4" -> BraceHeadingLevel.Four
+                "core-h5" -> BraceHeadingLevel.Five
+                else -> BraceHeadingLevel.Six
+            }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceHeading("Quarterly operations", level = level)
+                Text("Headings scale with system text size and remain navigable in TalkBack.",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted,
+                    style = BraceTheme.typography.body)
+            }
+        }
+        "core-blockquote" -> BraceBlockquote(
+            "A decision needs evidence and a clear owner.", citation = "— Design review")
+        "core-code" -> BraceCode("val ready = true")
+        "core-pre" -> BraceCodeBlock("val rows = listOf(1, 2, 3)\nrows.forEach(::println)")
+        "core-ol" -> BraceOrderedList(listOf("Open record", "Review fields", "Save changes"))
+        "core-ul" -> BraceUnorderedList(listOf("Keyboard navigation", "TalkBack labels"))
         "core-button" -> {
             var count by rememberSaveable { mutableStateOf(0) }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {

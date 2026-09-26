@@ -137,10 +137,12 @@ class BraceIconsTest {
         rule.runOnIdle { enabled.value = false }
         button.assertIsNotEnabled()
         rule.waitForIdle()
-        rule.waitUntil(5_000) { androidNodesForLabel("Confirm changes").size == 1 }
+        rule.waitUntil(5_000) {
+            androidNodesForLabel("Confirm changes").singleOrNull()?.isEnabled == false
+        }
         androidNodesForLabel("Confirm changes").single().let { node ->
-            assertFalse(node.isClickable)
-            assertFalse(node.isEnabled)
+            assertFalse("Disabled native node: $node", node.isClickable)
+            assertFalse("Disabled native node: $node", node.isEnabled)
         }
         button.performTouchInput { click() }
         assertEquals(4, taps)

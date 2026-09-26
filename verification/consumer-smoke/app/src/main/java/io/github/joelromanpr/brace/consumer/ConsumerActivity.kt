@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -78,6 +80,9 @@ import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
 import io.github.joelromanpr.brace.table.BraceTableClipboard
+import io.github.joelromanpr.brace.table.BraceTableCell
+import io.github.joelromanpr.brace.table.BraceColumnHeader
+import io.github.joelromanpr.brace.table.BraceRowHeader
 import io.github.joelromanpr.brace.table.BraceDataTable
 import io.github.joelromanpr.brace.table.BraceTableColumn
 import io.github.joelromanpr.brace.table.BraceTableSelection
@@ -161,6 +166,17 @@ class ConsumerActivity : ComponentActivity() {
                         var tableColumnWidth by remember { mutableStateOf(160.dp) }
                         var tableRowHeight by remember { mutableStateOf(64.dp) }
                         val tableViewport = rememberBraceTableViewport()
+                        Row {
+                            BraceRowHeader("Ready", 0, "ready", false,
+                                { selectedTable = BraceTableSelection.Row("ready") },
+                                Modifier.width(64.dp).height(48.dp))
+                            BraceColumnHeader("Status", 0, "status", false,
+                                { selectedTable = BraceTableSelection.Column("status") },
+                                Modifier.width(120.dp).height(48.dp))
+                            BraceTableCell("Ready", "Status", "Ready", 0, 0, "ready", "status", false,
+                                { selectedTable = BraceTableSelection.Cell("ready", "status") },
+                                Modifier.width(120.dp).height(48.dp))
+                        }
                         BraceDataTable(
                             rows = displayedTableRows,
                             rowKey = { it.first },
@@ -178,6 +194,14 @@ class ConsumerActivity : ComponentActivity() {
                             height = 160.dp,
                             sort = tableSort.value,
                             onSortChange = { tableSort.value = it },
+                            rowLabel = { it.second },
+                            rowHeaderContent = { _, index ->
+                                BasicText("R" + (index + 1),
+                                    style = BraceTheme.typography.label.copy(
+                                        color = if (selectedTable == BraceTableSelection.Row(tableRows[index].first))
+                                            BraceTheme.colors.semantic.onSelection
+                                        else BraceTheme.colors.components.table.headerContent))
+                            },
                             columnWidths = mapOf("status" to tableColumnWidth),
                             onColumnWidthChange = { _, width -> tableColumnWidth = width },
                             rowHeights = mapOf("ready" to tableRowHeight),

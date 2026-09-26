@@ -195,6 +195,12 @@ BraceJsonCell(payload, modifier = Modifier.width(220.dp), maxCharacters = 24)
 // cellContent = { row -> BraceJsonCell(row.payload, revealMode = BraceRevealMode.Never) }""".trimIndent(),
     "table-table" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it })",
     "table-column" to "BraceTableColumn<Record>(\"name\", \"Name\", 140.dp, { it.name })",
+    "table-cell" to """BraceTableColumn<Record>("status", "Status", 140.dp,
+    cellText = { it.status }, cellContent = { row -> Text("● " + row.status) })""",
+    "table-columnheadercell" to """BraceTableColumn<Record>("status", "Status", 140.dp,
+    cellText = { it.status }, headerContent = { Text("◆ Status") })""",
+    "table-rowheadercell" to """BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
+    rowLabel = { it.name }, rowHeaderContent = { _, index -> Text("R" + (index + 1)) })""",
     "table-viewport-rendering" to "val viewport = rememberBraceTableViewport(); BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, viewport = viewport)",
     "table-fixed-headers" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // row and column headers stay visible",
     "table-keyboard-navigation" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // Shift+arrows extend a range",
@@ -639,6 +645,7 @@ private fun ComponentSample(
         }
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
         "table-cell-selection", "table-column-and-row-resizing", "table-copying",
+        "table-cell", "table-columnheadercell", "table-rowheadercell",
         "table-editablecell", "table-editing", "table-editablename" -> {
             var records by remember { mutableStateOf(List(120) { DemoTableRecord("record-$it", "Case ${1000 + it}", if (it % 3 == 0) "Review" else "Ready") }) }
             var columnTitles by remember { mutableStateOf(mapOf("case" to "Case", "status" to "Status", "owner" to "Owner")) }
@@ -646,7 +653,14 @@ private fun ComponentSample(
                 BraceTableColumn<DemoTableRecord>("case", columnTitles.getValue("case"), 140.dp,
                     { it.case }, editable = true, editableName = true),
                 BraceTableColumn<DemoTableRecord>("status", columnTitles.getValue("status"), 130.dp,
-                    { it.status }, editable = true, editableName = true),
+                    { it.status }, cellContent = { row ->
+                        Text("● " + row.status, style = BraceTheme.typography.body)
+                    }, editable = true, editableName = true,
+                    headerContent = {
+                        Text("◆ " + columnTitles.getValue("status"),
+                            modifier = Modifier.padding(horizontal = BraceTheme.componentMetrics.table.cellHorizontalPadding),
+                            style = BraceTheme.typography.label)
+                    }),
                 BraceTableColumn<DemoTableRecord>("owner", columnTitles.getValue("owner"), 130.dp,
                     { "Team ${(it.id.substringAfter('-').toInt() % 4) + 1}" }, editableName = true),
             ) }
@@ -699,7 +713,11 @@ private fun ComponentSample(
                             extentRow = it.extentRowKey; extentColumn = it.extentColumnKey
                         }
                     }
-                }, modifier = Modifier.fillMaxWidth(), height = 260.dp, label = "Cases", rowLabel = { it.case },
+                }, modifier = Modifier.fillMaxWidth(), height = 260.dp, label = "Cases",
+                    rowLabel = { it.case },
+                    rowHeaderContent = { _, index ->
+                        Text("R" + (index + 1), style = BraceTheme.typography.label)
+                    },
                     columnWidths = columnWidths,
                     onColumnWidthChange = { key, width -> columnWidths = columnWidths + (key to width) },
                     rowHeights = rowHeights,

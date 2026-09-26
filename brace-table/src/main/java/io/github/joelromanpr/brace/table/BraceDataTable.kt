@@ -109,6 +109,7 @@ class BraceTableColumn<Row>(
     val editable: Boolean = false,
     val editableName: Boolean = false,
     val sortable: Boolean = false,
+    val headerContent: (@Composable () -> Unit)? = null,
 )
 
 /** Controlled table selection identified by stable row and column keys. */
@@ -204,6 +205,7 @@ fun <Row> BraceDataTable(
     validateColumnName: (String, String) -> String? = { _, _ -> null },
     sort: BraceTableSort? = null,
     onSortChange: ((BraceTableSort?) -> Unit)? = null,
+    rowHeaderContent: (@Composable (Row, Int) -> Unit)? = null,
 ) {
     require((onEditingCellChange == null) == (onCellCommit == null)) {
         "Editing requires both onEditingCellChange and onCellCommit"
@@ -604,38 +606,24 @@ fun <Row> BraceDataTable(
                                         .testTag("brace-table-name-editor:${column.key}"),
                                 )
                             }
-                        } else Box(
-                            Modifier.offset(x = rowHeaderWidth + columnIndex.starts[index])
-                                .width(widths[index]).height(headerHeight)
-                                .background(if (columnSelected) colors.selectedRow else colors.header)
-                                .border(metrics.gridLineWidth, colors.gridLine)
-                                .pointerSelect("column:${column.key}", null, selectColumn,
-                                    onDoubleTap = if (canBeginNameEdit) beginNameEdit else null)
-                                .testTag("brace-table-header:${column.key}")
-                                .clearAndSetSemantics {
-                                    collectionItemInfo = CollectionItemInfo(0, 1, index + 1, 1)
-                                    selected = columnSelected
-                                    contentDescription = headerDescription.format(column.title, index + 1)
-                                    if (sortable) stateDescription = sortStateDescription
-                                    if (editingColumnName == null)
-                                        onClick(selectedAction) { selectColumn(); true }
-                                    customActions = listOfNotNull(
-                                        if (canBeginNameEdit)
-                                            CustomAccessibilityAction(editColumnNameAction) { beginNameEdit(); true }
-                                        else null,
-                                        if (sortEnabled)
-                                            CustomAccessibilityAction(sortActionDescription) { requestSort(); true }
-                                        else null,
-                                    )
-                                },
-                            contentAlignment = Alignment.CenterStart,
-                        ) {
-                            Text(column.title, modifier = Modifier.padding(
-                                start = metrics.cellHorizontalPadding,
-                                end = metrics.cellHorizontalPadding +
-                                    (if (sortable) BraceTheme.sizing.touchTarget else 0.dp) + resizeTargetWidth),
-                                color = if (columnSelected) semantic.onSelection else colors.headerContent,
-                                style = typography.label, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        } else {
+                            BraceColumnHeader(
+                                title = column.title,
+                                columnIndex = index,
+                                columnKey = column.key,
+                                selected = columnSelected,
+                                onSelect = selectColumn,
+                                enabled = editingColumnName == null,
+                                onEdit = if (canBeginNameEdit) beginNameEdit else null,
+                                modifier = Modifier.offset(x = rowHeaderWidth + columnIndex.starts[index])
+                                    .width(widths[index]).height(headerHeight)
+                                    .testTag("brace-table-header:${column.key}"),
+                                content = column.headerContent,
+                                sortState = if (sortable) sortStateDescription else null,
+                                sortActionLabel = if (sortEnabled) sortActionDescription else null,
+                                onSort = if (sortEnabled) requestSort else null,
+                                trailingInset = (if (sortable) BraceTheme.sizing.touchTarget else 0.dp) + resizeTargetWidth,
+                            )
                         }
                         if (sortable && !isNameEditing) {
                             val sortInteraction = remember(column.key) { MutableInteractionSource() }
@@ -733,15 +721,7 @@ fun <Row> BraceDataTable(
                                     null -> false
                                 }
                                 val value = column.cellText(row)
-                                val interaction = remember(key, column.key) { MutableInteractionSource() }
-                                val hovered by interaction.collectIsHoveredAsState()
                                 var pointerShift by remember(key, column.key) { mutableStateOf(false) }
-                                val cellColor = when {
-                                    cellSelected || rowSelected -> colors.selectedRow
-                                    hovered -> semantic.hover
-                                    else -> rowColor
-                                }
-                                val textColor = if (cellSelected || rowSelected) semantic.onSelection else semantic.onSurface
                                 val selectCell: () -> Unit = {
                                     val anchor = validAnchor(when {
                                         pointerShift && selection is BraceTableSelection.Range ->
@@ -797,47 +777,38 @@ fun <Row> BraceDataTable(
                                                 .testTag("brace-table-editor:$key:${column.key}"),
                                         )
                                     }
-                                } else Box(
-                                    Modifier.offset(x = rowHeaderWidth + columnIndex.starts[columnNumber])
-                                        .width(widths[columnNumber]).height(itemHeight)
-                                        .background(cellColor)
-                                        .hoverable(interaction)
-                                        .pointerInput(key, column.key) {
-                                            awaitPointerEventScope {
-                                                while (true) {
-                                                    val event = awaitPointerEvent(PointerEventPass.Initial)
-                                                    if (event.type == PointerEventType.Press) {
-                                                        pointerShift = event.keyboardModifiers.isPointerShiftPressed
+                                } else {
+                                    val visualContent: (@Composable () -> Unit)? =
+                                        column.cellContent?.let { custom -> @Composable { custom(row) } }
+                                    BraceTableCell(
+                                        value = value,
+                                        columnTitle = column.title,
+                                        rowLabel = accessibleRowLabel,
+                                        rowIndex = rowNumber,
+                                        columnIndex = columnNumber,
+                                        rowKey = key,
+                                        columnKey = column.key,
+                                        selected = cellSelected,
+                                        focused = focused,
+                                        onSelect = selectCell,
+                                        onExtendSelection = beginTouchRange,
+                                        onEdit = if (editingEnabled && column.editable && editingColumnName == null)
+                                            beginEdit else null,
+                                        modifier = Modifier.offset(x = rowHeaderWidth + columnIndex.starts[columnNumber])
+                                            .width(widths[columnNumber]).height(itemHeight)
+                                            .pointerInput(key, column.key) {
+                                                awaitPointerEventScope {
+                                                    while (true) {
+                                                        val event = awaitPointerEvent(PointerEventPass.Initial)
+                                                        if (event.type == PointerEventType.Press) {
+                                                            pointerShift = event.keyboardModifiers.isPointerShiftPressed
+                                                        }
                                                     }
                                                 }
                                             }
-                                        }
-                                        .border(if (cellSelected && focused) BraceTheme.sizing.focusRingWidth else metrics.gridLineWidth,
-                                            if (cellSelected && focused) semantic.focusRing else colors.gridLine)
-                                        .pointerSelect(key, column.key, selectCell, beginTouchRange,
-                                            if (editingEnabled && column.editable && editingColumnName == null) beginEdit else null)
-                                        .testTag("brace-table-cell:$key:${column.key}")
-                                        .clearAndSetSemantics {
-                                            collectionItemInfo = CollectionItemInfo(rowNumber + 1, 1, columnNumber + 1, 1)
-                                            selected = cellSelected
-                                            contentDescription = cellDescription.format(column.title, rowNumber + 1, accessibleRowLabel, value)
-                                            onClick(selectedAction) { selectCell(); true }
-                                            customActions = listOfNotNull(
-                                                CustomAccessibilityAction(extendRangeAction) {
-                                                    beginTouchRange(); true
-                                                },
-                                                if (editingEnabled && column.editable && editingColumnName == null)
-                                                    CustomAccessibilityAction(editAction) { beginEdit(); true }
-                                                else null,
-                                            )
-                                        },
-                                    contentAlignment = Alignment.CenterStart,
-                                ) {
-                                    Box(Modifier.fillMaxWidth().padding(horizontal = metrics.cellHorizontalPadding)) {
-                                        if (column.cellContent == null) {
-                                            Text(value, color = textColor, style = typography.body, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                                        } else column.cellContent.invoke(row)
-                                    }
+                                            .testTag("brace-table-cell:$key:${column.key}"),
+                                        content = visualContent,
+                                    )
                                 }
                             }
                         }
@@ -868,25 +839,19 @@ fun <Row> BraceDataTable(
                             onSelectionChange(BraceTableSelection.Row(key))
                             requester.requestFocus()
                         }
-                        Box(
-                            Modifier.offset(y = with(density) { offsetPx.toDp() })
+                        val visualRowHeader: (@Composable () -> Unit)? =
+                            rowHeaderContent?.let { custom -> @Composable { custom(row, rowNumber) } }
+                        BraceRowHeader(
+                            rowLabel = accessibleRowLabel,
+                            rowIndex = rowNumber,
+                            rowKey = key,
+                            selected = rowSelected,
+                            onSelect = selectRow,
+                            modifier = Modifier.offset(y = with(density) { offsetPx.toDp() })
                                 .width(rowSelectWidth).height(itemHeight)
-                                .background(if (rowSelected) colors.selectedRow else colors.header)
-                                .border(metrics.gridLineWidth, colors.gridLine)
-                                .pointerSelect(key, null, selectRow)
-                                .testTag("brace-table-row:$key")
-                                .clearAndSetSemantics {
-                                    collectionItemInfo = CollectionItemInfo(rowNumber + 1, 1, 0, 1)
-                                    selected = rowSelected
-                                    contentDescription = rowDescription.format(rowNumber + 1, accessibleRowLabel)
-                                    onClick(selectedAction) { selectRow(); true }
-                                },
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Text((rowNumber + 1).toString(),
-                                color = if (rowSelected) semantic.onSelection else colors.headerContent,
-                                style = typography.label)
-                        }
+                                .testTag("brace-table-row:$key"),
+                            content = visualRowHeader,
+                        )
                         if (onRowHeightChange != null) {
                             val minimum = if (editingCell?.rowKey == key) editorRowHeight else defaultRowHeight
                             BraceTableResizeHandle(

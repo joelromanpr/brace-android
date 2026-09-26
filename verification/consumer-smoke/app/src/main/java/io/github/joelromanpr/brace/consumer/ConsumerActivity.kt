@@ -21,6 +21,9 @@ import io.github.joelromanpr.brace.core.BraceSection
 import io.github.joelromanpr.brace.core.BraceMenu
 import io.github.joelromanpr.brace.core.BraceMenuItem
 import io.github.joelromanpr.brace.core.BraceDialog
+import io.github.joelromanpr.brace.core.BraceDrawer
+import io.github.joelromanpr.brace.core.BraceDrawerPosition
+import io.github.joelromanpr.brace.core.BracePopover
 import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.BraceOverlayHost
 import io.github.joelromanpr.brace.core.BraceButtonIntent
@@ -34,6 +37,8 @@ class ConsumerActivity : ComponentActivity() {
                 var count by remember { mutableStateOf(0) }
                 var dialogOpen by remember { mutableStateOf(false) }
                 var alertOpen by remember { mutableStateOf(false) }
+                var drawerOpen by remember { mutableStateOf(false) }
+                var popoverOpen by remember { mutableStateOf(false) }
                 Column {
                     BraceCard {
                         BraceButton(label = "Saved $count", onClick = { count++ })
@@ -50,6 +55,20 @@ class ConsumerActivity : ComponentActivity() {
                             intent = io.github.joelromanpr.brace.core.BraceMenuIntent.Danger)
                     }
                     BraceOverlayHost {
+                        BracePopover(
+                            expanded = popoverOpen,
+                            onDismissRequest = { popoverOpen = false },
+                            title = "Filter options",
+                            target = { BraceButton("Popover filters", onClick = { popoverOpen = true }) },
+                        ) { BraceButton("Apply", onClick = { popoverOpen = false }) }
+                        BraceButton("Drawer filters", onClick = { drawerOpen = true })
+                        BraceDrawer(
+                            open = drawerOpen,
+                            onDismissRequest = { drawerOpen = false },
+                            title = "Filters",
+                            position = BraceDrawerPosition.End,
+                            footer = { BraceButton("Apply", onClick = { drawerOpen = false }) },
+                        ) { BraceTag("Active records") }
                         BraceDialog(
                             open = dialogOpen,
                             onDismissRequest = { dialogOpen = false },

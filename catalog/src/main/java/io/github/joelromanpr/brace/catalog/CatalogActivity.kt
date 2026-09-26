@@ -65,6 +65,10 @@ import io.github.joelromanpr.brace.core.BraceMenuDivider
 import io.github.joelromanpr.brace.core.BraceOverlay
 import io.github.joelromanpr.brace.core.BraceOverlayHost
 import io.github.joelromanpr.brace.core.BraceDialog
+import io.github.joelromanpr.brace.core.BraceDrawer
+import io.github.joelromanpr.brace.core.BraceDrawerPosition
+import io.github.joelromanpr.brace.core.BracePopover
+import io.github.joelromanpr.brace.core.BracePopoverPlacement
 import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.rememberBraceOverlayState
 import io.github.joelromanpr.brace.core.BraceProgressIntent
@@ -124,6 +128,9 @@ private val usageExamples = mapOf(
     "core-dialogbody" to "BraceDialogBody { Text(\"Scrollable details\") }",
     "core-dialogfooter" to "BraceDialogActions { BraceButton(\"Save\", onClick = save) }",
     "core-alert" to "BraceAlertDialog(open = open, title = \"Delete report?\", onConfirm = delete, onCancel = cancel, confirmIntent = BraceButtonIntent.Danger)",
+    "core-drawer" to "BraceDrawer(open = open, onDismissRequest = { open = false }, title = \"Filters\", position = BraceDrawerPosition.End) { Text(\"Filter options\") }",
+    "core-popover" to "BracePopover(expanded = open, onDismissRequest = { open = false }, target = { BraceButton(\"Filters\", onClick = { open = true }) }, title = \"Filter options\") { Text(\"Filter options\") }",
+    "core-popovernext" to "BracePopover(expanded = open, onDismissRequest = { open = false }, target = { BraceButton(\"Filters\", onClick = { open = true }) }, title = \"Filter options\") { Text(\"Filter options\") }",
 
 )
 
@@ -428,6 +435,52 @@ private fun ComponentSample(id: String) {
             }
         }
 
+        "core-drawer" -> {
+            var open by rememberSaveable { mutableStateOf(false) }
+            var position by rememberSaveable { mutableStateOf(BraceDrawerPosition.End) }
+            var activeOnly by rememberSaveable { mutableStateOf(true) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceButton("Open drawer", onClick = { open = true })
+                BraceButton("Switch edge", onClick = {
+                    position = if (position == BraceDrawerPosition.End) BraceDrawerPosition.Bottom
+                        else BraceDrawerPosition.End
+                }, variant = BraceButtonVariant.Outline)
+                Text("Edge: $position", color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BraceDrawer(
+                    open = open,
+                    onDismissRequest = { open = false },
+                    title = "Filter results",
+                    position = position,
+                    footer = { BraceButton("Apply filters", onClick = { open = false }) },
+                ) {
+                    Text("Choose the filters for this view.", color = BraceTheme.colors.semantic.onSurface)
+                    BraceCheckbox(activeOnly, { activeOnly = it }, "Active records")
+                }
+            }
+        }
+        "core-popover", "core-popovernext" -> {
+            var open by rememberSaveable { mutableStateOf(false) }
+            var placement by rememberSaveable { mutableStateOf(BracePopoverPlacement.Auto) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceButton("Switch placement", onClick = {
+                    placement = if (placement == BracePopoverPlacement.Auto) BracePopoverPlacement.TopEnd
+                        else BracePopoverPlacement.Auto
+                }, variant = BraceButtonVariant.Outline)
+                Text("Placement: $placement", color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BracePopover(
+                    expanded = open,
+                    onDismissRequest = { open = false },
+                    placement = placement,
+                    title = "Filter options",
+                    target = { BraceButton("Open filters", onClick = { open = !open }) },
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                        Text("Only active records", color = BraceTheme.colors.semantic.onSurface)
+                        BraceButton("Apply", onClick = { open = false })
+                    }
+                }
+            }
+        }
         "core-dialog", "core-dialogbody", "core-dialogfooter", "core-alert" -> {
             var dialogOpen by rememberSaveable { mutableStateOf(false) }
             var alertOpen by rememberSaveable { mutableStateOf(false) }

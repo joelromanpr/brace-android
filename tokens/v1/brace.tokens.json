@@ -441,6 +441,16 @@
       "disabledTrack": "{semantic.disabledContainer}",
       "disabledThumb": "{semantic.disabledContent}",
       "focusRing": "{semantic.focusRing}"
+    },
+    "drawer": {
+      "container": "{semantic.surfaceRaised}",
+      "content": "{semantic.onSurface}",
+      "border": "{semantic.border}"
+    },
+    "popover": {
+      "container": "{semantic.surfaceRaised}",
+      "content": "{semantic.onSurface}",
+      "border": "{semantic.border}"
     }
   },
   "componentMetricsDp": {
@@ -496,6 +506,16 @@
       "thumbRadius": 8,
       "thumbInset": 3,
       "focusCornerRadius": 6
+    },
+    "drawer": {
+      "cornerRadius": 12,
+      "contentPadding": 24,
+      "maxWidth": 420
+    },
+    "popover": {
+      "cornerRadius": 8,
+      "contentPadding": 12,
+      "maxWidth": 360
     }
   }
 }

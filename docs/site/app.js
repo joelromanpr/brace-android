@@ -38,7 +38,7 @@ function addFact(grid, label, value, isLink = false) {
   if (isLink) {
     const link = el('a', '', label === 'Blueprint documentation' ? 'Open Blueprint docs ↗' : label === 'Pinned Blueprint source' ? 'Open pinned source ↗' : 'View in repository ↗');
     const [path, fragment] = String(value).split('#', 2);
-    const guide = { 'docs/core-components.md': 'core-components.html', 'docs/content-feedback.md': 'content-feedback.html', 'docs/navigation-feedback.md': 'navigation-feedback.html', 'docs/overlays.md': 'overlays.html', 'docs/theming.md': 'theming.html', 'docs/installation.md': 'installation.html', 'docs/compatibility.md': 'compatibility.html', 'docs/attribution.md': 'attribution.html' }[path];
+    const guide = { 'docs/core-components.md': 'core-components.html', 'docs/content-feedback.md': 'content-feedback.html', 'docs/navigation-feedback.md': 'navigation-feedback.html', 'docs/overlays.md': 'overlays.html', 'docs/drawers-popovers.md': 'drawers-popovers.html', 'docs/theming.md': 'theming.html', 'docs/installation.md': 'installation.html', 'docs/compatibility.md': 'compatibility.html', 'docs/attribution.md': 'attribution.html' }[path];
     link.href = /^https:\/\//.test(value) ? value : guide ? `./${guide}${fragment ? `#${fragment}` : ''}` : repository + value.replace(/^\/+/, '');
     link.rel = 'noopener noreferrer';
     description.append(link);

@@ -94,6 +94,29 @@ public final class io/github/joelromanpr/brace/core/BraceDividerOrientation : ja
 	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceDividerOrientation;
 }
 
+public final class io/github/joelromanpr/brace/core/BraceDrawerKt {
+	public static final fun BraceDrawer-5tGJXgQ (ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceDrawerPosition;Lio/github/joelromanpr/brace/core/BraceDrawerSize;Landroidx/compose/ui/unit/Dp;Lkotlin/jvm/functions/Function2;ZLjava/lang/String;ZZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceDrawerPosition : java/lang/Enum {
+	public static final field Bottom Lio/github/joelromanpr/brace/core/BraceDrawerPosition;
+	public static final field End Lio/github/joelromanpr/brace/core/BraceDrawerPosition;
+	public static final field Start Lio/github/joelromanpr/brace/core/BraceDrawerPosition;
+	public static final field Top Lio/github/joelromanpr/brace/core/BraceDrawerPosition;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceDrawerPosition;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceDrawerPosition;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceDrawerSize : java/lang/Enum {
+	public static final field Large Lio/github/joelromanpr/brace/core/BraceDrawerSize;
+	public static final field Small Lio/github/joelromanpr/brace/core/BraceDrawerSize;
+	public static final field Standard Lio/github/joelromanpr/brace/core/BraceDrawerSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceDrawerSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceDrawerSize;
+}
+
 public final class io/github/joelromanpr/brace/core/BraceEmptyStateIconSize : java/lang/Enum {
 	public static final field ExtraSmall Lio/github/joelromanpr/brace/core/BraceEmptyStateIconSize;
 	public static final field Small Lio/github/joelromanpr/brace/core/BraceEmptyStateIconSize;
@@ -159,6 +182,29 @@ public final class io/github/joelromanpr/brace/core/BraceOverlayState {
 	public static final field $stable I
 	public fun <init> ()V
 	public final fun getActiveCount ()I
+}
+
+public final class io/github/joelromanpr/brace/core/BracePopoverKt {
+	public static final fun BracePopover (ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BracePopoverPlacement;Ljava/lang/String;ZZLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BracePopoverPlacement : java/lang/Enum {
+	public static final field Auto Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field Bottom Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field BottomEnd Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field BottomStart Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field End Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field EndBottom Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field EndTop Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field Start Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field StartBottom Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field StartTop Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field Top Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field TopEnd Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field TopStart Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
 }
 
 public final class io/github/joelromanpr/brace/core/BraceProgressBarKt {

@@ -134,7 +134,11 @@ class ConsumerActivity : ComponentActivity() {
                             BraceButton(label = "Saved $count", onClick = { count++ })
                         }
                         val tableRows = remember { listOf("Ready", "Review") }
-                        var selectedTable: BraceTableSelection? by remember { mutableStateOf(null) }
+                        var selectedTable: BraceTableSelection? by remember {
+                            mutableStateOf(BraceTableSelection.Range("Ready", "status", "Review", "status"))
+                        }
+                        var tableColumnWidth by remember { mutableStateOf(120.dp) }
+                        var tableRowHeight by remember { mutableStateOf(64.dp) }
                         val tableViewport = rememberBraceTableViewport()
                         BraceDataTable(
                             rows = tableRows,
@@ -144,7 +148,14 @@ class ConsumerActivity : ComponentActivity() {
                             onSelectionChange = { selectedTable = it },
                             viewport = tableViewport,
                             height = 160.dp,
+                            columnWidths = mapOf("status" to tableColumnWidth),
+                            onColumnWidthChange = { _, width -> tableColumnWidth = width },
+                            rowHeights = mapOf("Ready" to tableRowHeight),
+                            onRowHeightChange = { _, height -> tableRowHeight = height },
                         )
+                        BraceButton("Select status column", onClick = {
+                            selectedTable = BraceTableSelection.Column("status")
+                        })
                         BraceSection(title = "Job status", collapsible = true) {
                             BraceProgressBar(label = "Import progress", value = 0.5f)
                         }

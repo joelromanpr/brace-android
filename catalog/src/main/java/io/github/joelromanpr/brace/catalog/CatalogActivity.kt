@@ -182,7 +182,9 @@ Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
     "table-column" to "BraceTableColumn<Record>(\"name\", \"Name\", 140.dp, { it.name })",
     "table-viewport-rendering" to "val viewport = rememberBraceTableViewport(); BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, viewport = viewport)",
     "table-fixed-headers" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // row and column headers stay visible",
-    "table-keyboard-navigation" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // arrows, Home/End, Page Up/Down",
+    "table-keyboard-navigation" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // Shift+arrows extend a range",
+    "table-cell-selection" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // Cell, Row, Column, or Range",
+    "table-column-and-row-resizing" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, columnWidths = widths, onColumnWidthChange = { key, width -> widths = widths + (key to width) }, rowHeights = heights, onRowHeightChange = { key, height -> heights = heights + (key to height) })",
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-checkbox" to "BraceCheckbox(checked = checked, onCheckedChange = { checked = it }, label = \"Include archived\")",
     "core-switch" to "BraceSwitch(checked = enabled, onCheckedChange = { enabled = it }, label = \"Notifications\")",
@@ -512,33 +514,66 @@ private fun ComponentSample(
                     locale = Locale.US)
             }
         }
-        "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation" -> {
+        "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
+        "table-cell-selection", "table-column-and-row-resizing" -> {
             val records = remember { List(120) { DemoTableRecord("record-$it", "Case ${1000 + it}", if (it % 3 == 0) "Review" else "Ready") } }
             val tableColumns = remember { listOf(
                 BraceTableColumn<DemoTableRecord>("case", "Case", 140.dp, { it.case }),
                 BraceTableColumn<DemoTableRecord>("status", "Status", 130.dp, { it.status }),
                 BraceTableColumn<DemoTableRecord>("owner", "Owner", 130.dp, { "Team ${(it.id.substringAfter('-').toInt() % 4) + 1}" }),
             ) }
-            var selectedRow by rememberSaveable { mutableStateOf<String?>(null) }
-            var selectedColumn by rememberSaveable { mutableStateOf<String?>(null) }
-            val selection = when {
-                selectedRow == null -> null
-                selectedColumn == null -> BraceTableSelection.Row(selectedRow!!)
-                else -> BraceTableSelection.Cell(selectedRow!!, selectedColumn!!)
+            var selectedKind by rememberSaveable { mutableStateOf("none") }
+            var selectedRow by rememberSaveable { mutableStateOf("") }
+            var selectedColumn by rememberSaveable { mutableStateOf("") }
+            var extentRow by rememberSaveable { mutableStateOf("") }
+            var extentColumn by rememberSaveable { mutableStateOf("") }
+            var columnWidths by remember { mutableStateOf<Map<String, androidx.compose.ui.unit.Dp>>(emptyMap()) }
+            var rowHeights by remember { mutableStateOf<Map<String, androidx.compose.ui.unit.Dp>>(emptyMap()) }
+            val selection = when (selectedKind) {
+                "cell" -> BraceTableSelection.Cell(selectedRow, selectedColumn)
+                "row" -> BraceTableSelection.Row(selectedRow)
+                "column" -> BraceTableSelection.Column(selectedColumn)
+                "range" -> BraceTableSelection.Range(selectedRow, selectedColumn, extentRow, extentColumn)
+                else -> null
+            }
+            val rowNames = remember(records) { records.associate { it.id to it.case } }
+            val columnNames = remember(tableColumns) { tableColumns.associate { it.key to it.title } }
+            val selectionSummary = when (selection) {
+                is BraceTableSelection.Cell -> "${rowNames[selection.rowKey]} · ${columnNames[selection.columnKey]}"
+                is BraceTableSelection.Row -> "Row ${rowNames[selection.rowKey]}"
+                is BraceTableSelection.Column -> "Column ${columnNames[selection.columnKey]}"
+                is BraceTableSelection.Range ->
+                    "${rowNames[selection.anchorRowKey]} · ${columnNames[selection.anchorColumnKey]} → " +
+                        "${rowNames[selection.extentRowKey]} · ${columnNames[selection.extentColumnKey]}"
+                null -> "None"
             }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                Text("Scroll in both directions. Tap a cell or row number; focus the table for arrow keys.",
+                Text("Scroll both ways. Tap headers to select a row or column. Long-press a cell then tap an endpoint for a range; keyboard Shift+arrows extend it. Drag or focus resize grips.",
                     color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.body)
                 BraceDataTable(records, { it.id }, tableColumns, selection, {
                     when (it) {
-                        is BraceTableSelection.Cell -> { selectedRow = it.rowKey; selectedColumn = it.columnKey }
-                        is BraceTableSelection.Row -> { selectedRow = it.rowKey; selectedColumn = null }
+                        is BraceTableSelection.Cell -> {
+                            selectedKind = "cell"; selectedRow = it.rowKey; selectedColumn = it.columnKey
+                        }
+                        is BraceTableSelection.Row -> { selectedKind = "row"; selectedRow = it.rowKey }
+                        is BraceTableSelection.Column -> { selectedKind = "column"; selectedColumn = it.columnKey }
+                        is BraceTableSelection.Range -> {
+                            selectedKind = "range"; selectedRow = it.anchorRowKey; selectedColumn = it.anchorColumnKey
+                            extentRow = it.extentRowKey; extentColumn = it.extentColumnKey
+                        }
                     }
-                }, modifier = Modifier.fillMaxWidth(), height = 260.dp, label = "Cases", rowLabel = { it.case })
-                Text("Selection: ${selection ?: "None"}", color = BraceTheme.colors.semantic.onSurface,
+                }, modifier = Modifier.fillMaxWidth(), height = 260.dp, label = "Cases", rowLabel = { it.case },
+                    columnWidths = columnWidths,
+                    onColumnWidthChange = { key, width -> columnWidths = columnWidths + (key to width) },
+                    rowHeights = rowHeights,
+                    onRowHeightChange = { key, height -> rowHeights = rowHeights + (key to height) })
+                Text("Selection: $selectionSummary", color = BraceTheme.colors.semantic.onSurface,
                     style = BraceTheme.typography.body)
-                BraceButton("Clear selection", onClick = { selectedRow = null; selectedColumn = null },
-                    variant = BraceButtonVariant.Outline)
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton("Clear selection", onClick = { selectedKind = "none" }, variant = BraceButtonVariant.Outline)
+                    BraceButton("Reset sizes", onClick = { columnWidths = emptyMap(); rowHeights = emptyMap() },
+                        variant = BraceButtonVariant.Outline)
+                }
             }
         }
         "core-button" -> {

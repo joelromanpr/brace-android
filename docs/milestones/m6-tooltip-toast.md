@@ -1,6 +1,6 @@
 # M6 delivery slice: tooltips and toast notifications
 
-**Status:** implementation in progress in [PR #16](https://github.com/joelromanpr/brace-android/pull/16); hosted CI rerun pending. These rows belong to roadmap phase **M2 overlays/navigation**. No Maven Central version has shipped. Released applicable coverage remains **0/121**; the full pinned ledger now has **46 in progress** and **101 planned** rows out of 147.
+**Status:** source merged through [PR #16](https://github.com/joelromanpr/brace-android/pull/16); the inventory rows remain in progress until a Maven Central release and remaining acceptance checks. These rows belong to roadmap phase **M2 overlays/navigation**. No Maven Central version has shipped. Released applicable coverage remains **0/121**; the full pinned ledger now has **46 in progress** and **101 planned** rows out of 147.
 
 ## Scope
 
@@ -18,7 +18,7 @@
 | Documentation build and generated inventory | Passed: 147 rows and 17 guides; generated coverage, JavaScript syntax, and diff checks passed. |
 | Maven Local publication and independent consumer | Passed: foundation/core AAR, source and KDoc artifacts; separate consumer app assembled with Tooltip and Toast APIs. |
 | Installed catalog interaction | Passed on API 36 phone emulator: Toast search/detail opened; persistent actionable danger toast displayed without clipping and action dismissed it. |
-| Hosted CI and PR | [PR #16](https://github.com/joelromanpr/brace-android/pull/16): hosted `verify` passed on the first run. The API 34 emulator job failed before tests because its 4 GiB data partition needed 7.37 GiB and the runner had 6.99 GiB free. The partition is now 2 GiB; rerun pending. |
+| Hosted CI and PR | [PR #16](https://github.com/joelromanpr/brace-android/pull/16): hosted `verify` passed on the first run. The API 34 emulator job failed before tests because its 4 GiB data partition needed 7.37 GiB and the runner had 6.99 GiB free. The partition was reduced to 2 GiB. In the final [hosted run](https://github.com/joelromanpr/brace-android/actions/runs/36220633669), required `verify` passed (4m40s) and API 34 `instrumented` passed (18m8s); PR #16 was squash merged. |
 
 ## Limits and next branch
 

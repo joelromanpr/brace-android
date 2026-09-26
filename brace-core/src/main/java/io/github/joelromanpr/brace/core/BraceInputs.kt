@@ -42,6 +42,8 @@ import io.github.braceandroid.foundation.BraceTheme
 /**
  * A labeled, single-line editable field. Its value is hoisted for state restoration.
  * [supportingText] also supplies the accessibility error message when [isError] is true.
+ * While editable, the field automatically suppresses unrelated Brace shortcuts registered in
+ * a surrounding [BraceShortcutRegistry]; read-only and disabled fields do not claim that state.
  */
 @Composable
 public fun BraceTextField(
@@ -78,6 +80,7 @@ public fun BraceTextField(
                 .heightIn(min = maxOf(BraceTheme.sizing.touchTarget, BraceTheme.densityTokens.controlHeightDp))
                 .background(if (enabled) input.container else input.disabledContainer, RoundedCornerShape(metrics.cornerRadius))
                 .border(if (focused) BraceTheme.sizing.focusRingWidth else metrics.borderWidth, borderColor, RoundedCornerShape(metrics.cornerRadius))
+                .then(if (enabled && !readOnly) Modifier.braceShortcutEditable() else Modifier)
                 .semantics {
                     contentDescription = label
                     if (isError) error(supportingText ?: "Invalid value")

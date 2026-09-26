@@ -23,17 +23,21 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.IntOffset
 import io.github.braceandroid.foundation.BraceBrandColors
 import io.github.braceandroid.foundation.BraceColorMode
 import io.github.braceandroid.foundation.BraceContrast
@@ -70,6 +74,14 @@ import io.github.joelromanpr.brace.core.BraceDrawer
 import io.github.joelromanpr.brace.core.BraceDrawerPosition
 import io.github.joelromanpr.brace.core.BracePopover
 import io.github.joelromanpr.brace.core.BracePopoverPlacement
+import io.github.joelromanpr.brace.core.BraceContextMenu
+import io.github.joelromanpr.brace.core.BraceContextMenuPopup
+import io.github.joelromanpr.brace.core.BraceShortcut
+import io.github.joelromanpr.brace.core.BraceShortcutLabel
+import io.github.joelromanpr.brace.core.BraceShortcutRegistry
+import io.github.joelromanpr.brace.core.BraceShortcutScope
+import io.github.joelromanpr.brace.core.rememberBraceShortcutRegistryState
+import io.github.joelromanpr.brace.core.braceShortcuts
 import io.github.joelromanpr.brace.core.BraceTooltip
 import io.github.joelromanpr.brace.core.BraceToastHost
 import io.github.joelromanpr.brace.core.BraceToastIntent
@@ -138,6 +150,12 @@ private val usageExamples = mapOf(
     "core-drawer" to "BraceDrawer(open = open, onDismissRequest = { open = false }, title = \"Filters\", position = BraceDrawerPosition.End) { Text(\"Filter options\") }",
     "core-popover" to "BracePopover(expanded = open, onDismissRequest = { open = false }, target = { BraceButton(\"Filters\", onClick = { open = true }) }, title = \"Filter options\") { Text(\"Filter options\") }",
     "core-popovernext" to "BracePopover(expanded = open, onDismissRequest = { open = false }, target = { BraceButton(\"Filters\", onClick = { open = true }) }, title = \"Filter options\") { Text(\"Filter options\") }",
+    "core-contextmenu" to """var open by rememberSaveable { mutableStateOf(false) }; BraceContextMenu(open, { open = it }, title = "Row actions", targetIsFocusable = true, target = { targetModifier -> BraceButton("Record", onClick = {}, modifier = targetModifier) }) { dismiss -> BraceMenuItem("Copy link", onClick = { copyLink(); dismiss() }) }""",
+    "core-contextmenupopover" to """val trigger = remember { FocusRequester() }; var wasOpen by remember { mutableStateOf(false) }; LaunchedEffect(open) { if (open) wasOpen = true else if (wasOpen) { trigger.requestFocus(); wasOpen = false } }; BraceButton("More actions", onClick = { open = true }, modifier = Modifier.focusRequester(trigger)); BraceContextMenuPopup(expanded = open, onDismissRequest = { open = false }, targetOffset = IntOffset(80, 220), title = "More actions") { dismiss -> BraceMenuItem("Refresh", onClick = { refresh(); dismiss() }) }""",
+    "core-hotkeystarget" to """BraceShortcutScope(listOf(BraceShortcut("ctrl+e", "Export", onKeyDown = ::export))) { BraceButton("Export", onClick = ::export) }""",
+    "core-hotkeysprovider" to """BraceShortcutRegistry(shortcuts = listOf(BraceShortcut("ctrl+r", "Refresh", spokenComboLabel = "Control plus R", onKeyDown = ::refresh))) { ScreenContent() }""",
+    "core-usehotkeys" to """Column(Modifier.braceShortcuts(listOf(BraceShortcut("ctrl+k", "Search", onKeyDown = ::focusSearch)))) { ScreenContent() }""",
+    "core-keycombotag" to """BraceShortcutLabel(combo = "Ctrl+R", spokenLabel = "Control plus R")""",
     "core-tooltip" to "BraceTooltip(text = \"Imports include archived records\", target = { BraceButton(\"Import help\", onClick = {}) })",
     "core-toast" to "val toasts = rememberBraceToastState(); Box(Modifier.fillMaxSize()) { BraceButton(\"Save\", onClick = { toasts.show(BraceToastSpec(\"Saved\", intent = BraceToastIntent.Success)) }); BraceToastHost(toasts) }",
     "core-overlaytoaster" to "val toasts = rememberBraceToastState(); Box(Modifier.fillMaxSize()) { BraceButton(\"Notify\", onClick = { toasts.show(BraceToastSpec(\"Ready\"), key = \"status\") }); BraceToastHost(toasts, position = BraceToastPosition.BottomEnd) }",
@@ -502,6 +520,96 @@ private fun ComponentSample(
                         Text("Only active records", color = BraceTheme.colors.semantic.onSurface)
                         BraceButton("Apply", onClick = { open = false })
                     }
+                }
+            }
+        }
+        "core-contextmenu" -> {
+            var open by rememberSaveable { mutableStateOf(false) }
+            var result by rememberSaveable { mutableStateOf("No action yet") }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Right-click, long-press, or focus and press Shift+F10 on the report.",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BraceContextMenu(
+                    expanded = open,
+                    onExpandedChange = { open = it },
+                    title = "Report actions",
+                    targetIsFocusable = true,
+                    target = { targetModifier -> BraceButton("Quarterly report", onClick = { result = "Opened report" }, modifier = targetModifier) },
+                ) { dismiss ->
+                    BraceMenuItem("Copy link", onClick = { result = "Link copied"; dismiss() })
+                    BraceMenuItem("Archive", onClick = { result = "Report archived"; dismiss() })
+                    BraceMenuItem("Unavailable", onClick = {}, enabled = false)
+                }
+                Text(result, color = BraceTheme.colors.semantic.onSurface)
+            }
+        }
+        "core-contextmenupopover" -> {
+            var open by rememberSaveable { mutableStateOf(false) }
+            var result by rememberSaveable { mutableStateOf("No action yet") }
+            val trigger = remember { FocusRequester() }
+            var hadOpened by remember { mutableStateOf(false) }
+            LaunchedEffect(open) {
+                if (open) hadOpened = true
+                else if (hadOpened) {
+                    trigger.requestFocus()
+                    hadOpened = false
+                }
+            }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("This lower-level surface opens at an explicit window position.",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BraceButton("Open point-anchored menu", onClick = { open = true },
+                    modifier = Modifier.focusRequester(trigger))
+                Text(result, color = BraceTheme.colors.semantic.onSurface)
+                BraceContextMenuPopup(
+                    expanded = open,
+                    onDismissRequest = { open = false },
+                    targetOffset = IntOffset(80, 220),
+                    title = "More actions",
+                ) { dismiss ->
+                    BraceMenuItem("Refresh", onClick = { result = "Refreshed"; dismiss() })
+                    BraceMenuItem("Pin", onClick = { result = "Pinned"; dismiss() })
+                }
+            }
+        }
+        "core-hotkeystarget", "core-hotkeysprovider", "core-usehotkeys", "core-keycombotag" -> {
+            var refreshed by rememberSaveable { mutableStateOf(0) }
+            var exported by rememberSaveable { mutableStateOf(0) }
+            var searched by rememberSaveable { mutableStateOf(0) }
+            var query by rememberSaveable { mutableStateOf("") }
+            val shortcutState = rememberBraceShortcutRegistryState()
+            BraceShortcutRegistry(
+                shortcuts = listOf(BraceShortcut("ctrl+r", "Refresh records", spokenComboLabel = "Control plus R", group = "Records",
+                    onKeyDown = { refreshed++ })),
+                discoveryTitle = "Catalog shortcuts",
+                state = shortcutState,
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    Text("Focus a control, then press Ctrl+R. Press ? to open the guide.",
+                        color = BraceTheme.colors.semantic.onSurfaceMuted)
+                    BraceButton("Show shortcut guide", onClick = { shortcutState.showDiscovery() },
+                        variant = BraceButtonVariant.Outline)
+                    Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                        BraceShortcutLabel("Ctrl+R", spokenLabel = "Control plus R")
+                        Text("Refresh records", color = BraceTheme.colors.semantic.onSurface)
+                    }
+                    BraceButton("Refresh records", onClick = { refreshed++ })
+                    BraceShortcutScope(shortcuts = listOf(
+                        BraceShortcut("ctrl+e", "Export here", group = "Records", onKeyDown = { exported++ }),
+                        BraceShortcut("ctrl+g", "Export globally", group = "Records", global = true,
+                            onKeyDown = { exported++ }),
+                    )) {
+                        BraceButton("Export records", onClick = { exported++ })
+                    }
+                    Column(Modifier.braceShortcuts(listOf(BraceShortcut("ctrl+k", "Search records",
+                        group = "Records", onKeyDown = { searched++ })))) {
+                        BraceButton("Focus search shortcut", onClick = { searched++ })
+                    }
+                    BraceTextField(query, { query = it }, "Type without triggering shortcuts")
+                    Text("Ctrl+E is local; Ctrl+G works anywhere in this sample while mounted.",
+                        color = BraceTheme.colors.semantic.onSurfaceMuted)
+                    Text("Refresh $refreshed · Export $exported · Search $searched",
+                        color = BraceTheme.colors.semantic.onSurface)
                 }
             }
         }

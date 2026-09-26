@@ -37,6 +37,7 @@ class BraceTokensTest {
                 toast.warningContent to toast.warningContainer,
                 toast.dangerContent to toast.dangerContainer,
                 scheme.components.tooltip.content to scheme.components.tooltip.container,
+                scheme.components.shortcut.content to scheme.components.shortcut.container,
             ).forEach { (text, background) ->
                 assertTrue("feedback text contrast below 4.5", braceContrastRatio(text, background) >= 4.5)
             }

@@ -62,7 +62,7 @@ BraceTextField(
 )
 ```
 
-`BraceTextField` is a single-line field with hoisted string state, keyboard options, visual transformation, read-only and disabled modes, and an accessibility error message. It maps the first part of Blueprint InputGroup into a labeled Android input. Icon affordances, clear buttons, suggestion popup behavior, multiline input, and format-specific controls are separate follow-up work. On Android, `KeyboardOptions` configures the IME, and the text cursor and border use input tokens. The caller restores value with `rememberSaveable` or a persisted model.
+`BraceTextField` is a single-line field with hoisted string state, keyboard options, visual transformation, read-only and disabled modes, and an accessibility error message. It maps the first part of Blueprint InputGroup into a labeled Android input. Icon affordances, clear buttons, suggestion popup behavior, multiline input, and format-specific controls are separate follow-up work. On Android, `KeyboardOptions` configures the IME, and the text cursor and border use input tokens. The caller restores value with `rememberSaveable` or a persisted model. Inside `BraceShortcutRegistry`, this built-in field marks its editable focus automatically so ordinary screen shortcuts do not interrupt typing. Custom Compose text inputs can use `Modifier.braceShortcutEditable()`.
 
 ## Verification and acceptance
 

@@ -14,6 +14,7 @@
     <string name="brace_table_size_min">%1$d dp; minimum %2$d dp</string>
     <string name="brace_table_size_range">%1$d dp; minimum %2$d dp; maximum %3$d dp</string>
     <string name="brace_table_range_description">Selected rows %1$d to %2$d, columns %3$d to %4$d</string>
+    <string name="brace_table_selected">Selected</string>
     <string name="brace_table_selected_column_description">Selected column %1$d</string>
     <string name="brace_table_selected_cell_description">Selected %1$s, row %2$d (%3$s), %4$s</string>
     <string name="brace_table_selected_row_description">Selected row %1$d, %2$s</string>

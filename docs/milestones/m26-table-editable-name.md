@@ -1,6 +1,6 @@
 # M26: editable table column names
 
-**Status:** local source branch rebased onto M22 cell editing head `f5882da`, stacked on M21, M18, M14, and M13 DatePicker `ac121b3`. These APIs are **in progress**, `firstRelease` is null, and released applicable coverage remains **0/121**. The rebased head has not been pushed or run through Gradle and device gates.
+**Status:** local source branch rebased onto M22 cell editing head `f5882da`, stacked on M21, M18, M14, and M13 DatePicker `ac121b3`. These APIs are **in progress**, `firstRelease` is null, and released applicable coverage remains **0/121**. The rebased head has passed current local build, device, Maven Local, independent consumer, and 320dp catalog checks; hosted CI and review remain pending.
 
 ## Source delivered in this branch
 
@@ -12,9 +12,12 @@
 ## Verification
 
 - On this rebased source tree, token and inventory generation `--check` pass (**147 pinned rows, 0/121 released**), as do the Pages build (**43 guides**), JavaScript syntax, Android string XML parsing, Git whitespace check, and conflict-marker check.
-- The public `brace-table` API baseline predates M26 and does not yet contain `BraceEditableColumnName`, `BraceTableColumn.editableName`, or the new table parameters. Exact regeneration with `:brace-table:apiDump` and `apiCheck` is pending the shared Gradle lane; it has not been hand-edited.
-- Current-head focused API 36 instrumentation, full table regressions, repository build/lint/token/API gates, Maven Local publication, independent consumer, and 320 × 640 catalog inspection remain pending the shared Gradle/emulator lane. The M14 parent [Actions run](https://github.com/joelromanpr/brace-android/actions/runs/36247229045) was blocked before jobs started because GitHub reported failed account payments or an Actions spending limit. This is an external gate, not a test result. API 34 needs a rerun after M14's density-corrected test.
-- No publication is claimed.
+- `:brace-table:apiDump` generated the exact current public API after the source changes; `apiCheck` passed. The snapshot now contains `BraceEditableColumnName`, `BraceTableColumn.editableName`, and the controlled header-edit parameters. The compiler-generated Compose lambda signature was refreshed after the final semantics fix.
+- The current-head repository `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` passed (**653 tasks**). API 36 `:brace-table:connectedDebugAndroidTest` passed **58/58**, zero skips or failures, covering viewport, fixed headers, selection, resizing, copying, cell editing, and editable names. The initial run exposed Compose test API chaining mistakes and two header-name assertions. The fixture now explicitly opts into cell editing, and the selected header context is a separate native node with a localized spoken state while the input retains native editable actions. The focused native test and final full suite pass.
+- All six aligned artifacts published to Maven Local with AAR, sources, KDoc/Javadoc, POM, and Gradle metadata (**230 tasks**). The independent coordinate-only consumer assembled (**37 tasks**).
+- The 320 × 640 API 36 catalog showed the table viewport without layout overlap; horizontal clipping follows the scroll viewport. Native accessibility inspection found row, column, cell, and resize-handle labels and actions. The current static checks pass with **147 pinned rows, 43 Pages guides, 0/121 released**, plus JavaScript, XML, and whitespace checks. Manual TalkBack and hosted API 34 remain.
+- The M14 parent [Actions run](https://github.com/joelromanpr/brace-android/actions/runs/36247229045) was blocked before jobs started because GitHub reported failed account payments or an Actions spending limit. This is an external gate, not a test result. API 34 needs a rerun after M14's density-corrected test. All table stack PRs remain draft until required CI can run.
+- No Maven Central publication or release is claimed.
 
 ## Remaining and next branch
 

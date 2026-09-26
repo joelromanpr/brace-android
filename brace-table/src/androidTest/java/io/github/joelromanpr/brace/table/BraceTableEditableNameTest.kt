@@ -55,8 +55,10 @@ class BraceTableEditableNameTest {
 
     private data class Record(val id: String, val value: String)
     private val rows = listOf(Record("r0", "Before"))
-    private fun columns(title: String = "Status", editableName: Boolean = true) = listOf(
-        BraceTableColumn<Record>("status", title, 180.dp, { it.value }, editableName = editableName),
+    private fun columns(title: String = "Status", editableName: Boolean = true,
+        editable: Boolean = false) = listOf(
+        BraceTableColumn<Record>("status", title, 180.dp, { it.value },
+            editable = editable, editableName = editableName),
         BraceTableColumn<Record>("read-only", "Fixed", 120.dp, { it.id }),
     )
 
@@ -99,7 +101,7 @@ class BraceTableEditableNameTest {
         rule.onNodeWithTag("brace-table").requestFocus().performKeyInput { pressKey(Key.Enter) }
         rule.onNodeWithTag("brace-editable-column-name-input").assertIsFocused()
             .performTextInput("Queue") // Blueprint select-all-on-focus replaces the old title.
-            .performKeyInput { pressKey(Key.Enter) }
+        rule.onNodeWithTag("brace-editable-column-name-input").performKeyInput { pressKey(Key.Enter) }
         rule.waitForIdle()
         assertEquals("Queue", title)
         assertEquals("status", committedKey)
@@ -124,7 +126,7 @@ class BraceTableEditableNameTest {
         }
         rule.onNodeWithTag("brace-table").requestFocus().performKeyInput { pressKey(Key.F2) }
         rule.onNodeWithTag("brace-editable-column-name-input").performTextInput("Discard")
-            .performKeyInput { pressKey(Key.Escape) }
+        rule.onNodeWithTag("brace-editable-column-name-input").performKeyInput { pressKey(Key.Escape) }
         rule.waitForIdle()
         assertEquals("Status", title)
         assertEquals(null, editing)
@@ -149,13 +151,18 @@ class BraceTableEditableNameTest {
         }
         rule.onNodeWithTag("brace-table").requestFocus().performKeyInput { pressKey(Key.Enter) }
         val editor = rule.onNodeWithTag("brace-editable-column-name-input")
-        editor.performTextInput(" ").performKeyInput { pressKey(Key.Enter) }
+        editor.performTextInput(" ")
+        editor.performKeyInput { pressKey(Key.Enter) }
         assertEquals("status", editing)
         assertTrue(editor.fetchSemanticsNode().config[SemanticsProperties.Error].contains("required"))
-        editor.performTextClearance().performTextInput("Ab").performImeAction()
+        editor.performTextClearance()
+        editor.performTextInput("Ab")
+        editor.performImeAction()
         assertTrue(editor.fetchSemanticsNode().config[SemanticsProperties.Error].contains("4 or more"))
         assertEquals("Status", title)
-        editor.performTextClearance().performTextInput("Queue").performImeAction()
+        editor.performTextClearance()
+        editor.performTextInput("Queue")
+        editor.performImeAction()
         rule.waitForIdle()
         assertEquals("Queue", title)
         rule.onNodeWithTag("brace-table").assertIsFocused()
@@ -186,7 +193,10 @@ class BraceTableEditableNameTest {
         val context = androidNodesForDescription("Edit Status, header row, column 1")
         assertEquals(1, context.size)
         assertTrue(context.single().isVisibleToUser && context.single().isImportantForAccessibility)
-        assertTrue("Active header keeps selected state", context.single().isSelected)
+        assertTrue("Compose editor keeps selected state",
+            rule.onNodeWithTag("brace-table-name-editor:status").fetchSemanticsNode()
+                .config[SemanticsProperties.Selected])
+        assertEquals("Selected column 1", context.single().stateDescription?.toString())
         assertEquals(null, context.single().text)
         val editableNodes = mutableListOf<AccessibilityNodeInfo>()
         fun visit(node: AccessibilityNodeInfo) {
@@ -304,12 +314,15 @@ class BraceTableEditableNameTest {
         var editing by mutableStateOf<String?>(null)
         var width by mutableStateOf(180.dp)
         var resizeCount = 0
+        var editingCell by mutableStateOf<BraceTableSelection.Cell?>(null)
         rule.setContent {
             BraceTheme {
-                BraceDataTable(rows, { it.id }, columns(title), selection, { selection = it },
+                BraceDataTable(rows, { it.id }, columns(title, editable = true), selection, { selection = it },
                     Modifier.width(360.dp), height = 200.dp,
                     columnWidths = mapOf("status" to width),
                     onColumnWidthChange = { _, updated -> width = updated; resizeCount++ },
+                    editingCell = editingCell, onEditingCellChange = { editingCell = it },
+                    onCellCommit = { _, _ -> },
                     editingColumnName = editing, onEditingColumnNameChange = { editing = it },
                     onColumnNameCommit = { _, value -> title = value })
             }
@@ -320,7 +333,7 @@ class BraceTableEditableNameTest {
         assertEquals(1, rule.onNodeWithTag("brace-table-cell:r0:status").fetchSemanticsNode()
             .config[SemanticsActions.CustomActions].size) // Range extension remains; cell Edit is unavailable.
         rule.onNodeWithTag("brace-editable-column-name-input").performTextInput("Queue")
-            .performKeyInput { pressKey(Key.Escape) }
+        rule.onNodeWithTag("brace-editable-column-name-input").performKeyInput { pressKey(Key.Escape) }
         assertEquals(0, resizeCount)
         assertEquals(180.dp, width)
         rule.onNodeWithTag("brace-table-resize-column:status").assertExists()

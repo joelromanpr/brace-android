@@ -40,6 +40,7 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.error
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
@@ -81,7 +82,7 @@ fun BraceEditableCell(
         inputTag = "brace-editable-cell-input",
         collectionItem = if (rowIndex != null && columnIndex != null)
             CollectionItemInfo(rowIndex + 1, 1, columnIndex + 1, 1) else null,
-        isSelected = false,
+        isSelected = false, selectedStateDescription = null,
     )
 }
 
@@ -119,6 +120,9 @@ fun BraceEditableColumnName(
         selectAllOnFocus = true, inputTag = "brace-editable-column-name-input",
         collectionItem = columnIndex?.let { CollectionItemInfo(0, 1, it + 1, 1) },
         isSelected = isSelected,
+        selectedStateDescription = if (!isSelected) null else if (columnIndex == null)
+            stringResource(R.string.brace_table_selected) else
+            stringResource(R.string.brace_table_selected_column_description, columnIndex + 1),
     )
 }
 
@@ -134,6 +138,7 @@ private fun BraceInlineTableEditor(
     inputTag: String,
     collectionItem: CollectionItemInfo?,
     isSelected: Boolean,
+    selectedStateDescription: String?,
 ) {
     require(label.isNotBlank()) { "Editable table label must not be blank" }
     var draft by rememberSaveable(stateSaver = TextFieldValue.Saver) {
@@ -175,7 +180,13 @@ private fun BraceInlineTableEditor(
         modifier.background(colors.editorBackground)
             .border(BraceTheme.sizing.focusRingWidth,
                 if (errorMessage == null) colors.editorBorder else colors.editorErrorBorder)
-            .padding(horizontal = metrics.cellHorizontalPadding, vertical = 2.dp),
+            .padding(horizontal = metrics.cellHorizontalPadding, vertical = 2.dp)
+            .semantics {
+                contentDescription = label
+                if (collectionItem != null) collectionItemInfo = collectionItem
+                if (isSelected) selected = true
+                if (selectedStateDescription != null) stateDescription = selectedStateDescription
+            },
         verticalArrangement = Arrangement.Center,
     ) {
         BasicTextField(
@@ -194,9 +205,7 @@ private fun BraceInlineTableEditor(
                     }
                 }
                 .semantics(mergeDescendants = true) {
-                    contentDescription = label
                     if (collectionItem != null) collectionItemInfo = collectionItem
-                    if (isSelected) selected = true
                     errorMessage?.let { error(it) }
                     customActions = listOf(
                         CustomAccessibilityAction(saveLabel) { commit() },

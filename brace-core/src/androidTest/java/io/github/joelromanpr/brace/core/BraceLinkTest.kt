@@ -1,6 +1,8 @@
 package io.github.joelromanpr.brace.core
 
+import android.graphics.Rect
 import android.os.Build
+import android.view.accessibility.AccessibilityNodeInfo
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
@@ -41,15 +43,19 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import io.github.braceandroid.foundation.BraceColorMode
 import io.github.braceandroid.foundation.BraceContrast
 import io.github.braceandroid.foundation.BraceDensity
 import io.github.braceandroid.foundation.BraceTheme
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertThrows
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import kotlin.math.roundToInt
 
 @RunWith(AndroidJUnit4::class)
 class BraceLinkTest {
@@ -201,6 +207,59 @@ class BraceLinkTest {
         }
         rule.onNodeWithContentDescription("Get help, opens Help").performClick()
         assertEquals(listOf("https://example.org/help"), opened)
+    }
+
+    @Test fun nativeAccessibilityTreeKeepsLinkLabelsActionsAndTargetsTogether() {
+        data class NativeCase(val label: String, val actionLabel: String, val enabled: Boolean)
+        val cases = listOf(
+            NativeCase("Read guide, link to Guide", "Open Guide", true),
+            NativeCase("Unavailable guide, link to Guide", "Open Guide", false),
+            NativeCase("Open dashboard, opens Dashboard", "Open Dashboard", true),
+            NativeCase("Disabled dashboard, opens Dashboard", "Open Dashboard", false),
+        )
+        rule.setContent {
+            BraceTheme {
+                Column {
+                    BraceLink("Read guide", BraceLinkDestination.Action("Guide") {})
+                    BraceLink("Unavailable guide", BraceLinkDestination.Action("Guide") {}, enabled = false)
+                    BraceLinkButton("Open dashboard", BraceLinkDestination.Action("Dashboard") {})
+                    BraceLinkButton("Disabled dashboard", BraceLinkDestination.Action("Dashboard") {}, enabled = false)
+                }
+            }
+        }
+        rule.waitForIdle()
+        rule.waitUntil(15_000) { cases.all { androidNodesForLabel(it.label).size == 1 } }
+        val density = InstrumentationRegistry.getInstrumentation().targetContext.resources.displayMetrics.density
+        val minTargetPx = (48f * density).roundToInt()
+        cases.forEach { expected ->
+            val node = androidNodesForLabel(expected.label).single()
+            val clickActions = node.actionList.filter { it.id == AccessibilityNodeInfo.ACTION_CLICK }
+            assertEquals("Native enabled state: $node", expected.enabled, node.isEnabled)
+            assertEquals("Native clickable state: $node", expected.enabled, node.isClickable)
+            if (expected.enabled) {
+                assertEquals("One native click action: $node", 1, clickActions.size)
+                assertEquals(expected.actionLabel, clickActions.single().label?.toString())
+            } else {
+                assertFalse("Disabled node must expose no click action: $node", clickActions.isNotEmpty())
+            }
+            val bounds = Rect()
+            node.getBoundsInScreen(bounds)
+            assertTrue("Native target too narrow: $bounds", bounds.width() >= minTargetPx)
+            assertTrue("Native target too short: $bounds", bounds.height() >= minTargetPx)
+        }
+    }
+
+    private fun androidNodesForLabel(label: String): List<AccessibilityNodeInfo> {
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        val roots = automation.windows.mapNotNull { it.root }
+            .ifEmpty { listOfNotNull(automation.rootInActiveWindow) }
+        val matches = mutableListOf<AccessibilityNodeInfo>()
+        fun visit(node: AccessibilityNodeInfo) {
+            if (node.contentDescription?.toString() == label) matches += node
+            for (index in 0 until node.childCount) node.getChild(index)?.let(::visit)
+        }
+        roots.forEach(::visit)
+        return matches
     }
 
     @OptIn(ExperimentalTestApi::class)

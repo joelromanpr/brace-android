@@ -1,4 +1,4 @@
-Blueprint next-generation icon artwork and metadata
+Palantir Blueprint next-generation icon artwork and metadata
 Copyright Palantir Technologies, Inc.
 Licensed under Apache License 2.0; see blueprint-icons-next-LICENSE.txt in this AAR.
 

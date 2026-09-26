@@ -11,12 +11,12 @@
 
 | Gate | Result |
 | --- | --- |
-| Build, lint, unit tests, token, inventory, and API checks | Passed on the pre-M11 restack: `build lint checkTokenGeneration checkInventory apiCheck` (563 actionable Gradle tasks), including generated-token/inventory checks and regenerated foundation/datetime API baselines, on JDK 21 and SDK 36. |
-| Focused API 36 Compose interaction/accessibility tests | Passed 14/14 on the earlier diff, with 0 failed/skipped, after narrow-viewport and keyboard-mode fixes. The pre-M11-restack diff passed **17/17** API 36 device tests with zero failures or skips, including a far-out-of-bounds initial month and real Android accessibility nodes for days, navigation, and the date-field calendar button. Three JVM date-model tests also passed in the broad gate. |
+| Build, lint, unit tests, token, inventory, and API checks | Passed on the main-based head: `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` (563 actionable Gradle tasks), including generated-token/inventory checks and regenerated foundation/datetime API baselines, on JDK 21 and SDK 36. |
+| Focused API 36 Compose interaction/accessibility tests | Passed 14/14 on the earlier diff, with 0 failed/skipped, after narrow-viewport and keyboard-mode fixes. The main-based head passed **17/17** API 36 device tests with zero failures or skips, including a far-out-of-bounds initial month and real Android accessibility nodes for days, navigation, and the date-field calendar button. Three JVM date-model tests also passed in the broad gate. |
 | Generated coverage and documentation site | Passed on the current stacked head: 147 pinned rows, 31 generated guides, and 0/121 released applicable rows. Pages JavaScript syntax and inventory guide links were checked. |
-| Maven Local artifact metadata and independent consumer | Passed before the M11 restack: aligned foundation/core/icons/select/datetime Maven Local AARs, sources, KDoc JARs, POMs, and module metadata; the separate consumer compiled by coordinates only. Current stacked-head Gradle and consumer reruns are pending. |
+| Maven Local artifact metadata and independent consumer | Passed on the main-based head: aligned foundation/core/icons/select/datetime Maven Local AARs, sources, KDoc JARs, POMs, and module metadata (193 tasks); the separate coordinate-only consumer assembled (37 tasks). |
 | 320 dp catalog visual inspection | Passed on a 320 × 640 API 36 emulator: DatePicker and DateInput detail/sample screens had no overlapping controls. The calendar scrolls horizontally to retain 48 dp day targets; the seventh weekday may start offscreen and needs an intentional swipe. |
-| Hosted CI and review | The M13 PR is retargeted to main after M12 merged. The current head includes precompiled datetime instrumentation APKs and the M11 AOSP emulator safeguards; hosted checks on the main-based head are pending. |
+| Hosted CI and review | PR #23 targets main after M12 merged. Hosted [`verify` and API 34 `instrumented` both passed](https://github.com/joelromanpr/brace-android/actions/runs/36245657756) on main-based head `1975a2b`. The branch includes precompiled datetime instrumentation APKs and the M11 AOSP emulator safeguards. Review and release remain. |
 
 ## Known limits and next branch
 

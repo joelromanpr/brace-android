@@ -13,7 +13,7 @@ This page distinguishes configured repository controls from actions still needed
 
 ## Public site status
 
-The source repository is public. GitHub Pages is configured to deploy from GitHub Actions at [joelromanpr.github.io/brace-android](https://joelromanpr.github.io/brace-android/), and the repository homepage points there. [Docs Pages run 36274188920](https://github.com/joelromanpr/brace-android/actions/runs/36274188920) succeeded and the live URL returned HTTP 200 on 2026-09-26. That run published the inventory-ledger site on `main`; the real Android visual gallery is in the next showcase PR and needs a fresh deployed-site review after merge. The `github-pages` environment was read back with a custom deployment branch policy restricted to `main` (branch policy ID 61142526).
+The source repository is public. GitHub Pages is configured to deploy from GitHub Actions at [joelromanpr.github.io/brace-android](https://joelromanpr.github.io/brace-android/), and the repository homepage points there. [Docs Pages run 36274188920](https://github.com/joelromanpr/brace-android/actions/runs/36274188920) first published the inventory site. After PR #69 merged, [Docs Pages run 36275820116](https://github.com/joelromanpr/brace-android/actions/runs/36275820116) deployed the visual gallery; the live site returned HTTP 200 and all 9 original gallery images were verified on 2026-09-26. New component PRs add captures to the same inventory-backed gallery and need deployed-site review after merge. The `github-pages` environment was read back with a custom deployment branch policy restricted to `main` (branch policy ID 61142526).
 
 ## Remaining hosted setup
 

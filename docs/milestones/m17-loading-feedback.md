@@ -13,9 +13,12 @@
 
 | Gate | Result |
 | --- | --- |
-| Current post-Pages static checks | Passed on the current merged tree: token generation and coverage `--check`, JavaScript syntax, documentation build (**147 inventory rows, 9 real catalog captures, 32 guides**), and Git whitespace/conflict checks. M12 Select/QueryList, M25 TopBar, and M17 Spinner/Skeleton remain in tokens, inventory, catalog, docs, and the independent consumer. |
+| Current post-Pages static checks | Passed on the current merged tree: token generation and coverage `--check`, JavaScript syntax, documentation build (**147 inventory rows, 11 real catalog captures, 32 guides**), and Git whitespace/conflict checks. M12 Select/QueryList, M25 TopBar, and M17 Spinner/Skeleton remain in tokens, inventory, catalog, docs, and the independent consumer. |
 | Current build, lint, API, and catalog | `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` passed on the post-Pages merged tree: **467 tasks**, no failures. |
-| Current focused device, Maven consumer, and hosted checks | **Pending** on the post-Pages head. The earlier evidence below does not validate this integrated tree. The connected device run was deferred while another component PR uses the local emulator; hosted checks start when this branch is pushed. |
+| Current API 36 device tests | `BraceLoadingTest` passed **5/5** with no failures or skips (71 tasks, 21s). This covers progress semantics, reduced-motion pixels, sizing/intents, large text, RTL, high contrast, and automated accessibility checks. |
+| Current Maven consumer | Four aligned snapshot artifacts published into an isolated Maven Local directory with AAR, sources, Javadoc, POM, and Gradle metadata (156 tasks). The independent coordinate-only consumer assembled from that directory (37 tasks). |
+| Current hosted checks | Pending for the final gallery head. The earlier evidence below does not validate the post-Pages integrated tree. |
+| Current visual review | On API 36 at 400 × 800, Spinner showed determinate progress in dark high contrast and Skeleton showed a loading placeholder stack in light mode. Both fresh emulator captures are linked to the exact source commit in the Pages manifest. |
 | Prior post-M11 static checks | Passed on the earlier M11 rebased tree: token generation and coverage `--check`, JavaScript syntax, documentation build (147 inventory rows, 29 guides), and Git whitespace/conflict checks. |
 | Prior post-M11 build, lint, API, and catalog | `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` passed with **377 tasks**. Generated API baselines and icon/loading catalog samples compiled together. |
 | Prior post-M11 API 36 device tests | `BraceLoadingTest` passed **5/5** with no failures or skips (**71 tasks**): determinate and indeterminate range semantics, reduced-motion pixels, sizing/intent tokens, large text, RTL, high contrast, and automated accessibility checks. |
@@ -25,4 +28,4 @@
 
 ## Limits and next branch
 
-The loading placeholders are noninteractive. An app controls when to show a loader and when to replace it with content. Manual TalkBack, pointer, large-text, theme-matrix, and additional form-factor review remain before these rows can become stable. The next integration step is to complete focused device tests, the Maven consumer, and hosted checks on the post-Pages head before manual accessibility assessment of PR #29. Other core, table, and select families remain tracked by their focused inventory rows.
+The loading placeholders are noninteractive. An app controls when to show a loader and when to replace it with content. Manual TalkBack, pointer, large-text, theme-matrix, and additional form-factor review remain before these rows can become stable. The next integration step is to complete hosted checks on the final gallery head and review the deployed Pages images after merge, then perform manual accessibility assessment before stable status. Other core, table, and select families remain tracked by their focused inventory rows.

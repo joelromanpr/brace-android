@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -34,12 +35,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import io.github.braceandroid.foundation.BraceBrandColors
 import io.github.braceandroid.foundation.BraceColorMode
 import io.github.braceandroid.foundation.BraceContrast
@@ -200,6 +203,22 @@ Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
     onActivate = { state.activeKey = it }, onDismiss = { state.query = "" })) {
     BraceTextField(state.query, { state.query = it }, label = "Filter regions")
     visible.forEach { option -> BraceButton(option.label, onClick = { state.activeKey = option.key }) }
+}""".trimIndent(),
+    "core-css-utility-classes" to """val semantic = BraceTheme.colors.semantic
+Box(Modifier.background(semantic.surface).padding(BraceTheme.spacing.md)) {
+    BraceButton("Retry", onClick = ::retry, variant = BraceButtonVariant.Outline)
+}""".trimIndent(),
+    "core-resizesensor" to """var measured by remember { mutableStateOf(IntSize.Zero) }
+Box(Modifier.onSizeChanged { measured = it }) { Text("Measured content") }
+Text("Width: ${'$'}{measured.width} px")""".trimIndent(),
+    "core-blueprintprovider" to """var open by rememberSaveable { mutableStateOf(false) }
+BraceTheme {
+    BraceShortcutRegistry(listOf(BraceShortcut("ctrl+r", "Refresh", onKeyDown = ::refresh))) {
+        BraceOverlayHost(rememberBraceOverlayState()) {
+            WorkspaceContent()
+            BraceOverlay(open, { open = false }, title = "Details") { DetailsContent() }
+        }
+    }
 }""".trimIndent(),
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-checkbox" to "BraceCheckbox(checked = checked, onCheckedChange = { checked = it }, label = \"Include archived\")",
@@ -401,6 +420,97 @@ private fun ComponentSample(
     onToastPositionChange: (BraceToastPosition) -> Unit,
 ) {
     when (id) {
+        "core-css-utility-classes" -> {
+            var outlined by rememberSaveable { mutableStateOf(false) }
+            val semantic = BraceTheme.colors.semantic
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Typed parameters and scoped tokens replace CSS class names.",
+                    color = semantic.onSurfaceMuted, style = BraceTheme.typography.body)
+                Box(Modifier.background(semantic.surface).padding(BraceTheme.spacing.md)) {
+                    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                        Text("Token-styled content", color = semantic.onSurface,
+                            style = BraceTheme.typography.subtitle)
+                        BraceButton(
+                            if (outlined) "Outlined action" else "Solid action",
+                            onClick = { outlined = !outlined },
+                            variant = if (outlined) BraceButtonVariant.Outline else BraceButtonVariant.Solid,
+                        )
+                    }
+                }
+                Text("Try the app-wide theme, contrast, brand, and density controls above.",
+                    color = semantic.onSurfaceMuted, style = BraceTheme.typography.label)
+            }
+        }
+        "core-resizesensor" -> {
+            var wide by rememberSaveable { mutableStateOf(false) }
+            var measured by remember { mutableStateOf(IntSize.Zero) }
+            val semantic = BraceTheme.colors.semantic
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceButton(if (wide) "Narrow preview" else "Widen preview",
+                    onClick = { wide = !wide }, variant = BraceButtonVariant.Outline)
+                Box(
+                    Modifier
+                        .width(if (wide) 224.dp else 144.dp)
+                        .onSizeChanged { measured = it }
+                        .background(semantic.surface)
+                        .padding(BraceTheme.spacing.md),
+                ) {
+                    Text("Measured content", color = semantic.onSurface,
+                        style = BraceTheme.typography.body)
+                }
+                Text("Measured: ${measured.width} × ${measured.height} px",
+                    color = semantic.onSurfaceMuted, style = BraceTheme.typography.label)
+            }
+        }
+        "core-blueprintprovider" -> {
+            var localHighContrast by rememberSaveable { mutableStateOf(false) }
+            var detailsOpen by rememberSaveable { mutableStateOf(false) }
+            var refreshed by rememberSaveable { mutableStateOf(0) }
+            val shortcutState = rememberBraceShortcutRegistryState()
+            val overlayState = rememberBraceOverlayState()
+            BraceShortcutRegistry(
+                shortcuts = listOf(
+                    BraceShortcut("ctrl+r", "Refresh local preview", group = "Preview",
+                        onKeyDown = { refreshed++ }),
+                ),
+                state = shortcutState,
+                discoveryTitle = "Preview shortcuts",
+            ) {
+                BraceOverlayHost(overlayState) {
+                    BraceTheme(
+                        contrast = if (localHighContrast) BraceContrast.High else BraceContrast.Standard,
+                    ) {
+                        val semantic = BraceTheme.colors.semantic
+                        Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                            Text("This preview has its own theme and screen behavior scope.",
+                                color = semantic.onSurface, style = BraceTheme.typography.body)
+                            BraceButton(
+                                if (localHighContrast) "Standard local contrast" else "High local contrast",
+                                onClick = { localHighContrast = !localHighContrast },
+                                variant = BraceButtonVariant.Outline,
+                            )
+                            BraceButton("Open scoped overlay", onClick = { detailsOpen = true })
+                            BraceButton("Show shortcut guide",
+                                onClick = shortcutState::showDiscovery,
+                                variant = BraceButtonVariant.Outline)
+                            Text("Ctrl+R refreshes while a preview control has focus · $refreshed",
+                                color = semantic.onSurfaceMuted, style = BraceTheme.typography.label)
+                        }
+                        BraceOverlay(
+                            open = detailsOpen,
+                            onDismissRequest = { detailsOpen = false },
+                            title = "Scoped details",
+                        ) {
+                            Column(Modifier.padding(BraceTheme.spacing.md)) {
+                                Text("Scoped details", color = BraceTheme.colors.semantic.onSurface,
+                                    style = BraceTheme.typography.subtitle)
+                                BraceButton("Close", onClick = { detailsOpen = false })
+                            }
+                        }
+                    }
+                }
+            }
+        }
         "core-icon" -> {
             var large by rememberSaveable { mutableStateOf(false) }
             var danger by rememberSaveable { mutableStateOf(false) }

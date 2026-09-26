@@ -5,7 +5,7 @@ An open-source Jetpack Compose design system for complex, data-dense Android app
 ## Coverage
 
 <!-- coverage:begin -->
-**Released coverage: 0/121 applicable rows** (0/94 components; 0/27 capabilities). Web-specific mappings: 0/24. Labs tracked separately: 2 rows. Full applicable parity: no.
+**Released coverage: 0/121 applicable rows** (0/94 components; 0/27 capabilities). Web-specific mappings documented: 12/24 (stable: 0). Labs tracked separately: 2 rows. Full applicable parity: no.
 <!-- coverage:end -->
 
 [Live documentation and component showcase](https://joelromanpr.github.io/brace-android/) · [Browse every inventory row and its evidence](docs/coverage.md) · [Machine-readable inventory](inventory/blueprint-components.json) · [Roadmap](ROADMAP.md)

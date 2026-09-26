@@ -2,7 +2,7 @@ package io.github.joelromanpr.brace.core
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -22,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -33,9 +32,16 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.focused
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.liveRegion
@@ -97,7 +103,8 @@ public class BraceStepDialogLabels(
  * The underlying [BraceDialog] provides the modal Android window, TalkBack pane, Back and
  * outside-touch handling. Escape follows [dismissOnBackPress]. The active panel heading takes
  * keyboard focus on step changes; the caller can attach [focusReturnRequester] to the launcher
- * to restore focus when [open] becomes false. Button labels and spoken status are provided by
+ * to restore focus when [open] becomes false, keeping this composable present through the close
+ * transition. Button labels and spoken status are provided by
  * [labels] so applications can localize them. The step rail uses 48 dp touch targets.
  *
  * [resetVisitedOnOpen] resets rail history to the selected step when reopening. The caller must
@@ -123,14 +130,14 @@ public fun BraceStepDialog(
     val currentIndex = requireStepDialogConfiguration(title, selectedStepId, steps)
 
     val holder = rememberSaveableStateHolder()
-    var highestVisited by rememberSaveable { mutableIntStateOf(currentIndex) }
-    var wasOpen by remember { mutableStateOf(false) }
+    var visitedStepIds by rememberSaveable { mutableStateOf(listOf(selectedStepId)) }
+    var wasOpen by rememberSaveable { mutableStateOf(false) }
     val headingFocus = remember { FocusRequester() }
     val current = steps[currentIndex]
 
     LaunchedEffect(open, selectedStepId, resetVisitedOnOpen) {
-        if (open && !wasOpen && resetVisitedOnOpen) highestVisited = currentIndex
-        if (open) highestVisited = maxOf(highestVisited, currentIndex)
+        if (open && !wasOpen && resetVisitedOnOpen) visitedStepIds = listOf(selectedStepId)
+        if (open && selectedStepId !in visitedStepIds) visitedStepIds = visitedStepIds + selectedStepId
         if (!open && wasOpen) focusReturnRequester?.requestFocus()
         wasOpen = open
     }
@@ -186,7 +193,7 @@ public fun BraceStepDialog(
                 StepNavigation(
                     steps = steps,
                     currentIndex = currentIndex,
-                    highestVisited = highestVisited,
+                    visitedStepIds = visitedStepIds,
                     labels = labels,
                     vertical = sideRail,
                     onStepClick = ::changeTo,
@@ -246,7 +253,7 @@ public fun BraceStepDialog(
 private fun StepNavigation(
     steps: List<BraceDialogStep>,
     currentIndex: Int,
-    highestVisited: Int,
+    visitedStepIds: List<String>,
     labels: BraceStepDialogLabels,
     vertical: Boolean,
     onStepClick: (Int) -> Unit,
@@ -260,7 +267,7 @@ private fun StepNavigation(
             Text(labels.steps, color = BraceTheme.colors.semantic.onSurfaceMuted,
                 style = BraceTheme.typography.label, modifier = Modifier.semantics { heading() })
             steps.forEachIndexed { index, step ->
-                StepNavigationItem(step, index, steps.size, currentIndex, highestVisited, labels,
+                StepNavigationItem(step, index, steps.size, currentIndex, visitedStepIds, labels,
                     modifier = Modifier.fillMaxWidth(), onClick = { onStepClick(index) })
             }
         }
@@ -274,7 +281,7 @@ private fun StepNavigation(
                 horizontalArrangement = Arrangement.spacedBy(gap),
             ) {
                 steps.forEachIndexed { index, step ->
-                    StepNavigationItem(step, index, steps.size, currentIndex, highestVisited, labels,
+                    StepNavigationItem(step, index, steps.size, currentIndex, visitedStepIds, labels,
                         modifier = Modifier.widthIn(min = BraceTheme.sizing.touchTarget * 2),
                         onClick = { onStepClick(index) })
                 }
@@ -289,13 +296,13 @@ private fun StepNavigationItem(
     index: Int,
     count: Int,
     currentIndex: Int,
-    highestVisited: Int,
+    visitedStepIds: List<String>,
     labels: BraceStepDialogLabels,
     modifier: Modifier,
     onClick: () -> Unit,
 ) {
     val current = index == currentIndex
-    val available = index <= highestVisited
+    val available = current || step.id in visitedStepIds
     val interaction = remember { MutableInteractionSource() }
     val focused by interaction.collectIsFocusedAsState()
     val semantic = BraceTheme.colors.semantic
@@ -308,17 +315,22 @@ private fun StepNavigationItem(
     }
     Row(
         modifier = modifier
-            .clickable(enabled = available, role = Role.Tab, interactionSource = interaction,
-                indication = null, onClick = onClick)
-            .semantics {
+            .clearAndSetSemantics {
                 contentDescription = "${labels.position(index + 1, count)}, ${step.title}"
+                role = Role.Tab
                 selected = current
                 stateDescription = when {
                     current -> labels.current
                     available -> labels.available
                     else -> labels.upcoming
                 }
+                if (available) {
+                    this.focused = focused
+                    onClick { onClick(); true }
+                } else disabled()
             }
+            .selectable(selected = current, enabled = available, role = Role.Tab,
+                interactionSource = interaction, indication = null, onClick = onClick)
             .background(background, shape)
             .border(
                 if (focused) BraceTheme.sizing.focusRingWidth else BraceTheme.sizing.borderWidth,

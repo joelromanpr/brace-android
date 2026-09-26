@@ -1,26 +1,28 @@
 # M44 delivery slice: step dialog
 
-**Status:** static implementation prepared on `joelromanpr/m44-multistep-dialog`. Both pinned Blueprint rows, `MultistepDialog` and `DialogStep`, are **in progress**. Stable coverage remains **0/121** applicable rows, and no release version is assigned.
+**Status:** locally verified on `joelromanpr/m44-multistep-dialog`, based on main `47d2d38`. Both pinned Blueprint 6.18.0 rows, `MultistepDialog` and `DialogStep`, remain **in progress**. Stable coverage is **0/121** applicable rows, and neither row has a first release version.
 
-## Scope
+## Shipped in this slice
 
-- `BraceStepDialog`, `BraceDialogStep`, localized labels, and logical top/start/end navigation.
-- Controlled selection and completion, synchronous validation, disabled advance, visited-step navigation, `rememberSaveable` panel retention, responsive rail, and launcher focus return.
-- Native dialog Back/Escape and outside-touch policy, TalkBack pane/heading/selected/disabled semantics, 48 dp rail and action targets, and theme tokens.
-- Interactive catalog example for both rows, copyable usage, independent Maven consumer example, Pages guide, KDoc, and API 36 device tests.
+- Controlled `BraceStepDialog`, `BraceDialogStep`, localized labels, and logical top/start/end navigation.
+- Synchronous validation, disabled advance, visited-step navigation tracked by stable IDs, saveable panel and rail history, and launcher focus return while the dialog remains composed through dismissal.
+- Native modal Back/Escape and outside-touch policy, TalkBack pane/heading/tab/selected/disabled semantics, 48 dp rail and action targets, and token-driven themes.
+- Interactive catalog states for both rows, copyable usage, independent Maven consumer example, Pages guide, KDoc, exact API baselines, and API36 interaction tests.
 
 ## Verification
 
 | Gate | Result |
 | --- | --- |
-| Pinned inventory and generated coverage | Passed `python3 scripts/generate_coverage.py --check`: 147 rows, 0/121 applicable stable, 0/94 components stable. |
-| Token generation | Passed `python3 scripts/generate_tokens.py --check`; this slice uses existing dialog and semantic tokens. |
-| Pages build and JavaScript syntax | Passed `node scripts/build-docs.mjs` (147 rows, 33 guides) and `node --check` for both documentation scripts. |
-| Kotlin build, lint, API baseline | Pending shared Gradle lane. |
-| API 36 device interactions and accessibility | Pending shared emulator lane. Tests are authored for invalid metadata, validation, navigation, saveable state, focus return, mouse input, RTL/high contrast/compact 2× text targets, and supported automated checks. |
-| Maven Local and separate consumer | Pending shared Gradle lane. |
-| 320 dp visual, manual TalkBack/mouse, hosted CI | Pending review and hosted runner availability. |
+| Pinned scope and inventory | Blueprint `@blueprintjs/core@6.18.0` documentation/source at `a60d4c92257612808fbfac81cfeee4fcba91a8b4`; generated coverage check passed with 147 rows, 0/121 applicable stable, 0/94 components stable. |
+| Static and Pages | PASS: token and inventory generation checks, JavaScript syntax for documentation scripts, Pages build with 147 rows and 33 guides, and `git diff --check`. This slice uses existing dialog and semantic tokens. |
+| Gradle and API | PASS: foundation/core exact `apiDump` baselines, component/catalog/test compilation, and root `build lint checkTokenGeneration checkInventory apiCheck`. A temporary mirror of official Maven artifacts supplied downloads that Gradle had stalled on; repository dependencies were unchanged. |
+| API36 device | PASS: 9/9 focused tests for metadata validation, controlled forward/back/revisit transitions, validator rejection, saveable panels and visited IDs across activity recreation, dynamic reordering, launcher focus return, Escape, mouse input, RTL/high-contrast/compact 2× targets, automated accessibility checks, and native named/selected/disabled rail nodes. A visited unselected step has its click action on the same native node as its label. |
+| Maven Local and consumer | PASS: foundation, core, icons, and select published to Maven Local with AAR, POM, Gradle metadata, sources, and KDoc JARs; separate Maven-coordinate consumer `:app:assembleDebug` passed. Maven Central staging remains unverified. |
+| Visual | PASS locally: 320×640 light, dark high-contrast, and 2× large-text dialog inspected with rail, panel, field, and fixed actions visible. The emulator font scale was restored to 1.0. |
+| Hosted | Pending current-head GitHub CI and CodeQL. No hosted pass or release is claimed. |
 
-## Known limits and next branch
+## Adaptations, limits, and next branch
 
-The API supplies a synchronous validator. Apps that validate remotely should own a loading state and set `canAdvance = false` until it resolves. The step panels are retained within the dialog composition but business state must be hoisted to persist after removing that composable. Per-step custom footer slots and manual TalkBack/mouse review remain before stability. The next integration branch is `joelromanpr/m44-multistep-dialog` after the current shared Gradle/emulator lane is released, followed by a focused follow-up for any device findings.
+The API supplies a synchronous validator. Apps that validate remotely should own a loading state and set `canAdvance = false` until it resolves. Business state must be hoisted when it must outlive removal of the dialog composable. Focus return runs when `open` becomes false while `BraceStepDialog` remains in composition. Blueprint React child inspection and fixed desktop width become a typed Compose step list and responsive native modal.
+
+Per-step custom footer slots, manual TalkBack/physical keyboard/mouse review, and wide-screen RTL Start/End rail QA remain before stability. Hosted API34 and maintainer review are pending. The next concrete branch is `joelromanpr/m45-html-table`, a separate pinned table slice.

@@ -1,6 +1,6 @@
 # M14: first table viewport slice
 
-**Status:** implementation in progress on draft PR #24, stacked on M13 after the M11 icon and M12 Select restack. No first release or stable coverage is claimed.
+**Status:** implementation in progress on draft PR #24, stacked on M13 after the M11 icon and M12 Select restack. The two API 34 viewport tests use density-aware offsets in `a4686cc`; a fresh API 34 result is blocked before job execution by the GitHub Actions account billing limit. No first release or stable coverage is claimed.
 
 ## Shipped in this branch
 
@@ -12,12 +12,12 @@
 ## Verification on this branch
 
 - The earlier M14 slice passed `build lint checkTokenGeneration checkInventory apiCheck` (653 Gradle tasks) and separate Maven consumption before the M11–M13 restack. This review patch reran `:brace-table:apiCheck` successfully before the restack; the full integrated gate and consumer still need rerun on the current stack. A local temporary Gradle repository init script was needed for this machine's dependency mirror; it is not part of the project.
-- Focused `BraceDataTableTest` on an API 36 emulator: **14/14 passed, 0 skipped, 0 failed** on the final review diff before the M11–M13 restack; a current-stack rerun is pending. The suite covers duplicate and blank row keys, both-axis virtualization, fixed headers, partial vertical-scroll row-header alignment, RTL, touch and mouse selection, controlled state, keyboard reveal/navigation, viewport restoration, density and 48 dp targets, 3× text, native accessibility nodes, an automated accessibility check, and a bounded 5,000-row × 400-column composition/key-index regression. This is a composition and lookup check, not a frame-time or memory benchmark.
+- Focused `BraceDataTableTest` on an API 36 emulator: **14/14 passed, 0 skipped, 0 failed** on the current stacked head `a4686cc` (71 Gradle tasks). An earlier API 34 Pixel 5 run on `645825d` failed two viewport assertions because those tests passed dp-sized offsets directly to pixel-based `ScrollState.scrollTo`; the hosted row-header width (154 px for 56 dp) exposed the density difference from the local API 36 emulator. The assertions now use `LocalDensity` to convert those intended offsets. The suite covers duplicate and blank row keys, both-axis virtualization, fixed headers, partial vertical-scroll row-header alignment, RTL, touch and mouse selection, controlled state, keyboard reveal/navigation, viewport restoration, density and 48 dp targets, 3× text, native accessibility nodes, an automated accessibility check, and a bounded 5,000-row × 400-column composition/key-index regression. This is a composition and lookup check, not a frame-time or memory benchmark.
 - The 320 × 640 catalog was inspected in light and dark high-contrast modes. Horizontal scrolling visibly retained the row numbers; tapping a row number selected the row. This found and fixed an earlier paint bug: row-header semantics had stayed pinned while cells covered the row-header pixels. A touch-after-scroll regression now guards the visible fixed overlay.
 - Before the M11–M13 restack, `publishToMavenLocal` passed for foundation, core, icons, select, datetime, and table. The table snapshot has its AAR, sources, KDoc JAR, POM, and Gradle metadata; the POM names Apache-2.0, Joel Roman, and the foundation dependency. The independent `verification/consumer-smoke` app compiled against these locally published artifacts (`:app:assembleDebug`, 37 tasks).
 - `node scripts/build-docs.mjs` (33 guides), `node --check docs/site/app.js`, `python3 scripts/generate_coverage.py --check`, and `python3 scripts/generate_tokens.py --check` passed on the current stack. Generated coverage remains **0/121 released applicable rows**; M14 source work is not a release.
 
-Hosted pull-request `verify` and API 34 `instrumented` jobs must pass after this branch is integrated. No Maven Central deployment or signed release was attempted.
+Hosted [run 36247229045](https://github.com/joelromanpr/brace-android/actions/runs/36247229045) on `a4686cc` did not start `verify` or API 34 `instrumented`: GitHub reported recent account payments failed or the Actions spending limit needs to be increased. This run provides no test result. Both required checks must rerun after the account gate is resolved and this branch is integrated. No Maven Central deployment or signed release was attempted.
 
 ## Remaining and next table branch
 

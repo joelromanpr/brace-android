@@ -8,6 +8,7 @@ import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -133,7 +134,9 @@ public fun BraceOverlay(
                 LocalBraceOverlayState provides stack,
                 LocalLayoutDirection provides callerLayoutDirection,
             ) {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                // A Dialog owns a separate window. Keep its centered surface inside the
+                // IME-visible area when the keyboard does not resize that window.
+                Box(Modifier.fillMaxSize().imePadding(), contentAlignment = Alignment.Center) {
                     Box(
                         Modifier
                             .matchParentSize()

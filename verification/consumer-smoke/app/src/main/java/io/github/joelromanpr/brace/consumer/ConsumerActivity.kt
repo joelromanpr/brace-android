@@ -70,6 +70,8 @@ import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
 import io.github.joelromanpr.brace.select.BraceSuggest
 import io.github.joelromanpr.brace.select.BraceMultiSelect
+import io.github.joelromanpr.brace.select.BraceCommand
+import io.github.joelromanpr.brace.select.BraceCommandPalette
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
 
 /** Compiles against Maven coordinates only, with no dependency on the source checkout. */
@@ -106,6 +108,9 @@ class ConsumerActivity : ComponentActivity() {
                 var regionKey by remember { mutableStateOf<String?>(null) }
                 var regionExpanded by remember { mutableStateOf(false) }
                 val regionQuery = rememberBraceQueryListState()
+                var commandOpen by rememberSaveable { mutableStateOf(false) }
+                val commandQuery = rememberBraceQueryListState()
+                val commandTrigger = remember { FocusRequester() }
                 val shortcutState = rememberBraceShortcutRegistryState()
                 val toasts = rememberBraceToastState()
                 Box(Modifier.fillMaxSize()) {
@@ -227,6 +232,18 @@ class ConsumerActivity : ComponentActivity() {
                                     expanded = false,
                                     onExpandedChange = {},
                                     label = "Regions",
+                                )
+                                BraceButton("Commands", onClick = { commandOpen = true },
+                                    modifier = Modifier.focusRequester(commandTrigger))
+                                BraceCommandPalette(
+                                    commands = listOf(BraceCommand("open", "open", "Open record",
+                                        group = "Records")),
+                                    open = commandOpen,
+                                    onOpenChange = { commandOpen = it },
+                                    onExecute = { count++ },
+                                    title = "Commands",
+                                    state = commandQuery,
+                                    restoreFocusTo = commandTrigger,
                                 )
                                 BraceSelect(
                                     options = listOf(BraceSelectOption("east", "east", "East"),

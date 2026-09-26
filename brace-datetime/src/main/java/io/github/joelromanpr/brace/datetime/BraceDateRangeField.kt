@@ -267,7 +267,7 @@ private fun RangeEndpointTextField(
                 color = if (enabled) colors.content else colors.disabledContent),
             cursorBrush = SolidColor(BraceTheme.colors.semantic.primary),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = onFinished),
+            keyboardActions = KeyboardActions(onDone = { onFinished() }),
             decorationBox = { inner ->
                 androidx.compose.foundation.layout.Box(Modifier.padding(horizontal = metrics.horizontalPadding)) {
                     if (value.isEmpty()) Text(placeholder, color = colors.placeholder,

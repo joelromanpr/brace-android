@@ -1,6 +1,6 @@
 # M33 · date ranges
 
-**Status:** local implementation in progress on `joelromanpr/m33-date-range`, based on M13 `ac121b3`. The pinned Blueprint 6.18.0 DateRangePicker and DateRangeInput rows are covered by source, samples, documentation, and tests. They are not marked stable, released, or merged. Applicable stable coverage remains **0/121**.
+**Status:** local implementation in progress on `joelromanpr/m33-datetime-range`, based on M13 `ac121b3`. The pinned Blueprint 6.18.0 DateRangePicker and DateRangeInput rows are covered by source, samples, documentation, and tests. They are not marked stable, released, or merged. Applicable stable coverage remains **0/121**.
 
 ## Scope
 
@@ -10,7 +10,16 @@
 
 ## Verification
 
-Static source checks pass: token generation, coverage generation (147 rows, 0/121 stable), documentation site build (35 guides), JavaScript syntax, resource XML parsing, and `git diff --check`. The source has not yet entered the shared Gradle/ADB lane. Focused unit, API dump/check, Android instrumentation, broad build/lint/catalog, Maven Local publication, and independent consumer gates are pending. Do not infer a passing gate from the existence of test files. The draft PR and hosted checks are pending; GitHub Actions in this account have recently failed before starting jobs due to a billing gate.
+| Gate | Current-head result |
+| --- | --- |
+| Static generation and site | Passed token and coverage checks, JavaScript syntax, resource XML parsing, and documentation build: **147 pinned rows, 35 guides, 0/121 stable**. |
+| Focused Kotlin, JVM, AndroidTest, and catalog compile | Passed after correcting the IME Done callback type. `DateModelTest` **3/3** and `DateRangeModelTest` **6/6** passed; focused Gradle run **102 actionable tasks**. |
+| Public API | Regenerated exact `brace-foundation` and `brace-datetime` baselines in a separate `apiDump` invocation, then both `apiCheck` tasks passed. |
+| API 36 instrumented interactions and accessibility | Full `brace-datetime` suite passed **27/27**, 0 failed/skipped on `emulator-5556`: M13 picker/field regressions plus M33 range touch, mouse, keyboard, bounds, shortcut, restoration, high-contrast target, and popover flows. |
+| Full build, lint, token, inventory, API, catalog | Passed `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug --no-parallel` (**563 actionable tasks**). |
+| Maven Local and independent consumer | Published aligned foundation/core/icons/select/datetime AARs, sources, KDoc JARs, POMs, and module metadata locally (**193 tasks**). The separate coordinate-only consumer assembled (**37 tasks**). No Maven Central upload occurred. |
+| 320 × 640 catalog visual/interaction smoke | Inspected light DateRangePicker and DateRangeInput states, selected the range shortcut, opened the shared range popover, and inspected the dark field state. No overlap or clipping of actionable controls observed. The seven 48 dp day targets scroll horizontally, with the last weekday initially offscreen. |
+| Hosted CI and review | Pending. Recent GitHub Actions jobs in this account have stopped before executing steps because of a billing gate; this branch has not been pushed or opened as a PR. |
 
 ## Known limits and next branch
 

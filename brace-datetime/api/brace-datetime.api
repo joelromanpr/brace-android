@@ -6,6 +6,44 @@ public final class io/github/joelromanpr/brace/datetime/BraceDatePickerKt {
 	public static final fun BraceDatePicker (Ljava/time/LocalDate;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ljava/util/Locale;Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/jvm/functions/Function1;ZZZLjava/util/List;Ljava/time/YearMonth;Ljava/time/Clock;Landroidx/compose/runtime/Composer;III)V
 }
 
+public final class io/github/joelromanpr/brace/datetime/BraceDateRange {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Ljava/time/LocalDate;Ljava/time/LocalDate;)V
+	public synthetic fun <init> (Ljava/time/LocalDate;Ljava/time/LocalDate;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/time/LocalDate;
+	public final fun component2 ()Ljava/time/LocalDate;
+	public final fun copy (Ljava/time/LocalDate;Ljava/time/LocalDate;)Lio/github/joelromanpr/brace/datetime/BraceDateRange;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/datetime/BraceDateRange;Ljava/time/LocalDate;Ljava/time/LocalDate;ILjava/lang/Object;)Lio/github/joelromanpr/brace/datetime/BraceDateRange;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEnd ()Ljava/time/LocalDate;
+	public final fun getStart ()Ljava/time/LocalDate;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/datetime/BraceDateRangeFieldKt {
+	public static final fun BraceDateRangeField (Lio/github/joelromanpr/brace/datetime/BraceDateRange;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/util/Locale;Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/jvm/functions/Function1;ZZZLjava/util/List;ZZLjava/lang/String;Lkotlin/jvm/functions/Function2;Ljava/time/Clock;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/datetime/BraceDateRangePickerKt {
+	public static final fun BraceDateRangePicker (Lio/github/joelromanpr/brace/datetime/BraceDateRange;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ljava/util/Locale;Ljava/time/LocalDate;Ljava/time/LocalDate;Lkotlin/jvm/functions/Function1;ZZLio/github/joelromanpr/brace/datetime/BraceRangeBoundary;Ljava/util/List;ZLjava/time/YearMonth;Ljava/time/Clock;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/datetime/BraceDateRangeShortcut {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lio/github/joelromanpr/brace/datetime/BraceDateRange;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lio/github/joelromanpr/brace/datetime/BraceDateRange;
+	public final fun copy (Ljava/lang/String;Lio/github/joelromanpr/brace/datetime/BraceDateRange;)Lio/github/joelromanpr/brace/datetime/BraceDateRangeShortcut;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/datetime/BraceDateRangeShortcut;Ljava/lang/String;Lio/github/joelromanpr/brace/datetime/BraceDateRange;ILjava/lang/Object;)Lio/github/joelromanpr/brace/datetime/BraceDateRangeShortcut;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getRange ()Lio/github/joelromanpr/brace/datetime/BraceDateRange;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class io/github/joelromanpr/brace/datetime/BraceDateShortcut {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Ljava/time/LocalDate;)V
@@ -18,5 +56,13 @@ public final class io/github/joelromanpr/brace/datetime/BraceDateShortcut {
 	public final fun getLabel ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/datetime/BraceRangeBoundary : java/lang/Enum {
+	public static final field End Lio/github/joelromanpr/brace/datetime/BraceRangeBoundary;
+	public static final field Start Lio/github/joelromanpr/brace/datetime/BraceRangeBoundary;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/datetime/BraceRangeBoundary;
+	public static fun values ()[Lio/github/joelromanpr/brace/datetime/BraceRangeBoundary;
 }
 

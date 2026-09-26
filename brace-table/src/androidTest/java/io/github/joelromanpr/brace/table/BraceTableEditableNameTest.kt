@@ -291,11 +291,15 @@ class BraceTableEditableNameTest {
         rule.onNodeWithTag("brace-table-resize-column:status").assertExists()
         rule.onNodeWithTag("brace-table").requestFocus().performKeyInput { pressKey(Key.F2) }
         rule.onNodeWithTag("brace-table-resize-column:status").assertDoesNotExist()
+        assertEquals(1, rule.onNodeWithTag("brace-table-cell:r0:status").fetchSemanticsNode()
+            .config[SemanticsActions.CustomActions].size) // Range extension remains; cell Edit is unavailable.
         rule.onNodeWithTag("brace-editable-column-name-input").performTextInput("Queue")
             .performKeyInput { pressKey(Key.Escape) }
         assertEquals(0, resizeCount)
         assertEquals(180.dp, width)
         rule.onNodeWithTag("brace-table-resize-column:status").assertExists()
+        assertEquals(2, rule.onNodeWithTag("brace-table-cell:r0:status").fetchSemanticsNode()
+            .config[SemanticsActions.CustomActions].size) // Cell Edit returns after header cancel.
     }
 
     @Test fun removedEditableColumnClosesStaleSessionWithoutCommit() {

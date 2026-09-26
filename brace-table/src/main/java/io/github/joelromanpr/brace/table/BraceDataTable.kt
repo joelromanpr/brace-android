@@ -735,7 +735,7 @@ fun <Row> BraceDataTable(
                                                 CustomAccessibilityAction(extendRangeAction) {
                                                     beginTouchRange(); true
                                                 },
-                                                if (editingEnabled && column.editable)
+                                                if (editingEnabled && column.editable && editingColumnName == null)
                                                     CustomAccessibilityAction(editAction) { beginEdit(); true }
                                                 else null,
                                             )

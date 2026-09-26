@@ -20,11 +20,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.focused
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.requestFocus
 import androidx.compose.ui.text.style.TextDecoration
 import io.github.braceandroid.foundation.BraceContrast
 import io.github.braceandroid.foundation.BraceDensity
@@ -84,6 +89,7 @@ public fun BraceLink(
     val highContrast = BraceTheme.contrast == BraceContrast.High
     val uriHandler = LocalUriHandler.current
     val interaction = remember { MutableInteractionSource() }
+    val focusRequester = remember { FocusRequester() }
     val focused by interaction.collectIsFocusedAsState()
     val hovered by interaction.collectIsHoveredAsState()
     val pressed by interaction.collectIsPressedAsState()
@@ -113,6 +119,12 @@ public fun BraceLink(
     }
     val description = stringResource(R.string.brace_link_description, label, destination.label)
     val openLabel = stringResource(R.string.brace_link_open, destination.label)
+    val openDestination = {
+        when (destination) {
+            is BraceLinkDestination.Uri -> (onOpenUri ?: uriHandler::openUri)(destination.uri)
+            is BraceLinkDestination.Action -> destination.onNavigate()
+        }
+    }
     // High-contrast pressed fill and outline retain AAA text contrast and visible touch feedback.
     val background = when {
         enabled && pressed -> if (highContrast) semantic.surfaceInset else semantic.pressed
@@ -122,25 +134,28 @@ public fun BraceLink(
     Row(
         modifier = modifier
             .defaultMinSize(minWidth = BraceTheme.sizing.touchTarget, minHeight = BraceTheme.sizing.touchTarget)
+            .focusRequester(focusRequester)
             .background(background, shape)
             .then(when {
                 focused -> Modifier.border(BraceTheme.sizing.focusRingWidth, semantic.focusRing, shape)
                 enabled && highContrast && pressed -> Modifier.border(BraceTheme.sizing.borderWidth, semantic.borderStrong, shape)
                 else -> Modifier
             })
+            .clearAndSetSemantics {
+                contentDescription = description
+                if (!enabled) disabled() else {
+                    this.focused = focused
+                    onClick(openLabel) { openDestination(); true }
+                    requestFocus { focusRequester.requestFocus(); true }
+                }
+            }
             .clickable(
                 enabled = enabled,
                 interactionSource = interaction,
                 indication = null,
                 onClickLabel = openLabel,
-                onClick = {
-                    when (destination) {
-                        is BraceLinkDestination.Uri -> (onOpenUri ?: uriHandler::openUri)(destination.uri)
-                        is BraceLinkDestination.Action -> destination.onNavigate()
-                    }
-                },
+                onClick = openDestination,
             )
-            .semantics(mergeDescendants = true) { contentDescription = description }
             .padding(horizontal = horizontalPadding, vertical = BraceTheme.spacing.xs),
         horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xs),
         verticalAlignment = Alignment.CenterVertically,

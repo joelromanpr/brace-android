@@ -209,7 +209,9 @@ class BraceLinkTest {
         assertEquals(listOf("https://example.org/help"), opened)
     }
 
+    @OptIn(ExperimentalTestApi::class)
     @Test fun nativeAccessibilityTreeKeepsLinkLabelsActionsAndTargetsTogether() {
+        var dashboardNavigations = 0
         data class NativeCase(val label: String, val actionLabel: String, val enabled: Boolean)
         val cases = listOf(
             NativeCase("Read guide, link to Guide", "Open Guide", true),
@@ -222,13 +224,21 @@ class BraceLinkTest {
                 Column {
                     BraceLink("Read guide", BraceLinkDestination.Action("Guide") {})
                     BraceLink("Unavailable guide", BraceLinkDestination.Action("Guide") {}, enabled = false)
-                    BraceLinkButton("Open dashboard", BraceLinkDestination.Action("Dashboard") {})
+                    BraceLinkButton("Open dashboard", BraceLinkDestination.Action("Dashboard") { dashboardNavigations++ })
                     BraceLinkButton("Disabled dashboard", BraceLinkDestination.Action("Dashboard") {}, enabled = false)
                 }
             }
         }
         rule.waitForIdle()
-        rule.waitUntil(15_000) { cases.all { androidNodesForLabel(it.label).size == 1 } }
+        runCatching {
+            rule.waitUntil(15_000) {
+                dismissSystemCompatibilityWarning()
+                cases.all { androidNodesForLabel(it.label).size == 1 }
+            }
+        }.getOrElse { cause ->
+            val found = cases.joinToString("; ") { "${it.label}: ${androidNodesForLabel(it.label)}" }
+            throw AssertionError("Native link nodes did not settle: $found; ${nativeTreeSummary()}", cause)
+        }
         val density = InstrumentationRegistry.getInstrumentation().targetContext.resources.displayMetrics.density
         val minTargetPx = (48f * density).roundToInt()
         cases.forEach { expected ->
@@ -247,6 +257,23 @@ class BraceLinkTest {
             assertTrue("Native target too narrow: $bounds", bounds.width() >= minTargetPx)
             assertTrue("Native target too short: $bounds", bounds.height() >= minTargetPx)
         }
+        rule.onNodeWithContentDescription("Open dashboard, opens Dashboard")
+            .requestFocus().assertIsFocused().performKeyInput { pressKey(Key.Enter) }
+        assertEquals(1, dashboardNavigations)
+    }
+
+    private fun dismissSystemCompatibilityWarning() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val root = instrumentation.uiAutomation.rootInActiveWindow ?: return
+        val okText = instrumentation.context.getString(android.R.string.ok)
+        fun findOk(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
+            if (node.className?.toString() == "android.widget.Button" && node.text?.toString() == okText) return node
+            for (index in 0 until node.childCount) {
+                node.getChild(index)?.let { findOk(it)?.let { found -> return found } }
+            }
+            return null
+        }
+        findOk(root)?.performAction(AccessibilityNodeInfo.ACTION_CLICK)
     }
 
     private fun androidNodesForLabel(label: String): List<AccessibilityNodeInfo> {
@@ -260,6 +287,25 @@ class BraceLinkTest {
         }
         roots.forEach(::visit)
         return matches
+    }
+
+    private fun nativeTreeSummary(): String {
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        val roots = automation.windows.mapNotNull { it.root }
+            .ifEmpty { listOfNotNull(automation.rootInActiveWindow) }
+        val descriptions = mutableListOf<String>()
+        fun visit(node: AccessibilityNodeInfo) {
+            if (descriptions.size >= 80) return
+            val text = node.text?.toString().orEmpty()
+            val label = node.contentDescription?.toString().orEmpty()
+            if (text.isNotEmpty() || label.isNotEmpty() || node.isClickable) {
+                descriptions += "${node.packageName}/${node.className} text=$text label=$label " +
+                    "clickable=${node.isClickable} enabled=${node.isEnabled}"
+            }
+            for (index in 0 until node.childCount) node.getChild(index)?.let(::visit)
+        }
+        roots.forEach(::visit)
+        return "windows=${automation.windows.size}, roots=${roots.size}, nodes=$descriptions"
     }
 
     @OptIn(ExperimentalTestApi::class)

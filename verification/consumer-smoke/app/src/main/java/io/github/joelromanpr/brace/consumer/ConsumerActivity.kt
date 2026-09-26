@@ -26,6 +26,8 @@ import io.github.joelromanpr.brace.core.BraceCalloutIntent
 import io.github.joelromanpr.brace.core.BraceCard
 import io.github.joelromanpr.brace.core.BraceContextMenu
 import io.github.joelromanpr.brace.core.BraceContextMenuPopup
+import io.github.joelromanpr.brace.core.BraceControlGroup
+import io.github.joelromanpr.brace.core.BraceFieldLabel
 import io.github.joelromanpr.brace.core.BraceDialog
 import io.github.joelromanpr.brace.core.BraceDrawer
 import io.github.joelromanpr.brace.core.BraceDrawerPosition
@@ -92,6 +94,17 @@ class ConsumerActivity : ComponentActivity() {
                         }
                         BraceBreadcrumbs(listOf(BraceBreadcrumb("Home", onClick = {}), BraceBreadcrumb("Imports")))
                         BraceTag("Active")
+                        BraceFieldLabel("Export format", spokenLabel = "Export format, CSV") { controlModifier ->
+                            BraceButton("CSV", onClick = {}, modifier = controlModifier)
+                        }
+                        BraceControlGroup(fill = true, accessibilityLabel = "Report actions") {
+                            Item { controlModifier ->
+                                BraceButton("Preview", onClick = { count++ }, modifier = controlModifier)
+                            }
+                            Item(fill = false) { controlModifier ->
+                                BraceButton("Export", onClick = { count++ }, modifier = controlModifier)
+                            }
+                        }
                         BraceCallout(title = "Ready", intent = BraceCalloutIntent.Success)
                         BraceMenu {
                             BraceMenuItem("Edit project", onClick = { dialogOpen = true })

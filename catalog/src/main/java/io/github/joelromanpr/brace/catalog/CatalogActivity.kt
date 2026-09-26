@@ -49,6 +49,8 @@ import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceButtonVariant
 import io.github.joelromanpr.brace.core.BraceCheckbox
+import io.github.joelromanpr.brace.core.BraceControlGroup
+import io.github.joelromanpr.brace.core.BraceFieldLabel
 import io.github.joelromanpr.brace.core.BraceCard
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbItem
@@ -138,6 +140,8 @@ BraceTextArea(details, { details = it }, accessibilityLabel = "Details", minLine
     autoResize = true, intent = BraceFormIntent.Primary, size = BraceTextAreaSize.Medium)""".trimIndent(),
     "core-editabletext" to """var title by rememberSaveable { mutableStateOf("Quarterly report") }
 BraceEditableText(title, { title = it }, label = "Report title", editActionLabel = "Edit report title", onConfirm = { saveTitle(it) })""".trimIndent(),
+    "core-label" to """BraceFieldLabel("Export format", spokenLabel = "Export format, ${'$'}format") { controlModifier -> BraceButton(format, onClick = { format = "JSON" }, modifier = controlModifier) }""",
+    "core-controlgroup" to """BraceControlGroup(fill = true, accessibilityLabel = "Report actions") { Item { controlModifier -> BraceButton("Preview", onClick = ::preview, modifier = controlModifier) }; Item(fill = false) { controlModifier -> BraceButton("Export", onClick = ::export, modifier = controlModifier) } }""",
     "core-card" to "BraceCard(elevation = BraceCardElevation.One, onClick = { open() }) { Text(\"Open project\") }",
     "core-cardlist" to "BraceCardList(items = projects, itemKey = { it.id }, onItemClick = { open(it) }) { project -> Text(project.name) }",
     "core-divider" to "BraceDivider(orientation = BraceDividerOrientation.Horizontal)",
@@ -454,6 +458,45 @@ private fun ComponentSample(
                 }
                 BraceButton(if (disabled) "Enable editing" else "Disable editing",
                     onClick = { disabled = !disabled }, variant = BraceButtonVariant.Outline)
+            }
+        }
+        "core-label" -> {
+            var format by rememberSaveable { mutableStateOf("CSV") }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
+                BraceFieldLabel(label = "Export format", spokenLabel = "Export format, $format") { controlModifier ->
+                    BraceButton(format, onClick = {
+                        format = if (format == "CSV") "JSON" else "CSV"
+                    }, modifier = controlModifier)
+                }
+                BraceFieldLabel(label = "Unavailable format", enabled = false) { controlModifier ->
+                    BraceButton("Unavailable", onClick = {}, enabled = false, modifier = controlModifier)
+                }
+            }
+        }
+        "core-controlgroup" -> {
+            var vertical by rememberSaveable { mutableStateOf(false) }
+            var equalFill by rememberSaveable { mutableStateOf(true) }
+            var lastAction by rememberSaveable { mutableStateOf("None") }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceButton(if (vertical) "Use horizontal layout" else "Use vertical layout",
+                    onClick = { vertical = !vertical }, variant = BraceButtonVariant.Outline)
+                BraceButton(if (equalFill) "Use natural sizes" else "Use equal fill",
+                    onClick = { equalFill = !equalFill }, variant = BraceButtonVariant.Outline)
+                Box(Modifier.fillMaxWidth().then(if (vertical && equalFill) Modifier.height(220.dp) else Modifier)) {
+                    BraceControlGroup(vertical = vertical, fill = equalFill,
+                        accessibilityLabel = "Report actions") {
+                        Item { controlModifier ->
+                            BraceButton("Preview", onClick = { lastAction = "Preview" }, modifier = controlModifier)
+                        }
+                        Item { controlModifier ->
+                            BraceButton("Share", onClick = { lastAction = "Share" }, modifier = controlModifier)
+                        }
+                        Item(fill = false) { controlModifier ->
+                            BraceButton("Export", onClick = { lastAction = "Export" }, modifier = controlModifier)
+                        }
+                    }
+                }
+                Text("Last action: $lastAction", color = BraceTheme.colors.semantic.onSurface)
             }
         }
         "core-card" -> {

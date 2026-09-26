@@ -2,6 +2,7 @@ package io.github.braceandroid.foundation
 
 import androidx.compose.ui.graphics.Color
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -82,6 +83,23 @@ class BraceTokensTest {
         assertEquals(overridden.primarySubtle, components.callout.primaryContainer)
         assertEquals(overridden.selection, components.select.selectedContainer)
         assertEquals(Color.Red, components.select.focusRing)
+    }
+
+    @Test
+    fun loadingIndicatorsStayVisibleInEveryTheme() {
+        listOf(
+            BraceTokenDefaults.light,
+            BraceTokenDefaults.dark,
+            BraceTokenDefaults.highContrastLight,
+            BraceTokenDefaults.highContrastDark,
+        ).forEach { scheme ->
+            val spinner = scheme.components.spinner
+            listOf(spinner.indicator, spinner.successIndicator,
+                spinner.warningIndicator, spinner.dangerIndicator).forEach { indicator ->
+                assertTrue("spinner contrast below 3:1", braceContrastRatio(indicator, spinner.track) >= 3.0)
+            }
+            assertNotEquals(scheme.components.skeleton.base, scheme.components.skeleton.highlight)
+        }
     }
 
     @Test

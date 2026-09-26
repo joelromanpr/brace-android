@@ -203,6 +203,11 @@ public final class io/github/joelromanpr/brace/core/BraceInputsKt {
 	public static final fun BraceTextField (Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;ZZZLandroidx/compose/foundation/text/KeyboardOptions;Landroidx/compose/ui/text/input/VisualTransformation;Landroidx/compose/runtime/Composer;III)V
 }
 
+public final class io/github/joelromanpr/brace/core/BraceLoadingKt {
+	public static final fun BraceSkeleton-JEEbyFU (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/unit/Dp;Landroidx/compose/ui/unit/Dp;Ljava/lang/String;ZLandroidx/compose/runtime/Composer;II)V
+	public static final fun BraceSpinner-zyf5BA8 (Ljava/lang/String;Ljava/lang/Float;Landroidx/compose/ui/Modifier;Lkotlin/ranges/ClosedFloatingPointRange;Lio/github/joelromanpr/brace/core/BraceSpinnerSize;Landroidx/compose/ui/unit/Dp;Lio/github/joelromanpr/brace/core/BraceProgressIntent;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class io/github/joelromanpr/brace/core/BraceMenuIntent : java/lang/Enum {
 	public static final field Danger Lio/github/joelromanpr/brace/core/BraceMenuIntent;
 	public static final field Default Lio/github/joelromanpr/brace/core/BraceMenuIntent;
@@ -354,6 +359,15 @@ public final class io/github/joelromanpr/brace/core/BraceShortcutRegistryState {
 	public final fun dismissDiscovery ()V
 	public final fun getDiscoveryOpen ()Z
 	public final fun showDiscovery ()V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSpinnerSize : java/lang/Enum {
+	public static final field Large Lio/github/joelromanpr/brace/core/BraceSpinnerSize;
+	public static final field Medium Lio/github/joelromanpr/brace/core/BraceSpinnerSize;
+	public static final field Small Lio/github/joelromanpr/brace/core/BraceSpinnerSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceSpinnerSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceSpinnerSize;
 }
 
 public final class io/github/joelromanpr/brace/core/BraceTagIntent : java/lang/Enum {

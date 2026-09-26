@@ -55,6 +55,10 @@ import io.github.joelromanpr.brace.core.BraceCard
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbItem
 import io.github.joelromanpr.brace.core.BraceBreadcrumbs
+import io.github.joelromanpr.brace.core.BraceTopBar
+import io.github.joelromanpr.brace.core.BraceTopBarGroup
+import io.github.joelromanpr.brace.core.BraceTopBarTitle
+import io.github.joelromanpr.brace.core.BraceTopBarDivider
 import io.github.joelromanpr.brace.core.BraceCallout
 import io.github.joelromanpr.brace.core.BraceCalloutIntent
 import io.github.joelromanpr.brace.core.BraceCompoundTag
@@ -187,6 +191,10 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "core-section" to "BraceSection(title = \"Projects\", collapsible = true) { Text(\"Section content\") }",
     "core-sectioncard" to "BraceSectionCard { Text(\"Project settings\") }",
     "core-breadcrumbs" to "BraceBreadcrumbs(listOf(BraceBreadcrumb(\"Home\", onClick = { home() }), BraceBreadcrumb(\"Projects\")))",
+    "core-navbar" to "BraceTopBar(startContent = { BraceTopBarGroup { BraceTopBarTitle(\"Reports\") } }, endContent = { BraceTopBarGroup { BraceButton(\"Edit\", onClick = ::edit) } })",
+    "core-navbargroup" to "BraceTopBarGroup { BraceTopBarTitle(\"Reports\"); BraceTopBarDivider() }",
+    "core-navbarheading" to "BraceTopBarGroup { BraceTopBarTitle(\"Reports\") }",
+    "core-navbardivider" to "BraceTopBarGroup { BraceTopBarTitle(\"Reports\"); BraceTopBarDivider() }",
     "core-breadcrumb" to "BraceBreadcrumbItem(label = \"Home\", onClick = { home() })",
     "core-tag" to "BraceTag(label = \"Finance\", intent = BraceTagIntent.Primary, onRemove = { removeFilter() })",
     "core-compoundtag" to "BraceCompoundTag(label = \"Status\", value = \"Active\", onRemove = { clearStatus() })",
@@ -452,6 +460,28 @@ private fun ComponentSample(
                 BraceButton("Outlined", onClick = { count++ }, variant = BraceButtonVariant.Outline)
                 BraceButton("Unavailable", onClick = {}, enabled = false)
                 BraceButton("Loading", onClick = {}, loading = true)
+            }
+        }
+        "core-navbar", "core-navbargroup", "core-navbarheading", "core-navbardivider" -> {
+            var edited by rememberSaveable { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
+                BraceTopBar(
+                    startContent = {
+                        BraceTopBarGroup {
+                            BraceTopBarTitle(if (edited) "Edited report" else "Quarterly report")
+                            BraceTopBarDivider()
+                        }
+                    },
+                    endContent = {
+                        BraceTopBarGroup {
+                            BraceButton(if (edited) "Done" else "Edit", onClick = { edited = !edited })
+                        }
+                    },
+                )
+                BraceTopBar(
+                    startContent = { BraceTopBarGroup { BraceTopBarTitle("Raised variant") } },
+                    raised = true,
+                )
             }
         }
         "core-checkbox" -> {

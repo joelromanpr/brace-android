@@ -498,6 +498,13 @@ public final class io/github/joelromanpr/brace/core/BraceTooltipKt {
 	public static final fun BraceTooltip (Ljava/lang/String;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;II)V
 }
 
+public final class io/github/joelromanpr/brace/core/BraceTopBarKt {
+	public static final fun BraceTopBar (Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;ZLandroidx/compose/runtime/Composer;II)V
+	public static final fun BraceTopBarDivider (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceTopBarGroup (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceTopBarTitle (Landroidx/compose/foundation/layout/RowScope;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class io/github/joelromanpr/brace/core/ComposableSingletons$BraceDialogKt {
 	public static final field INSTANCE Lio/github/joelromanpr/brace/core/ComposableSingletons$BraceDialogKt;
 	public fun <init> ()V

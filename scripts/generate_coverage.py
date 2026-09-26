@@ -167,7 +167,8 @@ def make_summary(rows: list[dict], documented_pages: int) -> dict:
         "applicableCapabilities": len(capabilities),
         "stableCapabilities": sum(r["status"] == "stable" for r in capabilities),
         "webSpecificMappings": len(mapped),
-        "documentedWebSpecificMappings": sum(r["status"] == "stable" for r in mapped),
+        "documentedWebSpecificMappings": sum(bool(r["documentation"]) for r in mapped),
+        "stableWebSpecificMappings": sum(r["status"] == "stable" for r in mapped),
         "labsRows": len(labs),
         "stableLabsRows": sum(r["status"] == "stable" for r in labs),
         "byPackage": package_counts,
@@ -195,7 +196,7 @@ def markdown(data: dict) -> str:
         "",
         f"**Shipped applicable rows: {summary['stableApplicableRows']}/{summary['applicableRows']}** ({summary['stableComponents']}/{summary['applicableComponents']} components; {summary['stableCapabilities']}/{summary['applicableCapabilities']} capabilities).",
         "",
-        f"Web-specific mappings documented: {summary['documentedWebSpecificMappings']}/{summary['webSpecificMappings']}. Labs rows: {summary['labsRows']} (stable: {summary['stableLabsRows']}). Full applicable coverage: **{'yes' if summary['fullApplicableCoverage'] else 'no'}**.",
+        f"Web-specific mappings documented: {summary['documentedWebSpecificMappings']}/{summary['webSpecificMappings']} (stable: {summary['stableWebSpecificMappings']}). Labs rows: {summary['labsRows']} (stable: {summary['stableLabsRows']}). Full applicable coverage: **{'yes' if summary['fullApplicableCoverage'] else 'no'}**.",
         "",
         "## Package status",
         "",
@@ -262,7 +263,8 @@ def main() -> int:
         f"\n**Released coverage: {summary['stableApplicableRows']}/{summary['applicableRows']} applicable rows** "
         f"({summary['stableComponents']}/{summary['applicableComponents']} components; "
         f"{summary['stableCapabilities']}/{summary['applicableCapabilities']} capabilities). "
-        f"Web-specific mappings: {summary['documentedWebSpecificMappings']}/{summary['webSpecificMappings']}. "
+        f"Web-specific mappings documented: {summary['documentedWebSpecificMappings']}/{summary['webSpecificMappings']} "
+        f"(stable: {summary['stableWebSpecificMappings']}). "
         f"Labs tracked separately: {summary['labsRows']} rows. "
         f"Full applicable parity: {'yes' if summary['fullApplicableCoverage'] else 'no'}.\n"
     )

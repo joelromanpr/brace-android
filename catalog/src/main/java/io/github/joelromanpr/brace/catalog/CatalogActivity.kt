@@ -66,6 +66,9 @@ import io.github.joelromanpr.brace.core.BraceCardList
 import io.github.joelromanpr.brace.core.BraceDivider
 import io.github.joelromanpr.brace.core.BraceDividerOrientation
 import io.github.joelromanpr.brace.core.BraceProgressBar
+import io.github.joelromanpr.brace.core.BraceSpinner
+import io.github.joelromanpr.brace.core.BraceSpinnerSize
+import io.github.joelromanpr.brace.core.BraceSkeleton
 import io.github.joelromanpr.brace.core.BraceMenu
 import io.github.joelromanpr.brace.core.BraceMenuPopup
 import io.github.joelromanpr.brace.core.BraceMenuItem
@@ -168,6 +171,8 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "core-cardlist" to "BraceCardList(items = projects, itemKey = { it.id }, onItemClick = { open(it) }) { project -> Text(project.name) }",
     "core-divider" to "BraceDivider(orientation = BraceDividerOrientation.Horizontal)",
     "core-progressbar" to "BraceProgressBar(label = \"Uploading files\", value = progress, intent = BraceProgressIntent.Primary)",
+    "core-spinner" to "BraceSpinner(label = \"Loading records\", value = progress, size = BraceSpinnerSize.Large)",
+    "core-skeleton" to "BraceSkeleton(label = \"Loading report title\"); BraceSkeleton(width = 180.dp)",
     "core-section" to "BraceSection(title = \"Projects\", collapsible = true) { Text(\"Section content\") }",
     "core-sectioncard" to "BraceSectionCard { Text(\"Project settings\") }",
     "core-breadcrumbs" to "BraceBreadcrumbs(listOf(BraceBreadcrumb(\"Home\", onClick = { home() }), BraceBreadcrumb(\"Projects\")))",
@@ -654,6 +659,37 @@ private fun ComponentSample(
                 BraceButton("Advance upload", onClick = { progress = (progress + 0.15f).coerceAtMost(1f) })
                 BraceProgressBar(label = "Waiting for response", value = null, intent = BraceProgressIntent.Warning)
                 BraceProgressBar(label = "Unavailable task", value = 0.6f, enabled = false)
+            }
+        }
+        "core-spinner" -> {
+            var progress by rememberSaveable { mutableStateOf(0.3f) }
+            var determinate by rememberSaveable { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
+                    BraceSpinner("Loading small records", size = BraceSpinnerSize.Small)
+                    BraceSpinner("Loading records", if (determinate) progress else null)
+                    BraceSpinner("Loading large reports", if (determinate) progress else null,
+                        size = BraceSpinnerSize.Large, intent = BraceProgressIntent.Success)
+                }
+                Text(if (determinate) "Progress: ${(progress * 100).toInt()}%" else "Indeterminate",
+                    color = BraceTheme.colors.semantic.onSurface)
+                BraceButton("Toggle known progress", onClick = { determinate = !determinate })
+                BraceButton("Advance", onClick = { progress = (progress + 0.2f).coerceAtMost(1f) })
+            }
+        }
+        "core-skeleton" -> {
+            var loading by rememberSaveable { mutableStateOf(true) }
+            var animated by rememberSaveable { mutableStateOf(true) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                if (loading) {
+                    BraceSkeleton(label = "Loading report title", animated = animated)
+                    BraceSkeleton(width = 180.dp, animated = animated)
+                    BraceSkeleton(width = 120.dp, animated = animated)
+                } else {
+                    Text("Quarterly report is ready", color = BraceTheme.colors.semantic.onSurface)
+                }
+                BraceButton("Toggle content", onClick = { loading = !loading })
+                BraceButton("Toggle shimmer", onClick = { animated = !animated })
             }
         }
         "core-section" -> {

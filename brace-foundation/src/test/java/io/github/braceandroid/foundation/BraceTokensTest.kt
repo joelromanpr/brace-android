@@ -2,6 +2,7 @@ package io.github.braceandroid.foundation
 
 import androidx.compose.ui.graphics.Color
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -83,10 +84,27 @@ class BraceTokensTest {
     }
 
     @Test
+    fun loadingIndicatorsStayVisibleInEveryTheme() {
+        listOf(
+            BraceTokenDefaults.light,
+            BraceTokenDefaults.dark,
+            BraceTokenDefaults.highContrastLight,
+            BraceTokenDefaults.highContrastDark,
+        ).forEach { scheme ->
+            val spinner = scheme.components.spinner
+            listOf(spinner.indicator, spinner.successIndicator,
+                spinner.warningIndicator, spinner.dangerIndicator).forEach { indicator ->
+                assertTrue("spinner contrast below 3:1", braceContrastRatio(indicator, spinner.track) >= 3.0)
+            }
+            assertNotEquals(scheme.components.skeleton.base, scheme.components.skeleton.highlight)
+        }
+    }
+
+    @Test
     fun compactDensityRetainsAccessibleTouchTargetAndMotionCanBeReduced() {
         assertTrue(BraceTokenDefaults.compact.controlHeightDp < BraceTokenDefaults.comfortable.controlHeightDp)
         assertTrue(BraceTokenDefaults.sizing.touchTarget >= BraceTokenDefaults.compact.controlHeightDp)
         assertEquals(0, BraceTokenDefaults.motion.withoutAnimation().normal)
-        assertEquals("1.0.0", BraceTokenDefaults.version)
+        assertEquals("1.1.0", BraceTokenDefaults.version)
     }
 }

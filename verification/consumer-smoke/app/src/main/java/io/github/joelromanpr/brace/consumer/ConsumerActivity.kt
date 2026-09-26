@@ -42,6 +42,8 @@ import io.github.joelromanpr.brace.core.BraceMenuItem
 import io.github.joelromanpr.brace.core.BraceOverlayHost
 import io.github.joelromanpr.brace.core.BracePopover
 import io.github.joelromanpr.brace.core.BraceProgressBar
+import io.github.joelromanpr.brace.core.BraceSpinner
+import io.github.joelromanpr.brace.core.BraceSkeleton
 import io.github.joelromanpr.brace.core.BraceSection
 import io.github.joelromanpr.brace.core.BraceShortcut
 import io.github.joelromanpr.brace.core.BraceShortcutLabel
@@ -106,6 +108,8 @@ class ConsumerActivity : ComponentActivity() {
                         }
                         BraceSection(title = "Job status", collapsible = true) {
                             BraceProgressBar(label = "Import progress", value = 0.5f)
+                            BraceSpinner(label = "Indexing records", value = 0.5f)
+                            BraceSkeleton(label = "Loading next batch")
                         }
                         BraceBreadcrumbs(listOf(BraceBreadcrumb("Home", onClick = {}), BraceBreadcrumb("Imports")))
                         BraceTag("Active")

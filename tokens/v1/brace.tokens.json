@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Brace platform-neutral design tokens. Lengths are dp-like logical units; type is sp-like scalable units; motion is milliseconds.",
   "palette": {
     "slate0": "#FFFFFF",
@@ -475,6 +475,18 @@
       "container": "{semantic.surfaceInset}",
       "content": "{semantic.onSurface}",
       "border": "{semantic.borderStrong}"
+    },
+    "spinner": {
+      "track": "{semantic.surfaceInset}",
+      "indicator": "{semantic.primary}",
+      "successIndicator": "{semantic.success}",
+      "warningIndicator": "{semantic.warning}",
+      "dangerIndicator": "{semantic.danger}"
+    },
+    "skeleton": {
+      "base": "{semantic.disabledContainer}",
+      "highlight": "{semantic.selection}",
+      "border": "{semantic.border}"
     }
   },
   "componentMetricsDp": {
@@ -556,6 +568,16 @@
       "cornerRadius": 4,
       "horizontalPadding": 6,
       "verticalPadding": 2
+    },
+    "spinner": {
+      "smallSize": 20,
+      "mediumSize": 32,
+      "largeSize": 48,
+      "strokeWidth": 3
+    },
+    "skeleton": {
+      "cornerRadius": 4,
+      "lineHeight": 16
     }
   }
 }

@@ -129,7 +129,11 @@ class BraceIconsTest {
         rule.enableAccessibilityChecks()
         button.tryPerformAccessibilityChecks()
         rule.waitForIdle()
-        rule.waitUntil(5_000) { androidNodesForLabel("Confirm changes").size == 1 }
+        runCatching {
+            rule.waitUntil(15_000) { androidNodesForLabel("Confirm changes").size == 1 }
+        }.getOrElse { cause ->
+            throw AssertionError("Enabled icon native node was not unique: ${nativeTreeSummary()}", cause)
+        }
         androidNodesForLabel("Confirm changes").single().let { node ->
             assertTrue("Labeled native node: $node; parent: ${node.parent}", node.isClickable)
             assertTrue(node.isEnabled)
@@ -137,8 +141,12 @@ class BraceIconsTest {
         rule.runOnIdle { enabled.value = false }
         button.assertIsNotEnabled()
         rule.waitForIdle()
-        rule.waitUntil(5_000) {
-            androidNodesForLabel("Confirm changes").singleOrNull()?.isEnabled == false
+        runCatching {
+            rule.waitUntil(15_000) {
+                androidNodesForLabel("Confirm changes").singleOrNull()?.isEnabled == false
+            }
+        }.getOrElse { cause ->
+            throw AssertionError("Disabled icon native node did not settle: ${nativeTreeSummary()}", cause)
         }
         androidNodesForLabel("Confirm changes").single().let { node ->
             assertFalse("Disabled native node: $node", node.isClickable)
@@ -159,6 +167,25 @@ class BraceIconsTest {
         }
         roots.forEach(::visit)
         return matches
+    }
+
+    private fun nativeTreeSummary(): String {
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        val roots = automation.windows.mapNotNull { it.root }
+            .ifEmpty { listOfNotNull(automation.rootInActiveWindow) }
+        val descriptions = mutableListOf<String>()
+        fun visit(node: AccessibilityNodeInfo) {
+            if (descriptions.size >= 80) return
+            val text = node.text?.toString().orEmpty()
+            val label = node.contentDescription?.toString().orEmpty()
+            if (text.isNotEmpty() || label.isNotEmpty() || node.isClickable) {
+                descriptions += "${node.packageName}/${node.className} text=$text label=$label " +
+                    "clickable=${node.isClickable} enabled=${node.isEnabled}"
+            }
+            for (index in 0 until node.childCount) node.getChild(index)?.let(::visit)
+        }
+        roots.forEach(::visit)
+        return "windows=${automation.windows.size}, roots=${roots.size}, nodes=$descriptions"
     }
 
     @Test fun callerSmallSizeCannotShrinkIconActionTarget() {

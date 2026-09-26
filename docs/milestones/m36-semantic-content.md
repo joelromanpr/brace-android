@@ -10,7 +10,8 @@
 
 ## Verification
 
-- Inventory and documentation generation: pass, 147 rows, 0/121 applicable rows stable.
+- Inventory, token, and documentation generation: pass, 147 rows, 0/121 applicable rows stable.
+- Default inset text contrast from the platform-neutral token source: 13.65:1 light, 17.16:1 dark, 19.54:1 high-contrast light, 21.0:1 high-contrast dark. Muted quote citation text against the same inset surface: 5.59:1, 10.53:1, 12.22:1, and 15.47:1 respectively. Brand and scoped override colors still need consumer review.
 - Kotlin API, broad build/lint, API 36 device suite, Maven Local, and independent consumer: pending the shared validation lane.
 - Manual TalkBack, large-text visual inspection, and representative app layout: pending.
 

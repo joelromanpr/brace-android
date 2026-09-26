@@ -49,6 +49,9 @@ import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceButtonVariant
 import io.github.joelromanpr.brace.core.BraceCheckbox
+import io.github.joelromanpr.brace.core.BraceCheckboxCard
+import io.github.joelromanpr.brace.core.BraceRadioCardGroup
+import io.github.joelromanpr.brace.core.BraceRadioCardOption
 import io.github.joelromanpr.brace.core.BraceControlGroup
 import io.github.joelromanpr.brace.core.BraceFieldLabel
 import io.github.joelromanpr.brace.core.BraceCard
@@ -101,6 +104,7 @@ import io.github.joelromanpr.brace.core.BraceProgressIntent
 import io.github.joelromanpr.brace.core.BraceSection
 import io.github.joelromanpr.brace.core.BraceSectionCard
 import io.github.joelromanpr.brace.core.BraceSwitch
+import io.github.joelromanpr.brace.core.BraceSwitchCard
 import io.github.joelromanpr.brace.core.BraceTextField
 import io.github.joelromanpr.brace.core.BraceFormField
 import io.github.joelromanpr.brace.core.BraceFormIntent
@@ -171,6 +175,9 @@ Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-checkbox" to "BraceCheckbox(checked = checked, onCheckedChange = { checked = it }, label = \"Include archived\")",
     "core-switch" to "BraceSwitch(checked = enabled, onCheckedChange = { enabled = it }, label = \"Notifications\")",
+    "core-switchcard" to "var enabled by rememberSaveable { mutableStateOf(false) }; BraceSwitchCard(enabled, { enabled = it }, label = \"Notifications\", description = \"Daily summary\", modifier = Modifier.fillMaxWidth())",
+    "core-checkboxcard" to "var mixed by rememberSaveable { mutableStateOf(true) }; var checked by rememberSaveable { mutableStateOf(false) }; BraceCheckboxCard(checked, { checked = it; mixed = false }, label = \"Include archived\", indeterminate = mixed, modifier = Modifier.fillMaxWidth())",
+    "core-radiocard" to "var choice by rememberSaveable { mutableStateOf<String?>(null) }; BraceRadioCardGroup(listOf(BraceRadioCardOption(\"soup\", \"Soup\"), BraceRadioCardOption(\"salad\", \"Salad\")), choice, { choice = it }, label = \"Lunch special\")",
     "core-inputgroup" to "BraceTextField(value = query, onValueChange = { query = it }, label = \"Search\")",
     "core-formgroup" to """var notes by rememberSaveable { mutableStateOf("") }
 BraceFormField(label = "Case notes", helperText = "Include the event time", required = true, requiredDescription = "Required") { controlModifier ->
@@ -493,6 +500,44 @@ private fun ComponentSample(
             var checked by rememberSaveable { mutableStateOf(true) }
             Column { BraceSwitch(checked, { checked = it }, "Notifications")
                 BraceSwitch(false, {}, "Unavailable setting", enabled = false) }
+        }
+        "core-switchcard" -> {
+            var checked by rememberSaveable { mutableStateOf(true) }
+            var subtle by rememberSaveable { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceSwitchCard(checked, { checked = it }, "Notifications",
+                    description = "Daily summary across projects", modifier = Modifier.fillMaxWidth())
+                BraceSwitchCard(subtle, { subtle = it }, "No selected card tint",
+                    showAsSelectedWhenChecked = false, modifier = Modifier.fillMaxWidth())
+                BraceSwitchCard(true, {}, "Unavailable switch", enabled = false,
+                    modifier = Modifier.fillMaxWidth())
+            }
+        }
+        "core-checkboxcard" -> {
+            var checked by rememberSaveable { mutableStateOf(false) }
+            var mixed by rememberSaveable { mutableStateOf(true) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceButton("Set mixed state", onClick = { checked = false; mixed = true },
+                    variant = BraceButtonVariant.Outline)
+                BraceCheckboxCard(checked, { checked = it; mixed = false }, "Include archived",
+                    description = "Across all projects", indeterminate = mixed,
+                    modifier = Modifier.fillMaxWidth())
+                BraceCheckboxCard(true, {}, "Unavailable checkbox", enabled = false,
+                    modifier = Modifier.fillMaxWidth())
+            }
+        }
+        "core-radiocard" -> {
+            var selected by rememberSaveable { mutableStateOf<String?>("soup") }
+            BraceRadioCardGroup(
+                options = listOf(
+                    BraceRadioCardOption("soup", "Soup", "Vegetarian"),
+                    BraceRadioCardOption("salad", "Salad", enabled = false),
+                    BraceRadioCardOption("sandwich", "Sandwich"),
+                ),
+                selectedValue = selected,
+                onValueChange = { selected = it },
+                label = "Lunch special",
+            )
         }
         "core-inputgroup" -> {
             var value by rememberSaveable { mutableStateOf("") }

@@ -7,7 +7,7 @@ var names by rememberSaveable { mutableStateOf(emptyList<String>()) }
 BraceFilePickerField(
     label = "Attachments",
     selectedNames = names,
-    onFilesPicked = { uris -> viewModel.acceptDocuments(uris) },
+    onFilesPicked = { uris -> names = uris.mapIndexed { index, _ -> "Document ${index + 1}" } },
     mimeTypes = listOf("application/pdf", "image/*"),
     multiple = true,
 )

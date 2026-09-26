@@ -1,10 +1,13 @@
 package io.github.joelromanpr.brace.core
 
 import androidx.compose.material3.Text
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.click
@@ -210,6 +213,22 @@ class BraceOverlayTest {
         trigger.performClick()
         rule.onNodeWithText("Close overlay").performClick()
         trigger.assertIsFocused()
+    }
+
+    @Test fun scopedRtlIsPreservedInsideDialogWindow() {
+        var seenDirection: LayoutDirection? = null
+        rule.setContent {
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                BraceTheme {
+                    BraceOverlay(open = true, onDismissRequest = {}, title = "RTL details") {
+                        seenDirection = LocalLayoutDirection.current
+                        Text("RTL contents")
+                    }
+                }
+            }
+        }
+        rule.onNodeWithText("RTL contents").assertExists()
+        rule.runOnIdle { assertEquals(LayoutDirection.Rtl, seenDirection) }
     }
 
     @Test fun outsideTouchDismissesWhenEnabled() {

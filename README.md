@@ -10,7 +10,7 @@ An open-source Jetpack Compose design system for complex, data-dense Android app
 
 [Browse every row and its evidence](docs/coverage.md) · [Machine-readable inventory](inventory/blueprint-components.json) · [Roadmap](ROADMAP.md)
 
-The source milestones contain versioned platform-neutral design tokens, a generated Kotlin token API, `BraceTheme`, an interactive inventory-driven catalog, a documentation site source, actions and form controls, M2 content and progress feedback, M3 navigation labels and messages, and M4 menu and modal overlay source. These APIs remain **in progress** until release evidence is recorded. Blueprint parity is a project goal, not a current claim. Select, date/time, icons, and the data table are planned work in the pinned inventory.
+The source milestones contain versioned platform-neutral design tokens, a generated Kotlin token API, `BraceTheme`, an interactive inventory-driven catalog, a documentation site source, actions and form controls, M2 content and progress feedback, M3 navigation labels and messages, M4 menu and modal overlay source, and M5 drawer and anchored popover source. These APIs remain **in progress** until release evidence is recorded. Blueprint parity is a project goal, not a current claim. Select, date/time, icons, and the data table are planned work in the pinned inventory.
 
 ## Try the source build
 
@@ -21,7 +21,7 @@ Requires JDK 21 and Android SDK 36. The Gradle wrapper uses 8.14.3; the build pi
 ./gradlew build lint checkTokenGeneration checkInventory apiCheck
 ```
 
-The catalog APK is `catalog/build/outputs/apk/debug/catalog-debug.apk`. It lists component names and availability from the generated inventory asset, with runnable examples for implemented controls and runtime light/dark, high-contrast, brand, density, and motion controls. The [core](docs/core-components.md), [content and feedback](docs/content-feedback.md), [navigation and messages](docs/navigation-feedback.md), and [menus and overlays](docs/overlays.md) guides document APIs, states, accessibility, and current limits. The [M1](docs/milestones/m1-foundation-core.md), [M2](docs/milestones/m2-content-feedback.md), [M3](docs/milestones/m3-navigation-feedback.md), and [M4](docs/milestones/m4-overlays.md) reports track verification and open work.
+The catalog APK is `catalog/build/outputs/apk/debug/catalog-debug.apk`. It lists component names and availability from the generated inventory asset, with runnable examples for implemented controls and runtime light/dark, high-contrast, brand, density, and motion controls. The [core](docs/core-components.md), [content and feedback](docs/content-feedback.md), [navigation and messages](docs/navigation-feedback.md), [menus and overlays](docs/overlays.md), and [drawers and popovers](docs/drawers-popovers.md) guides document APIs, states, accessibility, and current limits. The [M1](docs/milestones/m1-foundation-core.md), [M2](docs/milestones/m2-content-feedback.md), [M3](docs/milestones/m3-navigation-feedback.md), [M4](docs/milestones/m4-overlays.md), and [M5](docs/milestones/m5-drawers-popovers.md) reports track verification and open work.
 
 No Maven Central release has been published. To try the local snapshot, publish the foundation and core AARs to Maven Local, then compile the [independent consumer sample](verification/consumer-smoke/README.md):
 

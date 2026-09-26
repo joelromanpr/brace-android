@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
@@ -63,7 +64,7 @@ public class BraceOverlayState {
 @Composable
 public fun rememberBraceOverlayState(): BraceOverlayState = remember { BraceOverlayState() }
 
-private val LocalBraceOverlayState = staticCompositionLocalOf<BraceOverlayState?> { null }
+internal val LocalBraceOverlayState = staticCompositionLocalOf<BraceOverlayState?> { null }
 
 /**
  * Shares one overlay stack among descendant [BraceOverlay] instances.
@@ -104,6 +105,7 @@ public fun BraceOverlay(
     val localState = rememberBraceOverlayState()
     val stack = sharedState ?: localState
     val id = remember { Any() }
+    val callerLayoutDirection = LocalLayoutDirection.current
     val currentDismissRequest by rememberUpdatedState(onDismissRequest)
 
     if (open) {
@@ -127,7 +129,10 @@ public fun BraceOverlay(
                 usePlatformDefaultWidth = false,
             ),
         ) {
-            CompositionLocalProvider(LocalBraceOverlayState provides stack) {
+            CompositionLocalProvider(
+                LocalBraceOverlayState provides stack,
+                LocalLayoutDirection provides callerLayoutDirection,
+            ) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Box(
                         Modifier

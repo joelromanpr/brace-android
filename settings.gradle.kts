@@ -19,6 +19,7 @@ rootProject.name = "brace-android"
 include(":brace-foundation")
 include(":brace-core")
 include(":brace-icons")
+include(":brace-blueprint-icons")
 include(":brace-select")
 include(":brace-datetime")
 include(":brace-table")

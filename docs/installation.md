@@ -23,13 +23,14 @@ dependencies {
     implementation("io.github.joelromanpr.brace:brace-foundation:0.1.0-SNAPSHOT")
     implementation("io.github.joelromanpr.brace:brace-core:0.1.0-SNAPSHOT")
     implementation("io.github.joelromanpr.brace:brace-icons:0.1.0-SNAPSHOT")
+    implementation("io.github.joelromanpr.brace:brace-blueprint-icons:0.1.0-SNAPSHOT")
     implementation("io.github.joelromanpr.brace:brace-select:0.1.0-SNAPSHOT")
     implementation("io.github.joelromanpr.brace:brace-datetime:0.1.0-SNAPSHOT")
     implementation("io.github.joelromanpr.brace:brace-table:0.1.0-SNAPSHOT")
 }
 ```
 
-The icons artifact is optional for apps that need Brace vectors or a scoped registry; core does not pull the icon artwork transitively. After the first release, remove `mavenLocal()` and use the released version from Maven Central. All public Brace artifacts use the same version. The source build currently targets Android SDK 36 and Android 26 as its minimum; verify the release's compatibility table before adoption.
+`brace-icons` is optional for apps that need Brace vectors or a scoped registry; `brace-blueprint-icons` is a further opt-in artifact for the 706 licensed pinned Blueprint glyphs. Core does not pull either icon artwork transitively. After the first release, remove `mavenLocal()` and use the released version from Maven Central. All public Brace artifacts use the same version. The source build currently targets Android SDK 36 and Android 26 as its minimum; verify the release's compatibility table before adoption.
 
 The datetime and table artifacts depend on core and foundation transitively. Add only the artifacts whose APIs you use.
 

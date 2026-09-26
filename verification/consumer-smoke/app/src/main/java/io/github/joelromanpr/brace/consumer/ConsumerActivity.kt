@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -22,6 +23,8 @@ import io.github.joelromanpr.brace.datetime.BraceDatePicker
 import io.github.joelromanpr.brace.datetime.BraceDateField
 import java.time.LocalDate
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbs
@@ -50,6 +53,8 @@ import io.github.joelromanpr.brace.core.BraceMenuItem
 import io.github.joelromanpr.brace.core.BraceOverlayHost
 import io.github.joelromanpr.brace.core.BracePopover
 import io.github.joelromanpr.brace.core.BraceProgressBar
+import io.github.joelromanpr.brace.core.BraceSpinner
+import io.github.joelromanpr.brace.core.BraceSkeleton
 import io.github.joelromanpr.brace.core.BraceSection
 import io.github.joelromanpr.brace.core.BraceShortcut
 import io.github.joelromanpr.brace.core.BraceShortcutLabel
@@ -78,6 +83,9 @@ import io.github.joelromanpr.brace.icons.BraceIconButton
 import io.github.joelromanpr.brace.icons.BraceIconRegistry
 import io.github.joelromanpr.brace.icons.BraceIconRegistryProvider
 import io.github.joelromanpr.brace.icons.BraceIcons
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIcon
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconNames
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconPack
 import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
@@ -114,6 +122,9 @@ class ConsumerActivity : ComponentActivity() {
                 var reportTitle by remember { mutableStateOf("Quarterly report") }
                 var amount by rememberSaveable { mutableStateOf("0.2") }
                 var iconName by remember { mutableStateOf("search") }
+                val blueprintIconPack by produceState<BraceBlueprintIconPack?>(null) {
+                    value = withContext(Dispatchers.IO) { BraceBlueprintIconPack.load(applicationContext) }
+                }
                 val iconRegistry = remember {
                     BraceIconRegistry.Default.register("custom-check",
                         BraceIconRegistry.Default.resolve("check"))
@@ -154,6 +165,8 @@ class ConsumerActivity : ComponentActivity() {
                         )
                         BraceSection(title = "Job status", collapsible = true) {
                             BraceProgressBar(label = "Import progress", value = 0.5f)
+                            BraceSpinner(label = "Indexing records", value = 0.5f)
+                            BraceSkeleton(label = "Loading next batch")
                         }
                         BraceBreadcrumbs(listOf(BraceBreadcrumb("Home", onClick = {}), BraceBreadcrumb("Imports")))
                         BraceTag("Active")
@@ -186,6 +199,10 @@ class ConsumerActivity : ComponentActivity() {
                         BraceIconRegistryProvider(iconRegistry) {
                             Row {
                                 BraceIcon(BraceIcons.Info, contentDescription = null)
+                                blueprintIconPack?.let { pack ->
+                                    BraceBlueprintIcon(pack, BraceBlueprintIconNames.Search,
+                                        contentDescription = null)
+                                }
                                 BraceIconByName(iconName, contentDescription = "Status icon")
                                 BraceIconButton(BraceIcons.Search, label = "Search records",
                                     onClick = { iconName = "custom-check" })

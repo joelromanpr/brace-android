@@ -24,6 +24,7 @@ kotlin { compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarg
 dependencies {
     implementation("io.github.joelromanpr.brace:brace-core:0.1.0-SNAPSHOT")
     implementation("io.github.joelromanpr.brace:brace-icons:0.1.0-SNAPSHOT")
+    implementation("io.github.joelromanpr.brace:brace-blueprint-icons:0.1.0-SNAPSHOT")
     implementation("io.github.joelromanpr.brace:brace-select:0.1.0-SNAPSHOT")
     implementation("io.github.joelromanpr.brace:brace-datetime:0.1.0-SNAPSHOT")
     implementation("io.github.joelromanpr.brace:brace-table:0.1.0-SNAPSHOT")

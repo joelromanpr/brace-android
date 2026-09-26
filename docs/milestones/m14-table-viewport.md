@@ -1,6 +1,6 @@
 # M14: first table viewport slice
 
-**Status:** in-progress source in [draft PR #24](https://github.com/joelromanpr/brace-android/pull/24), integrated with `main` through M13 (`f288abd`). The pinned Blueprint Table rows remain unreleased; generated stable coverage is **0/121 applicable rows**. This report records the current local checks. A fresh hosted API 34 run is still required before review or merge.
+**Status:** in-progress source in [draft PR #24](https://github.com/joelromanpr/brace-android/pull/24), integrated with `main` at `286d04e` (through M17, M35, and M54). The pinned Blueprint Table rows remain unreleased; generated stable coverage is **0/121 applicable rows**. This report records the current local checks. Hosted verify, API 34 instrumentation, and CodeQL remain required before merge.
 
 ## Shipped in this branch
 
@@ -20,12 +20,12 @@
 
 | Gate | Result |
 | --- | --- |
-| Full local build, lint, token/inventory generation, API checks, catalog assembly | Passed `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` on JDK 21 and SDK 36: **653 Gradle tasks**. |
+| Full local build, lint, token/inventory generation, API checks, catalog assembly | Passed `build lint checkTokenGeneration checkBlueprintIconGeneration checkInventory apiCheck :catalog:assembleDebug --no-parallel` on JDK 21 and SDK 36: **744 Gradle tasks**. |
 | API 36 Compose device tests | Passed **16/16**, zero failures/skips. These cover duplicate/blank keys, two-axis virtualization, fixed-header touch/RTL/partial-scroll alignment, mouse and touch, controlled selection, keyboard reveal, state restoration, density and 48 dp targets, 3× text, native accessibility nodes, explicit traversal hints, an automated accessibility check, and bounded 5,000 × 400 composition/key-index work. This is not a frame-time or memory benchmark. |
-| Maven Local and external consumer | Six aligned artifacts published with AAR, sources, KDoc JAR, POM, and Gradle module metadata (**230 tasks**). The separate coordinate-only consumer assembled (**37 tasks**). No Maven Central deployment was attempted. |
-| Coverage and documentation site | Token and coverage source checks pass: 147 pinned rows, 0/121 stable applicable rows. `node scripts/build-docs.mjs` builds 9 real Android captures and **38** guides; all local targets resolve across 39 HTML pages. JavaScript syntax and Git whitespace checks pass. |
+| Maven Local and external consumer | Seven aligned artifacts published with AAR, sources, KDoc JAR, POM, and Gradle module metadata (**271 tasks**). The separate coordinate-only consumer assembled (**37 tasks**). No Maven Central deployment was attempted. |
+| Coverage and documentation site | Token and coverage source checks pass: 147 pinned rows, 0/121 stable applicable rows. `node scripts/build-docs.mjs` builds 11 real Android captures and **43** guides; all local targets resolve across 44 HTML pages. JavaScript syntax and Git whitespace checks pass. |
 | Visual review | An earlier 320 × 640 catalog inspection covered light and dark high-contrast modes and found the fixed row-header paint/touch issue that this slice corrected. The final enlarged-text row-header layout still needs manual visual inspection. |
-| Hosted CI | Earlier head `dcd90e9` [run 36249693851](https://github.com/joelromanpr/brace-android/actions/runs/36249693851) ran zero steps because of an account billing gate. A fresh hosted verify, API 34 instrumentation, and CodeQL result are pending on the integrated head. |
+| Hosted CI | Fresh hosted verify, API 34 instrumentation, and CodeQL results are pending on the integrated head. |
 
 ## Next table branch
 

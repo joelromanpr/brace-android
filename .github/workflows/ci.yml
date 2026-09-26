@@ -71,4 +71,5 @@ jobs:
           disk-size: 1024M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: ./gradlew :brace-icons:connectedDebugAndroidTest :brace-foundation:connectedDebugAndroidTest :brace-core:connectedDebugAndroidTest --stacktrace
+          # One emulator cannot host multiple module instrumentation APKs concurrently.
+          script: ./gradlew :brace-icons:connectedDebugAndroidTest :brace-foundation:connectedDebugAndroidTest :brace-core:connectedDebugAndroidTest --no-parallel --stacktrace

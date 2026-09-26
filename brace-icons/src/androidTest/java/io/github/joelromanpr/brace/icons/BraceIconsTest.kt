@@ -131,7 +131,7 @@ class BraceIconsTest {
         rule.waitForIdle()
         rule.waitUntil(5_000) { androidNodesForLabel("Confirm changes").size == 1 }
         androidNodesForLabel("Confirm changes").single().let { node ->
-            assertTrue(node.isClickable)
+            assertTrue("Labeled native node: $node; parent: ${node.parent}", node.isClickable)
             assertTrue(node.isEnabled)
         }
         rule.runOnIdle { enabled.value = false }

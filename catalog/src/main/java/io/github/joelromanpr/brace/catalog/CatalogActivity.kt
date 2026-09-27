@@ -420,6 +420,53 @@ private fun Detail(entry: CatalogEntry, onBack: () -> Unit) {
 }
 
 @Composable
+private fun LinkSample() {
+            var destination by rememberSaveable { mutableStateOf("No navigation yet") }
+            var underline by rememberSaveable { mutableStateOf(BraceLinkUnderline.Always) }
+            var color by rememberSaveable { mutableStateOf(BraceLinkColor.Primary) }
+            var enabled by rememberSaveable { mutableStateOf(true) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Destination: $destination", color = BraceTheme.colors.semantic.onSurface)
+                BraceLink("Read the guide", BraceLinkDestination.Uri("https://example.org/guide", "Guide"),
+                    enabled = enabled, underline = underline, color = color,
+                    onOpenUri = { destination = it })
+                BraceLink("Open reports", BraceLinkDestination.Action("Reports") { destination = "Reports" },
+                    enabled = enabled, underline = underline, color = color)
+                BraceButton(if (underline == BraceLinkUnderline.Always) "Underline on focus or hover" else "Always underline",
+                    onClick = { underline = if (underline == BraceLinkUnderline.Always) BraceLinkUnderline.Hover else BraceLinkUnderline.Always },
+                    variant = BraceButtonVariant.Outline)
+                BraceButton(if (color == BraceLinkColor.Primary) "Success color" else "Primary color",
+                    onClick = { color = if (color == BraceLinkColor.Primary) BraceLinkColor.Success else BraceLinkColor.Primary },
+                    variant = BraceButtonVariant.Outline)
+                BraceButton(if (enabled) "Disable links" else "Enable links", onClick = { enabled = !enabled },
+                    variant = BraceButtonVariant.Outline)
+            }
+    }
+
+@Composable
+private fun AnchorButtonSample() {
+            var destination by rememberSaveable { mutableStateOf("No navigation yet") }
+            var outlined by rememberSaveable { mutableStateOf(false) }
+            var enabled by rememberSaveable { mutableStateOf(true) }
+            var loading by rememberSaveable { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Destination: $destination", color = BraceTheme.colors.semantic.onSurface)
+                BraceLinkButton("Open reports", BraceLinkDestination.Action("Reports") { destination = "Reports" },
+                    enabled = enabled, loading = loading,
+                    variant = if (outlined) BraceButtonVariant.Outline else BraceButtonVariant.Solid)
+                BraceLinkButton("Visit guide", BraceLinkDestination.Uri("https://example.org/guide", "Guide"),
+                    enabled = enabled, loading = loading, onOpenUri = { destination = it },
+                    intent = BraceButtonIntent.Secondary)
+                BraceButton(if (outlined) "Solid buttons" else "Outlined buttons", onClick = { outlined = !outlined },
+                    variant = BraceButtonVariant.Outline)
+                BraceButton(if (enabled) "Disable navigation" else "Enable navigation", onClick = { enabled = !enabled },
+                    variant = BraceButtonVariant.Outline)
+                BraceButton(if (loading) "Stop loading" else "Show loading", onClick = { loading = !loading },
+                    variant = BraceButtonVariant.Outline)
+            }
+    }
+
+@Composable
 private fun ComponentSample(
     id: String,
     toasts: BraceToastState,
@@ -737,49 +784,8 @@ private fun ComponentSample(
                 )
             }
         }
-        "core-link" -> {
-            var destination by rememberSaveable { mutableStateOf("No navigation yet") }
-            var underline by rememberSaveable { mutableStateOf(BraceLinkUnderline.Always) }
-            var color by rememberSaveable { mutableStateOf(BraceLinkColor.Primary) }
-            var enabled by rememberSaveable { mutableStateOf(true) }
-            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                Text("Destination: $destination", color = BraceTheme.colors.semantic.onSurface)
-                BraceLink("Read the guide", BraceLinkDestination.Uri("https://example.org/guide", "Guide"),
-                    enabled = enabled, underline = underline, color = color,
-                    onOpenUri = { destination = it })
-                BraceLink("Open reports", BraceLinkDestination.Action("Reports") { destination = "Reports" },
-                    enabled = enabled, underline = underline, color = color)
-                BraceButton(if (underline == BraceLinkUnderline.Always) "Underline on focus or hover" else "Always underline",
-                    onClick = { underline = if (underline == BraceLinkUnderline.Always) BraceLinkUnderline.Hover else BraceLinkUnderline.Always },
-                    variant = BraceButtonVariant.Outline)
-                BraceButton(if (color == BraceLinkColor.Primary) "Success color" else "Primary color",
-                    onClick = { color = if (color == BraceLinkColor.Primary) BraceLinkColor.Success else BraceLinkColor.Primary },
-                    variant = BraceButtonVariant.Outline)
-                BraceButton(if (enabled) "Disable links" else "Enable links", onClick = { enabled = !enabled },
-                    variant = BraceButtonVariant.Outline)
-            }
-        }
-        "core-anchorbutton" -> {
-            var destination by rememberSaveable { mutableStateOf("No navigation yet") }
-            var outlined by rememberSaveable { mutableStateOf(false) }
-            var enabled by rememberSaveable { mutableStateOf(true) }
-            var loading by rememberSaveable { mutableStateOf(false) }
-            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                Text("Destination: $destination", color = BraceTheme.colors.semantic.onSurface)
-                BraceLinkButton("Open reports", BraceLinkDestination.Action("Reports") { destination = "Reports" },
-                    enabled = enabled, loading = loading,
-                    variant = if (outlined) BraceButtonVariant.Outline else BraceButtonVariant.Solid)
-                BraceLinkButton("Visit guide", BraceLinkDestination.Uri("https://example.org/guide", "Guide"),
-                    enabled = enabled, loading = loading, onOpenUri = { destination = it },
-                    intent = BraceButtonIntent.Secondary)
-                BraceButton(if (outlined) "Solid buttons" else "Outlined buttons", onClick = { outlined = !outlined },
-                    variant = BraceButtonVariant.Outline)
-                BraceButton(if (enabled) "Disable navigation" else "Enable navigation", onClick = { enabled = !enabled },
-                    variant = BraceButtonVariant.Outline)
-                BraceButton(if (loading) "Stop loading" else "Show loading", onClick = { loading = !loading },
-                    variant = BraceButtonVariant.Outline)
-            }
-        }
+        "core-link" -> LinkSample()
+        "core-anchorbutton" -> AnchorButtonSample()
         "core-checkbox" -> {
             var checked by rememberSaveable { mutableStateOf(false) }
             Column { BraceCheckbox(checked, { checked = it }, "Include archived")

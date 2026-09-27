@@ -3,7 +3,7 @@
 This independent Gradle project resolves Brace **only by Maven coordinates**. From the repository root:
 
 ```sh
-./gradlew :brace-foundation:publishToMavenLocal :brace-core:publishToMavenLocal :brace-icons:publishToMavenLocal :brace-select:publishToMavenLocal :brace-datetime:publishToMavenLocal
+./gradlew :brace-foundation:publishToMavenLocal :brace-core:publishToMavenLocal :brace-icons:publishToMavenLocal :brace-blueprint-icons:publishToMavenLocal :brace-select:publishToMavenLocal :brace-datetime:publishToMavenLocal
 ./gradlew -p verification/consumer-smoke :app:assembleDebug
 ```
 

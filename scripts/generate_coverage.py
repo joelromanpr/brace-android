@@ -260,13 +260,10 @@ def main() -> int:
         fail("README coverage markers are out of order")
     summary = data["summary"]
     coverage_lines = (
-        f"\n**Released coverage: {summary['stableApplicableRows']}/{summary['applicableRows']} applicable rows** "
-        f"({summary['stableComponents']}/{summary['applicableComponents']} components; "
-        f"{summary['stableCapabilities']}/{summary['applicableCapabilities']} capabilities). "
-        f"Web-specific mappings documented: {summary['documentedWebSpecificMappings']}/{summary['webSpecificMappings']} "
-        f"(stable: {summary['stableWebSpecificMappings']}). "
-        f"Labs tracked separately: {summary['labsRows']} rows. "
-        f"Full applicable parity: {'yes' if summary['fullApplicableCoverage'] else 'no'}.\n"
+        f"\n**Released: {summary['stableApplicableRows']} of {summary['applicableRows']} tracked Android items** "
+        f"({summary['stableComponents']} of {summary['applicableComponents']} components; "
+        f"{summary['stableCapabilities']} of {summary['applicableCapabilities']} design-system capabilities). "
+        f"[See the full coverage record, web mappings, and experimental work](docs/coverage.md).\n"
     )
     outputs[README] = readme[:start] + coverage_lines + readme[end:]
     stale = []

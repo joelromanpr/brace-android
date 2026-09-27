@@ -45,4 +45,12 @@
     <string name="brace_range_invalid">Saisissez une date valide</string>
     <string name="brace_range_unavailable">Date indisponible</string>
     <string name="brace_range_overlapping">La date de début doit précéder la date de fin</string>
+    <string name="brace_zone_choose">Choisir un fuseau horaire</string>
+    <string name="brace_zone_search">Rechercher des fuseaux horaires</string>
+    <string name="brace_zone_empty">Aucun fuseau horaire correspondant</string>
+    <string name="brace_zone_selected">Sélectionné</string>
+    <string name="brace_zone_local">Fuseau horaire local</string>
+    <string name="brace_zone_expanded">Développé</string>
+    <string name="brace_zone_collapsed">Réduit</string>
+    <string name="brace_zone_position">%1$d sur %2$d : %3$s</string>
 </resources>

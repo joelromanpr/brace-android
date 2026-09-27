@@ -1,6 +1,6 @@
 # M33 · date ranges
 
-**Status:** draft source on `joelromanpr/m33-date-range-m55`, integrated locally with protected main `217b1b9f253bca79dcd57ea5d9071fbc9724e2a6` (M57 icon large-text, following M18 table selection) at merge `6a7acbf`. PR #43 still points to the fully hosted-green pre-M18 head until this exact-main repair is pushed. The pinned Blueprint 6.18.0 DateRangePicker and DateRangeInput rows have source, samples, documentation, and tests; both remain **in progress**. Released applicable coverage is **0/122**.
+**Status:** source merged through [PR #43](https://github.com/joelromanpr/brace-android/pull/43) to protected main at `8ba665a38a69d8130e41d851abc6a8a984956ab5`. The pinned Blueprint 6.18.0 DateRangePicker and DateRangeInput rows have source, samples, documentation, and tests; both remain **in progress**. Released applicable coverage is **0/122**.
 
 ## Scope
 
@@ -18,7 +18,7 @@
 | API 36 instrumented interactions and accessibility before M20 | Full `brace-datetime` suite passed **43/43**, zero failed/skipped (**91 tasks**) on the 320 × 640/160 dpi API 36 emulator. It covers the disabled-interior calendar, shortcut, and field cases, plus RTL keyboard and 2× font-scale target checks, alongside the existing date/time regressions. |
 | Maven Local and independent consumer before M20 | Published eight aligned foundation/core/icons/optional Blueprint legacy and next packs/select/datetime/table AARs with sources, KDoc, POMs, and module metadata (**308 tasks**). The separate coordinate-only consumer assembled with range APIs (**37 tasks**). No Maven Central upload occurred. |
 | Visual review | A selected DateRangePicker gallery capture was inspected at its full 400 × 800 resolution. The catalog was also used to select a complete range through the DateRangeField popover. The shared emulator was restored to 320 × 640/160 dpi/font scale 1.0 after capture. Manual TalkBack listening remains. |
-| Hosted CI and review | The pre-M18 PR head `491ec79` passed hosted verify (4m00), CodeQL (3m35), and API 34 instrumentation (7m18). The M18/M57-integrated source is local and unpushed at this report revision. The final squash-main merge changed no file content from the locally verified M57-branch integration; final hosted checks on the pushed exact-main head have not run. |
+| Hosted CI and review | The final PR head `2e6a0f8c8f8d2cc4b80ced1ed1d7e8e70d23e5a1` passed hosted verify (4m28), CodeQL (3m46), and API 34 instrumentation (10m05) before squash merge. Hosted datetime tests passed **43/43**, table **32/32**, and catalog **1/1**, with zero failures in those suites. One unrelated core test was skipped. The merged commit is `8ba665a38a69d8130e41d851abc6a8a984956ab5`. |
 
 ## Known limits and next branch
 

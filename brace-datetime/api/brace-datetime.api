@@ -83,6 +83,21 @@ public final class io/github/joelromanpr/brace/datetime/BraceTimePrecision : jav
 	public static fun values ()[Lio/github/joelromanpr/brace/datetime/BraceTimePrecision;
 }
 
+public final class io/github/joelromanpr/brace/datetime/BraceTimeZoneDisplay : java/lang/Enum {
+	public static final field Abbreviation Lio/github/joelromanpr/brace/datetime/BraceTimeZoneDisplay;
+	public static final field Composite Lio/github/joelromanpr/brace/datetime/BraceTimeZoneDisplay;
+	public static final field Identifier Lio/github/joelromanpr/brace/datetime/BraceTimeZoneDisplay;
+	public static final field LongName Lio/github/joelromanpr/brace/datetime/BraceTimeZoneDisplay;
+	public static final field Offset Lio/github/joelromanpr/brace/datetime/BraceTimeZoneDisplay;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/datetime/BraceTimeZoneDisplay;
+	public static fun values ()[Lio/github/joelromanpr/brace/datetime/BraceTimeZoneDisplay;
+}
+
+public final class io/github/joelromanpr/brace/datetime/BraceTimeZoneSelectKt {
+	public static final fun BraceTimeZoneSelect (Ljava/time/ZoneId;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/util/Locale;Ljava/time/Instant;Ljava/time/Clock;Ljava/time/ZoneId;ZZLio/github/joelromanpr/brace/datetime/BraceTimeZoneDisplay;Ljava/lang/String;ZLandroidx/compose/runtime/Composer;III)V
+}
+
 public final class io/github/joelromanpr/brace/datetime/ComposableSingletons$BraceTimePickerKt {
 	public static final field INSTANCE Lio/github/joelromanpr/brace/datetime/ComposableSingletons$BraceTimePickerKt;
 	public fun <init> ()V

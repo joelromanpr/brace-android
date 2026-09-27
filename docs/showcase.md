@@ -13,3 +13,12 @@ Each capture records its source branch and full commit, emulator, pixel dimensio
 5. Run `python3 scripts/generate_coverage.py --check`, `node scripts/build-docs.mjs`, and `node --check docs/site/app.js`. The site build validates the capture IDs against the generated inventory and checks PNG dimensions and provenance fields. Review the responsive gallery and full-size image links in a browser.
 
 The static site cannot demonstrate TalkBack, touch, mouse, keyboard, state restoration, or motion behavior. Use the Android catalog and component tests for those checks. Screenshots do not change inventory status or coverage counts.
+
+## Runnable operations examples
+
+The catalog also contains two fictional screens assembled from Brace source:
+
+- [Electric fleet](site/showcase/fleet-operations-wide.png) combines search, status filters, a selectable seven-column table, vehicle details, and charge progress. The [phone capture](site/showcase/fleet-operations-320.png) shows the same screen at 320 × 640; the table supports horizontal navigation.
+- [Mission control](site/showcase/mission-control-dark-400.png) combines spacecraft metrics, a signal callout, an original Compose orbit illustration, selection, and a table. A [light capture](site/showcase/mission-control-400.png) shows the same sample at 400 × 800.
+
+Fleet records, orbital positions, and telemetry are sample data. These screens do not add stable inventory coverage. Their source commit and emulator settings are recorded in the capture manifest; run the catalog to test the interactions.

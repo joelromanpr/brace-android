@@ -1,6 +1,6 @@
 # M21: table copying
 
-**Status:** draft PR [#26](https://github.com/joelromanpr/brace-android/pull/26), replayed onto protected main `217b1b9` (through M18 and M57). This source is **in progress**, `firstRelease` is null, and generated released coverage is **0/122** applicable rows (0/94 components). It is not a Maven Central release or a Blueprint parity claim.
+**Status:** draft PR [#26](https://github.com/joelromanpr/brace-android/pull/26), integrated onto protected main `47989fc` (through M18, M57, M33, and M59). This source is **in progress**, `firstRelease` is null, and generated released coverage is **0/122** applicable rows (0/94 components). It is not a Maven Central release or a Blueprint parity claim.
 
 ## Source in this slice
 
@@ -14,7 +14,7 @@
 - On the M18-main replay before the M57 docs/catalog integration, `./gradlew build lint checkTokenGeneration checkBlueprintIconGeneration checkBlueprintNextIconGeneration checkInventory apiCheck :catalog:assembleDebug --no-parallel` passed **836 tasks**. The first attempt exposed omitted Android clipboard imports during replay; the targeted table/catalog/test compilation passed after correction, then the full gate passed.
 - On the attached Android 16/API 36 emulator at **320 × 640, 160 dpi, font scale 1.0**, `:brace-table:connectedDebugAndroidTest` passed **37/37**, zero failed or skipped, in **71 Gradle tasks**. This includes 32 viewport/selection/resizing tests and five copying tests for TSV quoting and order, controlled updates, offscreen range copying, stale clipboard preservation, and the native named-table TalkBack copy action.
 - All eight aligned `0.1.0-SNAPSHOT` artifacts published to Maven Local (**308 tasks**). Each has an AAR, sources JAR, KDoc JAR, POM, and Gradle Module Metadata. The separate clean, offline, coordinate-only consumer passed **38/38 tasks**, including the new formatter API. No Maven Central publication or release tag was attempted.
-- Token and pinned icon generation, coverage `--check`, JavaScript syntax, whitespace checks, and the Pages build pass: **148 inventory rows, 14 real Android captures, 53 guides**, and **0/122** stable applicable rows. The earlier 320 × 640 catalog review showed selection and the copy preview without horizontal overflow; this replay has not had a new manual appearance review. The M57 docs/catalog integration passes static site and coverage checks; combined Gradle and current-head hosted verify, API34 instrumented, and CodeQL remain pending.
+- Token and pinned icon generation, coverage `--check`, JavaScript syntax, whitespace checks, and the Pages build pass: **148 inventory rows, 21 real Android captures, 56 guides**, and **0/122** stable applicable rows. The earlier 320 × 640 catalog review showed selection and the copy preview without horizontal overflow; this replay has not had a new manual appearance review. The M59 showcase integration passes static site and coverage checks. The earlier pushed M21 head `f9b7528` passed hosted verify, API34 instrumented (37/37 table tests), and CodeQL; those results precede this integration. Current-head local scoped Gradle and hosted checks remain pending.
 
 ## Limits and next table slice
 

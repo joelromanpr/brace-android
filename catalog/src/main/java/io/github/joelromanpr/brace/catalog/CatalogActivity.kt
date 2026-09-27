@@ -69,6 +69,11 @@ import io.github.joelromanpr.brace.core.BraceOrderedList
 import io.github.joelromanpr.brace.core.BraceUnorderedList
 import io.github.joelromanpr.brace.core.BraceSlider
 import io.github.joelromanpr.brace.core.BraceRangeSlider
+import io.github.joelromanpr.brace.core.BraceMultiSlider
+import io.github.joelromanpr.brace.core.BraceSliderHandle
+import io.github.joelromanpr.brace.core.BraceSliderHandleInteraction
+import io.github.joelromanpr.brace.core.BraceSliderHandleType
+import io.github.joelromanpr.brace.core.BraceSliderTrackIntent
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceButtonVariant
@@ -370,6 +375,21 @@ BraceSlider(value, { value = it }, label = "Volume", min = 0f, max = 10f, stepSi
     "core-rangeslider" to """var start by rememberSaveable { mutableFloatStateOf(2f) }
 var end by rememberSaveable { mutableFloatStateOf(7f) }
 BraceRangeSlider(start..end, { start = it.start; end = it.endInclusive }, label = "Hours")""",
+    "core-multislider" to """var positions by rememberSaveable { mutableStateOf(listOf(2f, 5f, 8f)) }
+val handles = listOf(
+    BraceSliderHandle("minimum", positions[0], "Minimum", intentAfter = BraceSliderTrackIntent.Primary),
+    BraceSliderHandle("target", positions[1], "Target", BraceSliderHandleInteraction.Push),
+    BraceSliderHandle("maximum", positions[2], "Maximum")
+)
+BraceMultiSlider(handles, { positions = it.map(BraceSliderHandle::value) }, label = "Thresholds")""",
+    "core-multisliderhandle" to """var positions by rememberSaveable { mutableStateOf(listOf(2f, 6f, 8f)) }
+val handles = listOf(
+    BraceSliderHandle("minimum", positions[0], "Minimum"),
+    BraceSliderHandle("warning", positions[1], "Warning threshold",
+        interactionKind = BraceSliderHandleInteraction.None, intentAfter = BraceSliderTrackIntent.Warning),
+    BraceSliderHandle("maximum", positions[2], "Maximum")
+)
+BraceMultiSlider(handles, { positions = it.map(BraceSliderHandle::value) }, label = "Thresholds")""",
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-link" to "BraceLink(\"Read guide\", BraceLinkDestination.Uri(\"https://example.org/guide\", \"Guide\"))",
     "core-anchorbutton" to "BraceLinkButton(\"Open reports\", BraceLinkDestination.Action(\"Reports\") { navigateToReports() })",
@@ -983,6 +1003,44 @@ private fun TreeSample() {
 }
 
 @Composable
+private fun MultiSliderSample() {
+    var positions by rememberSaveable { mutableStateOf(listOf(2f, 5f, 6f, 8f)) }
+    var push by rememberSaveable { mutableStateOf(true) }
+    var enabled by rememberSaveable { mutableStateOf(true) }
+    var fill by rememberSaveable { mutableStateOf(true) }
+    var released by rememberSaveable { mutableStateOf("No release yet") }
+    val handles = listOf(
+        BraceSliderHandle("minimum", positions[0], "Minimum", intentAfter = BraceSliderTrackIntent.Primary,
+            type = BraceSliderHandleType.Start),
+        BraceSliderHandle("target", positions[1], "Target",
+            interactionKind = if (push) BraceSliderHandleInteraction.Push else BraceSliderHandleInteraction.Lock,
+            intentAfter = BraceSliderTrackIntent.Success),
+        BraceSliderHandle("marker", positions[2], "Warning marker",
+            interactionKind = BraceSliderHandleInteraction.None,
+            intentAfter = BraceSliderTrackIntent.Warning),
+        BraceSliderHandle("maximum", positions[3], "Maximum", type = BraceSliderHandleType.End),
+    )
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        BraceMultiSlider(handles, { positions = it.map(BraceSliderHandle::value) },
+            label = "Thresholds", enabled = enabled, showTrackFill = fill,
+            onRelease = { released = "Released: " + it.joinToString { item -> "${item.id}=${item.value}" } })
+        Text(released, color = BraceTheme.colors.semantic.onSurfaceMuted)
+        Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+            BraceButton(if (push) "Use locks" else "Use push", onClick = { push = !push },
+                variant = BraceButtonVariant.Outline)
+            BraceButton(if (enabled) "Disable" else "Enable", onClick = { enabled = !enabled },
+                variant = BraceButtonVariant.Outline)
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+            BraceButton(if (fill) "Hide fill" else "Show fill", onClick = { fill = !fill },
+                variant = BraceButtonVariant.Outline)
+            BraceButton("Reset", onClick = { positions = listOf(2f, 5f, 6f, 8f) },
+                variant = BraceButtonVariant.Outline)
+        }
+    }
+}
+
+@Composable
 private fun SliderSample(id: String) {
     var value by rememberSaveable { mutableFloatStateOf(3f) }
     var start by rememberSaveable { mutableFloatStateOf(2f) }
@@ -1392,6 +1450,7 @@ private fun ComponentSample(
             }
         }
         "core-fileinput" -> FilePickerSample()
+        "core-multislider", "core-multisliderhandle" -> MultiSliderSample()
         "core-slider", "core-rangeslider" -> SliderSample(id)
         "core-button" -> {
             var count by rememberSaveable { mutableStateOf(0) }

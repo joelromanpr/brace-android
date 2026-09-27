@@ -20,3 +20,4 @@ Changes to released public artifacts are recorded here using [Semantic Versionin
 - Added an in-progress PanelStack Compose source slice with saveable/controlled navigation, native Back, catalog, docs, and device tests (not yet released).
 - Added Compose heading, quote, code and list adapters for Blueprint HTML content; inventory rows remain in progress pending release and acceptance.
 - Added controlled single and range numeric sliders with Brace component tokens; inventory rows remain in progress pending parity and release.
+- Added controlled multi-handle sliders with accessible, stable-ID handles; inventory rows remain in progress pending review and release.

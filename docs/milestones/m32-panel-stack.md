@@ -1,6 +1,6 @@
 # M32 delivery slice: PanelStack
 
-**Status:** local preflight with protected M15 main `98f3d46065b63116dbed249ea60550d7e794f2d4` statically integrated. The compile and device evidence below was collected on the earlier M34 base. [PR #42](https://github.com/joelromanpr/brace-android/pull/42) still points to its earlier draft branch; this replay has not been pushed or reviewed by hosted CI. Final runtime verification and later main integration remain. The pinned `core-panelstack` row is **in progress**, with no first release version. Generated coverage is **0/122 applicable rows** and **0/94 components** stable.
+**Status:** local preflight with protected M22 main `5fdaa3b07d4fcfec191bfa3f1b2cf217212ca775` statically integrated. The compile and device evidence below was collected on the earlier M34 base. [PR #42](https://github.com/joelromanpr/brace-android/pull/42) still points to its earlier draft branch; this replay has not been pushed or reviewed by hosted CI. Final runtime verification and later main integration remain. The pinned `core-panelstack` row is **in progress**, with no first release version. Generated coverage is **0/122 applicable rows** and **0/94 components** stable.
 
 ## Scope
 
@@ -14,7 +14,7 @@
 
 | Gate | Result |
 | --- | --- |
-| Inventory, tokens, and Pages | On the M15 integration, generated inventory has 148 rows, 23 authentic Android captures, and 62 guides. Token and coverage generation, JavaScript syntax, XML parse, and Pages build passed; 8,150 local references have no missing targets. Runtime checks below predate M15. PanelStack remains in progress. |
+| Inventory, tokens, and Pages | On the M22 integration, generated inventory has 148 rows, 23 authentic Android captures, and 64 guides. Token and coverage generation, JavaScript syntax, XML parse, and Pages build passed; 65 HTML pages and 8,671 local references have no missing targets. Runtime checks below predate M22. PanelStack remains in progress. |
 | API baselines | `:brace-foundation:apiDump :brace-core:apiDump` passed, 21 actionable Gradle tasks. The generated foundation baseline includes PanelStack tokens alongside current main. |
 | Focused build and lint | Foundation unit tests, core AndroidTest compile and lint, catalog debug assembly and lint, foundation/core API checks, token check, and inventory check passed, 417 actionable Gradle tasks. The catalog PanelStack sample was extracted to a separate composable to stay under Kotlin's JVM method limit. |
 | API 36 device | Focused `BracePanelStackTest` passed **6/6**, zero skipped or failed, 71 actionable Gradle tasks on `Brace_API36(AVD)`. Cases exercise root and controlled state, restoration, Back and Escape, RTL, large text, high contrast, reduced motion, native accessibility bounds and actions, and automated checks where supported. |

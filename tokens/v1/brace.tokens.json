@@ -414,7 +414,11 @@
       "alternateRow": "{semantic.tableAlternateRow}",
       "selectedRow": "{semantic.selection}",
       "gridLine": "{semantic.border}",
-      "resizeHandle": "{semantic.focusRing}"
+      "resizeHandle": "{semantic.focusRing}",
+      "editorBackground": "{semantic.surfaceRaised}",
+      "editorText": "{semantic.onSurface}",
+      "editorBorder": "{semantic.focusRing}",
+      "editorErrorBorder": "{semantic.danger}"
     },
     "tag": {
       "container": "{semantic.primarySubtle}",

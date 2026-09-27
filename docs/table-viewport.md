@@ -2,7 +2,7 @@
 
 Brace Table is the Android adaptation of the pinned Blueprint Table and Column APIs and its viewport, fixed-header, and keyboard-navigation behavior. The source is [Blueprint Table 6.2.4 at commit a60d4c9](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx). Brace uses original Compose code and Brace tokens; no Blueprint table source or styles are copied.
 
-The Maven Central coordinate is `io.github.joelromanpr.brace:brace-table:0.1.0-alpha01`. The table is an API preview, with incomplete behaviors tracked in the inventory. `brace-table` exposes `brace-foundation` transitively and has the same version as other Brace artifacts.
+The Maven Central coordinate is `io.github.joelromanpr.brace:brace-table:1.0.0`. The table is an API preview, with incomplete behaviors tracked in the inventory. `brace-table` exposes `brace-foundation` transitively and has the same version as other Brace artifacts.
 
 ```kotlin
 private data class Record(val id: String, val name: String, val status: String)

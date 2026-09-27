@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Signed annotated release tag on main, for example v0.1.0-alpha01
+        description: Signed annotated release tag on main, for example v1.0.0
         required: true
         type: string
 

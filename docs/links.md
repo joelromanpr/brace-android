@@ -1,6 +1,6 @@
 # Links and button-shaped navigation
 
-The pinned [Blueprint Link](https://blueprintjs.com/docs/#core/components/link) and [AnchorButton](https://blueprintjs.com/docs/#core/components/buttons) rows have Android source APIs in `brace-core`. They are available in the `0.1.0-alpha01` preview and remain **in progress** in the [coverage ledger](coverage.md).
+The pinned [Blueprint Link](https://blueprintjs.com/docs/#core/components/link) and [AnchorButton](https://blueprintjs.com/docs/#core/components/buttons) rows have Android source APIs in `brace-core`. They are available in the `1.0.0` release and remain **in progress** in the [coverage ledger](coverage.md).
 
 ## Explicit destinations
 

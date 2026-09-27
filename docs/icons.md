@@ -1,13 +1,13 @@
 # Icons and icon loading
 
-`brace-icons` provides 11 original Brace drawings, themed icon buttons, and a registry for your own Compose vectors. Add it when an app needs icons without a large artwork pack. Two optional [licensed icon packs](#optional-legacy-blueprint-glyph-pack) offer more drawings. All three artifacts are available in the `0.1.0-alpha01` preview; their [component status](coverage.md) remains in progress.
+`brace-icons` provides 11 original Brace drawings, themed icon buttons, and a registry for your own Compose vectors. Add it when an app needs icons without a large artwork pack. Two optional [licensed icon packs](#optional-legacy-blueprint-glyph-pack) offer more drawings. All three artifacts are available in the `1.0.0` release; their [component status](coverage.md) remains in progress.
 
 ## Install and use
 
 Add the icon artifact from Maven Central:
 
 ```kotlin
-implementation("io.github.joelromanpr.brace:brace-icons:0.1.0-alpha01")
+implementation("io.github.joelromanpr.brace:brace-icons:1.0.0")
 ```
 
 ```kotlin
@@ -52,7 +52,7 @@ BraceIconRegistryProvider(customRegistry) {
 `brace-blueprint-icons` is an **opt-in**, aligned-version artifact. It does not replace `brace-icons` or change `BraceIconRegistry.Default`. It imports the 706 legacy names in pinned `@blueprintjs/icons` 6.13.0, with distinct 16px and 20px SVG paths. Add this artifact when the complete pinned legacy artwork is needed:
 
 ```kotlin
-implementation("io.github.joelromanpr.brace:brace-blueprint-icons:0.1.0-alpha01")
+implementation("io.github.joelromanpr.brace:brace-blueprint-icons:1.0.0")
 ```
 
 Load the 844 KB packaged JSON asset once on a background dispatcher, then retain the immutable pack across screens. Loading performs one local read and JSON parse; `find` lazily parses each requested path into a cached Compose `ImageVector`. Rendering after load does no file or network I/O. The 16px and 20px choices are artwork resolution, independent of the Brace theme's display size. Small defaults to the 16px path; medium and large default to the 20px path. The 20px `third-party` drawing retains its original 20×18 viewBox, and `blank` intentionally draws nothing.
@@ -88,10 +88,10 @@ The [pack manifest](../brace-blueprint-icons/src/main/assets/brace-blueprint-ico
 
 ## Optional next-generation Blueprint glyph pack
 
-For outlined and filled artwork, add `brace-blueprint-icons-next`. It contains 695 outlined names, 386 filled variants, and a mapping from 706 legacy names. This optional pack does not change the 11 original Brace vectors. Its API remains in progress during the `0.1.0-alpha01` preview; [source and license details](attribution.md) are recorded separately.
+For outlined and filled artwork, add `brace-blueprint-icons-next`. It contains 695 outlined names, 386 filled variants, and a mapping from 706 legacy names. This optional pack does not change the 11 original Brace vectors. Its API remains in progress during the `1.0.0` release; [source and license details](attribution.md) are recorded separately.
 
 ```kotlin
-implementation("io.github.joelromanpr.brace:brace-blueprint-icons-next:0.1.0-alpha01")
+implementation("io.github.joelromanpr.brace:brace-blueprint-icons-next:1.0.0")
 ```
 
 Load its 762 KB packaged manifest once off the UI thread, then retain the immutable pack. `find` returns the requested outlined or filled variant, or null when a filled form is unavailable. A missing filled form draws its outline; an unknown name uses the original Brace Help glyph. Give that fallback an accurate spoken description. Type-safe names, runtime lookup, metadata search, and an explicit [legacy name map](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/icons-name-map.json) are available:

@@ -1,6 +1,6 @@
 # Command palette
 
-`brace-select` includes a source implementation of `BraceCommandPalette`, an Android adaptation of the pinned Blueprint [Omnibar](https://blueprintjs.com/docs/#select/omnibar). The inventory row is **in progress**. The comparison uses the pinned [Omnibar documentation](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/select/src/components/omnibar/omnibar.mdx) and [source](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/select/src/components/omnibar/omnibar.tsx). The API is available in the `0.1.0-alpha01` preview.
+`brace-select` includes a source implementation of `BraceCommandPalette`, an Android adaptation of the pinned Blueprint [Omnibar](https://blueprintjs.com/docs/#select/omnibar). The inventory row is **in progress**. The comparison uses the pinned [Omnibar documentation](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/select/src/components/omnibar/omnibar.mdx) and [source](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/select/src/components/omnibar/omnibar.tsx). The API is available in the `1.0.0` release.
 
 ```kotlin
 val commands = listOf(

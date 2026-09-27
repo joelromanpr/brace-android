@@ -1,6 +1,6 @@
 # Table loading, empty, and error states
 
-Brace Table adapts the pinned [Blueprint Table 6.2.4 loading API](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx). Blueprint offers table, column, and individual cell/header loading flags, with the closest override taking priority. Brace adds row body overrides and explicit empty/error states for Android. This is original Compose code; no Blueprint styles or components are copied. The Maven Central coordinate is `io.github.joelromanpr.brace:brace-table:0.1.0-alpha01`; this behavior remains in progress.
+Brace Table adapts the pinned [Blueprint Table 6.2.4 loading API](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx). Blueprint offers table, column, and individual cell/header loading flags, with the closest override taking priority. Brace adds row body overrides and explicit empty/error states for Android. This is original Compose code; no Blueprint styles or components are copied. The Maven Central coordinate is `io.github.joelromanpr.brace:brace-table:1.0.0`; this behavior remains in progress.
 
 `BraceDataTable(state = ...)` accepts caller-owned `BraceTableState.Ready`, `Loading`, `Empty`, or `Error`. Loading defaults to all body cells and headers. Use `BraceTableLoading` to mask only a scope:
 

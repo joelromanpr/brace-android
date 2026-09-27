@@ -1,6 +1,6 @@
 # Table row and column freezing
 
-Brace adapts [Blueprint Table freezing](https://blueprintjs.com/docs/#table/features) from `numFrozenRows` and `numFrozenColumns` to caller-controlled Compose counts. The pinned comparison is [Blueprint 6.18.0 table features](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx). This API is **in progress** in the `0.1.0-alpha01` preview.
+Brace adapts [Blueprint Table freezing](https://blueprintjs.com/docs/#table/features) from `numFrozenRows` and `numFrozenColumns` to caller-controlled Compose counts. The pinned comparison is [Blueprint 6.18.0 table features](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx). This API is **in progress** in the `1.0.0` release.
 
 ```kotlin
 val viewport = rememberBraceTableViewport()

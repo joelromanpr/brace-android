@@ -13,7 +13,7 @@ apiValidation {
 }
 
 group = "io.github.joelromanpr.brace"
-version = providers.gradleProperty("releaseVersion").orElse("0.1.0-SNAPSHOT").get()
+version = providers.gradleProperty("releaseVersion").orElse("1.0.0-SNAPSHOT").get()
 
 subprojects {
     group = rootProject.group

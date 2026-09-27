@@ -1,6 +1,6 @@
 # Circular progress and loading placeholders
 
-This source slice maps the pinned Blueprint 6.18.0 [Spinner](https://blueprintjs.com/docs/#core/components/spinner) and [Skeleton](https://blueprintjs.com/docs/#core/components/skeleton) rows to native Compose. Both remain **in progress**. Both APIs are available in the `0.1.0-alpha01` preview.
+This source slice maps the pinned Blueprint 6.18.0 [Spinner](https://blueprintjs.com/docs/#core/components/spinner) and [Skeleton](https://blueprintjs.com/docs/#core/components/skeleton) rows to native Compose. Both remain **in progress**. Both APIs are available in the `1.0.0` release.
 
 ```kotlin
 BraceTheme {

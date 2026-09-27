@@ -21,7 +21,7 @@ android {
 
 kotlin { compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17) } }
 
-val braceVersion = providers.gradleProperty("braceVersion").orElse("0.1.0-SNAPSHOT").get()
+val braceVersion = providers.gradleProperty("braceVersion").orElse("1.0.0-SNAPSHOT").get()
 
 dependencies {
     implementation("io.github.joelromanpr.brace:brace-foundation:$braceVersion")

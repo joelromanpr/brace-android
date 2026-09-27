@@ -1,6 +1,6 @@
 # Numeric input
 
-`BraceNumericField` maps the pinned [Blueprint 6.18.0 NumericInput](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/forms/numeric-input.mdx) to a controlled Compose field in `brace-core`. This row remains **in progress**. It is available in the `0.1.0-alpha01` preview; the [generated coverage ledger](coverage.md) records its acceptance status.
+`BraceNumericField` maps the pinned [Blueprint 6.18.0 NumericInput](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/forms/numeric-input.mdx) to a controlled Compose field in `brace-core`. This row remains **in progress**. It is available in the `1.0.0` release; the [generated coverage ledger](coverage.md) records its acceptance status.
 
 ## Controlled string value
 

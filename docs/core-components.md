@@ -1,6 +1,6 @@
 # Core components
 
-The `0.1.0-alpha01` preview includes buttons, checkboxes, switches, and a single-line text field. [Add `brace-core`](installation.md), wrap your screen in `BraceTheme`, and try the examples below. Their APIs are still in progress; the [component status](coverage.md) lists tests and remaining work.
+The `1.0.0` release includes buttons, checkboxes, switches, and a single-line text field. [Add `brace-core`](installation.md), wrap your screen in `BraceTheme`, and try the examples below. Their APIs are still in progress; the [component status](coverage.md) lists tests and remaining work.
 
 ## Button
 

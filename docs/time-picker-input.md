@@ -1,13 +1,13 @@
 # Time picker and time field
 
-`brace-datetime` implements the pinned Blueprint [TimePicker](https://blueprintjs.com/docs/#datetime/timepicker) row with two native Compose APIs: `BraceTimePicker` for direct unit adjustment and `BraceTimeField` for localized text entry with an anchored picker. Blueprint 6.18.0 has **no separate documented TimeInput component**, so the field is an adjunct to the single inventory row. This slice is available in the `0.1.0-alpha01` preview and remains **in progress**; it does not raise stable Blueprint coverage.
+`brace-datetime` implements the pinned Blueprint [TimePicker](https://blueprintjs.com/docs/#datetime/timepicker) row with two native Compose APIs: `BraceTimePicker` for direct unit adjustment and `BraceTimeField` for localized text entry with an anchored picker. Blueprint 6.18.0 has **no separate documented TimeInput component**, so the field is an adjunct to the single inventory row. This slice is available in the `1.0.0` release and remains **in progress**; it does not raise stable Blueprint coverage.
 
 ## Add the datetime artifact
 
 Add the artifact from Maven Central:
 
 ```kotlin
-implementation("io.github.joelromanpr.brace:brace-datetime:0.1.0-alpha01")
+implementation("io.github.joelromanpr.brace:brace-datetime:1.0.0")
 ```
 
 The artifact depends on Brace foundation and core. See [installation](installation.md) for the local Maven repository and supported toolchain.

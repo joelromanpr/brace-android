@@ -1,10 +1,10 @@
 # Date picker and date input
 
-`brace-datetime` contains two pinned Blueprint datetime rows: [DatePicker](https://blueprintjs.com/docs/#datetime/date-picker) and [DateInput](https://blueprintjs.com/docs/#datetime/date-input). Both are available in the `0.1.0-alpha01` preview and remain **in progress** in the [coverage inventory](coverage.md).
+`brace-datetime` contains two pinned Blueprint datetime rows: [DatePicker](https://blueprintjs.com/docs/#datetime/date-picker) and [DateInput](https://blueprintjs.com/docs/#datetime/date-input). Both are available in the `1.0.0` release and remain **in progress** in the [coverage inventory](coverage.md).
 
 ## Add the datetime artifact
 
-Add `implementation("io.github.joelromanpr.brace:brace-datetime:0.1.0-alpha01")`. The datetime artifact resolves core and foundation transitively. See [installation](installation.md) for the repository block and supported toolchain.
+Add `implementation("io.github.joelromanpr.brace:brace-datetime:1.0.0")`. The datetime artifact resolves core and foundation transitively. See [installation](installation.md) for the repository block and supported toolchain.
 
 ## Choose a day
 

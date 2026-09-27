@@ -1,6 +1,6 @@
 # Date range picker and fields
 
-`brace-datetime` has source implementations for the pinned Blueprint 6.18.0 [DateRangePicker](https://blueprintjs.com/docs/#datetime/date-range-picker) and [DateRangeInput](https://blueprintjs.com/docs/#datetime/date-range-input) rows. Both remain **in progress**. Both APIs are available in `0.1.0-alpha01`; [coverage](coverage.md) still reports zero stable rows.
+`brace-datetime` has source implementations for the pinned Blueprint 6.18.0 [DateRangePicker](https://blueprintjs.com/docs/#datetime/date-range-picker) and [DateRangeInput](https://blueprintjs.com/docs/#datetime/date-range-input) rows. Both remain **in progress**. Both APIs are available in `1.0.0`; [coverage](coverage.md) still reports zero stable rows.
 
 ## Choose a range
 

@@ -1,6 +1,6 @@
 # Button group
 
-`BraceButtonGroup` in `brace-core` maps the pinned Blueprint 6.18.0 [ButtonGroup documentation](https://blueprintjs.com/docs/#core/components/button-group) to a connected group of native Compose actions. The API is available in the `0.1.0-alpha01` preview; the inventory row remains **in progress**.
+`BraceButtonGroup` in `brace-core` maps the pinned Blueprint 6.18.0 [ButtonGroup documentation](https://blueprintjs.com/docs/#core/components/button-group) to a connected group of native Compose actions. The API is available in the `1.0.0` release; the inventory row remains **in progress**.
 
 ```kotlin
 var view by rememberSaveable { mutableStateOf("list") }

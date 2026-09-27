@@ -78,7 +78,7 @@ main{overflow:clip}
 .button.secondary{border-color:#c2cfe0;background:#fff}
 .hero-note{display:flex;align-items:center;gap:9px;margin:23px 0 0;color:#687a90;font-size:12px;font-weight:650}
 .hero-note>span:last-child{min-width:0}.hero-note a{color:#3156b8;text-underline-offset:3px}
-.note-dot{width:7px;height:7px;border-radius:50%;background:#d28d36}
+.note-dot{width:7px;height:7px;border-radius:50%;background:#365bda}
 .hero-visual{min-width:0;border-radius:19px;background:#17263f;box-shadow:0 31px 75px rgba(22,41,73,.25);padding:18px 18px 16px;transform:rotate(1deg)}
 .hero-visual-top,.hero-visual-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;color:#a9bcdf;font-size:10px;font-weight:800;letter-spacing:.12em}
 .hero-visual-top{padding:1px 4px 14px}

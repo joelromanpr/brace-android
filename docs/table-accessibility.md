@@ -1,6 +1,6 @@
 # Table accessibility
 
-Brace adapts [Blueprint Table features at the pinned commit](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx) to Android's accessibility model. The public surface is the existing `BraceDataTable` and its cell and header composables; there is no separate `BraceTableSemantics` object. This slice is **in progress** in the `0.1.0-alpha01` preview.
+Brace adapts [Blueprint Table features at the pinned commit](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx) to Android's accessibility model. The public surface is the existing `BraceDataTable` and its cell and header composables; there is no separate `BraceTableSemantics` object. This slice is **in progress** in the `1.0.0` release.
 
 ```kotlin
 var selection by rememberBraceTableSelection()

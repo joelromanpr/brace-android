@@ -1,8 +1,8 @@
 # Compatibility and versioning
 
-Brace Android uses one version across all public Gradle artifacts. `0.1.0-alpha01` is the first Maven Central preview. Its APIs may change before a stable release; breaking changes will be called out in the changelog and migration notes.
+Brace Android uses one version across all public Gradle artifacts. `1.0.0` is the current Maven Central release. The [component list](coverage.md) records what each component supports and which reviews are still open.
 
-Versions follow Semantic Versioning. A stable public Compose API removal, incompatible signature change, or meaningful behavior change requires a major version once the library reaches 1.0. New compatible APIs and new components use minor versions; fixes use patch versions. While on 0.x, minor versions can include breaking changes, called out in the changelog and migration notes.
+Versions follow Semantic Versioning. A stable public Compose API removal, incompatible signature change, or meaningful behavior change requires a major version. New compatible APIs and new components use minor versions; fixes use patch versions. Breaking changes are called out in the changelog and migration notes.
 
 Public APIs include documented composables, state types, token and theme customization contracts, and published artifact coordinates. Internal and experimental APIs can change; experimental status is explicit in the coverage inventory and KDoc. Deprecations should include a replacement path and remain for at least one minor release when practical. API compatibility checks compare each artifact against its committed baseline during CI. Binary compatibility does not replace interaction or visual review.
 

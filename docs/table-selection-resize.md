@@ -1,6 +1,6 @@
 # Table selection and resizing
 
-Brace extends [the table viewport](table-viewport.md) against the pinned [Blueprint Table features](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx). It is **in progress** in the `0.1.0-alpha01` preview. Brace uses stable row and column keys, Compose gestures, and Android accessibility actions instead of Blueprint's DOM regions and pixel resize callbacks.
+Brace extends [the table viewport](table-viewport.md) against the pinned [Blueprint Table features](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx). It is **in progress** in the `1.0.0` release. Brace uses stable row and column keys, Compose gestures, and Android accessibility actions instead of Blueprint's DOM regions and pixel resize callbacks.
 
 ```kotlin
 var selection by remember { mutableStateOf<BraceTableSelection?>(null) }

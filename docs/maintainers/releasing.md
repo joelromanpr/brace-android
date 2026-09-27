@@ -1,6 +1,6 @@
 # Release checklist
 
-The release workflow is manual and requires an annotated tag signed by the Brace release key pinned in the repository. `0.1.0-alpha01` is the first published preview, with no claim of full component coverage or stable inventory rows. Choose a new version for every later release; Maven Central versions and signed tags are immutable.
+The release workflow is manual and requires an annotated tag signed by the Brace release key pinned in the repository. Choose a new version for every release; Maven Central versions cannot be replaced. Artifact availability and component readiness are separate: only rows that pass the [acceptance checks](../../CONTRIBUTING.md) may be marked stable.
 
 ## Before tagging
 
@@ -14,7 +14,7 @@ The release workflow is manual and requires an annotated tag signed by the Brace
 The dedicated release key has fingerprint `F152 FD63 0BE9 9A9B B248 3995 BA23 075E 89D1 23B5`. Confirm the local private key matches [the pinned public key](../../.github/release-signing-key.asc). On 2026-09-27, the public key was retrieved from [Ubuntu's keyserver](https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xF152FD630BE99A9BB2483995BA23075E89D123B5) with that exact fingerprint; Ubuntu is [supported by Sonatype](https://central.sonatype.org/publish/requirements/gpg/). Recheck retrieval before staging. CI imports the pinned key and checks both the tag signature and fingerprint. A GitHub Verified badge is useful when available, but is not the release gate.
 
 ```sh
-VERSION=0.1.0-alpha02 # replace with the approved next version
+VERSION=1.0.0 # replace with the approved release version
 git switch main
 git pull --ff-only
 git -c user.signingkey=F152FD630BE99A9BB2483995BA23075E89D123B5 tag -s "v$VERSION" -m "Brace Android $VERSION"

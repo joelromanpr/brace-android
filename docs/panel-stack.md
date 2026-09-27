@@ -42,6 +42,8 @@ The caller owns controlled state and must supply a Saver if the stack should sur
 - Push and pop slide in logical start/end directions, including RTL. `BraceMotion.Reduced` and the system animator scale turn the transition off through `BraceTheme.motionTokens`.
 - The back action is at least 48 dp, exposes one labeled button action to TalkBack, and has a visible keyboard focus boundary. The pane title is announced separately.
 
+The [Android catalog capture](site/showcase/panel-stack-400.png) shows the Filters pane open above Workspace, with its back action visible. The capture is from a draft branch and does not change the inventory status.
+
 The catalog app includes nested panels and a header toggle. Android tests cover root protection, controlled and saveable state, keyboard and system Back, RTL, large text, high contrast, reduced motion, native accessibility nodes, and automated accessibility checks where supported.
 
 ## Blueprint mapping and limits

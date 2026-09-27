@@ -1,6 +1,6 @@
 # M39 — Android file picker field
 
-**Status:** M36/Tree-main replay verified locally; draft PR and hosted checks pending. No release or stable inventory claim.
+**Status:** M23-main source/static replay verified; focused FilePicker device and Maven gates passed on the prior M36/Tree-main replay. Draft PR and hosted checks pending. No release or stable inventory claim.
 
 ## Delivered in this slice
 
@@ -10,9 +10,9 @@
 
 ## Verification
 
-- The current replay on protected main `231870a5e7d9876792d9286a7b47d3c0efb1e32d` passes inventory generation, Pages build, JavaScript syntax, and diff checks: 148 rows, 0/122 applicable rows stable, 24 existing captures, 70 guides. FilePicker is the sole inventory row advanced in this slice and stays in progress. The file-picker guide is registered in the site route and guide navigation. The catalog FilePicker sample was extracted into a private composable after the M15 catalog method exceeded the JVM method-size limit; the current integrated build below passed.
-- On the current M36/Tree-main replay, focused core compile, lint, JVM tests, API check, inventory, and catalog APK passed offline (264 tasks). Eight aligned `0.1.0-SNAPSHOT` artifacts published to Maven Local (308 tasks); each has an AAR, sources JAR, KDoc JAR, POM, and Gradle Module Metadata. The separate Maven-coordinate-only consumer, including FilePicker use, passed (37 tasks). These are local checks, not a Maven Central release. The wider combined build/lint suite remains for hosted CI.
-- On the current replay, API 36 at 320×640, 160 dpi, font scale 1.0 passed all three focused FilePicker tests (71 Gradle tasks). They cover single and multiple document contracts, actual `EXTRA_MIME_TYPES` intent data, URI de-duplication, cancellation, disabled/error state, touch, Enter, Space, mouse, RTL, dark high contrast, native accessibility click, and a 48 dp minimum target.
+- The current replay on protected main `ea47305b54c59a9c42f270cf383d45b2151a8ca7` passes inventory generation, Pages build, JavaScript syntax, and diff checks: 148 rows, 0/122 applicable rows stable, 24 existing captures, 72 guides. FilePicker is the sole inventory row advanced in this slice and stays in progress. The file-picker guide is registered in the site route and guide navigation. The catalog FilePicker sample was extracted into a private composable after the M15 catalog method exceeded the JVM method-size limit; the current integrated build below passed.
+- On the M36/Tree-main replay before the M23 docs/source merge, focused core compile, lint, JVM tests, API check, inventory, and catalog APK passed offline (264 tasks). Eight aligned `0.1.0-SNAPSHOT` artifacts published to Maven Local (308 tasks); each has an AAR, sources JAR, KDoc JAR, POM, and Gradle Module Metadata. The separate Maven-coordinate-only consumer, including FilePicker use, passed (37 tasks). These are local checks, not a Maven Central release. The wider combined build/lint suite remains for hosted CI.
+- On the M36/Tree-main replay before the M23 merge, API 36 at 320×640, 160 dpi, font scale 1.0 passed all three focused FilePicker tests (71 Gradle tasks). They cover single and multiple document contracts, actual `EXTRA_MIME_TYPES` intent data, URI de-duplication, cancellation, disabled/error state, touch, Enter, Space, mouse, RTL, dark high contrast, native accessibility click, and a 48 dp minimum target.
 - On the earlier M39 topic branch, the catalog field was visually reviewed at 320 dp in light and dark high contrast, and with 200% Android text. That visual pass has not been repeated after the replay. Manual system picker and human TalkBack journeys remain pending.
 
 ## Limits and next branch

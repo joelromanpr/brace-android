@@ -1,6 +1,6 @@
 # M46 delivery slice: table sorting
 
-**Status:** static implementation prepared on `joelromanpr/m46-table-sorting`, preflighted on protected M31 Tree main `fee948c` plus the focused M26 header-edit slice while PR #40 is hosted. The pinned Blueprint Table `Sorting` row is **in progress**. Stable coverage stays **0/122** applicable rows, and no first release is assigned.
+**Status:** local preflight on protected M31 Tree main `fee948c` plus the focused M26 header-edit slice while PR #40 is hosted. The remote M46 PR remains draft and will be replayed onto M26 after it merges. The pinned Blueprint Table `Sorting` row is **in progress**. Stable coverage stays **0/122** applicable rows, and no first release is assigned.
 
 ## Scope
 
@@ -15,8 +15,8 @@
 | --- | --- |
 | Inventory and tokens | Passed `python3 scripts/generate_coverage.py --check` (148 rows, 0/122 stable) and `python3 scripts/generate_tokens.py --check`. This slice uses existing table and semantic tokens. |
 | Pages and JavaScript | Passed `node scripts/build-docs.mjs` (70 guides, 24 real Android captures) and JavaScript syntax checks. English/Spanish string XML parses; whitespace check passes. |
-| Kotlin build, lint, exact API baseline | Pending shared Gradle lane. |
-| API 36 interaction and accessibility | Pending shared emulator lane. Tests cover cycle, stable row-key selection, independent header and resize controls, keyboard/mouse, TalkBack action, RTL/high contrast/2× text, viewport and state restoration. |
+| Kotlin build and API baseline | Local M31+M26 preflight passed `:brace-table:apiDump :brace-table:assembleDebugAndroidTest :catalog:assembleDebug checkInventory` in **247 tasks**. The generated API snapshot includes the sorting API; `:brace-table:apiCheck` passed separately in **19 tasks**. Final-current-main lint and broader integration remain pending. |
+| API 36 interaction and accessibility | Focused `BraceTableSortTest` passed **7/7**, zero failed/skipped, on the local M31+M26 preflight. Tests cover cycle, stable row-key selection, independent header and resize controls, native accessibility action and direction, keyboard/mouse, RTL/high contrast/2× text, viewport and state restoration. |
 | Maven Local and separate consumer | Pending shared Gradle lane. |
 | Visual, manual TalkBack, hosted CI | Pending review and runner availability. |
 

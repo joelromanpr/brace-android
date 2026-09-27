@@ -83,6 +83,8 @@ import io.github.joelromanpr.brace.core.BraceCompoundTag
 import io.github.joelromanpr.brace.core.BraceEmptyState
 import io.github.joelromanpr.brace.core.BraceTag
 import io.github.joelromanpr.brace.core.BraceTagIntent
+import io.github.joelromanpr.brace.core.BraceTagInput
+import io.github.joelromanpr.brace.core.BraceTagDuplicatePolicy
 import io.github.joelromanpr.brace.core.BraceCardElevation
 import io.github.joelromanpr.brace.core.BraceCardList
 import io.github.joelromanpr.brace.core.BraceDivider
@@ -315,6 +317,7 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "core-navbardivider" to "BraceTopBarGroup { BraceTopBarTitle(\"Reports\"); BraceTopBarDivider() }",
     "core-breadcrumb" to "BraceBreadcrumbItem(label = \"Home\", onClick = { home() })",
     "core-tag" to "BraceTag(label = \"Finance\", intent = BraceTagIntent.Primary, onRemove = { removeFilter() })",
+    "core-taginput" to "BraceTagInput(values = tags, onValuesChange = { tags = it }, draft = draft, onDraftChange = { draft = it }, label = \"Skills\")",
     "core-compoundtag" to "BraceCompoundTag(label = \"Status\", value = \"Active\", onRemove = { clearStatus() })",
     "core-callout" to "BraceCallout(title = \"Saved\", intent = BraceCalloutIntent.Success) { Text(\"Your changes are ready.\") }",
     "core-nonidealstate" to "BraceEmptyState(title = \"No results\", description = \"Try another query.\")",
@@ -804,6 +807,38 @@ private fun TimePickerSample() {
             style = BraceTheme.typography.body)
         BraceTimeField(null, {}, label = "Unavailable time", enabled = false,
             locale = Locale.US)
+    }
+}
+
+@Composable
+private fun TagInputSample() {
+    var tags by rememberSaveable { mutableStateOf(listOf("Compose", "Android")) }
+    var draft by rememberSaveable { mutableStateOf("") }
+    var message by rememberSaveable { mutableStateOf("Type a value, then press Enter or comma") }
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        BraceTagInput(
+            values = tags,
+            onValuesChange = { tags = it },
+            draft = draft,
+            onDraftChange = { draft = it },
+            label = "Skills",
+            placeholder = "Add a skill",
+            supportingText = "Commas and line breaks separate skills",
+            duplicatePolicy = BraceTagDuplicatePolicy.RejectIgnoreCase,
+            validator = { it.length >= 2 },
+            tagIntent = BraceTagIntent.Primary,
+            onRejected = { value, reason -> message = "$value: $reason" },
+            onTagsAdded = { added, method -> message = "Added ${added.joinToString()} via $method" },
+            onTagRemoved = { value, _ -> message = "Removed $value" },
+        )
+        Text(message, color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.label)
+        BraceButton("Reset tags", onClick = {
+            tags = listOf("Compose", "Android")
+            draft = ""
+            message = "Tags restored"
+        })
+        BraceTagInput(listOf("Read only"), {}, "", {}, "Read only tags", readOnly = true)
+        BraceTagInput(listOf("Unavailable"), {}, "", {}, "Disabled tags", enabled = false)
     }
 }
 
@@ -1527,6 +1562,7 @@ private fun ComponentSample(
                 BraceButton("Restore tag", onClick = { visible = true })
             }
         }
+        "core-taginput" -> TagInputSample()
         "core-compoundtag" -> {
             var visible by rememberSaveable { mutableStateOf(true) }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {

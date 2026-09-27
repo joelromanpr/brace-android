@@ -39,6 +39,7 @@ import io.github.joelromanpr.brace.core.BraceTagIntent
 import io.github.joelromanpr.brace.table.BraceDataTable
 import io.github.joelromanpr.brace.table.BraceTableColumn
 import io.github.joelromanpr.brace.table.BraceTableSelection
+import io.github.joelromanpr.brace.table.rememberBraceTableSelection
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -80,7 +81,8 @@ internal fun MissionControlSample(
     var anchorColumn by rememberSaveable { mutableStateOf<String?>(null) }
     val visible = if (watchOnly) assets.filter { it.state == "Watch" } else assets
     val selected = assets.firstOrNull { it.id == selectedRow } ?: assets.first()
-    val selection = when {
+    var selectionOverride by rememberBraceTableSelection()
+    val selection = selectionOverride ?: when {
         selectedRow == null && selectedColumn != null -> BraceTableSelection.Column(selectedColumn!!)
         selectedRow == null -> null
         anchorRow != null && anchorColumn != null && selectedColumn != null ->
@@ -154,6 +156,7 @@ internal fun MissionControlSample(
                     Row(horizontalArrangement = Arrangement.spacedBy(spacing.md)) {
                         OrbitPanel(Modifier.weight(0.9f))
                         MissionTable(visible, columns, selection, { chosen ->
+                            if (chosen !is BraceTableSelection.Regions) selectionOverride = null
                             when (chosen) {
                                 is BraceTableSelection.Cell -> {
                                     selectedRow = chosen.rowKey
@@ -179,6 +182,7 @@ internal fun MissionControlSample(
                                     anchorRow = chosen.anchorRowKey
                                     anchorColumn = chosen.anchorColumnKey
                                 }
+                                is BraceTableSelection.Regions -> { selectionOverride = chosen }
                             }
                         }, watchOnly, { watchOnly = !watchOnly }, Modifier.weight(1.7f))
                     }
@@ -186,6 +190,7 @@ internal fun MissionControlSample(
                     Column(verticalArrangement = Arrangement.spacedBy(spacing.md)) {
                         OrbitPanel(Modifier.fillMaxWidth())
                         MissionTable(visible, columns, selection, { chosen ->
+                            if (chosen !is BraceTableSelection.Regions) selectionOverride = null
                             when (chosen) {
                                 is BraceTableSelection.Cell -> {
                                     selectedRow = chosen.rowKey
@@ -211,6 +216,7 @@ internal fun MissionControlSample(
                                     anchorRow = chosen.anchorRowKey
                                     anchorColumn = chosen.anchorColumnKey
                                 }
+                                is BraceTableSelection.Regions -> { selectionOverride = chosen }
                             }
                         }, watchOnly, { watchOnly = !watchOnly }, Modifier.fillMaxWidth())
                     }

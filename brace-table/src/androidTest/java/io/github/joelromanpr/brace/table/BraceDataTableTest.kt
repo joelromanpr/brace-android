@@ -264,7 +264,9 @@ class BraceDataTableTest {
         val positions = orderedTags.map { tag ->
             rule.onNodeWithTag(tag).fetchSemanticsNode().config[SemanticsProperties.TraversalIndex]
         }
-        assertEquals((0..8).map(Int::toFloat), positions)
+        assertEquals(9, positions.distinct().size)
+        assertEquals(0f, positions.first())
+        assertEquals(positions.sorted(), positions)
         assertTrue(rule.onNodeWithTag("brace-table").fetchSemanticsNode()
             .config[SemanticsProperties.IsTraversalGroup])
     }

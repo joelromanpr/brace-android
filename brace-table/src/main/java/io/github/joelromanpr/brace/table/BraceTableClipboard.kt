@@ -6,7 +6,9 @@ package io.github.joelromanpr.brace.table
  * Cells are ordered by their current visible row and column order. A row or range becomes
  * tab-separated lines; tabs, line breaks, and quotes inside values are quoted so paste targets
  * can distinguish them from cell boundaries. Column titles and row keys are not included.
- * Return `null` when the selection refers to data no longer present in the table.
+ * Disjoint regions become one sparse TSV rectangle in current visual order. Gaps are blank;
+ * only selected cells call [BraceTableColumn.cellText]. Return `null` when any selected bound
+ * refers to data no longer present in the table.
  */
 object BraceTableClipboard {
     /** Format [selection] from the current [rows] and [columns], or return null if it is stale. */
@@ -34,6 +36,19 @@ object BraceTableClipboard {
         val selectedRows: IntRange
         val selectedColumns: IntRange
         when (selection) {
+            is BraceTableSelection.Regions -> {
+                val regions = resolveTableRegions(selection.regions, rowIndices, columnIndices,
+                    rows.size, columns.size) ?: return null
+                val selectedRows = regions.minOf { it.rows.first }..regions.maxOf { it.rows.last }
+                val selectedColumns = regions.minOf { it.columns.first }..regions.maxOf { it.columns.last }
+                return selectedRows.joinToString("\n") { rowIndex ->
+                    selectedColumns.joinToString("\t") { columnIndex ->
+                        if (regions.any { it.contains(rowIndex, columnIndex) })
+                            quote(columns[columnIndex].cellText(rows[rowIndex]))
+                        else ""
+                    }
+                }
+            }
             is BraceTableSelection.Cell -> {
                 val row = rowIndices[selection.rowKey] ?: return null
                 val column = columnIndices[selection.columnKey] ?: return null

@@ -146,7 +146,7 @@ class BraceTableClipboardTest {
         }
         val config = rule.onNodeWithTag("brace-table").fetchSemanticsNode().config
         rule.runOnIdle {
-            assertEquals(false, config.contains(SemanticsActions.CustomActions))
+            assertEquals(false, config[SemanticsActions.CustomActions].any { it.label == "Copy selected cells" })
             assertEquals("Keep me", clipboard.primaryClip?.getItemAt(0)?.coerceToText(context).toString())
         }
     }

@@ -55,6 +55,8 @@ function addFact(grid, label, value, isLink = false) {
       link.rel = 'noopener noreferrer';
       description.append(link);
     } else description.textContent = `${value} · public source link pending`;
+
+
   } else description.textContent = value;
   wrap.append(term, description);
   grid.append(wrap);

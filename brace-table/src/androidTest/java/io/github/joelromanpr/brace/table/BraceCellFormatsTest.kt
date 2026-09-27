@@ -47,7 +47,8 @@ class BraceCellFormatsTest {
     @Test fun codePointTruncationRevealsFullValueByTouchMouseAndKeyboard() {
         val full = "A😀BCDEF"
         rule.setContent {
-            CompositionLocalProvider(LocalDensity provides Density(1f, 2f),
+            val deviceDensity = LocalDensity.current.density
+            CompositionLocalProvider(LocalDensity provides Density(deviceDensity, 2f),
                 LocalLayoutDirection provides LayoutDirection.Rtl) {
                 BraceTheme(mode = BraceColorMode.Dark, contrast = BraceContrast.High) {
                     BraceTruncatedCell(full, Modifier.width(220.dp), maxCharacters = 3)

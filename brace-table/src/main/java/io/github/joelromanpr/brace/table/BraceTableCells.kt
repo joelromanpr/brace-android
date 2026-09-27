@@ -60,8 +60,9 @@ import io.github.braceandroid.foundation.BraceTheme
  * pauses those actions during a controlled table load. [onAddRegion] exposes a separate
  * TalkBack action for adding this cell to a disjoint selection. [pinState] can announce
  * that the cell remains visible in a frozen row, column, or their intersection. [traversalIndex]
- * lets a parent grid order cells across independently composed panes. When [focused] is true,
- * [activeCellLabel] is announced alongside any pinned state. [onReveal] adds a separate 48 dp
+ * lets a parent grid order cells across independently composed panes. [focused] draws the keyboard
+ * focus ring; [activeCellLabel] names the current navigation target alongside any pinned state,
+ * even while keyboard focus is outside the grid. [onReveal] adds a separate 48 dp
  * full-value button and a TalkBack custom action on the cell without changing selection.
  */
 @Composable
@@ -139,7 +140,7 @@ fun BraceTableCell(
                 this.selected = selected
                 contentDescription = description
                 if (!enabled) disabled()
-                val cellState = listOfNotNull(if (focused) activeCellLabel else null, pinState)
+                val cellState = listOfNotNull(activeCellLabel, pinState)
                 if (cellState.isNotEmpty()) stateDescription = cellState.joinToString(", ")
                 if (enabled) onClick(selectLabel) { onSelect(); true }
                 customActions = if (enabled) listOfNotNull(

@@ -1245,7 +1245,7 @@ fun <Row> BraceDataTable(
                             columnKey = column.key,
                             selected = cellSelected,
                             focused = focused && activeCell == cell,
-                            activeCellLabel = activeCellState,
+                            activeCellLabel = if (activeCell == cell) activeCellState else null,
                             traversalIndex = traversalOrder(rowNumber, columnNumber),
                             enabled = !isLoading,
                             onSelect = selectCell,

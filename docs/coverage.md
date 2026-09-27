@@ -14,7 +14,7 @@ Web-specific mappings documented: 23/24 (stable: 0). Labs rows: 2 (stable: 0). F
 | Blueprint package | Rows | Stable | Planned | In progress | Experimental |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | colors | 1 | 0 | 0 | 1 | 0 |
-| core | 108 | 0 | 12 | 96 | 0 |
+| core | 108 | 0 | 11 | 97 | 0 |
 | datetime | 6 | 0 | 0 | 6 | 0 |
 | icons | 3 | 0 | 0 | 3 | 0 |
 | labs | 2 | 0 | 2 | 0 | 0 |

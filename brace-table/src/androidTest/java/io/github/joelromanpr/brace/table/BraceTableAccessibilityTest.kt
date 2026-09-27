@@ -100,6 +100,8 @@ class BraceTableAccessibilityTest {
         assertEquals(1, nativeColumnHeader.collectionItemInfo?.columnIndex)
         assertEquals(1, nativeCell.collectionItemInfo?.rowIndex)
         assertEquals(1, nativeCell.collectionItemInfo?.columnIndex)
+        assertEquals("Active cell, Frozen row and column", rule.onNodeWithTag("brace-table-cell:r0:c0")
+            .fetchSemanticsNode().config[SemanticsProperties.StateDescription])
         rule.onNodeWithTag("brace-table").requestFocus()
         assertEquals("Active cell, Frozen row and column", rule.onNodeWithTag("brace-table-cell:r0:c0")
             .fetchSemanticsNode().config[SemanticsProperties.StateDescription])

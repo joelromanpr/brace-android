@@ -322,6 +322,11 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "core-overlaytoaster" to "val toasts = rememberBraceToastState(); Box(Modifier.fillMaxSize()) { BraceButton(\"Notify\", onClick = { toasts.show(BraceToastSpec(\"Ready\"), key = \"status\") }); BraceToastHost(toasts, position = BraceToastPosition.BottomEnd) }",
     "datetime-datepicker" to "var day by rememberSaveable { mutableStateOf<String?>(null) }; BraceDatePicker(day?.let(LocalDate::parse), { day = it?.toString() }, locale = Locale.US)",
     "datetime-dateinput" to "var day by rememberSaveable { mutableStateOf<String?>(null) }; BraceDateField(day?.let(LocalDate::parse), { day = it?.toString() }, label = \"Due date\", locale = Locale.US)",
+    "datetime-timepicker" to """var time by rememberSaveable { mutableStateOf("23:30") }
+BraceTimePicker(LocalTime.parse(time), { time = it.toString() }, locale = Locale.US,
+    use24Hour = true, minTime = LocalTime.of(22, 0), maxTime = LocalTime.of(2, 0))
+BraceTimeField(LocalTime.parse(time), { time = it?.toString() ?: "23:30" },
+    label = "Time", locale = Locale.US)""",
 
 )
 

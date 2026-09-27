@@ -50,4 +50,4 @@ A callback can reject an edit by leaving `value` unchanged; the visible field th
 
 ## Verification and limits
 
-The source includes device tests for partial drafts, keyboard and touch/mouse stepping, precision, locale, bounds and blur clamping, disabled/read-only semantics, state restoration, RTL, large text, high contrast, and automated Compose accessibility where supported. See the [M10 milestone report](milestones/m10-numeric-input.md) for the actual gate results; source availability alone is not a stable release. Manual TalkBack and representative phone/tablet checks remain before stable status.
+The source includes device tests for partial drafts, keyboard and touch/mouse stepping, precision, locale, bounds and blur clamping, disabled/read-only semantics, state restoration, RTL, large text, high contrast, and automated Compose accessibility where supported. Manual TalkBack and representative phone/tablet checks remain before stable status. See the [component list](coverage.md) for current availability.

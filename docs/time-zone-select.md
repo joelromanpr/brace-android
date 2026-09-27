@@ -20,4 +20,4 @@ A 48 dp button opens a focusable Compose popover. Search retains focus while Up/
 
 Blueprint's JavaScript string and `Date` props become a typed `ZoneId` and `Instant`. Android's time-zone database replaces Blueprint's bundled web list and browser local-zone detection; its version may differ by device and OS update. The Compose popover replaces DOM portal and Select wrappers. `buttonProps`, `inputProps`, `popoverProps`, and custom React children have no direct one-to-one API. Custom Compose trigger and filter slots, plus manual TalkBack, large-text, RTL, physical-keyboard, and device QA, remain open before this row can be stable. Automated RTL, 2× text, mouse, target-size, and supported accessibility checks pass in the current test suite. No Blueprint assets or source were copied.
 
-See the [M34 report](milestones/m34-timezone-select.md) for verification status and known limits, and the [coverage inventory](coverage.md) for the exact pinned row.
+See the [component list](coverage.md) for current status, code, examples, and tests.

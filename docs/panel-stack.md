@@ -50,4 +50,4 @@ The catalog app includes nested panels and a header toggle. Android tests cover 
 
 Blueprint injects `openPanel` and `closePanel` into React panel renderers and accepts arbitrary renderer props and HTML titles. Brace supplies typed destination IDs and `BracePanelScope` actions; application data belongs to the caller. Blueprint's `renderActivePanelOnly = false` keeps every React tree mounted in the DOM. Brace composes the active panel and preserves its saveable state by default. Arbitrary `remember` state and effects are not retained while a panel is covered. The host can keep shared work above the stack. Blueprint's CSS transitions map to Compose transitions controlled by Brace motion tokens. There is no DOM `className` or HTML title API.
 
-This source slice is **in progress** and has no public release. The [inventory](coverage.md) tracks its implementation, sample, documentation, tests, and eventual first release. See the [M32 report](milestones/m32-panel-stack.md) for current verification.
+This source API is **in progress**. The [component list](coverage.md) links to its implementation, sample, documentation, tests, and eventual first release.

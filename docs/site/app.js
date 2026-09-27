@@ -167,7 +167,6 @@ function captureCard(capture) {
     ['Appearance', `${captureAppearance(capture)} · ${capture.density}`],
     ['Device', `${capture.device} · ${capture.pixelWidth} × ${capture.pixelHeight}`],
     ['Captured', capture.capturedAt],
-    ['Source', `${capture.sourceBranch} @ ${capture.sourceCommit.slice(0, 8)}`],
   ]) {
     const pair = el('div');
     pair.append(el('dt', '', label), el('dd', '', value));
@@ -180,7 +179,7 @@ function captureCard(capture) {
   inventoryButton.dataset.inventoryId = item.id;
   const source = publicSourceRepository ? el('a', '', 'View source ↗') : el('span', 'shot-source-pending', 'Source link pending public repository');
   if (publicSourceRepository) {
-    source.href = `${publicSourceRepository}/blob/${capture.sourceCommit}/${capture.sourceFile}`;
+    source.href = `${publicSourceRepository}/blob/main/${capture.sourceFile}`;
     source.rel = 'noopener noreferrer';
   }
   actions.append(inventoryButton, source);

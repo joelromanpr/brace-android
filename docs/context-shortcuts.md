@@ -90,4 +90,4 @@ Blueprint's [HotkeysTarget](https://github.com/palantir/blueprint/blob/a60d4c922
 
 ## Verification and limits
 
-The source includes focused device tests for context gestures, popup dismissal, shortcut precedence, editable suppression, discovery, and labels. The [M7 report](milestones/m7-context-shortcuts.md) records the initial focused results and pending final regression gates. Manual TalkBack, hardware keyboard, mouse/stylus, small-window, RTL, large-text, and theme review remain before stable status. No Maven Central version has shipped.
+The source includes focused device tests for context gestures, popup dismissal, shortcut precedence, editable suppression, discovery, and labels. Manual TalkBack, hardware keyboard, mouse/stylus, small-window, RTL, large-text, and theme review remain before stable status. Check the [component list](coverage.md) for current availability.

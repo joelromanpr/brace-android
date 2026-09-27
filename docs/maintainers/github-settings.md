@@ -1,21 +1,13 @@
-# GitHub settings
+# Repository settings
 
-Checked on 2026-09-27. This is a short record of hosted settings that cannot be expressed fully in repository files.
+Brace Android is public. `main` requires a pull request, current `verify` and `instrumented` checks, resolved conversations, and linear history. Squash merge is the only merge method; merged topic branches are deleted. A solo maintainer can merge without a second approver. The `v*` tag ruleset blocks tag updates and deletion.
 
-## In place
+[GitHub Pages](https://joelromanpr.github.io/brace-android/) deploys from Actions on `main`. The [public project board](https://github.com/users/joelromanpr/projects/1) tracks work; the [inventory](../../inventory/blueprint-components.json) remains the component and status record. Issues, Discussions, dependency updates, security alerts, and CodeQL are enabled.
 
-- The repository is public. Issues and Discussions are on. Squash merge is the only merge method, and merged branches are deleted automatically.
-- `main` requires a pull request, current `verify` and `instrumented` checks, linear history, and resolved conversations. Protection applies to admins. Zero approvals are required while there is one maintainer.
-- The `v*` tag ruleset prevents tag updates and deletion. The release workflow also checks that a signed annotated tag points at the reviewed tip of `main`.
-- Dependabot alerts, security fixes, and CodeQL are on. Private vulnerability reporting is enabled.
-- [GitHub Pages](https://joelromanpr.github.io/brace-android/) deploys from the `main` branch through Actions. The Pages environment accepts deployments from `main` only.
-- The `maven-central` environment is limited to `main`, requires the maintainer as reviewer, and has a readiness marker. The release workflow must be dispatched manually and stages artifacts for separate Portal review.
+## Release setup
 
-## Before the first release
+The protected `maven-central` environment is restricted to `main` and requires maintainer review. On 2026-09-27, the readiness marker and four credential secrets were present: `MAVEN_CENTRAL_ENVIRONMENT_READY`, `MAVEN_CENTRAL_USERNAME`, `MAVEN_CENTRAL_PASSWORD`, `SIGNING_IN_MEMORY_KEY`, and `SIGNING_IN_MEMORY_KEY_PASSWORD`. Secret values are not stored in the repository. Confirm their presence again before a release.
 
-1. The [Maven Central account](https://central.sonatype.com/publishing/namespaces) has a verified `io.github.joelromanpr` namespace, which covers the planned `io.github.joelromanpr.brace` group. No Brace deployment exists yet.
-2. Add a dedicated Central Portal user token and signing material to the protected `maven-central` environment as `MAVEN_CENTRAL_USERNAME`, `MAVEN_CENTRAL_PASSWORD`, `SIGNING_IN_MEMORY_KEY`, and `SIGNING_IN_MEMORY_KEY_PASSWORD`. Keep values out of Git and chat. Follow the [release checklist](releasing.md).
-3. Verify that the private vulnerability contact in [SECURITY.md](../../SECURITY.md) reaches the maintainer.
-4. A public project board is optional. The current GitHub CLI authorization lacks `read:project`; use `gh auth refresh -s read:project -s project` before creating a board. The [component inventory](../../inventory/blueprint-components.json) remains the source of truth for coverage.
+The release workflow checks an annotated tag against [the pinned public key](../../.github/release-signing-key.asc) and the reviewed tip of `main`; it does not depend on a GitHub Verified badge. The public signing key has been submitted to `pgp.mit.edu`, a [keyserver supported by Sonatype](https://central.sonatype.org/publish/requirements/gpg/). Recheck that it can be retrieved before staging.
 
-After changing a hosted setting, read it back in GitHub or the Central Portal. A checked-in workflow alone does not prove a deployment or release.
+The `io.github.joelromanpr` Central namespace was previously observed as verified. Recheck ownership in the [Central Portal](https://central.sonatype.com/publishing/namespaces) before the first stage. A successful workflow upload creates a deployment for separate maintainer review and manual publication. No public Maven Central release is claimed here; follow the [release checklist](releasing.md) and verify artifacts after publication.

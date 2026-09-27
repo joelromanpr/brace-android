@@ -1,6 +1,6 @@
 # Release checklist
 
-The release workflow is manual and must use a signed annotated tag that GitHub marks verified. This is a preparation guide; there is no published Brace Android version yet. The first proposed version is `0.1.0-alpha01`, a preview with no claim of full Blueprint coverage or stable inventory rows.
+The release workflow is manual and requires an annotated tag signed by the Brace release key pinned in the repository. This is a preparation guide; there is no published Brace Android version yet. The first proposed version is `0.1.0-alpha01`, a preview with no claim of full component coverage or stable inventory rows.
 
 ## Before tagging
 
@@ -11,17 +11,17 @@ The release workflow is manual and must use a signed annotated tag that GitHub m
 
 ## Tag and stage
 
-Configure a signing key in Git and add its public key to GitHub first. See [GitHub's tag signing guide](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-tags).
+The dedicated release key has fingerprint `F152 FD63 0BE9 9A9B B248 3995 BA23 075E 89D1 23B5`. Confirm the local private key matches [the pinned public key](../../.github/release-signing-key.asc) and that its public half is discoverable from a [Sonatype-supported keyserver](https://central.sonatype.org/publish/requirements/gpg/). The CI workflow imports that public key and checks both the signature and fingerprint. A GitHub Verified badge is useful when available, but is not the release gate.
 
 ```sh
 git switch main
 git pull --ff-only
-git tag -s v0.1.0-alpha01 -m "Brace Android 0.1.0-alpha01"
+git -c user.signingkey=F152FD630BE99A9BB2483995BA23075E89D123B5 tag -s v0.1.0-alpha01 -m "Brace Android 0.1.0-alpha01"
 git tag -v v0.1.0-alpha01
 git push origin v0.1.0-alpha01
 ```
 
-Use the actual release version. Confirm GitHub reports the tag as verified and that it points to the reviewed `main` commit. Run the **Release to Maven Central** workflow manually from `main` and enter that tag as its input. The workflow checks the Maven Local artifacts and independent consumer before requesting approval for its protected `maven-central` stage. That environment needs the readiness marker, a Central Portal user token, and an in-memory signing key and password; see [GitHub settings](github-settings.md). It stages via `publishToMavenCentral`; the maintainer reviews the validated deployment in the Central Portal and explicitly publishes it there. The workflow never publishes a deployment automatically.
+Use the actual release version. Confirm the tag points to the reviewed `main` commit. Run the **Release to Maven Central** workflow manually from `main` and enter that tag as its input. The workflow verifies the tag against the pinned public key, then checks the Maven Local artifacts and independent consumer before requesting approval for its protected `maven-central` stage. That environment needs the readiness marker, a Central Portal user token, and an in-memory signing key and password; see [GitHub settings](github-settings.md). It stages via `publishToMavenCentral`; the maintainer reviews the validated deployment in the Central Portal and explicitly publishes it there. The workflow never publishes a deployment automatically.
 
 ## After publishing
 

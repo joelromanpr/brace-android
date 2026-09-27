@@ -35,9 +35,23 @@ jobs:
           tag_sha=$(jq -r '.object.sha' <<<"$ref_json")
           tag_json=$(gh api "repos/$GITHUB_REPOSITORY/git/tags/$tag_sha")
           [[ "$(jq -r '.tag' <<<"$tag_json")" == "$TAG" ]] || exit 1
-          [[ "$(jq -r '.verification.verified' <<<"$tag_json")" == true ]] || { echo 'GitHub does not verify this tag signature'; exit 1; }
           [[ "$(jq -r '.object.type' <<<"$tag_json")" == commit ]] || exit 1
           commit_sha=$(jq -r '.object.sha' <<<"$tag_json")
+          git fetch origin "refs/tags/$TAG:refs/tags/$TAG"
+          [[ "$(git rev-parse "refs/tags/$TAG")" == "$tag_sha" ]] || { echo 'Fetched tag differs from the GitHub tag object'; exit 1; }
+          [[ "$(git cat-file -t "refs/tags/$TAG")" == tag ]] || { echo 'Release tag must be annotated'; exit 1; }
+          expected_fingerprint=F152FD630BE99A9BB2483995BA23075E89D123B5
+          export GNUPGHOME="$RUNNER_TEMP/brace-release-gnupg"
+          mkdir -m 700 "$GNUPGHOME"
+          key_fingerprint=$(gpg --show-keys --with-colons --fingerprint .github/release-signing-key.asc |
+            awk -F: '$1 == "fpr" { print $10; exit }')
+          [[ "$key_fingerprint" == "$expected_fingerprint" ]] || { echo 'Pinned release key fingerprint mismatch'; exit 1; }
+          gpg --batch --import .github/release-signing-key.asc
+          signature_status=$(git -c gpg.format=openpgp verify-tag --raw "$TAG" 2>&1) ||
+            { echo "$signature_status"; echo 'Release tag signature is invalid'; exit 1; }
+          grep -Fq "[GNUPG:] VALIDSIG $expected_fingerprint " <<<"$signature_status" ||
+            { echo 'Release tag was not signed by the pinned Brace release key'; exit 1; }
+          [[ "$(git rev-parse "$TAG^{commit}")" == "$commit_sha" ]] || { echo 'Signed tag target differs from the GitHub tag object'; exit 1; }
           git fetch origin main
           [[ "$commit_sha" == "$(git rev-parse origin/main)" ]] || { echo 'Tag must point to the current reviewed main commit'; exit 1; }
           echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"

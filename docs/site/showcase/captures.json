@@ -163,7 +163,7 @@
       ],
       "image": "showcase/08-icons-next-light.png",
       "alt": "Brace opt-in Blueprint next icon sample showing filled magnifying glass, directional chevron, and searchable glyph names",
-      "caption": "The opt-in /next artwork on draft M55 previews one subset of the pinned icon glyph catalog. The main inventory row remains planned.",
+      "caption": "The optional /next artwork previews a subset of the pinned icon glyph catalog. The inventory row remains in progress.",
       "device": "Android 16 (API 36) emulator · 160 dpi",
       "sourceBranch": "joelromanpr/m55-blueprint-next-icons",
       "sourceCommit": "26c62885cb670a6c3f6df8e93936bf32792e05c4",
@@ -267,6 +267,29 @@
       "capturedAt": "2026-09-26",
       "pixelWidth": 400,
       "pixelHeight": 800
+    },
+    {
+      "id": "table-dark-high-contrast",
+      "inventoryIds": [
+        "table-table",
+        "table-fixed-headers"
+      ],
+      "image": "showcase/12-table-dark-high-contrast.png",
+      "alt": "Brace DataTable in dark high-contrast mode with fixed headers, clear grid borders, and selected Case 1000 cell",
+      "caption": "The M14 table switches to dark high-contrast tokens at runtime; grid lines and the controlled selected cell remain distinct.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m14-table-viewport",
+      "sourceCommit": "6ff40dd001bd52af60d1866c46a38833d52f06c8",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var selected by remember { mutableStateOf<BraceTableSelection?>(null) }\nval viewport = rememberBraceTableViewport()\nBraceDataTable(\n    rows = records,\n    rowKey = { it.id },\n    columns = columns,\n    selection = selected,\n    onSelectionChange = { selected = it },\n    viewport = viewport,\n    label = \"Cases\",\n)",
+      "format": "phone",
+      "theme": "dark",
+      "contrast": "high",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
     }
   ]
 }

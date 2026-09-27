@@ -345,6 +345,18 @@ BraceTheme {
     "core-pre" to """BraceCodeBlock("val rows = listOf(1, 2, 3)\nrows.forEach(::println)")""",
     "core-ol" to """BraceOrderedList(listOf("Open record", "Review fields", "Save changes"))""",
     "core-ul" to """BraceUnorderedList(listOf("Keyboard navigation", "TalkBack labels"))""",
+    "table-sorting" to """val sort = rememberBraceTableSortState()
+val displayed = remember(rows, sort.value) {
+    val order = sort.value
+    if (order == null) rows else rows.withIndex().sortedWith { a, b ->
+        val comparison = a.value.name.compareTo(b.value.name)
+        val directed = if (order.direction == BraceTableSortDirection.Ascending) comparison else -comparison
+        if (directed == 0) a.index.compareTo(b.index) else directed
+    }.map { it.value }
+}
+val columns = listOf(BraceTableColumn<Record>("name", "Name", 160.dp, { it.name }, sortable = true))
+BraceDataTable(displayed, { it.id }, columns, selection, { selection = it },
+    sort = sort.value, onSortChange = { sort.value = it })""".trimIndent(),
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-link" to "BraceLink(\"Read guide\", BraceLinkDestination.Uri(\"https://example.org/guide\", \"Guide\"))",
     "core-anchorbutton" to "BraceLinkButton(\"Open reports\", BraceLinkDestination.Action(\"Reports\") { navigateToReports() })",
@@ -1307,6 +1319,7 @@ private fun ComponentSample(
         "datetime-daterangepicker" -> DateRangePickerSample()
         "datetime-daterangeinput" -> DateRangeFieldSample()
         "datetime-timepicker" -> TimePickerSample()
+        "table-sorting" -> TableSortingCatalogSample()
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
         "table-cell-selection", "table-column-and-row-resizing", "table-copying",
         "table-editablecell", "table-editing", "table-editablename" -> TableCatalogSample()

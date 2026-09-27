@@ -191,6 +191,18 @@ public final class io/github/joelromanpr/brace/core/BraceFormLayoutKt {
 	public static final fun BraceFieldLabel (Ljava/lang/String;Landroidx/compose/ui/Modifier;ZLjava/lang/String;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
 }
 
+public final class io/github/joelromanpr/brace/core/BraceHeadingLevel : java/lang/Enum {
+	public static final field Five Lio/github/joelromanpr/brace/core/BraceHeadingLevel;
+	public static final field Four Lio/github/joelromanpr/brace/core/BraceHeadingLevel;
+	public static final field One Lio/github/joelromanpr/brace/core/BraceHeadingLevel;
+	public static final field Six Lio/github/joelromanpr/brace/core/BraceHeadingLevel;
+	public static final field Three Lio/github/joelromanpr/brace/core/BraceHeadingLevel;
+	public static final field Two Lio/github/joelromanpr/brace/core/BraceHeadingLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceHeadingLevel;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceHeadingLevel;
+}
+
 public final class io/github/joelromanpr/brace/core/BraceHotkeysKt {
 	public static final fun BraceShortcutLabel (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
 	public static final fun BraceShortcutRegistry (Ljava/util/List;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BraceShortcutRegistryState;ZLjava/lang/String;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
@@ -443,6 +455,21 @@ public final class io/github/joelromanpr/brace/core/BraceSegmentedSize : java/la
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceSegmentedSize;
 	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceSegmentedSize;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSemanticContentKt {
+	public static final fun BraceBlockquote (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceCode (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceCodeBlock (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceHeading (Ljava/lang/String;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BraceHeadingLevel;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceHeading1 (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceHeading2 (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceHeading3 (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceHeading4 (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceHeading5 (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceHeading6 (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceOrderedList (Ljava/util/List;Landroidx/compose/ui/Modifier;ILandroidx/compose/runtime/Composer;II)V
+	public static final fun BraceUnorderedList (Ljava/util/List;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class io/github/joelromanpr/brace/core/BraceShortcut {

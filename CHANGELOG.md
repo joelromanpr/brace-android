@@ -4,6 +4,8 @@ Changes to released public artifacts are recorded here using [Semantic Versionin
 
 ## Unreleased
 
+- Added unreleased Collapse and Text Compose APIs with controlled disclosure, overflow help, accessibility behavior, catalog examples, and tests.
+
 - Added an in-progress table copying slice with Ctrl/Cmd+C, a TalkBack copy action, and ordered tab-separated plain text for controlled selections. No Maven release exists.
 
 - Added an in-progress table selection and resize slice: controlled column and rectangular range selection, touch and keyboard range extension, and controlled column and row sizes with accessible drag/keyboard/TalkBack handles. This remains unreleased.

@@ -16,6 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -66,6 +68,8 @@ import io.github.joelromanpr.brace.core.BraceMenuItem
 import io.github.joelromanpr.brace.core.BraceOverlayHost
 import io.github.joelromanpr.brace.core.BracePopover
 import io.github.joelromanpr.brace.core.BraceProgressBar
+import io.github.joelromanpr.brace.core.BraceCollapse
+import io.github.joelromanpr.brace.core.BraceText
 import io.github.joelromanpr.brace.core.BraceSpinner
 import io.github.joelromanpr.brace.core.BraceSkeleton
 import io.github.joelromanpr.brace.core.BraceSection
@@ -123,6 +127,7 @@ class ConsumerActivity : ComponentActivity() {
         setContent {
             BraceTheme {
                 var count by remember { mutableStateOf(0) }
+                var detailsOpen by rememberSaveable { mutableStateOf(true) }
                 var dialogOpen by remember { mutableStateOf(false) }
                 var alertOpen by remember { mutableStateOf(false) }
                 var drawerOpen by remember { mutableStateOf(false) }
@@ -216,6 +221,14 @@ class ConsumerActivity : ComponentActivity() {
                             BraceProgressBar(label = "Import progress", value = 0.5f)
                             BraceSpinner(label = "Indexing records", value = 0.5f)
                             BraceSkeleton(label = "Loading next batch")
+                        }
+                        BraceButton(if (detailsOpen) "Hide details" else "Show details",
+                            onClick = { detailsOpen = !detailsOpen },
+                            modifier = Modifier.semantics {
+                                stateDescription = if (detailsOpen) "Expanded" else "Collapsed"
+                            })
+                        BraceCollapse(expanded = detailsOpen) {
+                            BraceText("Import details are available while expanded.")
                         }
                         BraceBreadcrumbs(listOf(BraceBreadcrumb("Home", onClick = {}), BraceBreadcrumb("Imports")))
                         BraceLink("Open reports", BraceLinkDestination.Action("Reports") { count++ })

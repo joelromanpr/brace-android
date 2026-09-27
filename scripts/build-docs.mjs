@@ -18,6 +18,7 @@ const guideSources = new Map([
   ['docs/compatibility.md', 'compatibility'],
   ['docs/core-components.md', 'core-components'],
   ['docs/content-feedback.md', 'content-feedback'],
+  ['docs/collapse-text.md', 'collapse-text'],
   ['docs/loading-feedback.md', 'loading-feedback'],
   ['docs/navigation-feedback.md', 'navigation-feedback'],
   ['docs/overlays.md', 'overlays'],
@@ -56,6 +57,7 @@ const guideSources = new Map([
   ['docs/milestones/m9-form-layout.md', 'milestone-m9'],
   ['docs/milestones/m10-numeric-input.md', 'milestone-m10'],
   ['docs/milestones/m11-icons.md', 'milestone-m11'],
+  ['docs/milestones/m24-collapse-text.md', 'milestone-m24'],
   ['docs/milestones/m12-select-query.md', 'milestone-m12'],
   ['docs/milestones/m17-loading-feedback.md', 'milestone-m17'],
   ['docs/milestones/m16-suggest-multiselect.md', 'milestone-m16'],
@@ -244,6 +246,7 @@ const componentGuideLinks = [
 ];
 const extraGuideLinks = [
   ['Content and feedback', 'content-feedback'],
+  ['Collapse and text', 'collapse-text'],
   ['Loading feedback', 'loading-feedback'],
   ['Navigation and messages', 'navigation-feedback'],
   ['Menus and overlays', 'overlays'],

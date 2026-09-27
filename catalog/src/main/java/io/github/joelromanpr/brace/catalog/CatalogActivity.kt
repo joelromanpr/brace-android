@@ -322,6 +322,8 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "core-label" to """BraceFieldLabel("Export format", spokenLabel = "Export format, ${'$'}format") { controlModifier -> BraceButton(format, onClick = { format = "JSON" }, modifier = controlModifier) }""",
     "core-controlgroup" to """BraceControlGroup(fill = true, accessibilityLabel = "Report actions") { Item { controlModifier -> BraceButton("Preview", onClick = ::preview, modifier = controlModifier) }; Item(fill = false) { controlModifier -> BraceButton("Export", onClick = ::export, modifier = controlModifier) } }""",
     "core-numericinput" to "var amount by rememberSaveable { mutableStateOf(\"0.2\") }; BraceNumericField(value = amount, onValueChange = { amount = it }, label = \"Amount\", min = 0.0, max = 100.0, stepSize = 1.0, majorStepSize = 10.0, minorStepSize = 0.1)",
+    "core-collapse" to "var detailsOpen by rememberSaveable { mutableStateOf(false) }; BraceButton(if (detailsOpen) \"Hide\" else \"Show\", onClick = { detailsOpen = !detailsOpen }); BraceCollapse(expanded = detailsOpen) { BraceText(\"Quarterly details\") }",
+    "core-text" to "BraceText(\"A long project title that overflows\", modifier = Modifier.width(140.dp), ellipsize = true)",
     "core-card" to "BraceCard(elevation = BraceCardElevation.One, onClick = { open() }) { Text(\"Open project\") }",
     "core-cardlist" to "BraceCardList(items = projects, itemKey = { it.id }, onItemClick = { open(it) }) { project -> Text(project.name) }",
     "core-divider" to "BraceDivider(orientation = BraceDividerOrientation.Horizontal)",
@@ -1437,6 +1439,7 @@ private fun ComponentSample(
                 BraceNumericField("", {}, label = "Disabled", enabled = false)
             }
         }
+        "core-collapse", "core-text" -> CollapseTextCatalogSample(id)
         "core-card" -> {
             var selected by rememberSaveable { mutableStateOf(false) }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {

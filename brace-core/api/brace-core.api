@@ -73,6 +73,10 @@ public final class io/github/joelromanpr/brace/core/BraceCardElevation : java/la
 	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceCardElevation;
 }
 
+public final class io/github/joelromanpr/brace/core/BraceCollapseKt {
+	public static final fun BraceCollapse (ZLandroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class io/github/joelromanpr/brace/core/BraceContentKt {
 	public static final fun BraceCard (Landroidx/compose/ui/Modifier;ZLio/github/joelromanpr/brace/core/BraceCardElevation;ZZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
 	public static final fun BraceCardList (Ljava/util/List;Landroidx/compose/ui/Modifier;ZZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;II)V
@@ -556,6 +560,10 @@ public final class io/github/joelromanpr/brace/core/BraceTextAreaSize : java/lan
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceTextAreaSize;
 	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceTextAreaSize;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTextKt {
+	public static final fun BraceText (Ljava/lang/String;Landroidx/compose/ui/Modifier;ZLjava/lang/String;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class io/github/joelromanpr/brace/core/BraceToastDismissReason : java/lang/Enum {

@@ -333,6 +333,12 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "core-skeleton" to "BraceSkeleton(label = \"Loading report title\"); BraceSkeleton(width = 180.dp)",
     "core-section" to "BraceSection(title = \"Projects\", collapsible = true) { Text(\"Section content\") }",
     "core-sectioncard" to "BraceSectionCard { Text(\"Project settings\") }",
+    "core-tabs" to """var selected by rememberSaveable { mutableStateOf("overview") }
+BraceTabs(tabs = listOf(BraceTab("overview", "Overview"), BraceTab("activity", "Activity", badge = "3")),
+    selectedTabId = selected, onTabSelected = { selected = it }) { tab -> Text("Panel: ${'$'}{tab.label}") }""".trimIndent(),
+    "core-tab" to "BraceTab(id = \"activity\", label = \"Activity\", badge = \"3\", enabled = true)",
+    "core-tabpanel" to "BraceTabPanel(tab = BraceTab(\"overview\", \"Overview\"), selectedTabId = selected) { Text(\"Overview content\") }",
+    "core-tabsexpander" to "Row(Modifier.fillMaxWidth()) { Text(\"Start\"); BraceTabSpacer(); BraceButton(\"Search\", onClick = {}) }",
     "core-breadcrumbs" to "BraceBreadcrumbs(listOf(BraceBreadcrumb(\"Home\", onClick = { home() }), BraceBreadcrumb(\"Projects\")))",
     "core-tree" to """val state = rememberBraceTreeState(
     initialExpandedKeys = setOf("projects"), initialSelectedKeys = setOf("alpha"))
@@ -1564,6 +1570,7 @@ private fun ComponentSample(
                 BraceSectionCard(padded = false) { Text("Edge to edge content", color = BraceTheme.colors.semantic.onSurface) }
             }
         }
+        "core-tabs", "core-tab", "core-tabpanel", "core-tabsexpander" -> TabsCatalogSample()
         "core-tree", "core-treenode" -> TreeSample()
         "core-breadcrumbs" -> {
             var destination by rememberSaveable { mutableStateOf("Dashboard") }

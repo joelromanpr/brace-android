@@ -76,6 +76,15 @@ class BraceTokensTest {
                 assertTrue("neutral segment boundary contrast below 3.0",
                     braceContrastRatio(segmented.selectedBorder, background) >= 3.0)
             }
+            val tabs = scheme.components.tabs
+            listOf(
+                tabs.content to tabs.container,
+                tabs.selectedContent to tabs.selectedContainer,
+                tabs.badgeContent to tabs.badgeContainer,
+                tabs.selectedBadgeContent to tabs.selectedBadgeContainer,
+            ).forEach { (text, background) ->
+                assertTrue("tab text contrast below 4.5", braceContrastRatio(text, background) >= 4.5)
+            }
             val button = scheme.components.button
             listOf(
                 button.primaryContent to button.primaryHoverContainer,
@@ -118,6 +127,8 @@ class BraceTokensTest {
         assertEquals(custom, components.segmentedControl.selectedPrimaryContainer)
         assertEquals(Color.Red, components.radio.focusRing)
         assertEquals(Color.Red, components.segmentedControl.focusRing)
+        assertEquals(Color.Red, components.tabs.focusRing)
+        assertEquals(custom, components.tabs.indicator)
         assertEquals(overridden.primarySubtle, components.callout.primaryContainer)
         assertEquals(overridden.selection, components.select.selectedContainer)
         assertEquals(Color.Red, components.select.focusRing)

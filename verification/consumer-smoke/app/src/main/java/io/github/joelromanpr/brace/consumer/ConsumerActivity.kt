@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,6 +40,10 @@ import kotlinx.coroutines.withContext
 import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbs
+import io.github.joelromanpr.brace.core.BraceTab
+import io.github.joelromanpr.brace.core.BraceTabs
+import io.github.joelromanpr.brace.core.BraceTabPanel
+import io.github.joelromanpr.brace.core.BraceTabSpacer
 import io.github.joelromanpr.brace.core.BraceTree
 import io.github.joelromanpr.brace.core.BraceTreeNode
 import io.github.joelromanpr.brace.core.rememberBraceTreeState
@@ -168,6 +173,7 @@ class ConsumerActivity : ComponentActivity() {
                 var meal by remember { mutableStateOf("soup") }
                 var layout by remember { mutableStateOf("list") }
                 var reportingZone by remember { mutableStateOf<ZoneId?>(null) }
+                var activeTab by rememberSaveable { mutableStateOf("summary") }
                 val shortcutState = rememberBraceShortcutRegistryState()
                 val toasts = rememberBraceToastState()
                 val tree = rememberBraceTreeState(initialExpandedKeys = setOf("projects"))
@@ -234,6 +240,20 @@ class ConsumerActivity : ComponentActivity() {
                             label = "Workspace tree", maxHeight = 160.dp,
                         )
                         BraceTag("Active")
+                        BraceTabs(
+                            tabs = listOf(BraceTab("summary", "Summary"), BraceTab("files", "Files")),
+                            selectedTabId = activeTab,
+                            onTabSelected = { activeTab = it },
+                            trailingContent = { BraceButton("Add", onClick = { count++ }) },
+                        ) { tab -> BraceTag(tab.label) }
+                        BraceTabPanel(BraceTab("files", "Files"), activeTab) {
+                            BraceTag("Detached file details")
+                        }
+                        Row(Modifier.fillMaxWidth()) {
+                            BraceTag("Summary")
+                            BraceTabSpacer()
+                            BraceTag("Actions")
+                        }
                         BraceFieldLabel("Export format", spokenLabel = "Export format, CSV") { controlModifier ->
                             BraceButton("CSV", onClick = {}, modifier = controlModifier)
                         }

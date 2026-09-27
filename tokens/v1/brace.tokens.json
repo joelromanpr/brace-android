@@ -638,6 +638,21 @@
       "disabledContent": "{semantic.disabledContent}",
       "caret": "{semantic.onSurfaceMuted}",
       "focusRing": "{semantic.focusRing}"
+    },
+    "tabs": {
+      "container": "{semantic.surface}",
+      "content": "{semantic.onSurfaceMuted}",
+      "selectedContainer": "{semantic.selection}",
+      "selectedContent": "{semantic.onSelection}",
+      "hoverContainer": "{semantic.hover}",
+      "pressedContainer": "{semantic.pressed}",
+      "disabledContent": "{semantic.disabledContent}",
+      "indicator": "{semantic.primary}",
+      "focusRing": "{semantic.focusRing}",
+      "badgeContainer": "{semantic.surfaceInset}",
+      "badgeContent": "{semantic.onSurfaceMuted}",
+      "selectedBadgeContainer": "{semantic.primarySubtle}",
+      "selectedBadgeContent": "{semantic.onPrimarySubtle}"
     }
   },
   "componentMetricsDp": {
@@ -803,6 +818,15 @@
       "indent": 16,
       "horizontalPadding": 8,
       "cornerRadius": 5
+    },
+    "tabs": {
+      "mediumMinHeight": 48,
+      "largeMinHeight": 56,
+      "horizontalPadding": 12,
+      "indicatorHeight": 3,
+      "badgeCornerRadius": 999,
+      "verticalRailMaxWidth": 240,
+      "verticalStackBreakpoint": 420
     }
   }
 }

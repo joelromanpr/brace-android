@@ -12,8 +12,7 @@ const showcaseGrid = document.querySelector('#showcase-grid');
 const showcaseTheme = document.querySelector('#showcase-theme');
 const showcaseFamily = document.querySelector('#showcase-family');
 const showcaseResult = document.querySelector('#showcase-result');
-const heroSnapshotCount = document.querySelector('#hero-snapshot-count');
-const heroImage = document.querySelector('#hero-image');
+const statusChips = document.querySelector('#status-chips');
 let entries = [];
 let captures = [];
 let entryById = new Map();
@@ -67,7 +66,7 @@ function card(item) {
   const title = el('span', 'component-name', item.blueprintName || item.id);
   title.append(el('span', 'component-family', `${item.package || 'Unassigned'} · ${item.family || 'General'}`));
   const badge = el('span', `pill ${String(item.status || 'planned').replace(/\s+/g, '-')}`, item.status || 'planned');
-  summary.append(title, badge, el('span', 'milestone', item.milestone || 'Unscheduled'));
+  summary.append(title, badge);
   const body = el('dl', 'component-body');
   addFact(body, 'Brace API', item.braceApi);
   addFact(body, 'Artifact', item.artifact);
@@ -86,6 +85,7 @@ function card(item) {
   }
   addFact(body, 'Adaptation or exclusion', item.reason);
   addFact(body, 'Priority', item.priority);
+  addFact(body, 'Milestone', item.milestone);
   addFact(body, 'Blueprint documentation', item.blueprintUrl, true);
   addFact(body, 'Pinned Blueprint source', item.pinnedSourceUrl, true);
   addFact(body, 'Implementation', item.implementation, true);
@@ -109,6 +109,22 @@ function render() {
   results.replaceChildren(...filtered.map(card));
   if (filtered.length === 0) results.append(el('p', 'empty', 'No inventory rows match these filters.'));
   resultCount.textContent = `${filtered.length} of ${entries.length} inventory rows`;
+  for (const chip of statusChips.querySelectorAll('[data-status]')) {
+    chip.setAttribute('aria-pressed', String(chip.dataset.status === statusSelect.value));
+  }
+}
+
+function renderStatusChips() {
+  const statuses = ['', 'in progress', 'planned', 'experimental', 'stable'];
+  statusChips.replaceChildren(...statuses.map(status => {
+    const count = status ? entries.filter(item => item.status === status).length : entries.length;
+    const button = el('button', 'status-chip');
+    button.type = 'button';
+    button.dataset.status = status;
+    button.setAttribute('aria-pressed', String(status === statusSelect.value));
+    button.append(el('span', 'status-chip-dot'), el('span', '', `${status ? status.replace(/^./, c => c.toUpperCase()) : 'All'} · ${count}`));
+    return button;
+  }));
 }
 
 function captureAppearance(capture) {
@@ -123,7 +139,7 @@ function captureCard(capture) {
   media.href = `./${capture.image}`;
   media.target = '_blank';
   media.rel = 'noopener noreferrer';
-  media.setAttribute('aria-label', `Open full-size Android capture of ${item.blueprintName} in a new tab`);
+  media.setAttribute('aria-label', `Open full-size Android capture of ${capture.title || item.blueprintName} in a new tab`);
   const screenshot = el('img');
   screenshot.src = `./${capture.image}`;
   screenshot.alt = capture.alt;
@@ -139,7 +155,7 @@ function captureCard(capture) {
   badges.append(el('span', `shot-stage ${capture.sourceStage}`, capture.sourceStage === 'draft' ? 'Draft branch capture' : 'Merged source'));
   body.append(badges);
   body.append(el('p', 'shot-family', `${item.package} · ${item.family}`));
-  body.append(el('h3', '', item.blueprintName));
+  body.append(el('h3', '', capture.title || item.blueprintName));
   body.append(el('p', 'shot-api', item.braceApi));
   body.append(el('p', 'shot-caption', capture.caption));
   if (capture.inventoryIds.length > 1) {
@@ -212,24 +228,8 @@ async function loadShowcase() {
       }
     }
     addOptions(showcaseFamily, captures.map(capture => entryById.get(capture.inventoryIds[0]).family));
-    heroSnapshotCount.textContent = `${captures.length} real catalog captures`;
-    const featured = captures.find(capture => capture.inventoryIds.includes('core-button') && capture.theme === 'light' && capture.contrast === 'standard') || captures[0];
-    if (featured) {
-      const featuredLink = el('a');
-      featuredLink.href = `#capture-${featured.id}`;
-      featuredLink.setAttribute('aria-label', `See the ${entryById.get(featured.inventoryIds[0]).blueprintName} Android capture`);
-      const featuredImage = el('img');
-      featuredImage.src = `./${featured.image}`;
-      featuredImage.alt = featured.alt;
-      featuredImage.width = featured.pixelWidth;
-      featuredImage.height = featured.pixelHeight;
-      featuredImage.decoding = 'async';
-      featuredLink.append(featuredImage);
-      heroImage.replaceChildren(featuredLink);
-    }
     renderShowcase();
   } catch (error) {
-    heroSnapshotCount.textContent = 'Gallery unavailable';
     showcaseResult.textContent = 'Captures could not be loaded';
     showcaseGrid.append(el('p', 'empty', `Build the site with node scripts/build-docs.mjs. ${error.message}`));
   }
@@ -274,14 +274,15 @@ async function load() {
     baseline.textContent = `Blueprint baseline: ${pin.releaseTag || pin.version || 'pinned stable'} · ${pin.commit || pin.sha || 'commit recorded in inventory'}`;
     const counts = data.summary || {};
     stats.replaceChildren(
-      stat(`${counts.stableApplicableRows ?? 0}/${counts.applicableRows ?? entries.length}`, 'Applicable rows stable'),
-      stat(`${counts.stableComponents ?? 0}/${counts.applicableComponents ?? 0}`, 'Components stable'),
-      stat(`${counts.documentedWebSpecificMappings ?? 0}/${counts.webSpecificMappings ?? 0}`, 'Web mappings documented'),
-      stat(counts.labsRows ?? entries.filter(item => item.track === 'labs').length, 'Labs rows tracked')
+      stat(`${counts.stableApplicableRows ?? 0}/${counts.applicableRows ?? entries.length}`, 'Released Android items'),
+      stat(`${counts.stableComponents ?? 0}/${counts.applicableComponents ?? 0}`, 'Released components'),
+      stat(`${counts.documentedWebSpecificMappings ?? 0}/${counts.webSpecificMappings ?? 0}`, 'Web-only cases explained'),
+      stat(counts.labsRows ?? entries.filter(item => item.track === 'labs').length, 'Experimental items')
     );
     addOptions(packageSelect, entries.map(item => item.package));
     addOptions(statusSelect, entries.map(item => item.status));
     addOptions(kindSelect, entries.map(item => item.classification));
+    renderStatusChips();
     render();
     revealHash();
   } catch (error) {
@@ -294,10 +295,11 @@ async function load() {
 window.addEventListener('hashchange', revealHash);
 for (const control of [search, packageSelect, statusSelect, kindSelect]) control.addEventListener('input', render);
 for (const control of [showcaseTheme, showcaseFamily]) control.addEventListener('input', renderShowcase);
-heroImage.addEventListener('click', () => {
-  showcaseTheme.value = '';
-  showcaseFamily.value = '';
-  renderShowcase();
+statusChips.addEventListener('click', event => {
+  const chip = event.target.closest('[data-status]');
+  if (!chip) return;
+  statusSelect.value = chip.dataset.status;
+  render();
 });
 results.addEventListener('click', event => {
   if (!event.target.closest('[data-capture-id]')) return;

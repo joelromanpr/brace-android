@@ -61,6 +61,7 @@ const guideSources = new Map([
   ['docs/milestones/m20-links.md', 'milestone-m20'],
   ['docs/milestones/m55-blueprint-next-icons.md', 'milestone-m55'],
   ['docs/milestones/m57-icon-large-text.md', 'milestone-m57'],
+  ['docs/milestones/m59-visual-catalog.md', 'milestone-m59'],
   ['CONTRIBUTING.md', 'contributing'],
   ['docs/attribution.md', 'attribution'],
 ]);
@@ -210,10 +211,54 @@ function renderMarkdown(source, sourcePath) {
   return output.join('\n');
 }
 
+const primaryGuideLinks = [
+  ['Visual showcase', 'showcase-guide'],
+  ['Installation', 'installation'],
+  ['Theming', 'theming'],
+  ['Compatibility', 'compatibility'],
+];
+const componentGuideLinks = [
+  ['Core controls', 'core-components'],
+  ['Forms and text', 'form-text'],
+  ['Select and query', 'select-query'],
+  ['Date and time', 'datetime-picker-input'],
+  ['Data tables', 'table-viewport'],
+  ['Selection and resizing', 'table-selection-resize'],
+  ['Icons', 'icons'],
+];
+const extraGuideLinks = [
+  ['Content and feedback', 'content-feedback'],
+  ['Loading feedback', 'loading-feedback'],
+  ['Navigation and messages', 'navigation-feedback'],
+  ['Menus and overlays', 'overlays'],
+  ['Drawers and popovers', 'drawers-popovers'],
+  ['Tooltips and toasts', 'tooltip-toast'],
+  ['Context menus and shortcuts', 'context-shortcuts'],
+  ['Labels and control groups', 'form-layout'],
+  ['Numeric input', 'numeric-input'],
+  ['Top bar', 'top-bar'],
+  ['Radio and segmented choices', 'radio-segmented'],
+  ['Time picker and field', 'time-picker-input'],
+  ['Web mechanisms in Compose', 'web-mechanisms'],
+  ['Links', 'links'],
+];
+
 function guidePage(title, body, sourcePath) {
+  const current = guideSources.get(sourcePath);
+  const navLink = ([label, id]) => `<a href="./${id}.html"${current === id ? ' aria-current="page"' : ''}>${label}</a>`;
+  const milestoneLinks = [...guideSources.values()]
+    .filter(id => /^milestone-m\d+$/.test(id))
+    .sort((a, b) => Number(a.slice(11)) - Number(b.slice(11)))
+    .map(id => [`M${id.slice(11)} report`, id]);
+  const navSections = `
+      <div class="guide-nav-group"><span class="guide-nav-title">Start here</span>${primaryGuideLinks.map(navLink).join('')}</div>
+      <details class="guide-nav-details"${[...componentGuideLinks, ...extraGuideLinks].some(([, id]) => id === current) ? ' open' : ''}><summary>Component guides</summary><div>${[...componentGuideLinks, ...extraGuideLinks].filter(([, id]) => [...guideSources.values()].includes(id)).map(navLink).join('')}</div></details>
+      <div class="guide-nav-group"><span class="guide-nav-title">Reference</span><a href="./index.html#coverage">Coverage inventory</a><a href="./contributing.html"${current === 'contributing' ? ' aria-current="page"' : ''}>Contributing</a><a href="./attribution.html"${current === 'attribution' ? ' aria-current="page"' : ''}>Attribution</a></div>
+      <details class="guide-nav-details"${current?.startsWith('milestone-') ? ' open' : ''}><summary>Milestone audit</summary><div>${milestoneLinks.map(navLink).join('')}</div></details>`;
+  const navigation = `<aside class="guide-nav" aria-label="Documentation"><details class="guide-nav-mobile"><summary>Browse documentation</summary>${navSections}</details><div class="guide-nav-desktop">${navSections}</div></aside>`;
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142338"><title>${escapeHtml(title)} · Brace Android</title><link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./guide.css"></head>
-<body><a class="skip" href="#main">Skip to content</a><header class="topbar"><a class="brand" href="./index.html" aria-label="Brace Android home"><span class="mark" aria-hidden="true">B</span><span>Brace <b>Android</b></span></a><nav aria-label="Main navigation"><a href="./index.html#showcase">Showcase</a><a href="./index.html#coverage">Coverage</a><a href="./installation.html">Get started</a><a href="https://github.com/joelromanpr/brace-android">GitHub ↗</a></nav></header><main id="main" class="guide-layout"><aside class="guide-nav" aria-label="Documentation"><span>Documentation</span><a href="./showcase-guide.html">Visual showcase</a><a href="./installation.html">Installation</a><a href="./theming.html">Theming</a><a href="./compatibility.html">Compatibility</a><a href="./core-components.html">Core components</a><a href="./content-feedback.html">Content and feedback</a><a href="./loading-feedback.html">Loading feedback</a><a href="./navigation-feedback.html">Navigation and messages</a><a href="./overlays.html">Menus and overlays</a><a href="./drawers-popovers.html">Drawers and popovers</a><a href="./tooltip-toast.html">Tooltips and toasts</a><a href="./context-shortcuts.html">Context menus and shortcuts</a><a href="./form-text.html">Form fields and editable text</a><a href="./form-layout.html">Labels and control groups</a><a href="./numeric-input.html">Numeric input</a><a href="./icons.html">Icons</a><a href="./select-query.html">Select and query</a><a href="./top-bar.html">Top bar</a><a href="./radio-segmented.html">Radio and segmented choices</a><a href="./datetime-picker-input.html">Date picker and input</a><a href="./time-picker-input.html">Time picker and field</a><a href="./table-viewport.html">Data table viewport</a><a href="./table-selection-resize.html">Table selection and resizing</a><a href="./web-mechanisms.html">Web mechanisms</a><a href="./links.html">Links</a><a href="./milestone-m1.html">M1 report</a><a href="./milestone-m2.html">M2 report</a><a href="./milestone-m3.html">M3 report</a><a href="./milestone-m4.html">M4 report</a><a href="./milestone-m5.html">M5 report</a><a href="./milestone-m6.html">M6 report</a><a href="./milestone-m7.html">M7 report</a><a href="./milestone-m8.html">M8 report</a><a href="./milestone-m9.html">M9 report</a><a href="./milestone-m10.html">M10 report</a><a href="./milestone-m11.html">M11 report</a><a href="./milestone-m12.html">M12 report</a><a href="./milestone-m25.html">M25 report</a><a href="./milestone-m19.html">M19 report</a><a href="./milestone-m13.html">M13 report</a><a href="./milestone-m30.html">M30 report</a><a href="./milestone-m20.html">M20 report</a><a href="./milestone-m14.html">M14 report</a><a href="./milestone-m18.html">M18 report</a><a href="./milestone-m17.html">M17 report</a><a href="./milestone-m35.html">M35 report</a><a href="./milestone-m54.html">M54 report</a><a href="./milestone-m55.html">M55 report</a><a href="./milestone-m57.html">M57 report</a><a href="./contributing.html">Contributing</a><a href="./attribution.html">Attribution</a><a href="./index.html#coverage">Coverage inventory</a></aside><article class="guide-article"><p class="eyebrow">Brace Android documentation</p>${body}<p class="source-link">${repository ? `Source: <a href="${repository + sourcePath}">${escapeHtml(sourcePath)} ↗</a>` : `Source path: <code>${escapeHtml(sourcePath)}</code> · public repository link pending`}</p></article></main><footer><span>Brace Android · Apache-2.0</span><span>Independent Android design system</span></footer></body></html>`;
+<body><a class="skip" href="#main">Skip to content</a><header class="topbar"><a class="brand" href="./index.html" aria-label="Brace Android home"><span class="mark" aria-hidden="true">B</span><span>Brace <b>Android</b></span></a><nav aria-label="Main navigation"><a href="./index.html#examples">App examples</a><a href="./index.html#coverage">Coverage</a><a href="./installation.html">Get started</a><a href="https://github.com/joelromanpr/brace-android">GitHub ↗</a></nav></header><main id="main" class="guide-layout">${navigation}<article class="guide-article"><p class="eyebrow">Brace Android documentation</p>${body}<p class="source-link">${repository ? `Source: <a href="${repository + sourcePath}">${escapeHtml(sourcePath)} ↗</a>` : `Source path: <code>${escapeHtml(sourcePath)}</code> · public repository link pending`}</p></article></main><footer><span>Brace Android · Apache-2.0</span><span>Independent Android design system</span></footer></body></html>`;
 }
 
 await rm(siteOutput, { recursive: true, force: true });

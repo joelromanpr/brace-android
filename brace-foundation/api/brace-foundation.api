@@ -233,92 +233,152 @@ public final class io/github/braceandroid/foundation/BraceColorScheme {
 
 public final class io/github/braceandroid/foundation/BraceComponentColors {
 	public static final field $stable I
-	public fun <init> (Lio/github/braceandroid/foundation/BraceButtonColors;Lio/github/braceandroid/foundation/BraceCalloutColors;Lio/github/braceandroid/foundation/BraceCardColors;Lio/github/braceandroid/foundation/BraceCheckboxColors;Lio/github/braceandroid/foundation/BraceDialogColors;Lio/github/braceandroid/foundation/BraceDrawerColors;Lio/github/braceandroid/foundation/BraceInputColors;Lio/github/braceandroid/foundation/BraceMenuColors;Lio/github/braceandroid/foundation/BracePopoverColors;Lio/github/braceandroid/foundation/BraceProgressColors;Lio/github/braceandroid/foundation/BraceSelectColors;Lio/github/braceandroid/foundation/BraceShortcutColors;Lio/github/braceandroid/foundation/BraceSwitchColors;Lio/github/braceandroid/foundation/BraceTableColors;Lio/github/braceandroid/foundation/BraceTagColors;Lio/github/braceandroid/foundation/BraceToastColors;Lio/github/braceandroid/foundation/BraceTooltipColors;Lio/github/braceandroid/foundation/BraceTopBarColors;)V
+	public fun <init> (Lio/github/braceandroid/foundation/BraceButtonColors;Lio/github/braceandroid/foundation/BraceCalloutColors;Lio/github/braceandroid/foundation/BraceCardColors;Lio/github/braceandroid/foundation/BraceCheckboxColors;Lio/github/braceandroid/foundation/BraceControlCardColors;Lio/github/braceandroid/foundation/BraceDateInputColors;Lio/github/braceandroid/foundation/BraceDatePickerColors;Lio/github/braceandroid/foundation/BraceDateRangeInputColors;Lio/github/braceandroid/foundation/BraceDateRangePickerColors;Lio/github/braceandroid/foundation/BraceDialogColors;Lio/github/braceandroid/foundation/BraceDrawerColors;Lio/github/braceandroid/foundation/BraceInputColors;Lio/github/braceandroid/foundation/BraceMenuColors;Lio/github/braceandroid/foundation/BracePanelStackColors;Lio/github/braceandroid/foundation/BracePopoverColors;Lio/github/braceandroid/foundation/BraceProgressColors;Lio/github/braceandroid/foundation/BraceRadioColors;Lio/github/braceandroid/foundation/BraceSegmentedControlColors;Lio/github/braceandroid/foundation/BraceSelectColors;Lio/github/braceandroid/foundation/BraceShortcutColors;Lio/github/braceandroid/foundation/BraceSkeletonColors;Lio/github/braceandroid/foundation/BraceSliderColors;Lio/github/braceandroid/foundation/BraceSpinnerColors;Lio/github/braceandroid/foundation/BraceSwitchColors;Lio/github/braceandroid/foundation/BraceTableColors;Lio/github/braceandroid/foundation/BraceTagColors;Lio/github/braceandroid/foundation/BraceTimeInputColors;Lio/github/braceandroid/foundation/BraceTimePickerColors;Lio/github/braceandroid/foundation/BraceTimeZoneSelectColors;Lio/github/braceandroid/foundation/BraceToastColors;Lio/github/braceandroid/foundation/BraceTooltipColors;Lio/github/braceandroid/foundation/BraceTopBarColors;Lio/github/braceandroid/foundation/BraceTreeColors;)V
 	public final fun component1 ()Lio/github/braceandroid/foundation/BraceButtonColors;
-	public final fun component10 ()Lio/github/braceandroid/foundation/BraceProgressColors;
-	public final fun component11 ()Lio/github/braceandroid/foundation/BraceSelectColors;
-	public final fun component12 ()Lio/github/braceandroid/foundation/BraceShortcutColors;
-	public final fun component13 ()Lio/github/braceandroid/foundation/BraceSwitchColors;
-	public final fun component14 ()Lio/github/braceandroid/foundation/BraceTableColors;
-	public final fun component15 ()Lio/github/braceandroid/foundation/BraceTagColors;
-	public final fun component16 ()Lio/github/braceandroid/foundation/BraceToastColors;
-	public final fun component17 ()Lio/github/braceandroid/foundation/BraceTooltipColors;
-	public final fun component18 ()Lio/github/braceandroid/foundation/BraceTopBarColors;
+	public final fun component10 ()Lio/github/braceandroid/foundation/BraceDialogColors;
+	public final fun component11 ()Lio/github/braceandroid/foundation/BraceDrawerColors;
+	public final fun component12 ()Lio/github/braceandroid/foundation/BraceInputColors;
+	public final fun component13 ()Lio/github/braceandroid/foundation/BraceMenuColors;
+	public final fun component14 ()Lio/github/braceandroid/foundation/BracePanelStackColors;
+	public final fun component15 ()Lio/github/braceandroid/foundation/BracePopoverColors;
+	public final fun component16 ()Lio/github/braceandroid/foundation/BraceProgressColors;
+	public final fun component17 ()Lio/github/braceandroid/foundation/BraceRadioColors;
+	public final fun component18 ()Lio/github/braceandroid/foundation/BraceSegmentedControlColors;
+	public final fun component19 ()Lio/github/braceandroid/foundation/BraceSelectColors;
 	public final fun component2 ()Lio/github/braceandroid/foundation/BraceCalloutColors;
+	public final fun component20 ()Lio/github/braceandroid/foundation/BraceShortcutColors;
+	public final fun component21 ()Lio/github/braceandroid/foundation/BraceSkeletonColors;
+	public final fun component22 ()Lio/github/braceandroid/foundation/BraceSliderColors;
+	public final fun component23 ()Lio/github/braceandroid/foundation/BraceSpinnerColors;
+	public final fun component24 ()Lio/github/braceandroid/foundation/BraceSwitchColors;
+	public final fun component25 ()Lio/github/braceandroid/foundation/BraceTableColors;
+	public final fun component26 ()Lio/github/braceandroid/foundation/BraceTagColors;
+	public final fun component27 ()Lio/github/braceandroid/foundation/BraceTimeInputColors;
+	public final fun component28 ()Lio/github/braceandroid/foundation/BraceTimePickerColors;
+	public final fun component29 ()Lio/github/braceandroid/foundation/BraceTimeZoneSelectColors;
 	public final fun component3 ()Lio/github/braceandroid/foundation/BraceCardColors;
+	public final fun component30 ()Lio/github/braceandroid/foundation/BraceToastColors;
+	public final fun component31 ()Lio/github/braceandroid/foundation/BraceTooltipColors;
+	public final fun component32 ()Lio/github/braceandroid/foundation/BraceTopBarColors;
+	public final fun component33 ()Lio/github/braceandroid/foundation/BraceTreeColors;
 	public final fun component4 ()Lio/github/braceandroid/foundation/BraceCheckboxColors;
-	public final fun component5 ()Lio/github/braceandroid/foundation/BraceDialogColors;
-	public final fun component6 ()Lio/github/braceandroid/foundation/BraceDrawerColors;
-	public final fun component7 ()Lio/github/braceandroid/foundation/BraceInputColors;
-	public final fun component8 ()Lio/github/braceandroid/foundation/BraceMenuColors;
-	public final fun component9 ()Lio/github/braceandroid/foundation/BracePopoverColors;
-	public final fun copy (Lio/github/braceandroid/foundation/BraceButtonColors;Lio/github/braceandroid/foundation/BraceCalloutColors;Lio/github/braceandroid/foundation/BraceCardColors;Lio/github/braceandroid/foundation/BraceCheckboxColors;Lio/github/braceandroid/foundation/BraceDialogColors;Lio/github/braceandroid/foundation/BraceDrawerColors;Lio/github/braceandroid/foundation/BraceInputColors;Lio/github/braceandroid/foundation/BraceMenuColors;Lio/github/braceandroid/foundation/BracePopoverColors;Lio/github/braceandroid/foundation/BraceProgressColors;Lio/github/braceandroid/foundation/BraceSelectColors;Lio/github/braceandroid/foundation/BraceShortcutColors;Lio/github/braceandroid/foundation/BraceSwitchColors;Lio/github/braceandroid/foundation/BraceTableColors;Lio/github/braceandroid/foundation/BraceTagColors;Lio/github/braceandroid/foundation/BraceToastColors;Lio/github/braceandroid/foundation/BraceTooltipColors;Lio/github/braceandroid/foundation/BraceTopBarColors;)Lio/github/braceandroid/foundation/BraceComponentColors;
-	public static synthetic fun copy$default (Lio/github/braceandroid/foundation/BraceComponentColors;Lio/github/braceandroid/foundation/BraceButtonColors;Lio/github/braceandroid/foundation/BraceCalloutColors;Lio/github/braceandroid/foundation/BraceCardColors;Lio/github/braceandroid/foundation/BraceCheckboxColors;Lio/github/braceandroid/foundation/BraceDialogColors;Lio/github/braceandroid/foundation/BraceDrawerColors;Lio/github/braceandroid/foundation/BraceInputColors;Lio/github/braceandroid/foundation/BraceMenuColors;Lio/github/braceandroid/foundation/BracePopoverColors;Lio/github/braceandroid/foundation/BraceProgressColors;Lio/github/braceandroid/foundation/BraceSelectColors;Lio/github/braceandroid/foundation/BraceShortcutColors;Lio/github/braceandroid/foundation/BraceSwitchColors;Lio/github/braceandroid/foundation/BraceTableColors;Lio/github/braceandroid/foundation/BraceTagColors;Lio/github/braceandroid/foundation/BraceToastColors;Lio/github/braceandroid/foundation/BraceTooltipColors;Lio/github/braceandroid/foundation/BraceTopBarColors;ILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceComponentColors;
+	public final fun component5 ()Lio/github/braceandroid/foundation/BraceControlCardColors;
+	public final fun component6 ()Lio/github/braceandroid/foundation/BraceDateInputColors;
+	public final fun component7 ()Lio/github/braceandroid/foundation/BraceDatePickerColors;
+	public final fun component8 ()Lio/github/braceandroid/foundation/BraceDateRangeInputColors;
+	public final fun component9 ()Lio/github/braceandroid/foundation/BraceDateRangePickerColors;
+	public final fun copy (Lio/github/braceandroid/foundation/BraceButtonColors;Lio/github/braceandroid/foundation/BraceCalloutColors;Lio/github/braceandroid/foundation/BraceCardColors;Lio/github/braceandroid/foundation/BraceCheckboxColors;Lio/github/braceandroid/foundation/BraceControlCardColors;Lio/github/braceandroid/foundation/BraceDateInputColors;Lio/github/braceandroid/foundation/BraceDatePickerColors;Lio/github/braceandroid/foundation/BraceDateRangeInputColors;Lio/github/braceandroid/foundation/BraceDateRangePickerColors;Lio/github/braceandroid/foundation/BraceDialogColors;Lio/github/braceandroid/foundation/BraceDrawerColors;Lio/github/braceandroid/foundation/BraceInputColors;Lio/github/braceandroid/foundation/BraceMenuColors;Lio/github/braceandroid/foundation/BracePanelStackColors;Lio/github/braceandroid/foundation/BracePopoverColors;Lio/github/braceandroid/foundation/BraceProgressColors;Lio/github/braceandroid/foundation/BraceRadioColors;Lio/github/braceandroid/foundation/BraceSegmentedControlColors;Lio/github/braceandroid/foundation/BraceSelectColors;Lio/github/braceandroid/foundation/BraceShortcutColors;Lio/github/braceandroid/foundation/BraceSkeletonColors;Lio/github/braceandroid/foundation/BraceSliderColors;Lio/github/braceandroid/foundation/BraceSpinnerColors;Lio/github/braceandroid/foundation/BraceSwitchColors;Lio/github/braceandroid/foundation/BraceTableColors;Lio/github/braceandroid/foundation/BraceTagColors;Lio/github/braceandroid/foundation/BraceTimeInputColors;Lio/github/braceandroid/foundation/BraceTimePickerColors;Lio/github/braceandroid/foundation/BraceTimeZoneSelectColors;Lio/github/braceandroid/foundation/BraceToastColors;Lio/github/braceandroid/foundation/BraceTooltipColors;Lio/github/braceandroid/foundation/BraceTopBarColors;Lio/github/braceandroid/foundation/BraceTreeColors;)Lio/github/braceandroid/foundation/BraceComponentColors;
+	public static synthetic fun copy$default (Lio/github/braceandroid/foundation/BraceComponentColors;Lio/github/braceandroid/foundation/BraceButtonColors;Lio/github/braceandroid/foundation/BraceCalloutColors;Lio/github/braceandroid/foundation/BraceCardColors;Lio/github/braceandroid/foundation/BraceCheckboxColors;Lio/github/braceandroid/foundation/BraceControlCardColors;Lio/github/braceandroid/foundation/BraceDateInputColors;Lio/github/braceandroid/foundation/BraceDatePickerColors;Lio/github/braceandroid/foundation/BraceDateRangeInputColors;Lio/github/braceandroid/foundation/BraceDateRangePickerColors;Lio/github/braceandroid/foundation/BraceDialogColors;Lio/github/braceandroid/foundation/BraceDrawerColors;Lio/github/braceandroid/foundation/BraceInputColors;Lio/github/braceandroid/foundation/BraceMenuColors;Lio/github/braceandroid/foundation/BracePanelStackColors;Lio/github/braceandroid/foundation/BracePopoverColors;Lio/github/braceandroid/foundation/BraceProgressColors;Lio/github/braceandroid/foundation/BraceRadioColors;Lio/github/braceandroid/foundation/BraceSegmentedControlColors;Lio/github/braceandroid/foundation/BraceSelectColors;Lio/github/braceandroid/foundation/BraceShortcutColors;Lio/github/braceandroid/foundation/BraceSkeletonColors;Lio/github/braceandroid/foundation/BraceSliderColors;Lio/github/braceandroid/foundation/BraceSpinnerColors;Lio/github/braceandroid/foundation/BraceSwitchColors;Lio/github/braceandroid/foundation/BraceTableColors;Lio/github/braceandroid/foundation/BraceTagColors;Lio/github/braceandroid/foundation/BraceTimeInputColors;Lio/github/braceandroid/foundation/BraceTimePickerColors;Lio/github/braceandroid/foundation/BraceTimeZoneSelectColors;Lio/github/braceandroid/foundation/BraceToastColors;Lio/github/braceandroid/foundation/BraceTooltipColors;Lio/github/braceandroid/foundation/BraceTopBarColors;Lio/github/braceandroid/foundation/BraceTreeColors;IILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceComponentColors;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getButton ()Lio/github/braceandroid/foundation/BraceButtonColors;
 	public final fun getCallout ()Lio/github/braceandroid/foundation/BraceCalloutColors;
 	public final fun getCard ()Lio/github/braceandroid/foundation/BraceCardColors;
 	public final fun getCheckbox ()Lio/github/braceandroid/foundation/BraceCheckboxColors;
+	public final fun getControlCard ()Lio/github/braceandroid/foundation/BraceControlCardColors;
+	public final fun getDateInput ()Lio/github/braceandroid/foundation/BraceDateInputColors;
+	public final fun getDatePicker ()Lio/github/braceandroid/foundation/BraceDatePickerColors;
+	public final fun getDateRangeInput ()Lio/github/braceandroid/foundation/BraceDateRangeInputColors;
+	public final fun getDateRangePicker ()Lio/github/braceandroid/foundation/BraceDateRangePickerColors;
 	public final fun getDialog ()Lio/github/braceandroid/foundation/BraceDialogColors;
 	public final fun getDrawer ()Lio/github/braceandroid/foundation/BraceDrawerColors;
 	public final fun getInput ()Lio/github/braceandroid/foundation/BraceInputColors;
 	public final fun getMenu ()Lio/github/braceandroid/foundation/BraceMenuColors;
+	public final fun getPanelStack ()Lio/github/braceandroid/foundation/BracePanelStackColors;
 	public final fun getPopover ()Lio/github/braceandroid/foundation/BracePopoverColors;
 	public final fun getProgress ()Lio/github/braceandroid/foundation/BraceProgressColors;
+	public final fun getRadio ()Lio/github/braceandroid/foundation/BraceRadioColors;
+	public final fun getSegmentedControl ()Lio/github/braceandroid/foundation/BraceSegmentedControlColors;
 	public final fun getSelect ()Lio/github/braceandroid/foundation/BraceSelectColors;
 	public final fun getShortcut ()Lio/github/braceandroid/foundation/BraceShortcutColors;
+	public final fun getSkeleton ()Lio/github/braceandroid/foundation/BraceSkeletonColors;
+	public final fun getSlider ()Lio/github/braceandroid/foundation/BraceSliderColors;
+	public final fun getSpinner ()Lio/github/braceandroid/foundation/BraceSpinnerColors;
 	public final fun getSwitch ()Lio/github/braceandroid/foundation/BraceSwitchColors;
 	public final fun getTable ()Lio/github/braceandroid/foundation/BraceTableColors;
 	public final fun getTag ()Lio/github/braceandroid/foundation/BraceTagColors;
+	public final fun getTimeInput ()Lio/github/braceandroid/foundation/BraceTimeInputColors;
+	public final fun getTimePicker ()Lio/github/braceandroid/foundation/BraceTimePickerColors;
+	public final fun getTimeZoneSelect ()Lio/github/braceandroid/foundation/BraceTimeZoneSelectColors;
 	public final fun getToast ()Lio/github/braceandroid/foundation/BraceToastColors;
 	public final fun getTooltip ()Lio/github/braceandroid/foundation/BraceTooltipColors;
 	public final fun getTopBar ()Lio/github/braceandroid/foundation/BraceTopBarColors;
+	public final fun getTree ()Lio/github/braceandroid/foundation/BraceTreeColors;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class io/github/braceandroid/foundation/BraceComponentMetrics {
 	public static final field $stable I
-	public fun <init> (Lio/github/braceandroid/foundation/BraceButtonMetrics;Lio/github/braceandroid/foundation/BraceCalloutMetrics;Lio/github/braceandroid/foundation/BraceCardMetrics;Lio/github/braceandroid/foundation/BraceCheckboxMetrics;Lio/github/braceandroid/foundation/BraceDialogMetrics;Lio/github/braceandroid/foundation/BraceDrawerMetrics;Lio/github/braceandroid/foundation/BraceInputMetrics;Lio/github/braceandroid/foundation/BraceMenuMetrics;Lio/github/braceandroid/foundation/BracePopoverMetrics;Lio/github/braceandroid/foundation/BraceProgressMetrics;Lio/github/braceandroid/foundation/BraceSelectMetrics;Lio/github/braceandroid/foundation/BraceShortcutMetrics;Lio/github/braceandroid/foundation/BraceSwitchMetrics;Lio/github/braceandroid/foundation/BraceTableMetrics;Lio/github/braceandroid/foundation/BraceTagMetrics;Lio/github/braceandroid/foundation/BraceToastMetrics;Lio/github/braceandroid/foundation/BraceTooltipMetrics;Lio/github/braceandroid/foundation/BraceTopBarMetrics;)V
+	public fun <init> (Lio/github/braceandroid/foundation/BraceButtonMetrics;Lio/github/braceandroid/foundation/BraceCalloutMetrics;Lio/github/braceandroid/foundation/BraceCardMetrics;Lio/github/braceandroid/foundation/BraceCheckboxMetrics;Lio/github/braceandroid/foundation/BraceControlCardMetrics;Lio/github/braceandroid/foundation/BraceDateInputMetrics;Lio/github/braceandroid/foundation/BraceDatePickerMetrics;Lio/github/braceandroid/foundation/BraceDateRangeInputMetrics;Lio/github/braceandroid/foundation/BraceDateRangePickerMetrics;Lio/github/braceandroid/foundation/BraceDialogMetrics;Lio/github/braceandroid/foundation/BraceDrawerMetrics;Lio/github/braceandroid/foundation/BraceInputMetrics;Lio/github/braceandroid/foundation/BraceMenuMetrics;Lio/github/braceandroid/foundation/BracePanelStackMetrics;Lio/github/braceandroid/foundation/BracePopoverMetrics;Lio/github/braceandroid/foundation/BraceProgressMetrics;Lio/github/braceandroid/foundation/BraceRadioMetrics;Lio/github/braceandroid/foundation/BraceSegmentedControlMetrics;Lio/github/braceandroid/foundation/BraceSelectMetrics;Lio/github/braceandroid/foundation/BraceShortcutMetrics;Lio/github/braceandroid/foundation/BraceSkeletonMetrics;Lio/github/braceandroid/foundation/BraceSliderMetrics;Lio/github/braceandroid/foundation/BraceSpinnerMetrics;Lio/github/braceandroid/foundation/BraceSwitchMetrics;Lio/github/braceandroid/foundation/BraceTableMetrics;Lio/github/braceandroid/foundation/BraceTagMetrics;Lio/github/braceandroid/foundation/BraceTimeInputMetrics;Lio/github/braceandroid/foundation/BraceTimePickerMetrics;Lio/github/braceandroid/foundation/BraceTimeZoneSelectMetrics;Lio/github/braceandroid/foundation/BraceToastMetrics;Lio/github/braceandroid/foundation/BraceTooltipMetrics;Lio/github/braceandroid/foundation/BraceTopBarMetrics;Lio/github/braceandroid/foundation/BraceTreeMetrics;)V
 	public final fun component1 ()Lio/github/braceandroid/foundation/BraceButtonMetrics;
-	public final fun component10 ()Lio/github/braceandroid/foundation/BraceProgressMetrics;
-	public final fun component11 ()Lio/github/braceandroid/foundation/BraceSelectMetrics;
-	public final fun component12 ()Lio/github/braceandroid/foundation/BraceShortcutMetrics;
-	public final fun component13 ()Lio/github/braceandroid/foundation/BraceSwitchMetrics;
-	public final fun component14 ()Lio/github/braceandroid/foundation/BraceTableMetrics;
-	public final fun component15 ()Lio/github/braceandroid/foundation/BraceTagMetrics;
-	public final fun component16 ()Lio/github/braceandroid/foundation/BraceToastMetrics;
-	public final fun component17 ()Lio/github/braceandroid/foundation/BraceTooltipMetrics;
-	public final fun component18 ()Lio/github/braceandroid/foundation/BraceTopBarMetrics;
+	public final fun component10 ()Lio/github/braceandroid/foundation/BraceDialogMetrics;
+	public final fun component11 ()Lio/github/braceandroid/foundation/BraceDrawerMetrics;
+	public final fun component12 ()Lio/github/braceandroid/foundation/BraceInputMetrics;
+	public final fun component13 ()Lio/github/braceandroid/foundation/BraceMenuMetrics;
+	public final fun component14 ()Lio/github/braceandroid/foundation/BracePanelStackMetrics;
+	public final fun component15 ()Lio/github/braceandroid/foundation/BracePopoverMetrics;
+	public final fun component16 ()Lio/github/braceandroid/foundation/BraceProgressMetrics;
+	public final fun component17 ()Lio/github/braceandroid/foundation/BraceRadioMetrics;
+	public final fun component18 ()Lio/github/braceandroid/foundation/BraceSegmentedControlMetrics;
+	public final fun component19 ()Lio/github/braceandroid/foundation/BraceSelectMetrics;
 	public final fun component2 ()Lio/github/braceandroid/foundation/BraceCalloutMetrics;
+	public final fun component20 ()Lio/github/braceandroid/foundation/BraceShortcutMetrics;
+	public final fun component21 ()Lio/github/braceandroid/foundation/BraceSkeletonMetrics;
+	public final fun component22 ()Lio/github/braceandroid/foundation/BraceSliderMetrics;
+	public final fun component23 ()Lio/github/braceandroid/foundation/BraceSpinnerMetrics;
+	public final fun component24 ()Lio/github/braceandroid/foundation/BraceSwitchMetrics;
+	public final fun component25 ()Lio/github/braceandroid/foundation/BraceTableMetrics;
+	public final fun component26 ()Lio/github/braceandroid/foundation/BraceTagMetrics;
+	public final fun component27 ()Lio/github/braceandroid/foundation/BraceTimeInputMetrics;
+	public final fun component28 ()Lio/github/braceandroid/foundation/BraceTimePickerMetrics;
+	public final fun component29 ()Lio/github/braceandroid/foundation/BraceTimeZoneSelectMetrics;
 	public final fun component3 ()Lio/github/braceandroid/foundation/BraceCardMetrics;
+	public final fun component30 ()Lio/github/braceandroid/foundation/BraceToastMetrics;
+	public final fun component31 ()Lio/github/braceandroid/foundation/BraceTooltipMetrics;
+	public final fun component32 ()Lio/github/braceandroid/foundation/BraceTopBarMetrics;
+	public final fun component33 ()Lio/github/braceandroid/foundation/BraceTreeMetrics;
 	public final fun component4 ()Lio/github/braceandroid/foundation/BraceCheckboxMetrics;
-	public final fun component5 ()Lio/github/braceandroid/foundation/BraceDialogMetrics;
-	public final fun component6 ()Lio/github/braceandroid/foundation/BraceDrawerMetrics;
-	public final fun component7 ()Lio/github/braceandroid/foundation/BraceInputMetrics;
-	public final fun component8 ()Lio/github/braceandroid/foundation/BraceMenuMetrics;
-	public final fun component9 ()Lio/github/braceandroid/foundation/BracePopoverMetrics;
-	public final fun copy (Lio/github/braceandroid/foundation/BraceButtonMetrics;Lio/github/braceandroid/foundation/BraceCalloutMetrics;Lio/github/braceandroid/foundation/BraceCardMetrics;Lio/github/braceandroid/foundation/BraceCheckboxMetrics;Lio/github/braceandroid/foundation/BraceDialogMetrics;Lio/github/braceandroid/foundation/BraceDrawerMetrics;Lio/github/braceandroid/foundation/BraceInputMetrics;Lio/github/braceandroid/foundation/BraceMenuMetrics;Lio/github/braceandroid/foundation/BracePopoverMetrics;Lio/github/braceandroid/foundation/BraceProgressMetrics;Lio/github/braceandroid/foundation/BraceSelectMetrics;Lio/github/braceandroid/foundation/BraceShortcutMetrics;Lio/github/braceandroid/foundation/BraceSwitchMetrics;Lio/github/braceandroid/foundation/BraceTableMetrics;Lio/github/braceandroid/foundation/BraceTagMetrics;Lio/github/braceandroid/foundation/BraceToastMetrics;Lio/github/braceandroid/foundation/BraceTooltipMetrics;Lio/github/braceandroid/foundation/BraceTopBarMetrics;)Lio/github/braceandroid/foundation/BraceComponentMetrics;
-	public static synthetic fun copy$default (Lio/github/braceandroid/foundation/BraceComponentMetrics;Lio/github/braceandroid/foundation/BraceButtonMetrics;Lio/github/braceandroid/foundation/BraceCalloutMetrics;Lio/github/braceandroid/foundation/BraceCardMetrics;Lio/github/braceandroid/foundation/BraceCheckboxMetrics;Lio/github/braceandroid/foundation/BraceDialogMetrics;Lio/github/braceandroid/foundation/BraceDrawerMetrics;Lio/github/braceandroid/foundation/BraceInputMetrics;Lio/github/braceandroid/foundation/BraceMenuMetrics;Lio/github/braceandroid/foundation/BracePopoverMetrics;Lio/github/braceandroid/foundation/BraceProgressMetrics;Lio/github/braceandroid/foundation/BraceSelectMetrics;Lio/github/braceandroid/foundation/BraceShortcutMetrics;Lio/github/braceandroid/foundation/BraceSwitchMetrics;Lio/github/braceandroid/foundation/BraceTableMetrics;Lio/github/braceandroid/foundation/BraceTagMetrics;Lio/github/braceandroid/foundation/BraceToastMetrics;Lio/github/braceandroid/foundation/BraceTooltipMetrics;Lio/github/braceandroid/foundation/BraceTopBarMetrics;ILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceComponentMetrics;
+	public final fun component5 ()Lio/github/braceandroid/foundation/BraceControlCardMetrics;
+	public final fun component6 ()Lio/github/braceandroid/foundation/BraceDateInputMetrics;
+	public final fun component7 ()Lio/github/braceandroid/foundation/BraceDatePickerMetrics;
+	public final fun component8 ()Lio/github/braceandroid/foundation/BraceDateRangeInputMetrics;
+	public final fun component9 ()Lio/github/braceandroid/foundation/BraceDateRangePickerMetrics;
+	public final fun copy (Lio/github/braceandroid/foundation/BraceButtonMetrics;Lio/github/braceandroid/foundation/BraceCalloutMetrics;Lio/github/braceandroid/foundation/BraceCardMetrics;Lio/github/braceandroid/foundation/BraceCheckboxMetrics;Lio/github/braceandroid/foundation/BraceControlCardMetrics;Lio/github/braceandroid/foundation/BraceDateInputMetrics;Lio/github/braceandroid/foundation/BraceDatePickerMetrics;Lio/github/braceandroid/foundation/BraceDateRangeInputMetrics;Lio/github/braceandroid/foundation/BraceDateRangePickerMetrics;Lio/github/braceandroid/foundation/BraceDialogMetrics;Lio/github/braceandroid/foundation/BraceDrawerMetrics;Lio/github/braceandroid/foundation/BraceInputMetrics;Lio/github/braceandroid/foundation/BraceMenuMetrics;Lio/github/braceandroid/foundation/BracePanelStackMetrics;Lio/github/braceandroid/foundation/BracePopoverMetrics;Lio/github/braceandroid/foundation/BraceProgressMetrics;Lio/github/braceandroid/foundation/BraceRadioMetrics;Lio/github/braceandroid/foundation/BraceSegmentedControlMetrics;Lio/github/braceandroid/foundation/BraceSelectMetrics;Lio/github/braceandroid/foundation/BraceShortcutMetrics;Lio/github/braceandroid/foundation/BraceSkeletonMetrics;Lio/github/braceandroid/foundation/BraceSliderMetrics;Lio/github/braceandroid/foundation/BraceSpinnerMetrics;Lio/github/braceandroid/foundation/BraceSwitchMetrics;Lio/github/braceandroid/foundation/BraceTableMetrics;Lio/github/braceandroid/foundation/BraceTagMetrics;Lio/github/braceandroid/foundation/BraceTimeInputMetrics;Lio/github/braceandroid/foundation/BraceTimePickerMetrics;Lio/github/braceandroid/foundation/BraceTimeZoneSelectMetrics;Lio/github/braceandroid/foundation/BraceToastMetrics;Lio/github/braceandroid/foundation/BraceTooltipMetrics;Lio/github/braceandroid/foundation/BraceTopBarMetrics;Lio/github/braceandroid/foundation/BraceTreeMetrics;)Lio/github/braceandroid/foundation/BraceComponentMetrics;
+	public static synthetic fun copy$default (Lio/github/braceandroid/foundation/BraceComponentMetrics;Lio/github/braceandroid/foundation/BraceButtonMetrics;Lio/github/braceandroid/foundation/BraceCalloutMetrics;Lio/github/braceandroid/foundation/BraceCardMetrics;Lio/github/braceandroid/foundation/BraceCheckboxMetrics;Lio/github/braceandroid/foundation/BraceControlCardMetrics;Lio/github/braceandroid/foundation/BraceDateInputMetrics;Lio/github/braceandroid/foundation/BraceDatePickerMetrics;Lio/github/braceandroid/foundation/BraceDateRangeInputMetrics;Lio/github/braceandroid/foundation/BraceDateRangePickerMetrics;Lio/github/braceandroid/foundation/BraceDialogMetrics;Lio/github/braceandroid/foundation/BraceDrawerMetrics;Lio/github/braceandroid/foundation/BraceInputMetrics;Lio/github/braceandroid/foundation/BraceMenuMetrics;Lio/github/braceandroid/foundation/BracePanelStackMetrics;Lio/github/braceandroid/foundation/BracePopoverMetrics;Lio/github/braceandroid/foundation/BraceProgressMetrics;Lio/github/braceandroid/foundation/BraceRadioMetrics;Lio/github/braceandroid/foundation/BraceSegmentedControlMetrics;Lio/github/braceandroid/foundation/BraceSelectMetrics;Lio/github/braceandroid/foundation/BraceShortcutMetrics;Lio/github/braceandroid/foundation/BraceSkeletonMetrics;Lio/github/braceandroid/foundation/BraceSliderMetrics;Lio/github/braceandroid/foundation/BraceSpinnerMetrics;Lio/github/braceandroid/foundation/BraceSwitchMetrics;Lio/github/braceandroid/foundation/BraceTableMetrics;Lio/github/braceandroid/foundation/BraceTagMetrics;Lio/github/braceandroid/foundation/BraceTimeInputMetrics;Lio/github/braceandroid/foundation/BraceTimePickerMetrics;Lio/github/braceandroid/foundation/BraceTimeZoneSelectMetrics;Lio/github/braceandroid/foundation/BraceToastMetrics;Lio/github/braceandroid/foundation/BraceTooltipMetrics;Lio/github/braceandroid/foundation/BraceTopBarMetrics;Lio/github/braceandroid/foundation/BraceTreeMetrics;IILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceComponentMetrics;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getButton ()Lio/github/braceandroid/foundation/BraceButtonMetrics;
 	public final fun getCallout ()Lio/github/braceandroid/foundation/BraceCalloutMetrics;
 	public final fun getCard ()Lio/github/braceandroid/foundation/BraceCardMetrics;
 	public final fun getCheckbox ()Lio/github/braceandroid/foundation/BraceCheckboxMetrics;
+	public final fun getControlCard ()Lio/github/braceandroid/foundation/BraceControlCardMetrics;
+	public final fun getDateInput ()Lio/github/braceandroid/foundation/BraceDateInputMetrics;
+	public final fun getDatePicker ()Lio/github/braceandroid/foundation/BraceDatePickerMetrics;
+	public final fun getDateRangeInput ()Lio/github/braceandroid/foundation/BraceDateRangeInputMetrics;
+	public final fun getDateRangePicker ()Lio/github/braceandroid/foundation/BraceDateRangePickerMetrics;
 	public final fun getDialog ()Lio/github/braceandroid/foundation/BraceDialogMetrics;
 	public final fun getDrawer ()Lio/github/braceandroid/foundation/BraceDrawerMetrics;
 	public final fun getInput ()Lio/github/braceandroid/foundation/BraceInputMetrics;
 	public final fun getMenu ()Lio/github/braceandroid/foundation/BraceMenuMetrics;
+	public final fun getPanelStack ()Lio/github/braceandroid/foundation/BracePanelStackMetrics;
 	public final fun getPopover ()Lio/github/braceandroid/foundation/BracePopoverMetrics;
 	public final fun getProgress ()Lio/github/braceandroid/foundation/BraceProgressMetrics;
+	public final fun getRadio ()Lio/github/braceandroid/foundation/BraceRadioMetrics;
+	public final fun getSegmentedControl ()Lio/github/braceandroid/foundation/BraceSegmentedControlMetrics;
 	public final fun getSelect ()Lio/github/braceandroid/foundation/BraceSelectMetrics;
 	public final fun getShortcut ()Lio/github/braceandroid/foundation/BraceShortcutMetrics;
+	public final fun getSkeleton ()Lio/github/braceandroid/foundation/BraceSkeletonMetrics;
+	public final fun getSlider ()Lio/github/braceandroid/foundation/BraceSliderMetrics;
+	public final fun getSpinner ()Lio/github/braceandroid/foundation/BraceSpinnerMetrics;
 	public final fun getSwitch ()Lio/github/braceandroid/foundation/BraceSwitchMetrics;
 	public final fun getTable ()Lio/github/braceandroid/foundation/BraceTableMetrics;
 	public final fun getTag ()Lio/github/braceandroid/foundation/BraceTagMetrics;
+	public final fun getTimeInput ()Lio/github/braceandroid/foundation/BraceTimeInputMetrics;
+	public final fun getTimePicker ()Lio/github/braceandroid/foundation/BraceTimePickerMetrics;
+	public final fun getTimeZoneSelect ()Lio/github/braceandroid/foundation/BraceTimeZoneSelectMetrics;
 	public final fun getToast ()Lio/github/braceandroid/foundation/BraceToastMetrics;
 	public final fun getTooltip ()Lio/github/braceandroid/foundation/BraceTooltipMetrics;
 	public final fun getTopBar ()Lio/github/braceandroid/foundation/BraceTopBarMetrics;
+	public final fun getTree ()Lio/github/braceandroid/foundation/BraceTreeMetrics;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -329,6 +389,272 @@ public final class io/github/braceandroid/foundation/BraceContrast : java/lang/E
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lio/github/braceandroid/foundation/BraceContrast;
 	public static fun values ()[Lio/github/braceandroid/foundation/BraceContrast;
+}
+
+public final class io/github/braceandroid/foundation/BraceControlCardColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJJJJJJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component10-0d7_KjU ()J
+	public final fun component11-0d7_KjU ()J
+	public final fun component12-0d7_KjU ()J
+	public final fun component13-0d7_KjU ()J
+	public final fun component14-0d7_KjU ()J
+	public final fun component15-0d7_KjU ()J
+	public final fun component16-0d7_KjU ()J
+	public final fun component17-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun component8-0d7_KjU ()J
+	public final fun component9-0d7_KjU ()J
+	public final fun copy-OG5zQOY (JJJJJJJJJJJJJJJJJ)Lio/github/braceandroid/foundation/BraceControlCardColors;
+	public static synthetic fun copy-OG5zQOY$default (Lio/github/braceandroid/foundation/BraceControlCardColors;JJJJJJJJJJJJJJJJJILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceControlCardColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBorder-0d7_KjU ()J
+	public final fun getContainer-0d7_KjU ()J
+	public final fun getContent-0d7_KjU ()J
+	public final fun getDisabledContainer-0d7_KjU ()J
+	public final fun getDisabledContent-0d7_KjU ()J
+	public final fun getDisabledSwitchThumb-0d7_KjU ()J
+	public final fun getDisabledSwitchTrack-0d7_KjU ()J
+	public final fun getFocusRing-0d7_KjU ()J
+	public final fun getHoverContainer-0d7_KjU ()J
+	public final fun getMutedContent-0d7_KjU ()J
+	public final fun getPressedContainer-0d7_KjU ()J
+	public final fun getRadioDot-0d7_KjU ()J
+	public final fun getRadioRing-0d7_KjU ()J
+	public final fun getRadioSelectedRing-0d7_KjU ()J
+	public final fun getSelectedBorder-0d7_KjU ()J
+	public final fun getSelectedContainer-0d7_KjU ()J
+	public final fun getSelectedContent-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceControlCardMetrics {
+	public static final field $stable I
+	public synthetic fun <init> (FFFFFFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun component5-D9Ej5fM ()F
+	public final fun component6-D9Ej5fM ()F
+	public final fun component7-D9Ej5fM ()F
+	public final fun copy-oRJhP44 (FFFFFFF)Lio/github/braceandroid/foundation/BraceControlCardMetrics;
+	public static synthetic fun copy-oRJhP44$default (Lio/github/braceandroid/foundation/BraceControlCardMetrics;FFFFFFFILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceControlCardMetrics;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContentPadding-D9Ej5fM ()F
+	public final fun getCornerRadius-D9Ej5fM ()F
+	public final fun getDescriptionGap-D9Ej5fM ()F
+	public final fun getIndicatorGap-D9Ej5fM ()F
+	public final fun getRadioDotRadius-D9Ej5fM ()F
+	public final fun getRadioSize-D9Ej5fM ()F
+	public final fun getRadioStrokeWidth-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceDateInputColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component10-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun component8-0d7_KjU ()J
+	public final fun component9-0d7_KjU ()J
+	public final fun copy--K518z4 (JJJJJJJJJJ)Lio/github/braceandroid/foundation/BraceDateInputColors;
+	public static synthetic fun copy--K518z4$default (Lio/github/braceandroid/foundation/BraceDateInputColors;JJJJJJJJJJILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceDateInputColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBorder-0d7_KjU ()J
+	public final fun getCalendarIcon-0d7_KjU ()J
+	public final fun getContainer-0d7_KjU ()J
+	public final fun getContent-0d7_KjU ()J
+	public final fun getDisabledContainer-0d7_KjU ()J
+	public final fun getDisabledContent-0d7_KjU ()J
+	public final fun getErrorBorder-0d7_KjU ()J
+	public final fun getFocusRing-0d7_KjU ()J
+	public final fun getFocusedBorder-0d7_KjU ()J
+	public final fun getPlaceholder-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceDateInputMetrics {
+	public static final field $stable I
+	public synthetic fun <init> (FFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun copy-2z7ARbQ (FFF)Lio/github/braceandroid/foundation/BraceDateInputMetrics;
+	public static synthetic fun copy-2z7ARbQ$default (Lio/github/braceandroid/foundation/BraceDateInputMetrics;FFFILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceDateInputMetrics;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBorderWidth-D9Ej5fM ()F
+	public final fun getCornerRadius-D9Ej5fM ()F
+	public final fun getHorizontalPadding-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceDatePickerColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component10-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun component8-0d7_KjU ()J
+	public final fun component9-0d7_KjU ()J
+	public final fun copy--K518z4 (JJJJJJJJJJ)Lio/github/braceandroid/foundation/BraceDatePickerColors;
+	public static synthetic fun copy--K518z4$default (Lio/github/braceandroid/foundation/BraceDatePickerColors;JJJJJJJJJJILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceDatePickerColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBorder-0d7_KjU ()J
+	public final fun getContainer-0d7_KjU ()J
+	public final fun getContent-0d7_KjU ()J
+	public final fun getDisabledContent-0d7_KjU ()J
+	public final fun getFocusRing-0d7_KjU ()J
+	public final fun getHoverContainer-0d7_KjU ()J
+	public final fun getMutedContent-0d7_KjU ()J
+	public final fun getSelectedContainer-0d7_KjU ()J
+	public final fun getSelectedContent-0d7_KjU ()J
+	public final fun getTodayBorder-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceDatePickerMetrics {
+	public static final field $stable I
+	public synthetic fun <init> (FFFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun copy-a9UjIt4 (FFFF)Lio/github/braceandroid/foundation/BraceDatePickerMetrics;
+	public static synthetic fun copy-a9UjIt4$default (Lio/github/braceandroid/foundation/BraceDatePickerMetrics;FFFFILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceDatePickerMetrics;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColumnGap-D9Ej5fM ()F
+	public final fun getContentPadding-D9Ej5fM ()F
+	public final fun getCornerRadius-D9Ej5fM ()F
+	public final fun getDaySize-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceDateRangeInputColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component10-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun component8-0d7_KjU ()J
+	public final fun component9-0d7_KjU ()J
+	public final fun copy--K518z4 (JJJJJJJJJJ)Lio/github/braceandroid/foundation/BraceDateRangeInputColors;
+	public static synthetic fun copy--K518z4$default (Lio/github/braceandroid/foundation/BraceDateRangeInputColors;JJJJJJJJJJILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceDateRangeInputColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBorder-0d7_KjU ()J
+	public final fun getCalendarIcon-0d7_KjU ()J
+	public final fun getContainer-0d7_KjU ()J
+	public final fun getContent-0d7_KjU ()J
+	public final fun getDisabledContainer-0d7_KjU ()J
+	public final fun getDisabledContent-0d7_KjU ()J
+	public final fun getErrorBorder-0d7_KjU ()J
+	public final fun getFocusRing-0d7_KjU ()J
+	public final fun getFocusedBorder-0d7_KjU ()J
+	public final fun getPlaceholder-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceDateRangeInputMetrics {
+	public static final field $stable I
+	public synthetic fun <init> (FFFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun copy-a9UjIt4 (FFFF)Lio/github/braceandroid/foundation/BraceDateRangeInputMetrics;
+	public static synthetic fun copy-a9UjIt4$default (Lio/github/braceandroid/foundation/BraceDateRangeInputMetrics;FFFFILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceDateRangeInputMetrics;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBorderWidth-D9Ej5fM ()F
+	public final fun getCornerRadius-D9Ej5fM ()F
+	public final fun getFieldGap-D9Ej5fM ()F
+	public final fun getHorizontalPadding-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceDateRangePickerColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component10-0d7_KjU ()J
+	public final fun component11-0d7_KjU ()J
+	public final fun component12-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun component8-0d7_KjU ()J
+	public final fun component9-0d7_KjU ()J
+	public final fun copy-2qZNXz8 (JJJJJJJJJJJJ)Lio/github/braceandroid/foundation/BraceDateRangePickerColors;
+	public static synthetic fun copy-2qZNXz8$default (Lio/github/braceandroid/foundation/BraceDateRangePickerColors;JJJJJJJJJJJJILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceDateRangePickerColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBorder-0d7_KjU ()J
+	public final fun getContainer-0d7_KjU ()J
+	public final fun getContent-0d7_KjU ()J
+	public final fun getDisabledContent-0d7_KjU ()J
+	public final fun getFocusRing-0d7_KjU ()J
+	public final fun getHoverContainer-0d7_KjU ()J
+	public final fun getMutedContent-0d7_KjU ()J
+	public final fun getRangeContainer-0d7_KjU ()J
+	public final fun getRangeContent-0d7_KjU ()J
+	public final fun getSelectedContainer-0d7_KjU ()J
+	public final fun getSelectedContent-0d7_KjU ()J
+	public final fun getTodayBorder-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceDateRangePickerMetrics {
+	public static final field $stable I
+	public synthetic fun <init> (FFFFFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun component5-D9Ej5fM ()F
+	public final fun component6-D9Ej5fM ()F
+	public final fun copy-erZIsFM (FFFFFF)Lio/github/braceandroid/foundation/BraceDateRangePickerMetrics;
+	public static synthetic fun copy-erZIsFM$default (Lio/github/braceandroid/foundation/BraceDateRangePickerMetrics;FFFFFFILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceDateRangePickerMetrics;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColumnGap-D9Ej5fM ()F
+	public final fun getContentPadding-D9Ej5fM ()F
+	public final fun getCornerRadius-D9Ej5fM ()F
+	public final fun getDaySize-D9Ej5fM ()F
+	public final fun getMonthGap-D9Ej5fM ()F
+	public final fun getTwoMonthMinWidth-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class io/github/braceandroid/foundation/BraceDensity : java/lang/Enum {
@@ -702,6 +1028,52 @@ public final class io/github/braceandroid/foundation/BracePalette {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class io/github/braceandroid/foundation/BracePanelStackColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun component8-0d7_KjU ()J
+	public final fun copy-FD3wquc (JJJJJJJJ)Lio/github/braceandroid/foundation/BracePanelStackColors;
+	public static synthetic fun copy-FD3wquc$default (Lio/github/braceandroid/foundation/BracePanelStackColors;JJJJJJJJILjava/lang/Object;)Lio/github/braceandroid/foundation/BracePanelStackColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBackContent-0d7_KjU ()J
+	public final fun getBackHover-0d7_KjU ()J
+	public final fun getBackPressed-0d7_KjU ()J
+	public final fun getBorder-0d7_KjU ()J
+	public final fun getContainer-0d7_KjU ()J
+	public final fun getFocusRing-0d7_KjU ()J
+	public final fun getHeader-0d7_KjU ()J
+	public final fun getTitle-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BracePanelStackMetrics {
+	public static final field $stable I
+	public synthetic fun <init> (FFFFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun component5-D9Ej5fM ()F
+	public final fun copy-RyVG9vg (FFFFF)Lio/github/braceandroid/foundation/BracePanelStackMetrics;
+	public static synthetic fun copy-RyVG9vg$default (Lio/github/braceandroid/foundation/BracePanelStackMetrics;FFFFFILjava/lang/Object;)Lio/github/braceandroid/foundation/BracePanelStackMetrics;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBackMaxWidth-D9Ej5fM ()F
+	public final fun getHorizontalPadding-D9Ej5fM ()F
+	public final fun getItemGap-D9Ej5fM ()F
+	public final fun getMinHeight-D9Ej5fM ()F
+	public final fun getVerticalPadding-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class io/github/braceandroid/foundation/BracePopoverColors {
 	public static final field $stable I
 	public synthetic fun <init> (JJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -770,6 +1142,114 @@ public final class io/github/braceandroid/foundation/BraceProgressMetrics {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class io/github/braceandroid/foundation/BraceRadioColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun component8-0d7_KjU ()J
+	public final fun component9-0d7_KjU ()J
+	public final fun copy-5r9EGqc (JJJJJJJJJ)Lio/github/braceandroid/foundation/BraceRadioColors;
+	public static synthetic fun copy-5r9EGqc$default (Lio/github/braceandroid/foundation/BraceRadioColors;JJJJJJJJJILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceRadioColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContainer-0d7_KjU ()J
+	public final fun getDisabledContainer-0d7_KjU ()J
+	public final fun getDisabledContent-0d7_KjU ()J
+	public final fun getFocusRing-0d7_KjU ()J
+	public final fun getHoverBorder-0d7_KjU ()J
+	public final fun getPressedBorder-0d7_KjU ()J
+	public final fun getSelectedBorder-0d7_KjU ()J
+	public final fun getSelectedDot-0d7_KjU ()J
+	public final fun getUnselectedBorder-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceRadioMetrics {
+	public static final field $stable I
+	public synthetic fun <init> (FFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun copy-2z7ARbQ (FFF)Lio/github/braceandroid/foundation/BraceRadioMetrics;
+	public static synthetic fun copy-2z7ARbQ$default (Lio/github/braceandroid/foundation/BraceRadioMetrics;FFFILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceRadioMetrics;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDotRadius-D9Ej5fM ()F
+	public final fun getSize-D9Ej5fM ()F
+	public final fun getStrokeWidth-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceSegmentedControlColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJJJJJJJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component10-0d7_KjU ()J
+	public final fun component11-0d7_KjU ()J
+	public final fun component12-0d7_KjU ()J
+	public final fun component13-0d7_KjU ()J
+	public final fun component14-0d7_KjU ()J
+	public final fun component15-0d7_KjU ()J
+	public final fun component16-0d7_KjU ()J
+	public final fun component17-0d7_KjU ()J
+	public final fun component18-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun component8-0d7_KjU ()J
+	public final fun component9-0d7_KjU ()J
+	public final fun copy-58FyvDQ (JJJJJJJJJJJJJJJJJJ)Lio/github/braceandroid/foundation/BraceSegmentedControlColors;
+	public static synthetic fun copy-58FyvDQ$default (Lio/github/braceandroid/foundation/BraceSegmentedControlColors;JJJJJJJJJJJJJJJJJJILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceSegmentedControlColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBorder-0d7_KjU ()J
+	public final fun getContainer-0d7_KjU ()J
+	public final fun getDisabledContainer-0d7_KjU ()J
+	public final fun getDisabledContent-0d7_KjU ()J
+	public final fun getFocusRing-0d7_KjU ()J
+	public final fun getHoverContainer-0d7_KjU ()J
+	public final fun getPressedContainer-0d7_KjU ()J
+	public final fun getSelectedBorder-0d7_KjU ()J
+	public final fun getSelectedContainer-0d7_KjU ()J
+	public final fun getSelectedContent-0d7_KjU ()J
+	public final fun getSelectedHoverContainer-0d7_KjU ()J
+	public final fun getSelectedPressedContainer-0d7_KjU ()J
+	public final fun getSelectedPrimaryContainer-0d7_KjU ()J
+	public final fun getSelectedPrimaryContent-0d7_KjU ()J
+	public final fun getSelectedPrimaryHoverContainer-0d7_KjU ()J
+	public final fun getSelectedPrimaryPressedContainer-0d7_KjU ()J
+	public final fun getUnselectedContainer-0d7_KjU ()J
+	public final fun getUnselectedContent-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceSegmentedControlMetrics {
+	public static final field $stable I
+	public synthetic fun <init> (FFFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun copy-a9UjIt4 (FFFF)Lio/github/braceandroid/foundation/BraceSegmentedControlMetrics;
+	public static synthetic fun copy-a9UjIt4$default (Lio/github/braceandroid/foundation/BraceSegmentedControlMetrics;FFFFILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceSegmentedControlMetrics;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCornerRadius-D9Ej5fM ()F
+	public final fun getGap-D9Ej5fM ()F
+	public final fun getHorizontalPadding-D9Ej5fM ()F
+	public final fun getItemCornerRadius-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class io/github/braceandroid/foundation/BraceSelectColors {
 	public static final field $stable I
 	public synthetic fun <init> (JJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -822,8 +1302,8 @@ public final class io/github/braceandroid/foundation/BraceSelectMetrics {
 
 public final class io/github/braceandroid/foundation/BraceSemanticColorOverrides {
 	public static final field $stable I
-	public synthetic fun <init> (Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
 	public final fun component10-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
 	public final fun component11-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
@@ -859,17 +1339,19 @@ public final class io/github/braceandroid/foundation/BraceSemanticColorOverrides
 	public final fun component39-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
 	public final fun component4-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
 	public final fun component40-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun component41-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
 	public final fun component5-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
 	public final fun component6-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
 	public final fun component7-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
 	public final fun component8-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
 	public final fun component9-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
-	public final fun copy-LzdXIVc (Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;)Lio/github/braceandroid/foundation/BraceSemanticColorOverrides;
-	public static synthetic fun copy-LzdXIVc$default (Lio/github/braceandroid/foundation/BraceSemanticColorOverrides;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;IILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceSemanticColorOverrides;
+	public final fun copy-1SQIcF0 (Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;)Lio/github/braceandroid/foundation/BraceSemanticColorOverrides;
+	public static synthetic fun copy-1SQIcF0$default (Lio/github/braceandroid/foundation/BraceSemanticColorOverrides;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;IILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceSemanticColorOverrides;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBackground-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
 	public final fun getBorder-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
 	public final fun getBorderStrong-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun getControlTrackInactive-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
 	public final fun getDanger-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
 	public final fun getDangerHover-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
 	public final fun getDangerPressed-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
@@ -913,7 +1395,7 @@ public final class io/github/braceandroid/foundation/BraceSemanticColorOverrides
 
 public final class io/github/braceandroid/foundation/BraceSemanticColors {
 	public static final field $stable I
-	public synthetic fun <init> (JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-0d7_KjU ()J
 	public final fun component10-0d7_KjU ()J
 	public final fun component11-0d7_KjU ()J
@@ -949,17 +1431,19 @@ public final class io/github/braceandroid/foundation/BraceSemanticColors {
 	public final fun component39-0d7_KjU ()J
 	public final fun component4-0d7_KjU ()J
 	public final fun component40-0d7_KjU ()J
+	public final fun component41-0d7_KjU ()J
 	public final fun component5-0d7_KjU ()J
 	public final fun component6-0d7_KjU ()J
 	public final fun component7-0d7_KjU ()J
 	public final fun component8-0d7_KjU ()J
 	public final fun component9-0d7_KjU ()J
-	public final fun copy-KR53e2g (JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ)Lio/github/braceandroid/foundation/BraceSemanticColors;
-	public static synthetic fun copy-KR53e2g$default (Lio/github/braceandroid/foundation/BraceSemanticColors;JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJIILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceSemanticColors;
+	public final fun copy-ilA1nao (JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ)Lio/github/braceandroid/foundation/BraceSemanticColors;
+	public static synthetic fun copy-ilA1nao$default (Lio/github/braceandroid/foundation/BraceSemanticColors;JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJIILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceSemanticColors;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBackground-0d7_KjU ()J
 	public final fun getBorder-0d7_KjU ()J
 	public final fun getBorderStrong-0d7_KjU ()J
+	public final fun getControlTrackInactive-0d7_KjU ()J
 	public final fun getDanger-0d7_KjU ()J
 	public final fun getDangerHover-0d7_KjU ()J
 	public final fun getDangerPressed-0d7_KjU ()J
@@ -1083,6 +1567,106 @@ public final class io/github/braceandroid/foundation/BraceSizingTokens {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class io/github/braceandroid/foundation/BraceSkeletonColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun copy-ysEtTa8 (JJJ)Lio/github/braceandroid/foundation/BraceSkeletonColors;
+	public static synthetic fun copy-ysEtTa8$default (Lio/github/braceandroid/foundation/BraceSkeletonColors;JJJILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceSkeletonColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBase-0d7_KjU ()J
+	public final fun getBorder-0d7_KjU ()J
+	public final fun getHighlight-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceSkeletonMetrics {
+	public static final field $stable I
+	public synthetic fun <init> (FFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun copy-YgX7TsA (FF)Lio/github/braceandroid/foundation/BraceSkeletonMetrics;
+	public static synthetic fun copy-YgX7TsA$default (Lio/github/braceandroid/foundation/BraceSkeletonMetrics;FFILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceSkeletonMetrics;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCornerRadius-D9Ej5fM ()F
+	public final fun getLineHeight-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceSliderColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJJJJJJJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component10-0d7_KjU ()J
+	public final fun component11-0d7_KjU ()J
+	public final fun component12-0d7_KjU ()J
+	public final fun component13-0d7_KjU ()J
+	public final fun component14-0d7_KjU ()J
+	public final fun component15-0d7_KjU ()J
+	public final fun component16-0d7_KjU ()J
+	public final fun component17-0d7_KjU ()J
+	public final fun component18-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun component8-0d7_KjU ()J
+	public final fun component9-0d7_KjU ()J
+	public final fun copy-58FyvDQ (JJJJJJJJJJJJJJJJJJ)Lio/github/braceandroid/foundation/BraceSliderColors;
+	public static synthetic fun copy-58FyvDQ$default (Lio/github/braceandroid/foundation/BraceSliderColors;JJJJJJJJJJJJJJJJJJILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceSliderColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getActiveTick-0d7_KjU ()J
+	public final fun getActiveTrack-0d7_KjU ()J
+	public final fun getDangerTrack-0d7_KjU ()J
+	public final fun getDisabledActiveTrack-0d7_KjU ()J
+	public final fun getDisabledInactiveTrack-0d7_KjU ()J
+	public final fun getDisabledThumb-0d7_KjU ()J
+	public final fun getFocusRing-0d7_KjU ()J
+	public final fun getHoverThumb-0d7_KjU ()J
+	public final fun getInactiveTick-0d7_KjU ()J
+	public final fun getInactiveTrack-0d7_KjU ()J
+	public final fun getLabel-0d7_KjU ()J
+	public final fun getMultiInactiveTrack-0d7_KjU ()J
+	public final fun getMultiTrackOutline-0d7_KjU ()J
+	public final fun getMutedLabel-0d7_KjU ()J
+	public final fun getSuccessTrack-0d7_KjU ()J
+	public final fun getThumb-0d7_KjU ()J
+	public final fun getThumbPressed-0d7_KjU ()J
+	public final fun getWarningTrack-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceSliderMetrics {
+	public static final field $stable I
+	public synthetic fun <init> (FFFFFFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun component5-D9Ej5fM ()F
+	public final fun component6-D9Ej5fM ()F
+	public final fun component7-D9Ej5fM ()F
+	public final fun copy-oRJhP44 (FFFFFFF)Lio/github/braceandroid/foundation/BraceSliderMetrics;
+	public static synthetic fun copy-oRJhP44$default (Lio/github/braceandroid/foundation/BraceSliderMetrics;FFFFFFFILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceSliderMetrics;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAxisLabelGap-D9Ej5fM ()F
+	public final fun getFocusCornerRadius-D9Ej5fM ()F
+	public final fun getMinHeight-D9Ej5fM ()F
+	public final fun getThumbHeight-D9Ej5fM ()F
+	public final fun getThumbSlotWidth-D9Ej5fM ()F
+	public final fun getThumbWidth-D9Ej5fM ()F
+	public final fun getTrackHeight-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class io/github/braceandroid/foundation/BraceSpacingTokens {
 	public static final field $stable I
 	public synthetic fun <init> (FFFFFFFFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -1107,6 +1691,44 @@ public final class io/github/braceandroid/foundation/BraceSpacingTokens {
 	public final fun getXxl-D9Ej5fM ()F
 	public final fun getXxs-D9Ej5fM ()F
 	public final fun getXxxl-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceSpinnerColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun copy-t635Npw (JJJJJ)Lio/github/braceandroid/foundation/BraceSpinnerColors;
+	public static synthetic fun copy-t635Npw$default (Lio/github/braceandroid/foundation/BraceSpinnerColors;JJJJJILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceSpinnerColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDangerIndicator-0d7_KjU ()J
+	public final fun getIndicator-0d7_KjU ()J
+	public final fun getSuccessIndicator-0d7_KjU ()J
+	public final fun getTrack-0d7_KjU ()J
+	public final fun getWarningIndicator-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceSpinnerMetrics {
+	public static final field $stable I
+	public synthetic fun <init> (FFFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun copy-a9UjIt4 (FFFF)Lio/github/braceandroid/foundation/BraceSpinnerMetrics;
+	public static synthetic fun copy-a9UjIt4$default (Lio/github/braceandroid/foundation/BraceSpinnerMetrics;FFFFILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceSpinnerMetrics;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLargeSize-D9Ej5fM ()F
+	public final fun getMediumSize-D9Ej5fM ()F
+	public final fun getSmallSize-D9Ej5fM ()F
+	public final fun getStrokeWidth-D9Ej5fM ()F
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1155,18 +1777,26 @@ public final class io/github/braceandroid/foundation/BraceSwitchMetrics {
 
 public final class io/github/braceandroid/foundation/BraceTableColors {
 	public static final field $stable I
-	public synthetic fun <init> (JJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JJJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-0d7_KjU ()J
+	public final fun component10-0d7_KjU ()J
+	public final fun component11-0d7_KjU ()J
 	public final fun component2-0d7_KjU ()J
 	public final fun component3-0d7_KjU ()J
 	public final fun component4-0d7_KjU ()J
 	public final fun component5-0d7_KjU ()J
 	public final fun component6-0d7_KjU ()J
 	public final fun component7-0d7_KjU ()J
-	public final fun copy-4JmcsL4 (JJJJJJJ)Lio/github/braceandroid/foundation/BraceTableColors;
-	public static synthetic fun copy-4JmcsL4$default (Lio/github/braceandroid/foundation/BraceTableColors;JJJJJJJILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceTableColors;
+	public final fun component8-0d7_KjU ()J
+	public final fun component9-0d7_KjU ()J
+	public final fun copy-KpyCeHw (JJJJJJJJJJJ)Lio/github/braceandroid/foundation/BraceTableColors;
+	public static synthetic fun copy-KpyCeHw$default (Lio/github/braceandroid/foundation/BraceTableColors;JJJJJJJJJJJILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceTableColors;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAlternateRow-0d7_KjU ()J
+	public final fun getEditorBackground-0d7_KjU ()J
+	public final fun getEditorBorder-0d7_KjU ()J
+	public final fun getEditorErrorBorder-0d7_KjU ()J
+	public final fun getEditorText-0d7_KjU ()J
 	public final fun getGridLine-0d7_KjU ()J
 	public final fun getHeader-0d7_KjU ()J
 	public final fun getHeaderContent-0d7_KjU ()J
@@ -1265,6 +1895,154 @@ public final class io/github/braceandroid/foundation/BraceThemeOverrides {
 	public final fun getSizing ()Lio/github/braceandroid/foundation/BraceSizingTokens;
 	public final fun getSpacing ()Lio/github/braceandroid/foundation/BraceSpacingTokens;
 	public final fun getTypography ()Lio/github/braceandroid/foundation/BraceTypographyTokens;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceTimeInputColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component10-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun component8-0d7_KjU ()J
+	public final fun component9-0d7_KjU ()J
+	public final fun copy--K518z4 (JJJJJJJJJJ)Lio/github/braceandroid/foundation/BraceTimeInputColors;
+	public static synthetic fun copy--K518z4$default (Lio/github/braceandroid/foundation/BraceTimeInputColors;JJJJJJJJJJILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceTimeInputColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBorder-0d7_KjU ()J
+	public final fun getClockIcon-0d7_KjU ()J
+	public final fun getContainer-0d7_KjU ()J
+	public final fun getContent-0d7_KjU ()J
+	public final fun getDisabledContainer-0d7_KjU ()J
+	public final fun getDisabledContent-0d7_KjU ()J
+	public final fun getErrorBorder-0d7_KjU ()J
+	public final fun getFocusRing-0d7_KjU ()J
+	public final fun getFocusedBorder-0d7_KjU ()J
+	public final fun getPlaceholder-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceTimeInputMetrics {
+	public static final field $stable I
+	public synthetic fun <init> (FFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun copy-2z7ARbQ (FFF)Lio/github/braceandroid/foundation/BraceTimeInputMetrics;
+	public static synthetic fun copy-2z7ARbQ$default (Lio/github/braceandroid/foundation/BraceTimeInputMetrics;FFFILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceTimeInputMetrics;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBorderWidth-D9Ej5fM ()F
+	public final fun getCornerRadius-D9Ej5fM ()F
+	public final fun getHorizontalPadding-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceTimePickerColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component10-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun component8-0d7_KjU ()J
+	public final fun component9-0d7_KjU ()J
+	public final fun copy--K518z4 (JJJJJJJJJJ)Lio/github/braceandroid/foundation/BraceTimePickerColors;
+	public static synthetic fun copy--K518z4$default (Lio/github/braceandroid/foundation/BraceTimePickerColors;JJJJJJJJJJILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceTimePickerColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBorder-0d7_KjU ()J
+	public final fun getContainer-0d7_KjU ()J
+	public final fun getContent-0d7_KjU ()J
+	public final fun getDisabledContent-0d7_KjU ()J
+	public final fun getErrorBorder-0d7_KjU ()J
+	public final fun getFocusRing-0d7_KjU ()J
+	public final fun getHoverContainer-0d7_KjU ()J
+	public final fun getMutedContent-0d7_KjU ()J
+	public final fun getStepContainer-0d7_KjU ()J
+	public final fun getStepContent-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceTimePickerMetrics {
+	public static final field $stable I
+	public synthetic fun <init> (FFFFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun component5-D9Ej5fM ()F
+	public final fun copy-RyVG9vg (FFFFF)Lio/github/braceandroid/foundation/BraceTimePickerMetrics;
+	public static synthetic fun copy-RyVG9vg$default (Lio/github/braceandroid/foundation/BraceTimePickerMetrics;FFFFFILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceTimePickerMetrics;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBorderWidth-D9Ej5fM ()F
+	public final fun getColumnGap-D9Ej5fM ()F
+	public final fun getContentPadding-D9Ej5fM ()F
+	public final fun getCornerRadius-D9Ej5fM ()F
+	public final fun getUnitWidth-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceTimeZoneSelectColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component10-0d7_KjU ()J
+	public final fun component11-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun component8-0d7_KjU ()J
+	public final fun component9-0d7_KjU ()J
+	public final fun copy-KpyCeHw (JJJJJJJJJJJ)Lio/github/braceandroid/foundation/BraceTimeZoneSelectColors;
+	public static synthetic fun copy-KpyCeHw$default (Lio/github/braceandroid/foundation/BraceTimeZoneSelectColors;JJJJJJJJJJJILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceTimeZoneSelectColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getActiveContainer-0d7_KjU ()J
+	public final fun getBorder-0d7_KjU ()J
+	public final fun getContainer-0d7_KjU ()J
+	public final fun getContent-0d7_KjU ()J
+	public final fun getDisabledContent-0d7_KjU ()J
+	public final fun getFocusRing-0d7_KjU ()J
+	public final fun getMutedContent-0d7_KjU ()J
+	public final fun getSearchBorder-0d7_KjU ()J
+	public final fun getSearchContainer-0d7_KjU ()J
+	public final fun getSelectedContainer-0d7_KjU ()J
+	public final fun getSelectedContent-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceTimeZoneSelectMetrics {
+	public static final field $stable I
+	public synthetic fun <init> (FFFFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun component4-D9Ej5fM ()F
+	public final fun component5-D9Ej5fM ()F
+	public final fun copy-RyVG9vg (FFFFF)Lio/github/braceandroid/foundation/BraceTimeZoneSelectMetrics;
+	public static synthetic fun copy-RyVG9vg$default (Lio/github/braceandroid/foundation/BraceTimeZoneSelectMetrics;FFFFFILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceTimeZoneSelectMetrics;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCornerRadius-D9Ej5fM ()F
+	public final fun getHorizontalPadding-D9Ej5fM ()F
+	public final fun getListMaxHeight-D9Ej5fM ()F
+	public final fun getMinWidth-D9Ej5fM ()F
+	public final fun getRowHeight-D9Ej5fM ()F
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1408,6 +2186,50 @@ public final class io/github/braceandroid/foundation/BraceTopBarMetrics {
 	public final fun getHorizontalPadding-D9Ej5fM ()F
 	public final fun getMinHeight-D9Ej5fM ()F
 	public final fun getVerticalPadding-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceTreeColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun component8-0d7_KjU ()J
+	public final fun component9-0d7_KjU ()J
+	public final fun copy-5r9EGqc (JJJJJJJJJ)Lio/github/braceandroid/foundation/BraceTreeColors;
+	public static synthetic fun copy-5r9EGqc$default (Lio/github/braceandroid/foundation/BraceTreeColors;JJJJJJJJJILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceTreeColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCaret-0d7_KjU ()J
+	public final fun getContainer-0d7_KjU ()J
+	public final fun getContent-0d7_KjU ()J
+	public final fun getDisabledContent-0d7_KjU ()J
+	public final fun getFocusRing-0d7_KjU ()J
+	public final fun getHoverContainer-0d7_KjU ()J
+	public final fun getMutedContent-0d7_KjU ()J
+	public final fun getSelectedContainer-0d7_KjU ()J
+	public final fun getSelectedContent-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/braceandroid/foundation/BraceTreeMetrics {
+	public static final field $stable I
+	public synthetic fun <init> (FFFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-D9Ej5fM ()F
+	public final fun component2-D9Ej5fM ()F
+	public final fun component3-D9Ej5fM ()F
+	public final fun copy-2z7ARbQ (FFF)Lio/github/braceandroid/foundation/BraceTreeMetrics;
+	public static synthetic fun copy-2z7ARbQ$default (Lio/github/braceandroid/foundation/BraceTreeMetrics;FFFILjava/lang/Object;)Lio/github/braceandroid/foundation/BraceTreeMetrics;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCornerRadius-D9Ej5fM ()F
+	public final fun getHorizontalPadding-D9Ej5fM ()F
+	public final fun getIndent-D9Ej5fM ()F
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }

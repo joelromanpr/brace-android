@@ -5,4 +5,12 @@
     <string name="brace_select_active_position">Opción %1$d de %2$d: %3$s</string>
     <string name="brace_select_expanded">Expandido</string>
     <string name="brace_select_collapsed">Contraído</string>
+    <string name="brace_suggest_done">Usar el texto escrito</string>
+    <string name="brace_multi_selected_count">%1$d seleccionados</string>
+    <string name="brace_multi_remove">Quitar %1$s</string>
+    <string name="brace_command_search">Buscar comandos</string>
+    <string name="brace_command_empty">No hay comandos coincidentes</string>
+    <string name="brace_command_loading">Cargando comandos</string>
+    <string name="brace_command_active">Comando activo</string>
+    <string name="brace_command_close">Cerrar comandos</string>
 </resources>

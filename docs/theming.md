@@ -4,7 +4,7 @@
 
 ## Token source and version
 
-The v1 token contract is at `1.1.0` after the additive select component group. The platform-neutral source is [`tokens/v1/brace.tokens.json`](../tokens/v1/brace.tokens.json). Its `version` is the token contract version and can evolve separately from the library's Maven version. The source records primitive palettes, semantic light/dark/high-contrast roles, typography styles and scales, spacing, sizing, shape, elevation, motion, compact/comfortable density, and visual states and dimensions for each component family. Logical lengths map to Android `dp`; type sizes map to `sp`; motion maps to milliseconds. Colors use `#RRGGBB` or `#AARRGGBB`.
+The v1 token contract is at `1.2.0` after additive selection-card and slider groups. The platform-neutral source is [`tokens/v1/brace.tokens.json`](../tokens/v1/brace.tokens.json). Its `version` is the token contract version and can evolve separately from the library's Maven version. The source records primitive palettes, semantic light/dark/high-contrast roles, typography styles and scales, spacing, sizing, shape, elevation, motion, compact/comfortable density, and visual states and dimensions for each component family. Logical lengths map to Android `dp`; type sizes map to `sp`; motion maps to milliseconds. Colors use `#RRGGBB` or `#AARRGGBB`.
 
 Run `python3 scripts/generate_tokens.py` after editing the JSON. Commit both source and generated Kotlin. `python3 scripts/generate_tokens.py --check` fails if they differ. The generator validates semantic-role completeness across modes, references, dimensions, typography references, and component families. The generated file carries a SHA-256 of its source, giving iOS and Flutter maintainers a way to verify they consumed the same version. Add new tokens to the JSON first; do not edit `GeneratedBraceTokens.kt` directly.
 
@@ -59,6 +59,8 @@ BraceTheme {
 ```
 
 A semantic color override rebuilds component state colors in that nested scope. Other typed groups can be replaced with `BraceThemeOverrides` (`spacing`, `sizing`, `shape`, `elevation`, `motion`, `componentMetrics`, and `typography`). When a nested scope selects a different light/dark or contrast mode, it starts from that mode's base colors and reapplies the inherited brand. Keep local overrides small and review their contrast in every mode they support.
+
+The additive `1.2.0` contract retains the earlier select, radio, segmented-control, date, and table tokens and adds slider colors and dimensions. Existing token names remain unchanged.
 
 ## Using tokens in components
 

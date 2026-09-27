@@ -1,28 +1,25 @@
-# M44 delivery slice: step dialog
+# M44 — Step dialog
 
-**Status:** locally verified on `joelromanpr/m44-multistep-dialog`, based on main `47d2d38`. Both pinned Blueprint 6.18.0 rows, `MultistepDialog` and `DialogStep`, remain **in progress**. Stable coverage is **0/121** applicable rows, and neither row has a first release version.
+**Status:** draft [PR #53](https://github.com/joelromanpr/brace-android/pull/53), locally replayed on protected main `1b802c39c1980afc7fed7756c95fc9cb135b88e9`. Pinned Blueprint 6.18.0 rows `MultistepDialog` and `DialogStep` remain **in progress**, with no first release version. Stable coverage remains **0/122** applicable rows.
 
-## Shipped in this slice
+## Included in this slice
 
-- Controlled `BraceStepDialog`, `BraceDialogStep`, localized labels, and logical top/start/end navigation.
-- Synchronous validation, disabled advance, visited-step navigation tracked by stable IDs, saveable panel and rail history, and launcher focus return while the dialog remains composed through dismissal.
-- Native modal Back/Escape and outside-touch policy, TalkBack pane/heading/tab/selected/disabled semantics, 48 dp rail and action targets, and token-driven themes.
-- Interactive catalog states for both rows, copyable usage, independent Maven consumer example, Pages guide, KDoc, exact API baselines, and API36 interaction tests.
+- Controlled `BraceStepDialog` and typed `BraceDialogStep` with localized labels, logical top/start/end navigation, synchronous validation, disabled advance, visited-step navigation, saveable panel history, and launcher focus return while dismissal stays composed.
+- Native modal Back/Escape and outside-touch policy, TalkBack pane/heading/tab/selected/disabled semantics, 48 dp rail and action targets, and semantic token styling.
+- Public API and KDoc, interactive catalog states for both rows, copyable usage, Pages guide, inventory evidence, Android tests, and an independent Maven-coordinate consumer example. The catalog sample was extracted into a private composable after the combined catalog exceeded the JVM method-size limit.
 
 ## Verification
 
 | Gate | Result |
 | --- | --- |
-| Pinned scope and inventory | Blueprint `@blueprintjs/core@6.18.0` documentation/source at `a60d4c92257612808fbfac81cfeee4fcba91a8b4`; generated coverage check passed with 147 rows, 0/121 applicable stable, 0/94 components stable. |
-| Static and Pages | PASS: token and inventory generation checks, JavaScript syntax for documentation scripts, Pages build with 147 rows and 33 guides, and `git diff --check`. This slice uses existing dialog and semantic tokens. |
-| Gradle and API | PASS: foundation/core exact `apiDump` baselines, component/catalog/test compilation, and root `build lint checkTokenGeneration checkInventory apiCheck`. A temporary mirror of official Maven artifacts supplied downloads that Gradle had stalled on; repository dependencies were unchanged. |
-| API36 device | PASS: 9/9 focused tests for metadata validation, controlled forward/back/revisit transitions, validator rejection, saveable panels and visited IDs across activity recreation, dynamic reordering, launcher focus return, Escape, mouse input, RTL/high-contrast/compact 2× targets, automated accessibility checks, and native named/selected/disabled rail nodes. A visited unselected step has its click action on the same native node as its label. |
-| Maven Local and consumer | PASS: foundation, core, icons, and select published to Maven Local with AAR, POM, Gradle metadata, sources, and KDoc JARs; separate Maven-coordinate consumer `:app:assembleDebug` passed. Maven Central staging remains unverified. |
-| Visual | PASS locally: 320×640 light, dark high-contrast, and 2× large-text dialog inspected with rail, panel, field, and fixed actions visible. The emulator font scale was restored to 1.0. |
-| Hosted | Pending current-head GitHub CI and CodeQL. No hosted pass or release is claimed. |
+| Current source and docs | Token and coverage generation checks, both pinned icon checks, contrast, Pages build, JavaScript syntax, and Git whitespace passed. Output: **148 rows, 0/122 stable, 25 real catalog captures, 86 guides**. |
+| Current-main compile and API | Core `apiDump` passed **19 tasks**. Foundation/core `apiCheck`, core Android-test Kotlin, and catalog Kotlin compilation passed **151 tasks** after the sample extraction. |
+| Earlier device and broader gate | The old topic branch passed root build/lint/API checks and API 36 StepDialog tests **9/9**. Tests cover validation, transitions, saveable state, launcher focus, Escape, mouse, RTL, compact 2× targets, automated accessibility, and native rail nodes. |
+| Earlier Maven and visual | Foundation, core, icons, and select artifacts plus a separate coordinate-only consumer passed from Maven Local. A 320×640 light, dark high-contrast, and 2× visual pass showed rail, panel, field, and actions; font scale was restored to 1.0. |
+| Hosted | Required checks on the current-main replay are pending. No release or Maven Central publication is claimed. |
 
-## Adaptations, limits, and next branch
+## Adaptation and limits
 
-The API supplies a synchronous validator. Apps that validate remotely should own a loading state and set `canAdvance = false` until it resolves. Business state must be hoisted when it must outlive removal of the dialog composable. Focus return runs when `open` becomes false while `BraceStepDialog` remains in composition. Blueprint React child inspection and fixed desktop width become a typed Compose step list and responsive native modal.
+Blueprint React child inspection and fixed desktop navigation become a typed Compose step list and responsive Android modal. The synchronous validator expects apps to own async loading and set `canAdvance = false` until validation resolves. Apps must hoist business state that should outlive removal of the dialog. Focus return requires the dialog to remain composed while `open` becomes false.
 
-Per-step custom footer slots, manual TalkBack/physical keyboard/mouse review, and wide-screen RTL Start/End rail QA remain before stability. Hosted API34 and maintainer review are pending. The next concrete branch is `joelromanpr/m45-html-table`, a separate pinned table slice.
+Per-step custom footer slots, manual TalkBack and physical keyboard/mouse review, and wide-screen RTL Start/End rail QA remain before stability. Full Blueprint parity is not claimed.

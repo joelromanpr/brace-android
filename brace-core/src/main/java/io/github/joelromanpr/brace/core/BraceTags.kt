@@ -28,6 +28,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.StrokeCap
@@ -35,6 +37,10 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.focused
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.requestFocus
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
@@ -256,6 +262,7 @@ private fun TagScaffold(
 ) {
     val semantic = BraceTheme.colors.semantic
     val interactionSource = remember { MutableInteractionSource() }
+    val mainFocusRequester = remember { FocusRequester() }
     val pressed by interactionSource.collectIsPressedAsState()
     val hovered by interactionSource.collectIsHoveredAsState()
     val focused by interactionSource.collectIsFocusedAsState()
@@ -286,6 +293,7 @@ private fun TagScaffold(
         Row(
             modifier = (if (fill || onRemove != null) Modifier.weight(1f, fill = fill) else Modifier)
                 .heightIn(min = minimumMainHeight)
+                .then(if (hasAction) Modifier.focusRequester(mainFocusRequester) else Modifier)
                 .then(if (hasAction) Modifier.defaultMinSize(
                     minWidth = BraceTheme.sizing.touchTarget,
                 ) else Modifier)
@@ -294,6 +302,20 @@ private fun TagScaffold(
                     semantic.focusRing,
                     shape,
                 ) else Modifier)
+                .then(if (hasAction) Modifier.clearAndSetSemantics {
+                    contentDescription = accessibilityLabel
+                    role = Role.Button
+                    if (selected) this.selected = true
+                    if (!enabled) disabled() else {
+                        this.focused = focused
+                        onClick(accessibilityLabel) { requireNotNull(onClick).invoke(); true }
+                        requestFocus { mainFocusRequester.requestFocus() }
+                    }
+                } else Modifier.semantics(mergeDescendants = true) {
+                    contentDescription = accessibilityLabel
+                    if (selected) this.selected = true
+                    if (!enabled) disabled()
+                })
                 .then(if (hasAction) Modifier.clickable(
                     enabled = enabled,
                     role = Role.Button,
@@ -301,11 +323,6 @@ private fun TagScaffold(
                     indication = null,
                     onClick = requireNotNull(onClick),
                 ) else Modifier)
-                .semantics(mergeDescendants = true) {
-                    contentDescription = accessibilityLabel
-                    if (selected) this.selected = true
-                    if (!enabled) disabled()
-                }
                 .padding(horizontal = padding, vertical = BraceTheme.spacing.xxs),
             horizontalArrangement = Arrangement.spacedBy(spacing),
             verticalAlignment = Alignment.CenterVertically,
@@ -314,6 +331,7 @@ private fun TagScaffold(
         }
         if (onRemove != null) {
             val removeInteraction = remember { MutableInteractionSource() }
+            val removeFocusRequester = remember { FocusRequester() }
             val removeFocused by removeInteraction.collectIsFocusedAsState()
             Box(
                 modifier = Modifier
@@ -321,19 +339,28 @@ private fun TagScaffold(
                         minWidth = BraceTheme.sizing.touchTarget,
                         minHeight = BraceTheme.sizing.touchTarget,
                     )
+                    .focusRequester(removeFocusRequester)
                     .then(if (removeFocused) Modifier.border(
                         BraceTheme.sizing.focusRingWidth,
                         semantic.focusRing,
                         shape,
                     ) else Modifier)
+                    .clearAndSetSemantics {
+                        contentDescription = description
+                        role = Role.Button
+                        if (!enabled) disabled() else {
+                            this.focused = removeFocused
+                            onClick(description) { onRemove(); true }
+                            requestFocus { removeFocusRequester.requestFocus() }
+                        }
+                    }
                     .clickable(
                         enabled = enabled,
                         role = Role.Button,
                         interactionSource = removeInteraction,
                         indication = null,
                         onClick = onRemove,
-                    )
-                    .semantics { contentDescription = description },
+                    ),
                 contentAlignment = Alignment.Center,
             ) {
                 val markColor = appearance.content

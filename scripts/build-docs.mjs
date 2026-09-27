@@ -6,13 +6,21 @@ const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const coveragePath = resolve(root, 'docs/coverage.json');
 const siteSource = resolve(root, 'docs/site');
 const siteOutput = resolve(root, 'build/site');
-const repository = 'https://github.com/joelromanpr/brace-android/blob/main/';
+const siteConfig = JSON.parse(await readFile(resolve(siteSource, 'site-config.json'), 'utf8'));
+if (siteConfig.schemaVersion !== 1 || (siteConfig.publicSourceRepository !== null && !/^https:\/\/github\.com\/[A-Za-z0-9-]+\/[A-Za-z0-9._-]+$/.test(siteConfig.publicSourceRepository))) {
+  throw new Error('Invalid docs/site/site-config.json');
+}
+const repository = siteConfig.publicSourceRepository ? `${siteConfig.publicSourceRepository}/blob/main/` : null;
 const guideSources = new Map([
   ['docs/installation.md', 'installation'],
+  ['docs/showcase.md', 'showcase-guide'],
   ['docs/theming.md', 'theming'],
   ['docs/compatibility.md', 'compatibility'],
   ['docs/core-components.md', 'core-components'],
+  ['docs/control-cards.md', 'control-cards'],
   ['docs/content-feedback.md', 'content-feedback'],
+  ['docs/semantic-content.md', 'semantic-content'],
+  ['docs/loading-feedback.md', 'loading-feedback'],
   ['docs/navigation-feedback.md', 'navigation-feedback'],
   ['docs/overlays.md', 'overlays'],
   ['docs/step-dialog.md', 'step-dialog'],
@@ -24,7 +32,32 @@ const guideSources = new Map([
   ['docs/numeric-input.md', 'numeric-input'],
   ['docs/icons.md', 'icons'],
   ['docs/select-query.md', 'select-query'],
+  ['docs/suggest-multiselect.md', 'suggest-multiselect'],
+  ['docs/command-palette.md', 'command-palette'],
   ['docs/top-bar.md', 'top-bar'],
+  ['docs/tree.md', 'tree'],
+  ['docs/tag-input.md', 'tag-input'],
+  ['docs/radio-segmented.md', 'radio-segmented'],
+  ['docs/datetime-picker-input.md', 'datetime-picker-input'],
+  ['docs/time-picker-input.md', 'time-picker-input'],
+  ['docs/datetime-range.md', 'datetime-range'],
+  ['docs/table-viewport.md', 'table-viewport'],
+  ['docs/table-selection-resize.md', 'table-selection-resize'],
+  ['docs/table-copying.md', 'table-copying'],
+  ['docs/table-editing.md', 'table-editing'],
+  ['docs/table-column-name.md', 'table-column-name'],
+  ['docs/table-sorting.md', 'table-sorting'],
+  ['docs/milestones/m22-table-editing.md', 'milestone-m22'],
+  ['docs/milestones/m26-table-editable-name.md', 'milestone-m26'],
+  ['docs/milestones/m46-table-sorting.md', 'milestone-m46'],
+  ['docs/milestones/m21-table-copying.md', 'milestone-m21'],
+  ['docs/web-mechanisms.md', 'web-mechanisms'],
+  ['docs/links.md', 'links'],
+  ['docs/time-zone-select.md', 'time-zone-select'],
+  ['docs/file-picker.md', 'file-picker'],
+  ['docs/panel-stack.md', 'panel-stack'],
+  ['docs/sliders.md', 'sliders'],
+  ['docs/multi-slider.md', 'multi-slider'],
   ['docs/milestones/m1-foundation-core.md', 'milestone-m1'],
   ['docs/milestones/m2-content-feedback.md', 'milestone-m2'],
   ['docs/milestones/m3-navigation-feedback.md', 'milestone-m3'],
@@ -37,16 +70,87 @@ const guideSources = new Map([
   ['docs/milestones/m10-numeric-input.md', 'milestone-m10'],
   ['docs/milestones/m11-icons.md', 'milestone-m11'],
   ['docs/milestones/m12-select-query.md', 'milestone-m12'],
+  ['docs/milestones/m17-loading-feedback.md', 'milestone-m17'],
+  ['docs/milestones/m16-suggest-multiselect.md', 'milestone-m16'],
+  ['docs/milestones/m23-command-palette.md', 'milestone-m23'],
   ['docs/milestones/m25-top-bar.md', 'milestone-m25'],
   ['docs/milestones/m44-step-dialog.md', 'milestone-m44'],
+  ['docs/milestones/m41-control-cards.md', 'milestone-m41'],
+  ['docs/milestones/m15-tag-input.md', 'milestone-m15'],
+  ['docs/milestones/m19-radio-segmented.md', 'milestone-m19'],
+  ['docs/milestones/m13-datetime-picker.md', 'milestone-m13'],
+  ['docs/milestones/m30-time-picker-input.md', 'milestone-m30'],
+  ['docs/milestones/m33-date-range.md', 'milestone-m33'],
+  ['docs/milestones/m14-table-viewport.md', 'milestone-m14'],
+  ['docs/milestones/m18-table-selection-resize.md', 'milestone-m18'],
+  ['docs/milestones/m35-blueprint-icon-pack.md', 'milestone-m35'],
+  ['docs/milestones/m36-semantic-content.md', 'milestone-m36'],
+  ['docs/milestones/m54-web-mechanisms.md', 'milestone-m54'],
+  ['docs/milestones/m20-links.md', 'milestone-m20'],
+  ['docs/milestones/m55-blueprint-next-icons.md', 'milestone-m55'],
+  ['docs/milestones/m57-icon-large-text.md', 'milestone-m57'],
+  ['docs/milestones/m34-timezone-select.md', 'milestone-m34'],
+  ['docs/milestones/m31-tree.md', 'milestone-m31'],
+  ['docs/milestones/m59-visual-catalog.md', 'milestone-m59'],
+  ['docs/milestones/m39-file-picker.md', 'milestone-m39'],
+  ['docs/milestones/m32-panel-stack.md', 'milestone-m32'],
+  ['docs/milestones/m37-sliders.md', 'milestone-m37'],
+  ['docs/milestones/m38-multi-slider.md', 'milestone-m38'],
   ['CONTRIBUTING.md', 'contributing'],
   ['docs/attribution.md', 'attribution'],
 ]);
 const coverage = JSON.parse(await readFile(coveragePath, 'utf8'));
+const capturesPath = resolve(siteSource, 'showcase/captures.json');
+const captureManifest = JSON.parse(await readFile(capturesPath, 'utf8'));
+const pngSignature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
 
 if (!Array.isArray(coverage.entries) || coverage.entries.length === 0 || coverage.summary?.totalRows !== coverage.entries.length) {
   throw new Error('Generated docs/coverage.json must contain entries and matching generated counts');
 }
+
+async function validateCaptures() {
+  if (captureManifest.schemaVersion !== 1 || !Array.isArray(captureManifest.captures) || captureManifest.captures.length === 0) {
+    throw new Error('The showcase needs at least one catalog capture in docs/site/showcase/captures.json');
+  }
+  const inventoryIds = new Set(coverage.entries.map(entry => entry.id));
+  const captureIds = new Set();
+  for (const capture of captureManifest.captures) {
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(capture.id) || captureIds.has(capture.id)) {
+      throw new Error(`Invalid or repeated showcase capture id: ${capture.id}`);
+    }
+    captureIds.add(capture.id);
+    if (!Array.isArray(capture.inventoryIds) || capture.inventoryIds.length === 0 ||
+        capture.inventoryIds.some(id => !inventoryIds.has(id)) || new Set(capture.inventoryIds).size !== capture.inventoryIds.length) {
+      throw new Error(`${capture.id}: inventoryIds must name unique pinned inventory rows`);
+    }
+    for (const field of ['alt', 'caption', 'device', 'sourceBranch', 'sourceFile', 'usage']) {
+      if (typeof capture[field] !== 'string' || !capture[field].trim()) throw new Error(`${capture.id}: missing ${field}`);
+    }
+    if (!/^showcase\/[a-z0-9-]+\.png$/.test(capture.image)) throw new Error(`${capture.id}: invalid image path`);
+    if (!/^[a-f0-9]{40}$/.test(capture.sourceCommit)) throw new Error(`${capture.id}: sourceCommit must be a full Git SHA`);
+    if (!/^catalog\/src\/main\/.+\.kt$/.test(capture.sourceFile)) throw new Error(`${capture.id}: sourceFile must point to a Kotlin catalog source file`);
+    if (!/^(main|joelromanpr\/[a-z0-9-]+)$/.test(capture.sourceBranch)) throw new Error(`${capture.id}: invalid sourceBranch`);
+    if (!['draft', 'merged'].includes(capture.sourceStage) || (capture.sourceStage === 'merged') !== (capture.sourceBranch === 'main')) {
+      throw new Error(`${capture.id}: sourceStage and sourceBranch disagree`);
+    }
+    if (!['phone', 'landscape'].includes(capture.format) || !['light', 'dark'].includes(capture.theme) ||
+        !['standard', 'high'].includes(capture.contrast) || !['comfortable', 'compact'].includes(capture.density)) {
+      throw new Error(`${capture.id}: invalid capture appearance metadata`);
+    }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(capture.capturedAt)) throw new Error(`${capture.id}: invalid capture date`);
+    const bytes = await readFile(resolve(siteSource, capture.image));
+    if (!bytes.subarray(0, 8).equals(pngSignature) || bytes.toString('ascii', 12, 16) !== 'IHDR') {
+      throw new Error(`${capture.id}: image is not a PNG`);
+    }
+    const width = bytes.readUInt32BE(16);
+    const height = bytes.readUInt32BE(20);
+    if (capture.pixelWidth !== width || capture.pixelHeight !== height) {
+      throw new Error(`${capture.id}: manifest dimensions ${capture.pixelWidth}×${capture.pixelHeight} differ from PNG ${width}×${height}`);
+    }
+  }
+}
+
+await validateCaptures();
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
@@ -56,9 +160,10 @@ function hrefFrom(sourcePath, href) {
   if (/^https:\/\//.test(href) || href.startsWith('#')) return href;
   const normalized = posix.normalize(posix.join(posix.dirname(sourcePath), href));
   if (normalized === 'docs/coverage.md') return './index.html#coverage';
+  if (normalized === 'docs/site/index.html') return './index.html#showcase';
   const guide = guideSources.get(normalized);
   if (guide) return `./${guide}.html`;
-  return repository + normalized.replace(/^\.\.\//, '');
+  return repository ? repository + normalized.replace(/^\.\.\//, '') : null;
 }
 
 function inline(source, sourcePath) {
@@ -67,7 +172,7 @@ function inline(source, sourcePath) {
   result = result.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   result = result.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => {
     const mapped = hrefFrom(sourcePath, href.replaceAll('&amp;', '&'));
-    return `<a href="${escapeHtml(mapped)}">${label}</a>`;
+    return mapped ? `<a href="${escapeHtml(mapped)}">${label}</a>` : `<span class="source-pending" title="Source link available when the repository is public">${label}</span>`;
   });
   return result;
 }
@@ -140,19 +245,76 @@ function renderMarkdown(source, sourcePath) {
   return output.join('\n');
 }
 
+const primaryGuideLinks = [
+  ['Visual showcase', 'showcase-guide'],
+  ['Installation', 'installation'],
+  ['Theming', 'theming'],
+  ['Compatibility', 'compatibility'],
+];
+const componentGuideLinks = [
+  ['Core controls', 'core-components'],
+  ['Semantic content', 'semantic-content'],
+  ['Forms and text', 'form-text'],
+  ['File picker', 'file-picker'],
+  ['Select and query', 'select-query'],
+  ['Date and time', 'datetime-picker-input'],
+  ['Date ranges', 'datetime-range'],
+  ['Trees', 'tree'],
+  ['Time-zone selection', 'time-zone-select'],
+  ['Data tables', 'table-viewport'],
+  ['Selection and resizing', 'table-selection-resize'],
+  ['Copying cells', 'table-copying'],
+  ['Editing cells', 'table-editing'],
+  ['Editing column names', 'table-column-name'],
+  ['Sorting columns', 'table-sorting'],
+  ['Icons', 'icons'],
+];
+const extraGuideLinks = [
+  ['Content and feedback', 'content-feedback'],
+  ['Loading feedback', 'loading-feedback'],
+  ['Navigation and messages', 'navigation-feedback'],
+  ['Menus and overlays', 'overlays'],
+  ['Step dialogs', 'step-dialog'],
+  ['Drawers and popovers', 'drawers-popovers'],
+  ['Tooltips and toasts', 'tooltip-toast'],
+  ['Context menus and shortcuts', 'context-shortcuts'],
+  ['Labels and control groups', 'form-layout'],
+  ['Numeric input', 'numeric-input'],
+  ['MultiSlider', 'multi-slider'],
+  ['Top bar', 'top-bar'],
+  ['Tag input', 'tag-input'],
+  ['Radio and segmented choices', 'radio-segmented'],
+  ['Time picker and field', 'time-picker-input'],
+  ['Web mechanisms in Compose', 'web-mechanisms'],
+  ['Links', 'links'],
+];
+
 function guidePage(title, body, sourcePath) {
+  const current = guideSources.get(sourcePath);
+  const navLink = ([label, id]) => `<a href="./${id}.html"${current === id ? ' aria-current="page"' : ''}>${label}</a>`;
+  const milestoneLinks = [...guideSources.values()]
+    .filter(id => /^milestone-m\d+$/.test(id))
+    .sort((a, b) => Number(a.slice(11)) - Number(b.slice(11)))
+    .map(id => [`M${id.slice(11)} report`, id]);
+  const navSections = `
+      <div class="guide-nav-group"><span class="guide-nav-title">Start here</span>${primaryGuideLinks.map(navLink).join('')}</div>
+      <details class="guide-nav-details"${[...componentGuideLinks, ...extraGuideLinks].some(([, id]) => id === current) ? ' open' : ''}><summary>Component guides</summary><div>${[...componentGuideLinks, ...extraGuideLinks].filter(([, id]) => [...guideSources.values()].includes(id)).map(navLink).join('')}</div></details>
+      <div class="guide-nav-group"><span class="guide-nav-title">Reference</span><a href="./index.html#coverage">Coverage inventory</a><a href="./contributing.html"${current === 'contributing' ? ' aria-current="page"' : ''}>Contributing</a><a href="./attribution.html"${current === 'attribution' ? ' aria-current="page"' : ''}>Attribution</a></div>
+      <details class="guide-nav-details"${current?.startsWith('milestone-') ? ' open' : ''}><summary>Milestone audit</summary><div>${milestoneLinks.map(navLink).join('')}</div></details>`;
+  const navigation = `<aside class="guide-nav" aria-label="Documentation"><details class="guide-nav-mobile"><summary>Browse documentation</summary>${navSections}</details><div class="guide-nav-desktop">${navSections}</div></aside>`;
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142338"><title>${escapeHtml(title)} · Brace Android</title><link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./guide.css"></head>
-<body><a class="skip" href="#main">Skip to content</a><header class="topbar"><a class="brand" href="./index.html" aria-label="Brace Android home"><span class="mark" aria-hidden="true">B</span><span>Brace <b>Android</b></span></a><nav aria-label="Main navigation"><a href="./index.html#coverage">Coverage</a><a href="./installation.html">Get started</a><a href="https://github.com/joelromanpr/brace-android">GitHub ↗</a></nav></header><main id="main" class="guide-layout"><aside class="guide-nav" aria-label="Documentation"><span>Documentation</span><a href="./installation.html">Installation</a><a href="./theming.html">Theming</a><a href="./compatibility.html">Compatibility</a><a href="./core-components.html">Core components</a><a href="./content-feedback.html">Content and feedback</a><a href="./navigation-feedback.html">Navigation and messages</a><a href="./overlays.html">Menus and overlays</a><a href="./step-dialog.html">Step dialogs</a><a href="./drawers-popovers.html">Drawers and popovers</a><a href="./tooltip-toast.html">Tooltips and toasts</a><a href="./context-shortcuts.html">Context menus and shortcuts</a><a href="./form-text.html">Form fields and editable text</a><a href="./form-layout.html">Labels and control groups</a><a href="./numeric-input.html">Numeric input</a><a href="./icons.html">Icons</a><a href="./select-query.html">Select and query</a><a href="./top-bar.html">Top bar</a><a href="./milestone-m1.html">M1 report</a><a href="./milestone-m2.html">M2 report</a><a href="./milestone-m3.html">M3 report</a><a href="./milestone-m4.html">M4 report</a><a href="./milestone-m5.html">M5 report</a><a href="./milestone-m6.html">M6 report</a><a href="./milestone-m7.html">M7 report</a><a href="./milestone-m8.html">M8 report</a><a href="./milestone-m9.html">M9 report</a><a href="./milestone-m10.html">M10 report</a><a href="./milestone-m11.html">M11 report</a><a href="./milestone-m12.html">M12 report</a><a href="./milestone-m25.html">M25 report</a><a href="./milestone-m44.html">M44 report</a><a href="./contributing.html">Contributing</a><a href="./attribution.html">Attribution</a><a href="./index.html#coverage">Coverage inventory</a></aside><article class="guide-article"><p class="eyebrow">Brace Android documentation</p>${body}<p class="source-link">Source: <a href="${repository + sourcePath}">${escapeHtml(sourcePath)} ↗</a></p></article></main><footer><span>Brace Android · Apache-2.0</span><span>Independent Android design system</span></footer></body></html>`;
+<body><a class="skip" href="#main">Skip to content</a><header class="topbar"><a class="brand" href="./index.html" aria-label="Brace Android home"><span class="mark" aria-hidden="true">B</span><span>Brace <b>Android</b></span></a><nav aria-label="Main navigation"><a href="./index.html#examples">App examples</a><a href="./index.html#coverage">Coverage</a><a href="./installation.html">Get started</a><a href="https://github.com/joelromanpr/brace-android">GitHub ↗</a></nav></header><main id="main" class="guide-layout">${navigation}<article class="guide-article"><p class="eyebrow">Brace Android documentation</p>${body}<p class="source-link">${repository ? `Source: <a href="${repository + sourcePath}">${escapeHtml(sourcePath)} ↗</a>` : `Source path: <code>${escapeHtml(sourcePath)}</code> · public repository link pending`}</p></article></main><footer><span>Brace Android · Apache-2.0</span><span>Independent Android design system</span></footer></body></html>`;
 }
 
 await rm(siteOutput, { recursive: true, force: true });
 await mkdir(siteOutput, { recursive: true });
 await cp(siteSource, siteOutput, { recursive: true });
 await cp(coveragePath, resolve(siteOutput, 'coverage.json'));
+await writeFile(resolve(siteOutput, 'guide-map.json'), JSON.stringify(Object.fromEntries([...guideSources].map(([path, slug]) => [path, `${slug}.html`]))));
 for (const [path, slug] of guideSources) {
   const markdown = await readFile(resolve(root, path), 'utf8');
   const title = markdown.match(/^# (.+)$/m)?.[1] || slug;
   await writeFile(resolve(siteOutput, `${slug}.html`), guidePage(title, renderMarkdown(markdown, path), path));
 }
-console.log(`Built documentation site with ${coverage.entries.length} inventory rows and ${guideSources.size} guides at ${siteOutput}`);
+console.log(`Built documentation site with ${coverage.entries.length} inventory rows, ${captureManifest.captures.length} real catalog captures, and ${guideSources.size} guides at ${siteOutput}`);

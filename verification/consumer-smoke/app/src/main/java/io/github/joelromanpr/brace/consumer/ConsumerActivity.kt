@@ -214,6 +214,8 @@ class ConsumerActivity : ComponentActivity() {
                         }
                         var tableRows by remember { mutableStateOf(listOf("ready" to "Ready", "review" to "Review")) }
                         var editingTable by remember { mutableStateOf<BraceTableSelection.Cell?>(null) }
+                        var statusColumnTitle by remember { mutableStateOf("Status") }
+                        var editingColumnName by remember { mutableStateOf<String?>(null) }
                         var selectedTable: BraceTableSelection? by remember {
                             mutableStateOf(BraceTableSelection.Range("ready", "status", "review", "status"))
                         }
@@ -223,7 +225,8 @@ class ConsumerActivity : ComponentActivity() {
                         BraceDataTable(
                             rows = tableRows,
                             rowKey = { it.first },
-                            columns = listOf(BraceTableColumn<Pair<String, String>>("status", "Status", 120.dp, { it.second }, editable = true)),
+                            columns = listOf(BraceTableColumn<Pair<String, String>>("status", statusColumnTitle, 120.dp,
+                                { it.second }, editable = true, editableName = true)),
                             selection = selectedTable,
                             onSelectionChange = { selectedTable = it },
                             viewport = tableViewport,
@@ -238,10 +241,18 @@ class ConsumerActivity : ComponentActivity() {
                                 tableRows = tableRows.map { if (it.first == cell.rowKey) it.first to value else it }
                             },
                             validateCell = { _, value -> if (value.isBlank()) "Required" else null },
+                            editingColumnName = editingColumnName,
+                            onEditingColumnNameChange = { editingColumnName = it },
+                            onColumnNameCommit = { key, value -> if (key == "status") statusColumnTitle = value },
+                            validateColumnName = { _, value -> if (value.length < 3) "Too short" else null },
                         )
                         BasicText("Table copy: ${BraceTableClipboard.formatSelection(tableRows, { it.first },
                             listOf(BraceTableColumn<Pair<String, String>>("status", "Status", 120.dp, { it.second })), selectedTable) ?: "none"}")
                         BraceButton("Select status column", onClick = {
+                            selectedTable = BraceTableSelection.Column("status")
+                        })
+                        BraceButton("Rename selected column", onClick = {
+                            editingColumnName = "status"
                             selectedTable = BraceTableSelection.Column("status")
                         })
                         BraceSection(title = "Job status", collapsible = true) {

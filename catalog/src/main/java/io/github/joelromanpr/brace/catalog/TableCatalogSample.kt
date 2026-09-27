@@ -25,14 +25,18 @@ import io.github.joelromanpr.brace.table.BraceTableSelection
 
 private data class DemoTableRecord(val id: String, val case: String, val status: String)
 
-/** Interactive 120-row table with controlled selection and resizing. */
+/** Interactive 120-row table with selection, resizing, copying, cell editing, and header renaming. */
 @Composable
 internal fun TableCatalogSample() {
     var records by remember { mutableStateOf(List(120) { DemoTableRecord("record-$it", "Case ${1000 + it}", if (it % 3 == 0) "Review" else "Ready") }) }
-    val tableColumns = remember { listOf(
-        BraceTableColumn<DemoTableRecord>("case", "Case", 140.dp, { it.case }, editable = true),
-        BraceTableColumn<DemoTableRecord>("status", "Status", 130.dp, { it.status }, editable = true),
-        BraceTableColumn<DemoTableRecord>("owner", "Owner", 130.dp, { "Team ${(it.id.substringAfter('-').toInt() % 4) + 1}" }),
+    var columnTitles by remember { mutableStateOf(mapOf("case" to "Case", "status" to "Status", "owner" to "Owner")) }
+    val tableColumns = remember(columnTitles) { listOf(
+        BraceTableColumn<DemoTableRecord>("case", columnTitles.getValue("case"), 140.dp,
+            { it.case }, editable = true, editableName = true),
+        BraceTableColumn<DemoTableRecord>("status", columnTitles.getValue("status"), 130.dp,
+            { it.status }, editable = true, editableName = true),
+        BraceTableColumn<DemoTableRecord>("owner", columnTitles.getValue("owner"), 130.dp,
+            { "Team ${(it.id.substringAfter('-').toInt() % 4) + 1}" }, editableName = true),
     ) }
     var selectedKind by rememberSaveable { mutableStateOf("none") }
     var selectedRow by rememberSaveable { mutableStateOf("") }
@@ -46,6 +50,8 @@ internal fun TableCatalogSample() {
     var editingRow by rememberSaveable { mutableStateOf("") }
     var editingColumn by rememberSaveable { mutableStateOf("") }
     var savedValue by rememberSaveable { mutableStateOf<String?>(null) }
+    var editingName by rememberSaveable { mutableStateOf("") }
+    var savedColumnTitle by rememberSaveable { mutableStateOf<String?>(null) }
     val editingCell = if (editingRow.isBlank() || editingColumn.isBlank()) null
         else BraceTableSelection.Cell(editingRow, editingColumn)
     val selection = when (selectedKind) {
@@ -67,7 +73,7 @@ internal fun TableCatalogSample() {
         null -> "None"
     }
     Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-        Text("Scroll both ways. Tap headers to select a row or column. Long-press a cell then tap an endpoint for a range; keyboard Shift+arrows extend it. Double-tap an editable cell, press Enter/F2, or use Edit selected cell. Drag or focus resize grips.",
+        Text("Scroll both ways. Tap headers to select a row or column. Long-press a cell then tap an endpoint for a range; keyboard Shift+arrows extend it. Double-tap an editable cell or column header, press Enter/F2, or use an Edit action. Drag or focus resize grips.",
             color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.body)
         BraceDataTable(records, { it.id }, tableColumns, selection, {
             when (it) {
@@ -90,6 +96,7 @@ internal fun TableCatalogSample() {
             onEditingCellChange = { cell ->
                 editingRow = cell?.rowKey.orEmpty()
                 editingColumn = cell?.columnKey.orEmpty()
+                if (cell != null) editingName = ""
             },
             onCellCommit = { cell, value ->
                 records = records.map { record -> if (record.id != cell.rowKey) record
@@ -100,7 +107,17 @@ internal fun TableCatalogSample() {
                     } }
                 savedValue = value
             },
-            validateCell = { _, value -> if (value.isBlank()) "Enter a value" else null })
+            validateCell = { _, value -> if (value.isBlank()) "Enter a value" else null },
+            editingColumnName = editingName.ifBlank { null },
+            onEditingColumnNameChange = { key ->
+                editingName = key.orEmpty()
+                if (key != null) { editingRow = ""; editingColumn = "" }
+            },
+            onColumnNameCommit = { key, title ->
+                columnTitles = columnTitles + (key to title)
+                savedColumnTitle = "$key: $title"
+            },
+            validateColumnName = { _, title -> if (title.length < 3) "Use at least 3 characters" else null })
         Text("Selection: $selectionSummary", color = BraceTheme.colors.semantic.onSurface,
             style = BraceTheme.typography.body)
         Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
@@ -118,6 +135,11 @@ internal fun TableCatalogSample() {
         }, enabled = selection is BraceTableSelection.Cell &&
             (selection.columnKey == "case" || selection.columnKey == "status"),
             variant = BraceButtonVariant.Outline)
+        BraceButton("Edit selected column name", onClick = {
+            (selection as? BraceTableSelection.Column)?.let { editingName = it.columnKey; editingRow = ""; editingColumn = "" }
+        }, enabled = selection is BraceTableSelection.Column, variant = BraceButtonVariant.Outline)
+        savedColumnTitle?.let { Text("Renamed: $it", color = BraceTheme.colors.semantic.onSurfaceMuted,
+            style = BraceTheme.typography.body) }
         savedValue?.let { Text("Saved: $it", color = BraceTheme.colors.semantic.onSurfaceMuted,
             style = BraceTheme.typography.body) }
         BraceButton("Copy selected cells", onClick = {

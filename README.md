@@ -1,10 +1,37 @@
 # Brace Android
 
-An open-source Jetpack Compose design system for Android apps with forms, filters, and dense data. Brace has its own tokens, visual language, and native interaction patterns.
+Compose components for Android apps with a lot going on: forms, filters, dialogs, and data tables. Brace has its own look and works with touch, keyboard, and screen readers.
 
-![Electric fleet catalog example with a seven-column Android data table](docs/site/showcase/fleet-operations-wide.png)
+![Electric fleet example in the Android catalog](docs/site/showcase/fleet-operations-wide.png)
 
-Explore the [live docs and Android captures](https://joelromanpr.github.io/brace-android/), or build the catalog to use two runnable examples: an electric fleet workspace and a spacecraft mission screen. Their data is fictional; the UI is captured from the Compose app.
+**[Explore the live showcase](https://joelromanpr.github.io/brace-android/)** · [Browse components](https://joelromanpr.github.io/brace-android/#coverage) · [View the Android captures](https://joelromanpr.github.io/brace-android/#showcase)
+
+The catalog includes two runnable examples: an electric fleet workspace and a spacecraft mission screen. The data is fictional; the screenshots come from the Android app.
+
+## Try the catalog
+
+With JDK 21 and Android SDK 36 installed, run:
+
+```sh
+./gradlew :catalog:installDebug
+```
+
+Open the app to search components, try their states, and change light or dark theme, contrast, brand color, and density. [Setup and supported versions](docs/installation.md)
+
+## Use a component
+
+```kotlin
+var name by rememberSaveable { mutableStateOf("") }
+
+BraceTheme {
+    Column {
+        BraceTextField(name, { name = it }, label = "Project name")
+        BraceButton("Save", onClick = { save(name) })
+    }
+}
+```
+
+[Theming](docs/theming.md) · [Component guides](docs/core-components.md) · [Data tables](docs/table-viewport.md)
 
 ## Availability
 
@@ -12,33 +39,10 @@ Explore the [live docs and Android captures](https://joelromanpr.github.io/brace
 **Released: 0 of 122 tracked Android items** (0 of 94 components; 0 of 28 design-system capabilities). [See the full coverage record, web mappings, and experimental work](docs/coverage.md).
 <!-- coverage:end -->
 
-The library is **in progress** and has no Maven Central release yet. The source includes tokens and `BraceTheme`, core controls, semantic content, and overlays, select and query APIs, date and time input and ranges, data tables, trees, and optional licensed icon packs. Each component's current status, Android behavior, tests, and source links are in the [coverage inventory](docs/coverage.md). Catalog screenshots do not change release status.
+Brace is under active development. The source can be built and published to Maven Local, but no version is available on Maven Central yet. The [component list](docs/coverage.md) shows what is in progress, planned, or released. Its counts come from the [machine-readable inventory](inventory/blueprint-components.json), so screenshots never imply a release.
 
-The long-term comparison uses a [pinned reference release](BLUEPRINT_BASELINE.md). License and third-party asset details are in [attribution](docs/attribution.md).
+The comparison uses a [pinned reference version](BLUEPRINT_BASELINE.md). [License and asset attribution](docs/attribution.md) are recorded separately.
 
-## Try the Android catalog
+## Contribute
 
-Use JDK 21 and Android SDK 36. Build and install the app with:
-
-```sh
-./gradlew :catalog:installDebug
-```
-
-The catalog lets you search the inventory, inspect component states, change theme, contrast, brand, density, and motion, and open the two operations examples. The [installation guide](docs/installation.md) has the supported toolchain, module coordinates, local Maven steps, and exact Gradle dependency snippets. There is no public version to fetch from Maven Central yet.
-
-## Start building
-
-```kotlin
-var projectName by rememberSaveable { mutableStateOf("") }
-
-BraceTheme {
-    Column {
-        BraceTextField(projectName, { projectName = it }, label = "Project name")
-        BraceButton("Save", onClick = { save(projectName) })
-    }
-}
-```
-
-Read the [theming guide](docs/theming.md), [component guides](docs/core-components.md), [collapse and text](docs/collapse-text.md), [semantic content guide](docs/semantic-content.md), [table guide](docs/table-viewport.md), [copying guide](docs/table-copying.md), [editing guide](docs/table-editing.md), and [compatibility policy](docs/compatibility.md). The [coverage inventory](inventory/blueprint-components.json) is machine-readable; the [roadmap](ROADMAP.md) tracks the next slices.
-
-Contributions are welcome. See [CONTRIBUTING](CONTRIBUTING.md), [GOVERNANCE](GOVERNANCE.md), [SECURITY](SECURITY.md), and [SUPPORT](SUPPORT.md). Brace is licensed under [Apache-2.0](LICENSE).
+Pick a component from the [roadmap](ROADMAP.md) and follow [the contribution guide](CONTRIBUTING.md). See [security](SECURITY.md) for private vulnerability reports and [support](SUPPORT.md) for help. Apache-2.0 [license](LICENSE).

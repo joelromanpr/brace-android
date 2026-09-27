@@ -1,26 +1,27 @@
 # M34 · time-zone selection
 
-**Status:** local implementation in progress on `joelromanpr/m34-timezone-select`, based on M13 `ac121b3`. One pinned Blueprint 6.18.0 TimezoneSelect row has source, tokens, tests, catalog, docs, and independent consumer usage. It is neither released nor stable; applicable stable coverage remains **0/121**.
+**Status:** draft source for [PR #44](https://github.com/joelromanpr/brace-android/pull/44), replayed on protected main `8ba665a38a69d8130e41d851abc6a8a984956ab5` after the M33 date-range merge. The pinned Blueprint 6.18.0 TimezoneSelect row has a native API, tokens, tests, catalog states, documentation, and an independent consumer call site. It remains **in progress**, unreleased, and outside stable coverage (**0/122** applicable rows).
 
 ## Scope
 
-- Controlled `BraceTimeZoneSelect(ZoneId?)` and typed display modes in `brace-datetime`, using Android's IANA time-zone database.
-- `Instant`-based UTC offset and daylight/standard label, localized names, literal multiword search, local zone priority, lazy 48 dp options, keyboard search navigation, TalkBack selection semantics, saveable query/open state.
-- Versioned `timeZoneSelect` component tokens and English, Spanish, French labels; runtime catalog states and copyable example; coordinate-only consumer call site.
+- Controlled `BraceTimeZoneSelect(ZoneId?)` and typed trigger display modes in `brace-datetime`, using Android's IANA time-zone database.
+- `Instant`-based UTC offsets and daylight/standard names, localized literal-word search, optional local-zone priority, lazy 48 dp rows, keyboard and TalkBack semantics, and saveable open/query state.
+- Versioned `timeZoneSelect` tokens; English, Spanish, and French labels; runtime catalog controls; copyable usage; Maven consumer compilation.
+- Two real 400 × 800 API 36 catalog captures: the filtered `Asia/Tokyo` popup and selected trigger/disabled state, recorded in the Pages gallery manifest.
+- Corrected the M33 report to record its final hosted-green squash merge.
 
 ## Verification
 
-| Gate | Current-head result |
+| Gate | Current integrated result |
 | --- | --- |
-| Static generation and site | Token and coverage checks, JavaScript syntax, datetime resource XML parsing, documentation build, and `git diff --check` passed: **147 pinned rows, 35 guides, 0/121 stable**. |
-| Focused Kotlin, JVM, AndroidTest, and catalog compile | Passed after correcting an invalid Android test import and splitting a chained test input/key action. `DateModelTest` **3/3** and `TimeZoneModelTest` **4/4** passed; focused Gradle run **102 actionable tasks**. |
-| Public API | Regenerated exact `brace-foundation` and `brace-datetime` baselines in a separate `apiDump` invocation; both `apiCheck` tasks passed in the broad gate. |
-| API 36 instrumented interactions and accessibility | Full `brace-datetime` suite passed **23/23**, 0 failed/skipped on `emulator-5556`: M13 picker/field regressions plus M34 touch selection, keyboard Enter, daylight offset changes, state restoration, disabled trigger, high-contrast 48 dp target, and supported automated accessibility checks. |
-| Full build, lint, token, inventory, API, catalog | Passed `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug --no-parallel` (**563 actionable tasks**). |
-| Maven Local and independent consumer | Published aligned foundation/core/icons/select/datetime AARs, sources, KDoc JARs, POMs, and module metadata locally (**193 tasks**). The separate coordinate-only consumer assembled (**37 tasks**). No Maven Central upload occurred. |
-| 320 × 640 catalog visual/interaction smoke | Inspected light and dark high-contrast states, opened the popover with the IME, filtered `Honolulu`, and touched the `Pacific/Honolulu` row. The catalog updated its controlled IANA ID; rows/search stayed visible above the keyboard without overlap. Long selected trigger text ellipsizes at this width while its full ID/offset remains in semantics and the catalog's value readout. |
-| Hosted CI and review | Pending draft PR. Recent GitHub Actions jobs in this account have stopped before executing steps because of a billing gate; no hosted check result exists for this branch yet. |
+| Source, tokens, inventory, and Pages | Token and coverage generators, datetime resource XML, JavaScript syntax, and documentation build passed: **148 inventory rows, 17 real captures, 55 guides, 0/122 stable**. Checked **3,502 local references across 56 HTML pages**, zero missing. |
+| Public API | Regenerated `brace-foundation` and `brace-datetime` baselines in a separate **30-task** `apiDump` run; both `apiCheck` tasks passed in the focused gate. |
+| Focused build, lint, catalog, and JVM tests | **426 Gradle tasks passed**, including datetime and catalog lint, catalog APK, Android test compilation, token/inventory checks, and datetime unit tests: DateModel **3/3**, DateRangeModel **8/8**, TimeModel **4/4**, TimeZoneModel **4/4**. |
+| API 36 device interaction and accessibility | Focused TimeZoneSelect suite **7/7**, zero failures/skips (**91 tasks**): touch search, Enter, DST offset, saved-state restoration, disabled trigger, high-contrast targets, and RTL/2× text/mouse interaction with supported accessibility checks. |
+| Maven Local and external consumer | Eight aligned foundation/core/icons/optional Blueprint legacy and next packs/select/datetime/table AARs, sources, KDoc, POMs, and module metadata published locally (**308 tasks**). The separate offline, coordinate-only consumer assembled (**37 tasks**, Kotlin compilation executed). No Maven Central upload occurred. |
+| Real-device-size visual inspection | Inspected the 400 × 800 light-mode catalog's filtered popup and selected state at full resolution. The popup exposes `Asia/Tokyo`, UTC+09:00, and the localized name above the IME; the selected trigger and disabled field remain visible. Restored shared emulator to 320 × 640/160 dpi/font scale 1.0. |
+| Hosted CI and review | Pending final draft PR checks; this report records local verification before hosted results. |
 
-## Known limits and next branch
+## Known limits and next work
 
-Android zone database contents and localized names vary by OS. Blueprint's preset list, custom React child, and pass-through button/input/popover props are replaced by typed parameters and a native popover; a customizable Compose target/filter slot is still open for stable acceptance. Manual TalkBack listening, large text, RTL, physical keyboard, and mouse QA remain; the 320 × 640 emulator narrow-phone visual smoke has passed. After verification, review this single inventory row in a focused draft PR; follow-on work should address the remaining pinned datetime behaviors and project-wide inventory.
+Android zone database contents and localized names vary by OS. Blueprint's preset list, custom React child, and pass-through button/input/popover props are adapted to typed parameters and a native popover. Custom Compose target and filter slots remain open before stable acceptance. Automated RTL, large-text, mouse, and accessibility checks pass; manual TalkBack listening, physical keyboard, and device QA remain. Continue with the pinned datetime inventory and keep this row in progress until its remaining acceptance work and a release are verified.

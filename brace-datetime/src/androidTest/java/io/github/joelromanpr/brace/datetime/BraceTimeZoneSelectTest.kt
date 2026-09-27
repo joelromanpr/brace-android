@@ -1,10 +1,13 @@
 package io.github.joelromanpr.brace.datetime
 
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertHeightIsAtLeast
 import androidx.compose.ui.test.assertIsNotEnabled
@@ -15,9 +18,13 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performKeyInput
+import androidx.compose.ui.test.performMouseInput
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.tryPerformAccessibilityChecks
+import androidx.compose.ui.test.click
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.github.braceandroid.foundation.BraceColorMode
@@ -109,6 +116,26 @@ class BraceTimeZoneSelectTest {
         rule.onNodeWithContentDescription("Search time zones").performTextInput("America/New_York")
         rule.onNode(hasContentDescription("America/New_York", substring = true))
             .assertHeightIsAtLeast(48.dp).tryPerformAccessibilityChecks()
+    }
+
+    @Test fun rtlLargeTextAndMouseKeepUsableTargets() {
+        var zone by mutableStateOf<ZoneId?>(null)
+        rule.setContent {
+            val density = LocalDensity.current
+            CompositionLocalProvider(
+                LocalLayoutDirection provides LayoutDirection.Rtl,
+                LocalDensity provides Density(density.density, fontScale = 2f),
+            ) { BraceTheme {
+                BraceTimeZoneSelect(zone, { zone = it }, "Time zone", locale = Locale.US,
+                    referenceInstant = winter, systemZone = utc)
+            } }
+        }
+        rule.onNodeWithContentDescription("Time zone: Select time zone")
+            .assertHeightIsAtLeast(48.dp).performMouseInput { click() }
+        rule.onNodeWithContentDescription("Search time zones").performTextInput("Tokyo")
+        rule.onNode(hasContentDescription("Asia/Tokyo", substring = true))
+            .assertHeightIsAtLeast(48.dp).tryPerformAccessibilityChecks().performClick()
+        rule.runOnIdle { assertEquals(ZoneId.of("Asia/Tokyo"), zone) }
     }
 
     @Test fun disabledTriggerCannotOpen() {

@@ -867,6 +867,34 @@ private fun TagInputSample() {
 }
 
 @Composable
+private fun SemanticContentSample(id: String) {
+    when (id) {
+        "core-h1", "core-h2", "core-h3", "core-h4", "core-h5", "core-h6" -> {
+            val level = when (id) {
+                "core-h1" -> BraceHeadingLevel.One
+                "core-h2" -> BraceHeadingLevel.Two
+                "core-h3" -> BraceHeadingLevel.Three
+                "core-h4" -> BraceHeadingLevel.Four
+                "core-h5" -> BraceHeadingLevel.Five
+                else -> BraceHeadingLevel.Six
+            }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceHeading("Quarterly operations", level = level)
+                Text("Headings scale with system text size and remain navigable in TalkBack.",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted,
+                    style = BraceTheme.typography.body)
+            }
+        }
+        "core-blockquote" -> BraceBlockquote(
+            "A decision needs evidence and a clear owner.", citation = "— Design review")
+        "core-code" -> BraceCode("val ready = true")
+        "core-pre" -> BraceCodeBlock("val rows = listOf(1, 2, 3)\nrows.forEach(::println)")
+        "core-ol" -> BraceOrderedList(listOf("Open record", "Review fields", "Save changes"))
+        "core-ul" -> BraceUnorderedList(listOf("Keyboard navigation", "TalkBack labels"))
+    }
+}
+
+@Composable
 private fun ComponentSample(
     id: String,
     toasts: BraceToastState,
@@ -1158,28 +1186,8 @@ private fun ComponentSample(
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
         "table-cell-selection", "table-column-and-row-resizing", "table-copying",
         "table-editablecell", "table-editing" -> TableCatalogSample()
-        "core-h1", "core-h2", "core-h3", "core-h4", "core-h5", "core-h6" -> {
-            val level = when (id) {
-                "core-h1" -> BraceHeadingLevel.One
-                "core-h2" -> BraceHeadingLevel.Two
-                "core-h3" -> BraceHeadingLevel.Three
-                "core-h4" -> BraceHeadingLevel.Four
-                "core-h5" -> BraceHeadingLevel.Five
-                else -> BraceHeadingLevel.Six
-            }
-            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                BraceHeading("Quarterly operations", level = level)
-                Text("Headings scale with system text size and remain navigable in TalkBack.",
-                    color = BraceTheme.colors.semantic.onSurfaceMuted,
-                    style = BraceTheme.typography.body)
-            }
-        }
-        "core-blockquote" -> BraceBlockquote(
-            "A decision needs evidence and a clear owner.", citation = "— Design review")
-        "core-code" -> BraceCode("val ready = true")
-        "core-pre" -> BraceCodeBlock("val rows = listOf(1, 2, 3)\nrows.forEach(::println)")
-        "core-ol" -> BraceOrderedList(listOf("Open record", "Review fields", "Save changes"))
-        "core-ul" -> BraceUnorderedList(listOf("Keyboard navigation", "TalkBack labels"))
+        "core-h1", "core-h2", "core-h3", "core-h4", "core-h5", "core-h6",
+        "core-blockquote", "core-code", "core-pre", "core-ol", "core-ul" -> SemanticContentSample(id)
         "datetime-timezoneselect" -> {
             var selected by rememberSaveable { mutableStateOf<String?>(null) }
             var summer by rememberSaveable { mutableStateOf(true) }

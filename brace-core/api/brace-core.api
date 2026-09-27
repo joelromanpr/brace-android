@@ -84,6 +84,21 @@ public final class io/github/joelromanpr/brace/core/BraceContextMenuKt {
 	public static final fun BraceContextMenuPopup-KJGI1gg (ZLkotlin/jvm/functions/Function0;JLjava/lang/String;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BraceMenuSize;ZZLkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;II)V
 }
 
+public final class io/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition : java/lang/Enum {
+	public static final field End Lio/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition;
+	public static final field Start Lio/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceControlCardsKt {
+	public static final fun BraceCheckboxCard (ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZZLio/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition;ZZLio/github/joelromanpr/brace/core/BraceCardElevation;Landroidx/compose/runtime/Composer;III)V
+	public static final fun BraceRadioCard (ZLkotlin/jvm/functions/Function0;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZLio/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition;ZZLio/github/joelromanpr/brace/core/BraceCardElevation;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceRadioCardGroup (Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;ZZLio/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceSwitchCard (ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZLio/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition;ZZLio/github/joelromanpr/brace/core/BraceCardElevation;Landroidx/compose/runtime/Composer;II)V
+}
+
 public abstract interface class io/github/joelromanpr/brace/core/BraceControlGroupScope {
 	public abstract fun Item (Landroidx/compose/ui/Modifier;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;I)V
 }
@@ -425,6 +440,25 @@ public final class io/github/joelromanpr/brace/core/BraceProgressIntent : java/l
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceProgressIntent;
 	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceProgressIntent;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceRadioCardOption {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Lio/github/joelromanpr/brace/core/BraceRadioCardOption;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceRadioCardOption;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceRadioCardOption;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getEnabled ()Z
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class io/github/joelromanpr/brace/core/BraceRadioIndicatorPosition : java/lang/Enum {

@@ -51,7 +51,6 @@ import io.github.braceandroid.foundation.BraceMotion
 import io.github.braceandroid.foundation.BraceTheme
 import java.io.FileInputStream
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -232,9 +231,10 @@ class BracePanelStackTest {
 
     @OptIn(ExperimentalTestApi::class)
     @Test fun nativeBackNodeHasOneLabelOneActionAndMinimumTarget() {
+        lateinit var state: BracePanelStackState
         rule.setContent {
             BraceTheme {
-                val state = rememberBracePanelStackState(root)
+                state = rememberBracePanelStackState(root)
                 BracePanelStack(state, Modifier.height(220.dp)) {
                     if (panel.id == "root") BraceButton("Open project", onClick = { openPanel(details) })
                     else Text("Details")
@@ -266,10 +266,21 @@ class BracePanelStackTest {
             rule.enableAccessibilityChecks()
             rule.onNodeWithContentDescription("Back to Workspaces").tryPerformAccessibilityChecks()
         }
-        assertTrue(node.performAction(AccessibilityNodeInfo.ACTION_CLICK))
-        rule.waitUntil(5_000) { nativeNodesForLabel("Back to Workspaces").isEmpty() }
+        // The accessibility audit can recompose the target, so do not click the earlier node handle.
+        rule.waitForIdle()
+        val actionNode = nativeNodesForLabel("Back to Workspaces").singleOrNull()
+            ?: throw AssertionError("Expected one fresh Back node before click: ${nativeTreeSummary()}")
+        val actionAccepted = actionNode.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+        assertTrue("Fresh Back node rejected ACTION_CLICK: ${nativeTreeSummary()}", actionAccepted)
+        runCatching { rule.waitUntil(10_000) { state.stack == listOf(root) } }
+            .getOrElse { cause -> throw AssertionError(
+                "Native Back click did not pop the stack: stack=${state.stack}, ${nativeTreeSummary()}", cause) }
+        rule.waitForIdle()
         rule.onNodeWithText("Open project").assertExists()
-        assertFalse(nativeNodesForLabel("Back to Workspaces").isNotEmpty())
+        rule.onNodeWithContentDescription("Back to Workspaces").assertDoesNotExist()
+        runCatching { rule.waitUntil(10_000) { nativeNodesForLabel("Back to Workspaces").isEmpty() } }
+            .getOrElse { cause -> throw AssertionError(
+                "Stack popped but native Back node remained: stack=${state.stack}, ${nativeTreeSummary()}", cause) }
     }
 
     private fun prepareNativeInput() {

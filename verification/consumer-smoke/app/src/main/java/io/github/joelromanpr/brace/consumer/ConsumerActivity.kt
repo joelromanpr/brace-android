@@ -78,6 +78,7 @@ import io.github.joelromanpr.brace.core.BraceSegmentedOption
 import io.github.joelromanpr.brace.core.braceShortcuts
 import io.github.joelromanpr.brace.core.rememberBraceShortcutRegistryState
 import io.github.joelromanpr.brace.core.BraceTag
+import io.github.joelromanpr.brace.core.BraceTagInput
 import io.github.joelromanpr.brace.core.BraceToastHost
 import io.github.joelromanpr.brace.core.BraceToastIntent
 import io.github.joelromanpr.brace.core.BraceToastSpec
@@ -145,6 +146,8 @@ class ConsumerActivity : ComponentActivity() {
                 var regionKey by remember { mutableStateOf<String?>(null) }
                 var regionExpanded by remember { mutableStateOf(false) }
                 val regionQuery = rememberBraceQueryListState()
+                var tags by remember { mutableStateOf(listOf("Compose")) }
+                var tagDraft by remember { mutableStateOf("") }
                 var dueDate by remember { mutableStateOf<LocalDate?>(null) }
                 var dueTime by rememberSaveable { mutableStateOf("14:30") }
                 var meal by remember { mutableStateOf("soup") }
@@ -211,6 +214,7 @@ class ConsumerActivity : ComponentActivity() {
                         }
                         BraceNumericField(amount, { amount = it }, label = "Amount",
                             min = 0.0, max = 100.0, minorStepSize = 0.1)
+                        BraceTagInput(tags, { tags = it }, tagDraft, { tagDraft = it }, "Skills")
                         BraceDateField(dueDate, { dueDate = it }, "Due date", locale = Locale.US)
                         BraceDatePicker(dueDate, { dueDate = it }, locale = Locale.US,
                             minDate = LocalDate.of(2026, 1, 1))

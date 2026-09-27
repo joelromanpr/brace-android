@@ -29,7 +29,7 @@ jobs:
         run: python3 scripts/generate_coverage.py --check
       - name: Build site
         run: node scripts/build-docs.mjs
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
         if: ${{ !github.event.repository.private }}
       - uses: actions/upload-pages-artifact@v4
         if: ${{ !github.event.repository.private }}

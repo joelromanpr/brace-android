@@ -490,6 +490,16 @@
       "content": "{semantic.onSurface}",
       "border": "{semantic.border}"
     },
+    "entityTitle": {
+      "title": "{semantic.onSurface}",
+      "subtitle": "{semantic.onSurfaceMuted}",
+      "icon": "{semantic.onSurfaceMuted}",
+      "interactiveTitle": "{semantic.primary}",
+      "interactiveHover": "{semantic.primaryHover}",
+      "interactivePressed": "{semantic.primaryPressed}",
+      "focusRing": "{semantic.focusRing}",
+      "loadingContainer": "{semantic.disabledContainer}"
+    },
     "popover": {
       "container": "{semantic.surfaceRaised}",
       "content": "{semantic.onSurface}",
@@ -774,6 +784,17 @@
       "cornerRadius": 12,
       "contentPadding": 24,
       "maxWidth": 420
+    },
+    "entityTitle": {
+      "iconSize": 24,
+      "iconGap": 12,
+      "titleTagsGap": 8,
+      "subtitleGap": 4,
+      "loadingTitleHeight": 20,
+      "loadingTitleWidth": 160,
+      "loadingSubtitleHeight": 12,
+      "loadingSubtitleWidth": 104,
+      "loadingCornerRadius": 3
     },
     "popover": {
       "cornerRadius": 8,

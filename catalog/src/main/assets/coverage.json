@@ -902,16 +902,16 @@
       "sourcePage": "core/components/panel-stack",
       "braceApi": "BracePanelStack",
       "artifact": "io.github.joelromanpr.brace:brace-core",
-      "behavior": "PanelStack manages a stack of panels and displays only the topmost panel. Each panel appears with a header containing a \"back\" button to return to the previous panel. Expose the current destination and ordered focus; support touch, keyboard, and TalkBack navigation.",
+      "behavior": "Root-first controlled or saveable stack with the last panel active; a labeled 48 dp back action, Android Back and Escape pop only above the root. Announce the active pane and heading, restore focus after navigation, mirror push/pop transitions in RTL, and honor reduced motion.",
       "classification": "adaptation",
-      "reason": "Use a saveable Android navigation back stack.",
-      "milestone": "M2",
+      "reason": "Blueprint React panel renderers, injected callbacks, HTML titles, DOM retention, and CSS transitions map to typed Compose destinations and scope actions, rememberSaveable state, Android back dispatch, pane semantics, and tokenized RTL motion. Only active panel content remains accessible; saveable state can survive covering without retaining arbitrary Compose trees.",
+      "milestone": "M32",
       "priority": "P1",
-      "status": "planned",
-      "implementation": null,
-      "sample": null,
-      "documentation": null,
-      "tests": null,
+      "status": "in progress",
+      "implementation": "brace-core/src/main/java/io/github/joelromanpr/brace/core/BracePanelStack.kt",
+      "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "documentation": "docs/panel-stack.md",
+      "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BracePanelStackTest.kt",
       "firstRelease": null,
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/panel-stack/panel-stack.mdx"
     },
@@ -3775,8 +3775,8 @@
         "total": 108,
         "stable": 0,
         "status": {
-          "in progress": 86,
-          "planned": 22
+          "in progress": 87,
+          "planned": 21
         }
       },
       "datetime": {

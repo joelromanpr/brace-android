@@ -41,6 +41,7 @@ import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.tryPerformAccessibilityChecks
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -85,6 +86,23 @@ class BraceTableSelectionResizeTest {
             Thread.sleep(100)
         }
         error("Android accessibility node absent: $description")
+    }
+
+    @Test fun controlledDimensionsRejectNonFiniteValues() {
+        fun rejects(block: () -> Unit) {
+            try {
+                block()
+                throw AssertionError("Non-finite table size must be rejected")
+            } catch (expected: IllegalArgumentException) {
+                assertTrue(expected.message.orEmpty().contains("finite"))
+            }
+        }
+        rejects { validateTableDimensions(Dp.Infinity, null, null, emptyMap(), emptyMap()) }
+        rejects { validateTableDimensions(320.dp, Dp.Infinity, null, emptyMap(), emptyMap()) }
+        rejects { validateTableDimensions(320.dp, null, Dp.Infinity, emptyMap(), emptyMap()) }
+        rejects { validateTableDimensions(320.dp, null, null, mapOf("c0" to Dp.Infinity), emptyMap()) }
+        rejects { validateTableDimensions(320.dp, null, null, emptyMap(), mapOf("r0" to Dp.Infinity)) }
+        rejects { indexColumns(columns.take(1), 64.dp, listOf(Dp.Infinity)) }
     }
 
     @Test fun headerAndTouchRangeSelectionExposeLogicalExtent() {
@@ -278,6 +296,26 @@ class BraceTableSelectionResizeTest {
         assertEquals(100.dp, widths["c0"])
     }
 
+    @Test fun switchingFocusedResizeHandlesKeepsTableNavigationIdle() {
+        var selected: BraceTableSelection? by mutableStateOf(BraceTableSelection.Cell("r0", "c0"))
+        var heights by mutableStateOf<Map<String, Dp>>(emptyMap())
+        rule.setContent {
+            BraceTheme {
+                BraceDataTable(rows.take(2), { it.id }, columns.take(2), selected, { selected = it },
+                    Modifier.width(320.dp), height = 240.dp,
+                    onColumnWidthChange = { _, _ -> },
+                    rowHeights = heights,
+                    onRowHeightChange = { key, value -> heights = heights + (key to value) })
+            }
+        }
+        rule.onNodeWithTag("brace-table-resize-column:c0").requestFocus()
+        rule.onNodeWithTag("brace-table-resize-row:r0").requestFocus().performKeyInput {
+            pressKey(Key.DirectionDown)
+        }
+        assertTrue(heights.getValue("r0") > 48.dp)
+        assertEquals(BraceTableSelection.Cell("r0", "c0"), selected)
+    }
+
     @Test fun rowHandleKeyboardAndTouchDragKeepFixedHeader() {
         var heights by mutableStateOf<Map<String, androidx.compose.ui.unit.Dp>>(emptyMap())
         rule.setContent {
@@ -312,7 +350,7 @@ class BraceTableSelectionResizeTest {
                     onColumnWidthChange = { key, width -> widths = widths + (key to width) })
             }
         }
-        rule.runOnIdle { runBlocking { viewport.horizontal.scrollTo(790); viewport.vertical.scrollToItem(50) } }
+        rule.runOnIdle { runBlocking { viewport.horizontal.scrollTo(viewport.horizontal.maxValue); viewport.vertical.scrollToItem(50) } }
         rule.onNodeWithTag("brace-table-cell:r50:c9").assertExists()
         rule.onNodeWithTag("brace-table-cell:r0:c9").assertDoesNotExist()
         val before = viewport.horizontal.value

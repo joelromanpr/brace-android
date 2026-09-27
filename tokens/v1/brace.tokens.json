@@ -494,6 +494,18 @@
       "searchBorder": "{semantic.border}",
       "focusRing": "{semantic.focusRing}"
     },
+    "spinner": {
+      "track": "{semantic.surfaceInset}",
+      "indicator": "{semantic.primary}",
+      "successIndicator": "{semantic.success}",
+      "warningIndicator": "{semantic.warning}",
+      "dangerIndicator": "{semantic.danger}"
+    },
+    "skeleton": {
+      "base": "{semantic.disabledContainer}",
+      "highlight": "{semantic.selection}",
+      "border": "{semantic.border}"
+    },
     "datePicker": {
       "container": "{semantic.surface}",
       "content": "{semantic.onSurface}",
@@ -517,6 +529,37 @@
       "disabledContent": "{semantic.disabledContent}",
       "calendarIcon": "{semantic.onSurface}",
       "focusRing": "{semantic.focusRing}"
+    },
+    "radio": {
+      "container": "{semantic.surface}",
+      "selectedBorder": "{semantic.primary}",
+      "selectedDot": "{semantic.primary}",
+      "unselectedBorder": "{semantic.borderStrong}",
+      "disabledContainer": "{semantic.disabledContainer}",
+      "disabledContent": "{semantic.disabledContent}",
+      "focusRing": "{semantic.focusRing}",
+      "hoverBorder": "{semantic.primaryHover}",
+      "pressedBorder": "{semantic.primaryPressed}"
+    },
+    "segmentedControl": {
+      "container": "{semantic.surfaceInset}",
+      "border": "{semantic.border}",
+      "unselectedContainer": "{semantic.surfaceInset}",
+      "unselectedContent": "{semantic.onSurface}",
+      "hoverContainer": "{semantic.surfaceRaised}",
+      "selectedContainer": "{semantic.surfaceRaised}",
+      "selectedContent": "{semantic.onSurface}",
+      "selectedPrimaryContainer": "{semantic.primary}",
+      "selectedPrimaryContent": "{semantic.onPrimary}",
+      "disabledContainer": "{semantic.disabledContainer}",
+      "disabledContent": "{semantic.disabledContent}",
+      "focusRing": "{semantic.focusRing}",
+      "pressedContainer": "{semantic.pressed}",
+      "selectedHoverContainer": "{semantic.hover}",
+      "selectedPressedContainer": "{semantic.pressed}",
+      "selectedPrimaryHoverContainer": "{semantic.primaryHover}",
+      "selectedPrimaryPressedContainer": "{semantic.primaryPressed}",
+      "selectedBorder": "{semantic.borderStrong}"
     }
   },
   "componentMetricsDp": {
@@ -613,6 +656,16 @@
       "minWidth": 240,
       "maxListHeight": 280
     },
+    "spinner": {
+      "smallSize": 20,
+      "mediumSize": 32,
+      "largeSize": 48,
+      "strokeWidth": 3
+    },
+    "skeleton": {
+      "cornerRadius": 4,
+      "lineHeight": 16
+    },
     "datePicker": {
       "daySize": 48,
       "cornerRadius": 5,
@@ -623,6 +676,17 @@
       "cornerRadius": 5,
       "horizontalPadding": 10,
       "borderWidth": 1
+    },
+    "radio": {
+      "size": 20,
+      "strokeWidth": 2,
+      "dotRadius": 5
+    },
+    "segmentedControl": {
+      "cornerRadius": 6,
+      "itemCornerRadius": 4,
+      "horizontalPadding": 12,
+      "gap": 2
     }
   }
 }

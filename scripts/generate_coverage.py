@@ -116,6 +116,10 @@ def validate(data: dict) -> None:
         pinned_url = "https://github.com/palantir/blueprint/blob/" + baseline["commit"] + "/" + source_files[row["sourcePage"]]
         if row["pinnedSourceUrl"] != pinned_url:
             fail(f"{row_id}: pinned source URL differs from baseline source file")
+        if row.get("pinnedAssetUrl") and not row["pinnedAssetUrl"].startswith(
+            "https://github.com/palantir/blueprint/blob/" + baseline["commit"] + "/packages/"
+        ):
+            fail(f"{row_id}: pinned asset URL must use the baseline commit")
         covered_pages.add(row["sourcePage"])
         for field in ("blueprintName", "braceApi", "artifact", "behavior", "milestone", "priority"):
             if not isinstance(row[field], str) or not row[field].strip():
@@ -163,7 +167,8 @@ def make_summary(rows: list[dict], documented_pages: int) -> dict:
         "applicableCapabilities": len(capabilities),
         "stableCapabilities": sum(r["status"] == "stable" for r in capabilities),
         "webSpecificMappings": len(mapped),
-        "documentedWebSpecificMappings": sum(r["status"] == "stable" for r in mapped),
+        "documentedWebSpecificMappings": sum(bool(r["documentation"]) for r in mapped),
+        "stableWebSpecificMappings": sum(r["status"] == "stable" for r in mapped),
         "labsRows": len(labs),
         "stableLabsRows": sum(r["status"] == "stable" for r in labs),
         "byPackage": package_counts,
@@ -191,7 +196,7 @@ def markdown(data: dict) -> str:
         "",
         f"**Shipped applicable rows: {summary['stableApplicableRows']}/{summary['applicableRows']}** ({summary['stableComponents']}/{summary['applicableComponents']} components; {summary['stableCapabilities']}/{summary['applicableCapabilities']} capabilities).",
         "",
-        f"Web-specific mappings documented: {summary['documentedWebSpecificMappings']}/{summary['webSpecificMappings']}. Labs rows: {summary['labsRows']} (stable: {summary['stableLabsRows']}). Full applicable coverage: **{'yes' if summary['fullApplicableCoverage'] else 'no'}**.",
+        f"Web-specific mappings documented: {summary['documentedWebSpecificMappings']}/{summary['webSpecificMappings']} (stable: {summary['stableWebSpecificMappings']}). Labs rows: {summary['labsRows']} (stable: {summary['stableLabsRows']}). Full applicable coverage: **{'yes' if summary['fullApplicableCoverage'] else 'no'}**.",
         "",
         "## Package status",
         "",
@@ -220,7 +225,8 @@ def markdown(data: dict) -> str:
             if row["firstRelease"]:
                 evidence += f"; since {row['firstRelease']}"
             lines.append("| " + " | ".join(map(escape, [
-                f"[{row['blueprintName']}]({row['blueprintUrl']}) ([pinned source]({row['pinnedSourceUrl']}))",
+                f"[{row['blueprintName']}]({row['blueprintUrl']}) ([pinned source]({row['pinnedSourceUrl']}))" +
+                (f" ([pinned asset]({row['pinnedAssetUrl']}))" if row.get("pinnedAssetUrl") else ""),
                 f"`{row['braceApi']}` / `{row['artifact']}`",
                 row["behavior"], mapping,
                 f"{row['milestone']} / {row['priority']}", row["status"], evidence,
@@ -257,7 +263,8 @@ def main() -> int:
         f"\n**Released coverage: {summary['stableApplicableRows']}/{summary['applicableRows']} applicable rows** "
         f"({summary['stableComponents']}/{summary['applicableComponents']} components; "
         f"{summary['stableCapabilities']}/{summary['applicableCapabilities']} capabilities). "
-        f"Web-specific mappings: {summary['documentedWebSpecificMappings']}/{summary['webSpecificMappings']}. "
+        f"Web-specific mappings documented: {summary['documentedWebSpecificMappings']}/{summary['webSpecificMappings']} "
+        f"(stable: {summary['stableWebSpecificMappings']}). "
         f"Labs tracked separately: {summary['labsRows']} rows. "
         f"Full applicable parity: {'yes' if summary['fullApplicableCoverage'] else 'no'}.\n"
     )

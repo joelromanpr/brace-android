@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -26,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -33,12 +35,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import io.github.braceandroid.foundation.BraceBrandColors
 import io.github.braceandroid.foundation.BraceColorMode
 import io.github.braceandroid.foundation.BraceContrast
@@ -51,6 +55,13 @@ import io.github.joelromanpr.brace.core.BraceButtonVariant
 import io.github.joelromanpr.brace.core.BraceCheckbox
 import io.github.joelromanpr.brace.core.BraceControlGroup
 import io.github.joelromanpr.brace.core.BraceFieldLabel
+import io.github.joelromanpr.brace.core.BraceRadio
+import io.github.joelromanpr.brace.core.BraceRadioGroup
+import io.github.joelromanpr.brace.core.BraceRadioOption
+import io.github.joelromanpr.brace.core.BraceSegmentedControl
+import io.github.joelromanpr.brace.core.BraceSegmentedOption
+import io.github.joelromanpr.brace.core.BraceSegmentedIntent
+import io.github.joelromanpr.brace.core.BraceSegmentedSize
 import io.github.joelromanpr.brace.core.BraceCard
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbItem
@@ -70,6 +81,9 @@ import io.github.joelromanpr.brace.core.BraceCardList
 import io.github.joelromanpr.brace.core.BraceDivider
 import io.github.joelromanpr.brace.core.BraceDividerOrientation
 import io.github.joelromanpr.brace.core.BraceProgressBar
+import io.github.joelromanpr.brace.core.BraceSpinner
+import io.github.joelromanpr.brace.core.BraceSpinnerSize
+import io.github.joelromanpr.brace.core.BraceSkeleton
 import io.github.joelromanpr.brace.core.BraceMenu
 import io.github.joelromanpr.brace.core.BraceMenuPopup
 import io.github.joelromanpr.brace.core.BraceMenuItem
@@ -120,6 +134,16 @@ import io.github.joelromanpr.brace.icons.BraceIconRegistry
 import io.github.joelromanpr.brace.icons.BraceIconRegistryProvider
 import io.github.joelromanpr.brace.icons.BraceIconSize
 import io.github.joelromanpr.brace.icons.BraceIcons
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIcon
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconByName
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconNames
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconPack
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconResolution
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIcon
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconByName
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconNames
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconPack
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconVariant
 import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
@@ -134,6 +158,8 @@ import io.github.joelromanpr.brace.table.BraceTableColumn
 import io.github.joelromanpr.brace.table.BraceTableSelection
 import org.json.JSONObject
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 private data class DemoTableRecord(val id: String, val case: String, val status: String)
 
@@ -160,6 +186,28 @@ private data class CatalogEntry(
 private val usageExamples = mapOf(
     "core-icon" to """BraceIcon(BraceIcons.Info, contentDescription = null, intent = BraceIconIntent.Primary)
 BraceIconButton(BraceIcons.Search, label = "Search records", onClick = { openSearch() })""".trimIndent(),
+    "icons-icon-glyph-catalog" to """val context = LocalContext.current
+val pack by produceState<BraceBlueprintIconPack?>(null, context) {
+    value = withContext(Dispatchers.IO) { BraceBlueprintIconPack.load(context) }
+}
+pack?.let { icons ->
+    BraceBlueprintIcon(icons, BraceBlueprintIconNames.Search, contentDescription = null)
+    BraceBlueprintIconByName(icons, iconNameFromData, contentDescription = "Selected icon",
+        resolution = BraceBlueprintIconResolution.Px16)
+    val matchingNames = icons.search("map", limit = 20)
+}""".trimIndent(),
+    "icons-next-glyph-catalog" to """val context = LocalContext.current
+val pack by produceState<BraceBlueprintNextIconPack?>(null, context) {
+    value = withContext(Dispatchers.IO) { BraceBlueprintNextIconPack.load(context) }
+}
+pack?.let { icons ->
+    val iconNameFromData = "magnifying-glass"
+    BraceBlueprintNextIcon(icons, BraceBlueprintNextIconNames.MagnifyingGlass,
+        contentDescription = null, variant = BraceBlueprintNextIconVariant.Filled)
+    BraceBlueprintNextIconByName(icons, iconNameFromData,
+        contentDescription = "Selected icon")
+    val migrated = icons.nextNameForLegacy("search") // magnifying-glass
+} """.trimIndent(),
     "icons-icon-loading" to """val custom = remember(customVector) {
     BraceIconRegistry.Default.register("workspace-mark", customVector)
 }
@@ -185,9 +233,28 @@ Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
     "table-keyboard-navigation" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // Shift+arrows extend a range",
     "table-cell-selection" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // Cell, Row, Column, or Range",
     "table-column-and-row-resizing" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, columnWidths = widths, onColumnWidthChange = { key, width -> widths = widths + (key to width) }, rowHeights = heights, onRowHeightChange = { key, height -> heights = heights + (key to height) })",
+    "core-css-utility-classes" to """val semantic = BraceTheme.colors.semantic
+Box(Modifier.background(semantic.surface).padding(BraceTheme.spacing.md)) {
+    BraceButton("Retry", onClick = ::retry, variant = BraceButtonVariant.Outline)
+}""".trimIndent(),
+    "core-resizesensor" to """var measured by remember { mutableStateOf(IntSize.Zero) }
+Box(Modifier.onSizeChanged { measured = it }) { Text("Measured content") }
+Text("Width: ${'$'}{measured.width} px")""".trimIndent(),
+    "core-blueprintprovider" to """var open by rememberSaveable { mutableStateOf(false) }
+BraceTheme {
+    BraceShortcutRegistry(listOf(BraceShortcut("ctrl+r", "Refresh", onKeyDown = ::refresh))) {
+        BraceOverlayHost(rememberBraceOverlayState()) {
+            WorkspaceContent()
+            BraceOverlay(open, { open = false }, title = "Details") { DetailsContent() }
+        }
+    }
+}""".trimIndent(),
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-checkbox" to "BraceCheckbox(checked = checked, onCheckedChange = { checked = it }, label = \"Include archived\")",
     "core-switch" to "BraceSwitch(checked = enabled, onCheckedChange = { enabled = it }, label = \"Notifications\")",
+    "core-radio" to "BraceRadio(selected = meal == \"soup\", onSelect = { meal = \"soup\" }, label = \"Soup\")",
+    "core-radiogroup" to "BraceRadioGroup(options = listOf(BraceRadioOption(\"soup\", \"Soup\"), BraceRadioOption(\"salad\", \"Salad\")), selectedValue = meal, onValueChange = { meal = it }, label = \"Lunch special\")",
+    "core-segmentedcontrol" to "BraceSegmentedControl(options = listOf(BraceSegmentedOption(\"list\", \"List\"), BraceSegmentedOption(\"grid\", \"Grid\")), value = layout, onValueChange = { layout = it }, label = \"Layout\")",
     "core-inputgroup" to "BraceTextField(value = query, onValueChange = { query = it }, label = \"Search\")",
     "core-formgroup" to """var notes by rememberSaveable { mutableStateOf("") }
 BraceFormField(label = "Case notes", helperText = "Include the event time", required = true, requiredDescription = "Required") { controlModifier ->
@@ -205,6 +272,8 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "core-cardlist" to "BraceCardList(items = projects, itemKey = { it.id }, onItemClick = { open(it) }) { project -> Text(project.name) }",
     "core-divider" to "BraceDivider(orientation = BraceDividerOrientation.Horizontal)",
     "core-progressbar" to "BraceProgressBar(label = \"Uploading files\", value = progress, intent = BraceProgressIntent.Primary)",
+    "core-spinner" to "BraceSpinner(label = \"Loading records\", value = progress, size = BraceSpinnerSize.Large)",
+    "core-skeleton" to "BraceSkeleton(label = \"Loading report title\"); BraceSkeleton(width = 180.dp)",
     "core-section" to "BraceSection(title = \"Projects\", collapsible = true) { Text(\"Section content\") }",
     "core-sectioncard" to "BraceSectionCard { Text(\"Project settings\") }",
     "core-breadcrumbs" to "BraceBreadcrumbs(listOf(BraceBreadcrumb(\"Home\", onClick = { home() }), BraceBreadcrumb(\"Projects\")))",
@@ -373,6 +442,63 @@ private fun Detail(entry: CatalogEntry, onBack: () -> Unit) {
 }
 
 @Composable
+private fun BlueprintNextGlyphSample() {
+    val context = LocalContext.current
+    val pack by produceState<BraceBlueprintNextIconPack?>(null, context) {
+        value = withContext(Dispatchers.IO) { BraceBlueprintNextIconPack.load(context) }
+    }
+    val loadedPack = pack ?: run {
+        Text("Loading licensed next icon artwork", color = BraceTheme.colors.semantic.onSurfaceMuted)
+        return
+    }
+    var query by rememberSaveable { mutableStateOf("magnifying") }
+    var chosen by rememberSaveable { mutableStateOf("magnifying-glass") }
+    var filled by rememberSaveable { mutableStateOf(false) }
+    var actions by rememberSaveable { mutableStateOf(0) }
+    val actionRegistry = remember(loadedPack) {
+        BraceIconRegistry.empty().register(BraceBlueprintNextIconNames.MagnifyingGlass,
+            loadedPack.find(BraceBlueprintNextIconNames.MagnifyingGlass)!!)
+    }
+    val metadata = loadedPack.metadata(chosen)
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        Text("Opt-in /next artwork · ${loadedPack.size} outlined · ${loadedPack.filledCount} filled · Apache-2.0",
+            color = BraceTheme.colors.semantic.onSurfaceMuted)
+        BraceTextField(query, { query = it }, "Search next glyph names and tags")
+        Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+            BraceBlueprintNextIconByName(loadedPack, chosen,
+                if (metadata != null) "$chosen icon" else "Unknown icon, help shown",
+                size = BraceIconSize.Large,
+                variant = if (filled) BraceBlueprintNextIconVariant.Filled else
+                    BraceBlueprintNextIconVariant.Outlined,
+                intent = BraceIconIntent.Primary)
+            Text(if (metadata == null) "Unknown: $chosen" else
+                "$chosen · ${if (metadata.hasFilled) "filled available" else "outline only"}",
+                color = BraceTheme.colors.semantic.onSurface)
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+            BraceBlueprintNextIcon(loadedPack, BraceBlueprintNextIconNames.ChevronRight, null,
+                mirrorInRtl = true, intent = BraceIconIntent.Primary)
+            Text("Directional artwork mirrors in RTL", color = BraceTheme.colors.semantic.onSurface)
+        }
+        BraceIconButton(BraceBlueprintNextIconNames.MagnifyingGlass,
+            "Search with next icon", onClick = { actions++ }, registry = actionRegistry)
+        Text("Icon action activated $actions times", color = BraceTheme.colors.semantic.onSurfaceMuted)
+        Text("Legacy search → ${loadedPack.nextNameForLegacy("search")?.value}",
+            color = BraceTheme.colors.semantic.onSurfaceMuted)
+        Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+            BraceButton(if (filled) "Outlined artwork" else "Filled artwork",
+                onClick = { filled = !filled }, variant = BraceButtonVariant.Outline)
+            BraceButton("Try fallback", onClick = { chosen = "not-in-pack" },
+                variant = BraceButtonVariant.Outline)
+        }
+        loadedPack.search(query, limit = 8).forEach { glyph ->
+            BraceButton("${glyph.name}${if (glyph.hasFilled) " · filled" else ""}",
+                onClick = { chosen = glyph.name }, variant = BraceButtonVariant.Outline)
+        }
+    }
+}
+
+@Composable
 private fun ComponentSample(
     id: String,
     toasts: BraceToastState,
@@ -380,6 +506,97 @@ private fun ComponentSample(
     onToastPositionChange: (BraceToastPosition) -> Unit,
 ) {
     when (id) {
+        "core-css-utility-classes" -> {
+            var outlined by rememberSaveable { mutableStateOf(false) }
+            val semantic = BraceTheme.colors.semantic
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Typed parameters and scoped tokens replace CSS class names.",
+                    color = semantic.onSurfaceMuted, style = BraceTheme.typography.body)
+                Box(Modifier.background(semantic.surface).padding(BraceTheme.spacing.md)) {
+                    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                        Text("Token-styled content", color = semantic.onSurface,
+                            style = BraceTheme.typography.subtitle)
+                        BraceButton(
+                            if (outlined) "Outlined action" else "Solid action",
+                            onClick = { outlined = !outlined },
+                            variant = if (outlined) BraceButtonVariant.Outline else BraceButtonVariant.Solid,
+                        )
+                    }
+                }
+                Text("Try the app-wide theme, contrast, brand, and density controls above.",
+                    color = semantic.onSurfaceMuted, style = BraceTheme.typography.label)
+            }
+        }
+        "core-resizesensor" -> {
+            var wide by rememberSaveable { mutableStateOf(false) }
+            var measured by remember { mutableStateOf(IntSize.Zero) }
+            val semantic = BraceTheme.colors.semantic
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceButton(if (wide) "Narrow preview" else "Widen preview",
+                    onClick = { wide = !wide }, variant = BraceButtonVariant.Outline)
+                Box(
+                    Modifier
+                        .width(if (wide) 224.dp else 144.dp)
+                        .onSizeChanged { measured = it }
+                        .background(semantic.surface)
+                        .padding(BraceTheme.spacing.md),
+                ) {
+                    Text("Measured content", color = semantic.onSurface,
+                        style = BraceTheme.typography.body)
+                }
+                Text("Measured: ${measured.width} × ${measured.height} px",
+                    color = semantic.onSurfaceMuted, style = BraceTheme.typography.label)
+            }
+        }
+        "core-blueprintprovider" -> {
+            var localHighContrast by rememberSaveable { mutableStateOf(false) }
+            var detailsOpen by rememberSaveable { mutableStateOf(false) }
+            var refreshed by rememberSaveable { mutableStateOf(0) }
+            val shortcutState = rememberBraceShortcutRegistryState()
+            val overlayState = rememberBraceOverlayState()
+            BraceShortcutRegistry(
+                shortcuts = listOf(
+                    BraceShortcut("ctrl+r", "Refresh local preview", group = "Preview",
+                        onKeyDown = { refreshed++ }),
+                ),
+                state = shortcutState,
+                discoveryTitle = "Preview shortcuts",
+            ) {
+                BraceOverlayHost(overlayState) {
+                    BraceTheme(
+                        contrast = if (localHighContrast) BraceContrast.High else BraceContrast.Standard,
+                    ) {
+                        val semantic = BraceTheme.colors.semantic
+                        Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                            Text("This preview has its own theme and screen behavior scope.",
+                                color = semantic.onSurface, style = BraceTheme.typography.body)
+                            BraceButton(
+                                if (localHighContrast) "Standard local contrast" else "High local contrast",
+                                onClick = { localHighContrast = !localHighContrast },
+                                variant = BraceButtonVariant.Outline,
+                            )
+                            BraceButton("Open scoped overlay", onClick = { detailsOpen = true })
+                            BraceButton("Show shortcut guide",
+                                onClick = shortcutState::showDiscovery,
+                                variant = BraceButtonVariant.Outline)
+                            Text("Ctrl+R refreshes while a preview control has focus · $refreshed",
+                                color = semantic.onSurfaceMuted, style = BraceTheme.typography.label)
+                        }
+                        BraceOverlay(
+                            open = detailsOpen,
+                            onDismissRequest = { detailsOpen = false },
+                            title = "Scoped details",
+                        ) {
+                            Column(Modifier.padding(BraceTheme.spacing.md)) {
+                                Text("Scoped details", color = BraceTheme.colors.semantic.onSurface,
+                                    style = BraceTheme.typography.subtitle)
+                                BraceButton("Close", onClick = { detailsOpen = false })
+                            }
+                        }
+                    }
+                }
+            }
+        }
         "core-icon" -> {
             var large by rememberSaveable { mutableStateOf(false) }
             var danger by rememberSaveable { mutableStateOf(false) }
@@ -408,6 +625,59 @@ private fun ComponentSample(
                 }
             }
         }
+        "icons-icon-glyph-catalog" -> {
+            val context = LocalContext.current
+            val pack by produceState<BraceBlueprintIconPack?>(null, context) {
+                value = withContext(Dispatchers.IO) { BraceBlueprintIconPack.load(context) }
+            }
+            val loadedPack = pack ?: run {
+                Text("Loading licensed icon artwork", color = BraceTheme.colors.semantic.onSurfaceMuted)
+                return
+            }
+            var query by rememberSaveable { mutableStateOf("map") }
+            var chosen by rememberSaveable { mutableStateOf("map") }
+            var use16 by rememberSaveable { mutableStateOf(false) }
+            var activations by rememberSaveable { mutableStateOf(0) }
+            val actionRegistry = remember(loadedPack) {
+                BraceIconRegistry.empty().register(BraceBlueprintIconNames.Search,
+                    loadedPack.find(BraceBlueprintIconNames.Search)!!)
+            }
+            val available = loadedPack.find(chosen) != null
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Opt-in Blueprint artwork · ${loadedPack.size} pinned names · Apache-2.0",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BraceTextField(query, { query = it }, "Search glyph names and tags")
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceBlueprintIconByName(loadedPack, chosen,
+                        if (available) "${loadedPack.metadata(chosen)?.displayName} icon" else "Unknown icon, help shown",
+                        size = BraceIconSize.Large,
+                        resolution = if (use16) BraceBlueprintIconResolution.Px16
+                            else BraceBlueprintIconResolution.Px20,
+                        intent = BraceIconIntent.Primary)
+                    Text(if (available) chosen else "Unknown: $chosen", color = BraceTheme.colors.semantic.onSurface)
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceBlueprintIcon(loadedPack, BraceBlueprintIconNames.ChevronRight, null,
+                        mirrorInRtl = true, intent = BraceIconIntent.Primary)
+                    Text("Directional artwork mirrors in RTL", color = BraceTheme.colors.semantic.onSurface)
+                }
+                BraceIconButton(BraceBlueprintIconNames.Search, "Search with Blueprint icon",
+                    onClick = { activations++ }, registry = actionRegistry)
+                Text("Icon action activated $activations times",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (use16) "Use 20px artwork" else "Use 16px artwork",
+                        onClick = { use16 = !use16 }, variant = BraceButtonVariant.Outline)
+                    BraceButton("Try fallback", onClick = { chosen = "not-in-pack" },
+                        variant = BraceButtonVariant.Outline)
+                }
+                loadedPack.search(query, limit = 8).forEach { glyph ->
+                    BraceButton("${glyph.displayName} · ${glyph.name}", onClick = { chosen = glyph.name },
+                        variant = BraceButtonVariant.Outline)
+                }
+            }
+        }
+        "icons-next-glyph-catalog" -> BlueprintNextGlyphSample()
         "icons-icon-loading" -> {
             var iconName by rememberSaveable { mutableStateOf("search") }
             val registry = remember {
@@ -613,6 +883,43 @@ private fun ComponentSample(
             var checked by rememberSaveable { mutableStateOf(false) }
             Column { BraceCheckbox(checked, { checked = it }, "Include archived")
                 BraceCheckbox(false, {}, "Disabled choice", enabled = false) }
+        }
+        "core-radio" -> {
+            var meal by rememberSaveable { mutableStateOf("soup") }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xs)) {
+                BraceRadio(meal == "soup", { meal = "soup" }, "Soup", description = "Vegetarian")
+                BraceRadio(meal == "sandwich", { meal = "sandwich" }, "Sandwich")
+                BraceRadio(false, {}, "Unavailable", enabled = false)
+            }
+        }
+        "core-radiogroup" -> {
+            var meal by rememberSaveable { mutableStateOf("soup") }
+            BraceRadioGroup(
+                options = listOf(
+                    BraceRadioOption("soup", "Soup", description = "Vegetarian"),
+                    BraceRadioOption("salad", "Salad", enabled = false),
+                    BraceRadioOption("sandwich", "Sandwich"),
+                ),
+                selectedValue = meal, onValueChange = { meal = it }, label = "Lunch special",
+            )
+        }
+        "core-segmentedcontrol" -> {
+            var layout by rememberSaveable { mutableStateOf("list") }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                BraceSegmentedControl(
+                    options = listOf(
+                        BraceSegmentedOption("list", "List"),
+                        BraceSegmentedOption("grid", "Grid", enabled = false),
+                        BraceSegmentedOption("gallery", "Gallery"),
+                    ),
+                    value = layout, onValueChange = { layout = it }, label = "Layout",
+                    fill = true, intent = BraceSegmentedIntent.Primary,
+                )
+                BraceSegmentedControl(
+                    options = listOf(BraceSegmentedOption("day", "Day"), BraceSegmentedOption("week", "Week")),
+                    value = "day", onValueChange = {}, label = "Small size", size = BraceSegmentedSize.Small,
+                )
+            }
         }
         "core-switch" -> {
             var checked by rememberSaveable { mutableStateOf(true) }
@@ -858,6 +1165,37 @@ private fun ComponentSample(
                 BraceButton("Advance upload", onClick = { progress = (progress + 0.15f).coerceAtMost(1f) })
                 BraceProgressBar(label = "Waiting for response", value = null, intent = BraceProgressIntent.Warning)
                 BraceProgressBar(label = "Unavailable task", value = 0.6f, enabled = false)
+            }
+        }
+        "core-spinner" -> {
+            var progress by rememberSaveable { mutableStateOf(0.3f) }
+            var determinate by rememberSaveable { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
+                    BraceSpinner("Loading small records", size = BraceSpinnerSize.Small)
+                    BraceSpinner("Loading records", if (determinate) progress else null)
+                    BraceSpinner("Loading large reports", if (determinate) progress else null,
+                        size = BraceSpinnerSize.Large, intent = BraceProgressIntent.Success)
+                }
+                Text(if (determinate) "Progress: ${(progress * 100).toInt()}%" else "Indeterminate",
+                    color = BraceTheme.colors.semantic.onSurface)
+                BraceButton("Toggle known progress", onClick = { determinate = !determinate })
+                BraceButton("Advance", onClick = { progress = (progress + 0.2f).coerceAtMost(1f) })
+            }
+        }
+        "core-skeleton" -> {
+            var loading by rememberSaveable { mutableStateOf(true) }
+            var animated by rememberSaveable { mutableStateOf(true) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                if (loading) {
+                    BraceSkeleton(label = "Loading report title", animated = animated)
+                    BraceSkeleton(width = 180.dp, animated = animated)
+                    BraceSkeleton(width = 120.dp, animated = animated)
+                } else {
+                    Text("Quarterly report is ready", color = BraceTheme.colors.semantic.onSurface)
+                }
+                BraceButton("Toggle content", onClick = { loading = !loading })
+                BraceButton("Toggle shimmer", onClick = { animated = !animated })
             }
         }
         "core-section" -> {

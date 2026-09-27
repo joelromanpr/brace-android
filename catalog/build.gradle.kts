@@ -29,6 +29,8 @@ kotlin { compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarg
 dependencies {
     implementation(project(":brace-core"))
     implementation(project(":brace-icons"))
+    implementation(project(":brace-blueprint-icons"))
+    implementation(project(":brace-blueprint-icons-next"))
     implementation(project(":brace-select"))
     implementation(project(":brace-datetime"))
     implementation(project(":brace-table"))

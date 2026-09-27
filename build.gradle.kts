@@ -31,3 +31,17 @@ tasks.register<Exec>("checkTokenGeneration") {
     group = "verification"
     commandLine("python3", "scripts/generate_tokens.py", "--check")
 }
+
+
+tasks.register<Exec>("checkBlueprintIconGeneration") {
+    description = "Checks the pinned Blueprint glyph manifest and generated Kotlin names."
+    group = "verification"
+    commandLine("python3", "scripts/generate_blueprint_icons.py", "--check")
+}
+
+
+tasks.register<Exec>("checkBlueprintNextIconGeneration") {
+    description = "Checks the pinned Blueprint /next glyph manifest and generated Kotlin names."
+    group = "verification"
+    commandLine("python3", "scripts/generate_blueprint_next_icons.py", "--check")
+}

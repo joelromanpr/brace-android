@@ -298,6 +298,12 @@ BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
     editingCell = editing, onEditingCellChange = { editing = it },
     onCellCommit = { cell, value -> rows = rows.map { if (it.id == cell.rowKey) it.copy(title = value) else it } })""".trimIndent(),
     "table-editing" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, editingCell = editing, onEditingCellChange = { editing = it }, onCellCommit = { cell, value -> save(cell, value) }) // Enter/F2, double-tap, TalkBack Edit",
+    "table-editablename" to """var editingName by remember { mutableStateOf<String?>(null) }
+var titles by remember { mutableStateOf(mapOf("status" to "Status")) }
+val columns = listOf(BraceTableColumn<Record>("status", titles.getValue("status"), 160.dp, { it.status }, editableName = true))
+BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
+    editingColumnName = editingName, onEditingColumnNameChange = { editingName = it },
+    onColumnNameCommit = { key, title -> titles = titles + (key to title) })""".trimIndent(),
     "table-column-and-row-resizing" to """var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
 var widths by remember { mutableStateOf<Map<String, Dp>>(emptyMap()) }
 var heights by remember { mutableStateOf<Map<String, Dp>>(emptyMap()) }
@@ -1278,7 +1284,7 @@ private fun ComponentSample(
         "datetime-timepicker" -> TimePickerSample()
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
         "table-cell-selection", "table-column-and-row-resizing", "table-copying",
-        "table-editablecell", "table-editing" -> TableCatalogSample()
+        "table-editablecell", "table-editing", "table-editablename" -> TableCatalogSample()
         "core-h1", "core-h2", "core-h3", "core-h4", "core-h5", "core-h6",
         "core-blockquote", "core-code", "core-pre", "core-ol", "core-ul" -> SemanticContentSample(id)
         "datetime-timezoneselect" -> {

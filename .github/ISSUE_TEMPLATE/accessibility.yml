@@ -1,0 +1,30 @@
+name: Accessibility issue
+description: Report a TalkBack, keyboard, large text, RTL, contrast, motion, or target-size issue.
+title: "[Accessibility] "
+labels: ["accessibility", "bug"]
+body:
+  - type: input
+    id: component
+    attributes:
+      label: Component or inventory ID
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Device, Android version, input method, and assistive technology
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps and observed behavior
+      description: Include the focus or reading order if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected accessible behavior
+    validations:
+      required: true

@@ -1,0 +1,3 @@
+# The founding maintainer reviews public API and release changes.
+# Do not make CODEOWNERS approval a required branch rule while there is one maintainer.
+* @joelromanpr

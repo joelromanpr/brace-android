@@ -52,7 +52,8 @@ class CatalogLargeTextTest {
         )
         var fontScale by mutableFloatStateOf(1f)
         rule.setContent {
-            CompositionLocalProvider(LocalDensity provides Density(1f, fontScale)) {
+            val deviceDensity = LocalDensity.current.density
+            CompositionLocalProvider(LocalDensity provides Density(deviceDensity, fontScale)) {
                 BraceTheme {
                     Box(Modifier.size(320.dp, 640.dp)) {
                         Detail(entry, onBack = {})

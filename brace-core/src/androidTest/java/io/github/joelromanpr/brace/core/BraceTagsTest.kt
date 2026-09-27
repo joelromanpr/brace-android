@@ -1,6 +1,7 @@
 package io.github.joelromanpr.brace.core
 
 import android.os.Build
+import android.view.accessibility.AccessibilityNodeInfo
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import io.github.braceandroid.foundation.BraceColorMode
 import io.github.braceandroid.foundation.BraceContrast
 import io.github.braceandroid.foundation.BraceDensity
@@ -260,6 +262,7 @@ class BraceTagsTest {
         rule.onNodeWithText("Joel Roman", useUnmergedTree = true).assertExists()
     }
 
+    @OptIn(ExperimentalTestApi::class)
     @Test
     fun actionableAndRemovableTagsPassAutomatedAccessibilityAudit() {
         if (Build.VERSION.SDK_INT < 34) return
@@ -270,5 +273,30 @@ class BraceTagsTest {
         }
         rule.enableAccessibilityChecks()
         rule.onNodeWithContentDescription("Status").tryPerformAccessibilityChecks()
+        val mainAppeared = runCatching {
+            rule.waitUntil(5_000) { nativeNodesWithDescription("Status").size == 1 }
+        }.isSuccess
+        assertTrue("Native tag nodes: ${nativeNodes().map { "${it.contentDescription}, clickable=${it.isClickable}" }}",
+            mainAppeared)
+        val main = nativeNodesWithDescription("Status").single()
+        assertTrue("native tag label must be clickable: $main", main.isClickable)
+        assertTrue("native tag label needs a click action: $main",
+            main.actionList.any { it.id == AccessibilityNodeInfo.ACTION_CLICK })
+    }
+
+    private fun nativeNodesWithDescription(description: String): List<AccessibilityNodeInfo> =
+        nativeNodes().filter { it.contentDescription?.toString() == description }
+
+    private fun nativeNodes(): List<AccessibilityNodeInfo> {
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        val roots = automation.windows.mapNotNull { it.root }
+            .ifEmpty { listOfNotNull(automation.rootInActiveWindow) }
+        val nodes = mutableListOf<AccessibilityNodeInfo>()
+        fun visit(node: AccessibilityNodeInfo) {
+            nodes += node
+            for (index in 0 until node.childCount) node.getChild(index)?.let(::visit)
+        }
+        roots.forEach(::visit)
+        return nodes
     }
 }

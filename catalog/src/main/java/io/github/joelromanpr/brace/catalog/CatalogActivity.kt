@@ -86,6 +86,8 @@ import io.github.joelromanpr.brace.core.BraceCompoundTag
 import io.github.joelromanpr.brace.core.BraceEmptyState
 import io.github.joelromanpr.brace.core.BraceTag
 import io.github.joelromanpr.brace.core.BraceTagIntent
+import io.github.joelromanpr.brace.core.BraceTagInput
+import io.github.joelromanpr.brace.core.BraceTagDuplicatePolicy
 import io.github.joelromanpr.brace.core.BraceCardElevation
 import io.github.joelromanpr.brace.core.BraceCardList
 import io.github.joelromanpr.brace.core.BraceDivider
@@ -257,6 +259,7 @@ Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
     "table-cell-selection" to """var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
 BraceDataTable(rows, { it.id }, columns, selection, { selection = it })
 // Tap a cell or header; Shift+arrows extend a rectangular range.""".trimIndent(),
+    "table-copying" to "BraceTableClipboard.formatSelection(rows, { it.id }, columns, selection) // Ctrl/Cmd+C also copies in BraceDataTable",
     "table-column-and-row-resizing" to """var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
 var widths by remember { mutableStateOf<Map<String, Dp>>(emptyMap()) }
 var heights by remember { mutableStateOf<Map<String, Dp>>(emptyMap()) }
@@ -322,6 +325,7 @@ BracePanelStack(stack, modifier = Modifier.height(280.dp)) {
     else Text("Settings content")
 }""",
     "core-tag" to "BraceTag(label = \"Finance\", intent = BraceTagIntent.Primary, onRemove = { removeFilter() })",
+    "core-taginput" to "BraceTagInput(values = tags, onValuesChange = { tags = it }, draft = draft, onDraftChange = { draft = it }, label = \"Skills\")",
     "core-compoundtag" to "BraceCompoundTag(label = \"Status\", value = \"Active\", onRemove = { clearStatus() })",
     "core-callout" to "BraceCallout(title = \"Saved\", intent = BraceCalloutIntent.Success) { Text(\"Your changes are ready.\") }",
     "core-nonidealstate" to "BraceEmptyState(title = \"No results\", description = \"Try another query.\")",
@@ -848,6 +852,38 @@ private fun PanelStackSample() {
 }
 
 @Composable
+private fun TagInputSample() {
+    var tags by rememberSaveable { mutableStateOf(listOf("Compose", "Android")) }
+    var draft by rememberSaveable { mutableStateOf("") }
+    var message by rememberSaveable { mutableStateOf("Type a value, then press Enter or comma") }
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        BraceTagInput(
+            values = tags,
+            onValuesChange = { tags = it },
+            draft = draft,
+            onDraftChange = { draft = it },
+            label = "Skills",
+            placeholder = "Add a skill",
+            supportingText = "Commas and line breaks separate skills",
+            duplicatePolicy = BraceTagDuplicatePolicy.RejectIgnoreCase,
+            validator = { it.length >= 2 },
+            tagIntent = BraceTagIntent.Primary,
+            onRejected = { value, reason -> message = "$value: $reason" },
+            onTagsAdded = { added, method -> message = "Added ${added.joinToString()} via $method" },
+            onTagRemoved = { value, _ -> message = "Removed $value" },
+        )
+        Text(message, color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.label)
+        BraceButton("Reset tags", onClick = {
+            tags = listOf("Compose", "Android")
+            draft = ""
+            message = "Tags restored"
+        })
+        BraceTagInput(listOf("Read only"), {}, "", {}, "Read only tags", readOnly = true)
+        BraceTagInput(listOf("Unavailable"), {}, "", {}, "Disabled tags", enabled = false)
+    }
+}
+
+@Composable
 private fun ComponentSample(
     id: String,
     toasts: BraceToastState,
@@ -1137,7 +1173,7 @@ private fun ComponentSample(
         "datetime-daterangeinput" -> DateRangeFieldSample()
         "datetime-timepicker" -> TimePickerSample()
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
-        "table-cell-selection", "table-column-and-row-resizing" -> TableCatalogSample()
+        "table-cell-selection", "table-column-and-row-resizing", "table-copying" -> TableCatalogSample()
         "datetime-timezoneselect" -> {
             var selected by rememberSaveable { mutableStateOf<String?>(null) }
             var summer by rememberSaveable { mutableStateOf(true) }
@@ -1568,6 +1604,7 @@ private fun ComponentSample(
                 BraceButton("Restore tag", onClick = { visible = true })
             }
         }
+        "core-taginput" -> TagInputSample()
         "core-compoundtag" -> {
             var visible by rememberSaveable { mutableStateOf(true) }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {

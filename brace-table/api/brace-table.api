@@ -3,6 +3,12 @@ public final class io/github/joelromanpr/brace/table/BraceDataTableKt {
 	public static final fun rememberBraceTableViewport (Landroidx/compose/runtime/Composer;I)Lio/github/joelromanpr/brace/table/BraceTableViewport;
 }
 
+public final class io/github/joelromanpr/brace/table/BraceTableClipboard {
+	public static final field $stable I
+	public static final field INSTANCE Lio/github/joelromanpr/brace/table/BraceTableClipboard;
+	public final fun formatSelection (Ljava/util/List;Lkotlin/jvm/functions/Function1;Ljava/util/List;Lio/github/joelromanpr/brace/table/BraceTableSelection;)Ljava/lang/String;
+}
+
 public final class io/github/joelromanpr/brace/table/BraceTableColumn {
 	public static final field $stable I
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;ILkotlin/jvm/internal/DefaultConstructorMarker;)V

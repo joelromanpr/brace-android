@@ -1,5 +1,8 @@
 package io.github.joelromanpr.brace.table
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.view.KeyEvent as AndroidKeyEvent
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -49,6 +52,7 @@ import androidx.compose.ui.input.key.isMetaPressed
 import androidx.compose.ui.input.key.isShiftPressed
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.input.pointer.PointerEventPass
@@ -149,7 +153,8 @@ fun rememberBraceTableViewport(): BraceTableViewport {
  * endpoint for touch range selection. Row and column headers select their full axis.
  * Optional controlled width/height maps and callbacks enable 48dp resize handles. Callers
  * must update those maps in response to callbacks for live visual resizing.
- * Editing, copying, disjoint selections, and frozen data regions are not yet exposed.
+ * Ctrl/Cmd+C and the TalkBack copy action place the selected values on the Android clipboard.
+ * Editing, disjoint selections, and frozen data regions are not yet exposed.
  */
 @Composable
 fun <Row> BraceDataTable(
@@ -187,6 +192,7 @@ fun <Row> BraceDataTable(
     val spacing = BraceTheme.spacing
     val densityTokens = BraceTheme.densityTokens
     val typography = BraceTheme.typography
+    val context = LocalContext.current
     val density = LocalDensity.current
     val direction = LocalLayoutDirection.current
     val scope = rememberCoroutineScope()
@@ -225,7 +231,17 @@ fun <Row> BraceDataTable(
     val totalWidth = rowHeaderWidth + columnIndex.totalWidth
     val tableLabel = label ?: stringResource(R.string.brace_table_default_label)
     require(tableLabel.isNotBlank()) { "Table label must not be blank" }
+    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val copySelection: () -> Boolean = {
+        val text = BraceTableClipboard.formatSelectionWithIndexes(rows, columns, selection,
+            rowIndexes, columnIndex.byKey)
+        if (text == null) false else {
+            clipboard.setPrimaryClip(ClipData.newPlainText(tableLabel, text))
+            true
+        }
+    }
     val selectedAction = stringResource(R.string.brace_table_select)
+    val copyAction = stringResource(R.string.brace_table_copy)
     val extendRangeAction = stringResource(R.string.brace_table_extend_range)
     val emptyText = stringResource(R.string.brace_table_empty)
     val rowDescription = stringResource(R.string.brace_table_row_description)
@@ -275,6 +291,7 @@ fun <Row> BraceDataTable(
         }
         else -> null
     }
+    val canCopySelection = rows.isNotEmpty() && columns.isNotEmpty() && selectionAnnouncement != null
 
     BoxWithConstraints(
         modifier.fillMaxWidth().height(height)
@@ -285,9 +302,13 @@ fun <Row> BraceDataTable(
             .focusRequester(requester)
             .onFocusChanged { focused = it.isFocused }
             .onPreviewKeyEvent { event ->
-                if (focusedResizeHandleId != null || event.type != KeyEventType.KeyDown ||
-                    rows.isEmpty() || columns.isEmpty() || event.isAltPressed ||
-                    event.isCtrlPressed || event.isMetaPressed) return@onPreviewKeyEvent false
+                if (event.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
+                if (!event.isAltPressed && (event.isCtrlPressed || event.isMetaPressed) &&
+                    event.nativeKeyEvent.keyCode == AndroidKeyEvent.KEYCODE_C) {
+                    return@onPreviewKeyEvent copySelection()
+                }
+                if (focusedResizeHandleId != null || rows.isEmpty() || columns.isEmpty() ||
+                    event.isAltPressed || event.isCtrlPressed || event.isMetaPressed) return@onPreviewKeyEvent false
                 val currentRow = when (selection) {
                     is BraceTableSelection.Cell -> rowIndex.byKey[selection.rowKey]
                     is BraceTableSelection.Row -> rowIndex.byKey[selection.rowKey]
@@ -370,6 +391,7 @@ fun <Row> BraceDataTable(
                 contentDescription = tableLabel
                 isTraversalGroup = true
                 if (selectionAnnouncement != null) stateDescription = selectionAnnouncement
+                if (canCopySelection) customActions = listOf(CustomAccessibilityAction(copyAction) { copySelection() })
             }
             .testTag("brace-table"),
     ) {

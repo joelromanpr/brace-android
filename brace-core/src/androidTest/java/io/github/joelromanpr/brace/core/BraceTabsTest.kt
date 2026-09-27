@@ -308,7 +308,17 @@ class BraceTabsTest {
             .performAction(AccessibilityNodeInfo.ACTION_CLICK))
         rule.waitForIdle()
         assertEquals("activity", selected)
-        rule.waitUntil(5_000) { nativeNodesForLabel("Activity, 3 updates").single().isSelected }
+        rule.onNodeWithContentDescription("Activity, 3 updates")
+            .assert(SemanticsMatcher.expectValue(SemanticsProperties.Selected, true))
+        runCatching {
+            rule.waitUntil(15_000) {
+                nativeNodesForLabel("Activity, 3 updates").singleOrNull()?.isSelected == true
+            }
+        }.getOrElse { cause ->
+            val states = nativeNodesForLabel("Activity, 3 updates")
+                .map { "selected=${it.isSelected}, enabled=${it.isEnabled}, clickable=${it.isClickable}" }
+            throw AssertionError("Compose selected Activity, but native tab states were $states", cause)
+        }
     }
 
     private fun dismissSystemCompatibilityWarning() {
@@ -331,6 +341,7 @@ class BraceTabsTest {
             .ifEmpty { listOfNotNull(automation.rootInActiveWindow) }
         val matches = mutableListOf<AccessibilityNodeInfo>()
         fun visit(node: AccessibilityNodeInfo) {
+            if (!node.refresh()) return
             if (node.contentDescription?.toString() == label) matches += node
             for (index in 0 until node.childCount) node.getChild(index)?.let(::visit)
         }

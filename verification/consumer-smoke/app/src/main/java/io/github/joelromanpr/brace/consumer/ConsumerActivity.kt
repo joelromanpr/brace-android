@@ -73,6 +73,7 @@ import io.github.joelromanpr.brace.core.BraceFormIntent
 import io.github.joelromanpr.brace.core.BraceMenu
 import io.github.joelromanpr.brace.core.BraceMenuIntent
 import io.github.joelromanpr.brace.core.BraceMenuItem
+import io.github.joelromanpr.brace.core.BraceMenuPopup
 import io.github.joelromanpr.brace.core.BraceOverlayHost
 import io.github.joelromanpr.brace.core.BracePopover
 import io.github.joelromanpr.brace.core.BraceProgressBar

@@ -20,6 +20,7 @@ const statusChips = document.querySelector('#status-chips');
 let entries = [];
 let captures = [];
 let entryById = new Map();
+let duplicateApiNames = new Set();
 
 function el(tag, className, content) {
   const node = document.createElement(tag);
@@ -69,7 +70,9 @@ function card(item) {
   const details = el('details', 'component');
   details.id = `component-${item.id}`;
   const summary = el('summary');
-  const title = el('span', 'component-name', (item.braceApi || item.blueprintName || item.id).split(' / ')[0]);
+  const apiName = (item.braceApi || item.blueprintName || item.id).split(' / ')[0];
+  const title = el('span', 'component-name', apiName);
+  if (duplicateApiNames.has(apiName)) title.append(el('span', 'component-topic', item.blueprintName));
   title.append(el('span', 'component-family', `${item.package || 'Unassigned'} · ${item.family || 'General'}`));
   const badge = el('span', `pill ${String(item.status || 'planned').replace(/\s+/g, '-')}`, item.status || 'planned');
   summary.append(title, badge);
@@ -285,6 +288,12 @@ async function load() {
     if (!Array.isArray(data.entries) || data.entries.length === 0) throw new Error('Inventory entries are missing');
     entries = data.entries;
     entryById = new Map(entries.map(item => [item.id, item]));
+    const apiNameCounts = new Map();
+    for (const item of entries) {
+      const name = (item.braceApi || item.blueprintName || item.id).split(' / ')[0];
+      apiNameCounts.set(name, (apiNameCounts.get(name) || 0) + 1);
+    }
+    duplicateApiNames = new Set([...apiNameCounts].filter(([, count]) => count > 1).map(([name]) => name));
     await loadShowcase();
     const pictured = new Set(captures.flatMap(capture => capture.inventoryIds));
     const rank = item => item.status === 'stable' ? 0 : pictured.has(item.id) ? 1 : item.kind === 'component' ? 2 : 3;

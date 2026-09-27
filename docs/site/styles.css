@@ -114,8 +114,9 @@ main{overflow:clip}
 .example-media{display:block;overflow:hidden;margin:0 14px 14px;border:1px solid #c7d5e7;border-radius:10px;background:#e8eef6;height:325px}
 .example-media img{display:block;width:100%;height:auto;object-fit:cover;object-position:top}
 .mission-example{background:#f0f2f9}
-.mission-media{background:#15243a;text-align:center}
-.mission-media img{width:auto;height:100%;margin:auto;object-fit:contain;object-position:top}
+.mission-media{position:relative;background:#15243a;text-align:center}
+.mission-media img{width:min(100%,400px);height:auto;margin:auto}
+.mission-media::after{content:'Open full capture ↗';position:absolute;inset:auto 0 0;padding:32px 14px 11px;background:linear-gradient(transparent,rgba(9,20,38,.95));color:#e9f1ff;text-align:right;font-size:11px;font-weight:700}
 .example-provenance{max-width:900px;color:#697b8c;font-size:12px;line-height:1.6;margin:18px 0 0}
 .example-provenance a{color:#3156b8;text-underline-offset:3px}
 .coverage{background:#f5f8fd}
@@ -143,6 +144,7 @@ main{overflow:clip}
 .component > summary::after{content:'+';display:grid;place-items:center;grid-column:3;grid-row:1;width:30px;height:30px;justify-self:end;margin:0;border:1px solid #d8e1ee;border-radius:8px;background:#f6f8fc;color:#536d90;font-size:19px;line-height:1;transition:background .15s ease}
 .component[open] > summary::after{content:'−';background:#e9effc}
 .component-name{font-size:14px;min-width:0;overflow-wrap:anywhere}
+.component-topic{display:block;margin-top:3px;color:#415b7f;font-size:12px;font-weight:650}
 .component-family{font-size:11px;color:#71839b;margin-top:5px}
 .component > summary .pill{grid-column:2;grid-row:1}
 .pill{gap:7px;padding:0;border-radius:0;background:transparent;color:#52667e;font-size:11px;font-weight:700}

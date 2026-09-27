@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,6 +47,9 @@ import io.github.joelromanpr.brace.core.BraceTopBar
 import io.github.joelromanpr.brace.core.BraceTopBarGroup
 import io.github.joelromanpr.brace.core.BraceTopBarTitle
 import io.github.joelromanpr.brace.core.BraceTopBarDivider
+import io.github.joelromanpr.brace.core.BracePanel
+import io.github.joelromanpr.brace.core.BracePanelStack
+import io.github.joelromanpr.brace.core.rememberBracePanelStackState
 import io.github.joelromanpr.brace.core.BraceHeading2
 import io.github.joelromanpr.brace.core.BraceCode
 import io.github.joelromanpr.brace.core.BraceOrderedList
@@ -177,6 +181,7 @@ class ConsumerActivity : ComponentActivity() {
                 var meal by remember { mutableStateOf("soup") }
                 var layout by remember { mutableStateOf("list") }
                 var reportingZone by remember { mutableStateOf<ZoneId?>(null) }
+                val panelState = rememberBracePanelStackState(BracePanel("imports", "Imports"))
                 val shortcutState = rememberBraceShortcutRegistryState()
                 val toasts = rememberBraceToastState()
                 val tree = rememberBraceTreeState(initialExpandedKeys = setOf("projects"))
@@ -244,6 +249,15 @@ class ConsumerActivity : ComponentActivity() {
                         BraceLink("Open reports", BraceLinkDestination.Action("Reports") { count++ })
                         BraceLinkButton("Open guide", BraceLinkDestination.Uri("https://example.org/guide", "Guide"),
                             onOpenUri = { count++ })
+                        BracePanelStack(panelState, Modifier.height(180.dp)) {
+                            if (panel.id == "imports") {
+                                BraceButton("Configure imports", onClick = {
+                                    openPanel(BracePanel("import-settings", "Import settings"))
+                                })
+                            } else {
+                                BraceButton("Close settings", onClick = { closePanel() })
+                            }
+                        }
                         BraceTree(
                             nodes = listOf(BraceTreeNode("projects", "Projects", children = listOf(
                                 BraceTreeNode("imports", "Imports"), BraceTreeNode("exports", "Exports")))),

@@ -16,6 +16,7 @@ The static site cannot demonstrate TalkBack, touch, mouse, keyboard, state resto
 
 ## Component details
 
+- [PanelStack](site/showcase/panel-stack-400.png) shows the Filters pane pushed above Workspace, a labeled back action, and stack depth two in the real API 36 catalog. The inventory remains in progress.
 - [Tree and TreeNode](site/showcase/tree-400.png) shows an expanded branch, selected Alpha child, disabled Beta child, and collapsed branches in the real API 36 catalog. The inventory remains in progress.
 
 ## Runnable operations examples

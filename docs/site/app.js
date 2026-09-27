@@ -70,31 +70,31 @@ function card(item) {
   summary.append(title, badge);
   const body = el('dl', 'component-body');
   addFact(body, 'Brace API', item.braceApi);
-  addFact(body, 'Reference component', item.blueprintName);
-  addFact(body, 'Artifact', item.artifact);
-  addFact(body, 'Android mapping', item.classification);
+  addFact(body, 'Reference name', item.blueprintName);
+  addFact(body, 'Gradle module', item.artifact);
+  addFact(body, 'Android form', item.classification);
   addFact(body, 'Behavior and accessibility', item.behavior);
   const visual = captures.find(capture => capture.inventoryIds.includes(item.id));
   if (visual) {
     const visualFact = el('div', 'fact');
     const visualDescription = el('dd');
-    const visualLink = el('a', '', 'See Android catalog capture ↗');
+    const visualLink = el('a', '', 'See Android screenshot ↗');
     visualLink.href = `#capture-${visual.id}`;
     visualLink.dataset.captureId = visual.id;
     visualDescription.append(visualLink);
-    visualFact.append(el('dt', '', 'Visual preview'), visualDescription);
+    visualFact.append(el('dt', '', 'Android screenshot'), visualDescription);
     body.append(visualFact);
   }
-  addFact(body, 'Adaptation or exclusion', item.reason);
+  addFact(body, 'Why this differs', item.reason);
   addFact(body, 'Priority', item.priority);
-  addFact(body, 'Milestone', item.milestone);
+  addFact(body, 'Planned step', item.milestone);
   addFact(body, 'Reference documentation', item.blueprintUrl, true);
   addFact(body, 'Pinned source', item.pinnedSourceUrl, true);
   addFact(body, 'Implementation', item.implementation, true);
   addFact(body, 'Sample', item.sample, true);
   addFact(body, 'Documentation', item.documentation, true);
   addFact(body, 'Tests', item.tests, true);
-  addFact(body, 'First release', item.firstRelease);
+  addFact(body, 'First published version', item.firstRelease);
   details.append(summary, body);
   return details;
 }
@@ -109,8 +109,8 @@ function render() {
       .some(value => String(value || '').toLocaleLowerCase().includes(query)))
   );
   results.replaceChildren(...filtered.map(card));
-  if (filtered.length === 0) results.append(el('p', 'empty', 'No inventory rows match these filters.'));
-  resultCount.textContent = `${filtered.length} of ${entries.length} inventory rows`;
+  if (filtered.length === 0) results.append(el('p', 'empty', 'No components match these filters.'));
+  resultCount.textContent = `${filtered.length} of ${entries.length} entries`;
   for (const chip of statusChips.querySelectorAll('[data-status]')) {
     chip.setAttribute('aria-pressed', String(chip.dataset.status === statusSelect.value));
   }
@@ -177,7 +177,7 @@ function captureCard(capture) {
   }
   body.append(meta);
   const actions = el('div', 'shot-actions');
-  const inventoryButton = el('button', 'shot-inventory', 'View inventory row →');
+  const inventoryButton = el('button', 'shot-inventory', 'View component details →');
   inventoryButton.type = 'button';
   inventoryButton.dataset.inventoryId = item.id;
   const source = publicSourceRepository ? el('a', '', 'View source ↗') : el('span', 'shot-source-pending', 'Source link pending public repository');
@@ -210,8 +210,8 @@ function renderShowcase() {
     (!showcaseFamily.value || entryById.get(capture.inventoryIds[0]).family === showcaseFamily.value)
   );
   showcaseGrid.replaceChildren(...filtered.map(captureCard));
-  if (filtered.length === 0) showcaseGrid.append(el('p', 'empty', 'No captures match these filters.'));
-  showcaseResult.textContent = `${filtered.length} of ${captures.length} Android captures`;
+  if (filtered.length === 0) showcaseGrid.append(el('p', 'empty', 'No screenshots match these filters.'));
+  showcaseResult.textContent = `${filtered.length} of ${captures.length} Android screenshots`;
 }
 
 async function loadShowcase() {
@@ -277,13 +277,13 @@ async function load() {
     entryById = new Map(entries.map(item => [item.id, item]));
     await loadShowcase();
     const pin = data.baseline || {};
-    baseline.textContent = `Reference baseline: ${pin.releaseTag || pin.version || 'pinned stable'} · ${pin.commit || pin.sha || 'commit recorded in inventory'}`;
+    baseline.textContent = `Reference version: ${pin.releaseTag || pin.version || 'pinned stable'} · ${pin.commit || pin.sha || 'commit recorded in inventory'}`;
     const counts = data.summary || {};
     stats.replaceChildren(
-      stat(`${counts.stableApplicableRows ?? 0}/${counts.applicableRows ?? entries.length}`, 'Released Android items'),
-      stat(`${counts.stableComponents ?? 0}/${counts.applicableComponents ?? 0}`, 'Released components'),
-      stat(`${counts.documentedWebSpecificMappings ?? 0}/${counts.webSpecificMappings ?? 0}`, 'Web-only cases explained'),
-      stat(counts.labsRows ?? entries.filter(item => item.track === 'labs').length, 'Experimental items')
+      stat(`${counts.stableApplicableRows ?? 0}/${counts.applicableRows ?? entries.length}`, 'Android items released'),
+      stat(`${counts.stableComponents ?? 0}/${counts.applicableComponents ?? 0}`, 'Components released'),
+      stat(`${counts.documentedWebSpecificMappings ?? 0}/${counts.webSpecificMappings ?? 0}`, 'Web behaviors explained'),
+      stat(counts.labsRows ?? entries.filter(item => item.track === 'labs').length, 'Early experiments')
     );
     addOptions(packageSelect, entries.map(item => item.package));
     addOptions(statusSelect, entries.map(item => item.status));

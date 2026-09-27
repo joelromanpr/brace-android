@@ -36,7 +36,7 @@ BraceTheme {
 ## Availability
 
 <!-- coverage:begin -->
-**Released: 0 of 122 tracked Android items** (0 of 94 components; 0 of 28 design-system capabilities). [See the full coverage record, web mappings, and experimental work](docs/coverage.md).
+**Stable: 0 of 122 tracked Android items** (0 of 94 components; 0 of 28 design-system capabilities). [See the full coverage record, web mappings, and experimental work](docs/coverage.md).
 <!-- coverage:end -->
 
 Brace is under active development. The source can be built and published to Maven Local, but no version is available on Maven Central yet. The [component list](docs/coverage.md) shows what is in progress, planned, or released. Its counts come from the [machine-readable inventory](inventory/blueprint-components.json), so screenshots never imply a release.
@@ -45,4 +45,4 @@ The comparison uses a [pinned reference version](BLUEPRINT_BASELINE.md). [Licens
 
 ## Contribute
 
-Pick a component from the [roadmap](ROADMAP.md) and follow [the contribution guide](CONTRIBUTING.md). See [security](SECURITY.md) for private vulnerability reports and [support](SUPPORT.md) for help. Apache-2.0 [license](LICENSE).
+Pick a component from the [public project board](https://github.com/users/joelromanpr/projects/1) or [roadmap](ROADMAP.md), then follow [the contribution guide](CONTRIBUTING.md). See [security](SECURITY.md) for private vulnerability reports and [support](SUPPORT.md) for help. Apache-2.0 [license](LICENSE).

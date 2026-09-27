@@ -1,6 +1,6 @@
 # Table regions
 
-The M50 source slice adapts [Blueprint Table Region](https://blueprintjs.com/docs/#table/api.region) from inclusive zero-indexed intervals to stable row and column keys. The authority is Blueprint's [pinned `regions.ts`](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/regions.ts). This API is **in progress** and unpublished.
+Brace adapts [Blueprint Table Region](https://blueprintjs.com/docs/#table/api.region) from inclusive zero-indexed intervals to stable row and column keys. The authority is Blueprint's [pinned `regions.ts`](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/regions.ts). This API is **in progress** and unpublished.
 
 `BraceTableRegion.Cells`, `Rows`, `Columns`, and `Table` correspond to Blueprint's `CELLS`, `FULL_ROWS`, `FULL_COLUMNS`, and `FULL_TABLE` cardinalities. `BraceTableSelection.Regions` holds one or more disjoint regions. `BraceTableRegions.add` and `updateLast` create new controlled values. Keys remain attached to data during a host-owned sort; their current positions determine the inclusive interval. If any bound key disappears, the selection is stale: the table does not highlight or copy a partial result.
 

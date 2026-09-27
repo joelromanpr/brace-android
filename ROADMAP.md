@@ -1,16 +1,21 @@
 # Roadmap
 
-The [pinned component inventory](inventory/blueprint-components.json) is authoritative for exact rows, milestones, status, and links. The generated [coverage page](docs/coverage.md) reports current counts. A roadmap milestone does not imply a component is released.
+Brace Android is growing into a complete Compose design system for data-rich apps. The [component inventory](inventory/blueprint-components.json) defines the exact scope, and the generated [coverage page](docs/coverage.md) shows what is available today. The [public project board](https://github.com/users/joelromanpr/projects/1) tracks work in progress and places to contribute.
 
-| Milestone | Scope | Exit evidence |
-| --- | --- | --- |
-| M0 — foundation | Pinned scope, design tokens, theme, repository and docs/catalog foundation, first coherent core controls | Inventory and generated counts; token checks; tested public APIs and examples |
-| M1 — core | Remaining core actions, content, forms, inputs, feedback, tags, trees, shortcuts | Each applicable inventory row has implementation, catalog example, docs, tests |
-| M2 — overlays/navigation | Menus, dialogs, drawers, popovers, tooltips, toasts, navigation | Focus restoration, dismissal, semantics, keyboard and touch tests |
-| M3 — selection | Single/multiple selection, suggestions, query, command palette | Selection and query state/interaction tests |
-| M4 — datetime and icons | Date/time/range/time-zone experiences and licensed icon strategy | Localization, zone handling, icon attribution and accessibility tests |
-| M5 — data table | Viewport rendering, fixed headers, resize, selection, copy, editing, keyboard navigation | Performance and complex interaction tests, accessibility evidence |
+## Now
 
-Delivery branch numbers count reviewable PR slices and can differ from these scope phases. For example, navigation and overlays in roadmap M2 span delivery branches M3, M4, and M5.
+- Polish the catalog and real app examples so developers can inspect components, states, themes, and behavior quickly.
+- Finish cross-device and accessibility review of the controls, overlays, selection tools, date and time controls, icons, and table already in source.
+- Prepare the first preview release with tested Maven artifacts and clear in-progress labels.
 
-Each slice updates its inventory rows, documentation, catalog, tests, and changelog together. Full parity can be claimed only after every applicable pinned row is stable and verified. Experimental/labs rows are tracked separately.
+## Next
+
+- Close the remaining interaction and accessibility gaps in core components, menus, dialogs, navigation, and selection.
+- Expand date, time, time-zone, and table behavior where the inventory still lists gaps.
+- Review each completed component in light, dark, and high-contrast themes, at large text sizes and in RTL.
+
+## Later
+
+Implement and verify every applicable component in the pinned inventory. Experimental components stay on a separate track. A preview artifact or screenshot does not make an inventory row stable.
+
+A component becomes stable only after its public API, token-driven styles, interactive catalog sample, guide, and meaningful tests are complete, including relevant touch, keyboard, mouse, TalkBack, restoration, and accessibility checks. Update the inventory, sample, docs, and tests together in each pull request.

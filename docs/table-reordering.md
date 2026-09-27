@@ -1,6 +1,6 @@
 # Table reordering
 
-The M51 source slice adapts [Blueprint Table reordering](https://blueprintjs.com/docs/#table/features) from DOM drag callbacks to controlled Compose key orders. The pinned authority is [Blueprint 6.18.0 table features](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx). This API is **in progress** and unpublished.
+Brace adapts [Blueprint Table reordering](https://blueprintjs.com/docs/#table/features) from DOM drag callbacks to controlled Compose key orders. The pinned authority is [Blueprint 6.18.0 table features](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx). This API is **in progress** and unpublished.
 
 ```kotlin
 var rows by remember { mutableStateOf(cases) }

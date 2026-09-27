@@ -1,6 +1,6 @@
 # M36 — semantic content adapters
 
-**Status:** source integrated through M16 protected main; final-head checks and hosted review pending. No public artifact or stable inventory claim.
+**Status:** exact-M16-main scoped compile passed; hosted review pending. No public artifact or stable inventory claim.
 
 ## Delivered in this slice
 
@@ -10,8 +10,9 @@
 
 ## Verification
 
-- On protected main `47989fc0f56652bee74223e08760907eeb6d9107`, inventory and documentation generation passed with 148 rows and 0/122 applicable rows stable. M34, M21, M15, M22, and M16 were then integrated; generated coverage and site/static checks still pass on M16 main `dd8ab119805a8676fa72a055d0803f4923cf24a3`. The site build validates 23 existing captures and 66 guides, including direct semantic-content and M36 audit routes. The combined Gradle and device gates below were run before M34/M21/M15/M22/M16 integration; final-head verification remains pending.
+- On protected main `47989fc0f56652bee74223e08760907eeb6d9107`, inventory and documentation generation passed with 148 rows and 0/122 applicable rows stable. M34, M21, M15, M22, and M16 were then integrated; generated coverage and site/static checks still pass on M16 main `dd8ab119805a8676fa72a055d0803f4923cf24a3`. The site build validates 23 existing captures and 66 guides, including direct semantic-content and M36 audit routes. The combined Gradle and device gates below were run before M34/M21/M15/M22/M16 integration; the exact-head scoped gate below passed. Hosted checks and a current-head device rerun remain pending.
 - To keep the growing catalog under the JVM method-size limit, the semantic sample is dispatched to a private composable; its public API and behavior did not change.
+- On exact M16-main integration, `:brace-core:apiCheck :brace-core:compileDebugAndroidTestKotlin :catalog:assembleDebug checkInventory` passed offline (227 tasks). This verifies the catalog sample extraction compiles with the new select and table slices.
 - Combined `build lint checkTokenGeneration checkBlueprintIconGeneration checkBlueprintNextIconGeneration checkInventory apiCheck :catalog:assembleDebug` passed offline on the replay (836 tasks). The API dump was regenerated to match canonical class ordering; the exported semantic-content signatures did not change.
 - API 36 at 320×640, 160 dpi, font scale 1.0: focused `BraceSemanticContentTest` passed 3/3 (71 Gradle tasks), covering headings through theme changes, RTL list collection/order semantics, and readable noninteractive quote/code semantics.
 - Eight aligned `0.1.0-SNAPSHOT` artifacts published to Maven Local (308 tasks). Each has an AAR, sources JAR, KDoc JAR, POM, and Gradle Module Metadata. The separate Maven-coordinate-only consumer compiled with `BraceHeading2` and `BraceOrderedList` (37 tasks). This is local verification, not a Maven Central release.

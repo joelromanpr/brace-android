@@ -849,6 +849,37 @@ private fun TagInputSample() {
 }
 
 @Composable
+private fun FilePickerSample() {
+    var names by rememberSaveable { mutableStateOf(emptyList<String>()) }
+    var multiple by rememberSaveable { mutableStateOf(false) }
+    var enabled by rememberSaveable { mutableStateOf(true) }
+    var showError by rememberSaveable { mutableStateOf(false) }
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        BraceFilePickerField(
+            label = "Attachments",
+            selectedNames = names,
+            onFilesPicked = { uris ->
+                names = uris.mapIndexed { index, _ -> "Selected document ${index + 1}" }
+            },
+            mimeTypes = listOf("application/pdf", "image/*"),
+            multiple = multiple,
+            enabled = enabled,
+            size = BraceFilePickerSize.Medium,
+            helperText = "Files stay on your device until the app reads them.",
+            errorText = if (showError) "Select a supported document" else null,
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+            BraceButton(if (multiple) "Single" else "Multiple", onClick = { multiple = !multiple },
+                variant = BraceButtonVariant.Outline)
+            BraceButton(if (enabled) "Disable" else "Enable", onClick = { enabled = !enabled },
+                variant = BraceButtonVariant.Outline)
+        }
+        BraceButton(if (showError) "Clear error" else "Show error",
+            onClick = { showError = !showError }, variant = BraceButtonVariant.Outline)
+    }
+}
+
+@Composable
 private fun ComponentSample(
     id: String,
     toasts: BraceToastState,
@@ -1171,35 +1202,7 @@ private fun ComponentSample(
                     locale = Locale.US)
             }
         }
-        "core-fileinput" -> {
-            var names by rememberSaveable { mutableStateOf(emptyList<String>()) }
-            var multiple by rememberSaveable { mutableStateOf(false) }
-            var enabled by rememberSaveable { mutableStateOf(true) }
-            var showError by rememberSaveable { mutableStateOf(false) }
-            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                BraceFilePickerField(
-                    label = "Attachments",
-                    selectedNames = names,
-                    onFilesPicked = { uris ->
-                        names = uris.mapIndexed { index, _ -> "Selected document ${index + 1}" }
-                    },
-                    mimeTypes = listOf("application/pdf", "image/*"),
-                    multiple = multiple,
-                    enabled = enabled,
-                    size = BraceFilePickerSize.Medium,
-                    helperText = "Files stay on your device until the app reads them.",
-                    errorText = if (showError) "Select a supported document" else null,
-                )
-                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                    BraceButton(if (multiple) "Single" else "Multiple", onClick = { multiple = !multiple },
-                        variant = BraceButtonVariant.Outline)
-                    BraceButton(if (enabled) "Disable" else "Enable", onClick = { enabled = !enabled },
-                        variant = BraceButtonVariant.Outline)
-                }
-                BraceButton(if (showError) "Clear error" else "Show error",
-                    onClick = { showError = !showError }, variant = BraceButtonVariant.Outline)
-            }
-        }
+        "core-fileinput" -> FilePickerSample()
         "core-button" -> {
             var count by rememberSaveable { mutableStateOf(0) }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {

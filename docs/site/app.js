@@ -1,11 +1,10 @@
 const search = document.querySelector('#search');
-const packageSelect = document.querySelector('#package');
+const familySelect = document.querySelector('#package');
 const statusSelect = document.querySelector('#status');
 const kindSelect = document.querySelector('#kind');
 const results = document.querySelector('#components');
 const resultCount = document.querySelector('#result-count');
 const stats = document.querySelector('#stats');
-const baseline = document.querySelector('#baseline');
 let publicSourceRepository = null;
 let repository = null;
 let guideMap = {};
@@ -13,10 +12,15 @@ const showcaseGrid = document.querySelector('#showcase-grid');
 const showcaseTheme = document.querySelector('#showcase-theme');
 const showcaseFamily = document.querySelector('#showcase-family');
 const showcaseResult = document.querySelector('#showcase-result');
+const showcaseMore = document.querySelector('#showcase-more');
+const showcaseMoreWrap = document.querySelector('#showcase-more-wrap');
+const featuredCaptureCount = 8;
+let showcaseExpanded = false;
 const statusChips = document.querySelector('#status-chips');
 let entries = [];
 let captures = [];
 let entryById = new Map();
+let duplicateApiNames = new Set();
 
 function el(tag, className, content) {
   const node = document.createElement(tag);
@@ -49,7 +53,7 @@ function addFact(grid, label, value, isLink = false) {
     const guide = guideMap[path];
     const href = /^https:\/\//.test(value) ? value : guide ? `./${guide}${fragment ? `#${fragment}` : ''}` : repository ? repository + value.replace(/^\/+/, '') : null;
     if (href) {
-      const text = label === 'Reference documentation' ? 'Open reference docs ↗' : label === 'Pinned source' ? 'Open pinned source ↗' : guide ? 'Read guide ↗' : 'View public source ↗';
+      const text = ({ Code: 'View code ↗', 'Catalog sample': 'View sample ↗', Tests: 'View tests ↗', 'Status record': 'Full coverage record ↗' })[label] || (guide ? 'Read guide ↗' : 'View public source ↗');
       const link = el('a', '', text);
       link.href = href;
       link.rel = 'noopener noreferrer';
@@ -66,7 +70,9 @@ function card(item) {
   const details = el('details', 'component');
   details.id = `component-${item.id}`;
   const summary = el('summary');
-  const title = el('span', 'component-name', (item.braceApi || item.blueprintName || item.id).split(' / ')[0]);
+  const apiName = (item.braceApi || item.blueprintName || item.id).split(' / ')[0];
+  const title = el('span', 'component-name', apiName);
+  if (duplicateApiNames.has(apiName)) title.append(el('span', 'component-topic', item.blueprintName));
   title.append(el('span', 'component-family', `${item.package || 'Unassigned'} · ${item.family || 'General'}`));
   const badge = el('span', `pill ${String(item.status || 'planned').replace(/\s+/g, '-')}`, item.status || 'planned');
   summary.append(title, badge);
@@ -90,33 +96,23 @@ function card(item) {
   addFact(body, 'Guide', item.documentation, true);
   addFact(body, 'Tests', item.tests, true);
   addFact(body, 'First release', item.firstRelease);
-  const reference = el('details', 'reference-notes');
-  reference.append(el('summary', '', 'Reference and planning notes'));
-  const referenceBody = el('dl', 'reference-body');
-  addFact(referenceBody, 'Reference name', item.blueprintName);
-  addFact(referenceBody, 'Android form', item.classification);
-  addFact(referenceBody, 'Why this differs', item.reason);
-  addFact(referenceBody, 'Priority', item.priority);
-  addFact(referenceBody, 'Planned step', item.milestone);
-  addFact(referenceBody, 'Reference documentation', item.blueprintUrl, true);
-  addFact(referenceBody, 'Pinned source', item.pinnedSourceUrl, true);
-  reference.append(referenceBody);
-  details.append(summary, body, reference);
+  addFact(body, 'Status record', 'docs/coverage.md', true);
+  details.append(summary, body);
   return details;
 }
 
 function render() {
   const query = search.value.trim().toLocaleLowerCase();
   const filtered = entries.filter(item =>
-    (!packageSelect.value || item.package === packageSelect.value) &&
+    (!familySelect.value || item.family === familySelect.value) &&
     (!statusSelect.value || item.status === statusSelect.value) &&
-    (!kindSelect.value || item.classification === kindSelect.value) &&
+    (!kindSelect.value || item.kind === kindSelect.value) &&
     (!query || [item.id, item.blueprintName, item.family, item.braceApi, item.artifact]
       .some(value => String(value || '').toLocaleLowerCase().includes(query)))
   );
   results.replaceChildren(...filtered.map(card));
   if (filtered.length === 0) results.append(el('p', 'empty', 'No components match these filters.'));
-  resultCount.textContent = `${filtered.length} of ${entries.length} entries`;
+  resultCount.textContent = `${filtered.length} of ${entries.length} items`;
   for (const chip of statusChips.querySelectorAll('[data-status]')) {
     chip.setAttribute('aria-pressed', String(chip.dataset.status === statusSelect.value));
   }
@@ -174,7 +170,6 @@ function captureCard(capture) {
     ['Appearance', `${captureAppearance(capture)} · ${capture.density}`],
     ['Device', `${capture.device} · ${capture.pixelWidth} × ${capture.pixelHeight}`],
     ['Captured', capture.capturedAt],
-    ['Source', `${capture.sourceBranch} @ ${capture.sourceCommit.slice(0, 8)}`],
   ]) {
     const pair = el('div');
     pair.append(el('dt', '', label), el('dd', '', value));
@@ -187,7 +182,7 @@ function captureCard(capture) {
   inventoryButton.dataset.inventoryId = item.id;
   const source = publicSourceRepository ? el('a', '', 'View source ↗') : el('span', 'shot-source-pending', 'Source link pending public repository');
   if (publicSourceRepository) {
-    source.href = `${publicSourceRepository}/blob/${capture.sourceCommit}/${capture.sourceFile}`;
+    source.href = `${publicSourceRepository}/blob/main/${capture.sourceFile}`;
     source.rel = 'noopener noreferrer';
   }
   actions.append(inventoryButton, source);
@@ -214,9 +209,16 @@ function renderShowcase() {
     (!showcaseTheme.value || captureAppearance(capture) === showcaseTheme.value) &&
     (!showcaseFamily.value || entryById.get(capture.inventoryIds[0]).family === showcaseFamily.value)
   );
-  showcaseGrid.replaceChildren(...filtered.map(captureCard));
+  const hasFilter = Boolean(showcaseTheme.value || showcaseFamily.value);
+  const visible = hasFilter || showcaseExpanded ? filtered : filtered.slice(0, featuredCaptureCount);
+  showcaseGrid.replaceChildren(...visible.map(captureCard));
   if (filtered.length === 0) showcaseGrid.append(el('p', 'empty', 'No screenshots match these filters.'));
-  showcaseResult.textContent = `${filtered.length} of ${captures.length} Android screenshots`;
+  showcaseResult.textContent = `Showing ${visible.length} of ${captures.length} Android screenshots`;
+  showcaseMoreWrap.hidden = hasFilter || captures.length <= featuredCaptureCount;
+  showcaseMore.setAttribute('aria-expanded', String(showcaseExpanded));
+  showcaseMore.textContent = showcaseExpanded
+    ? `Show ${Math.min(featuredCaptureCount, captures.length)} featured captures`
+    : `Show all ${captures.length} captures`;
 }
 
 async function loadShowcase() {
@@ -242,24 +244,30 @@ async function loadShowcase() {
   }
 }
 
+function revealCapture(id) {
+  const index = captures.findIndex(capture => capture.id === id);
+  if (index < 0) return null;
+  showcaseExpanded ||= index >= featuredCaptureCount;
+  showcaseTheme.value = '';
+  showcaseFamily.value = '';
+  renderShowcase();
+  return document.getElementById(`capture-${id}`);
+}
+
 function revealHash() {
   const fragment = decodeURIComponent(location.hash.slice(1));
   if (fragment.startsWith('component-')) {
     const id = fragment.slice('component-'.length);
     if (!entryById.has(id)) return;
     search.value = id;
-    packageSelect.value = '';
+    familySelect.value = '';
     statusSelect.value = '';
     kindSelect.value = '';
     render();
     const match = document.getElementById(fragment);
     if (match) { match.open = true; match.scrollIntoView(); }
   } else if (fragment.startsWith('capture-')) {
-    if (!captures.some(capture => `capture-${capture.id}` === fragment)) return;
-    showcaseTheme.value = '';
-    showcaseFamily.value = '';
-    renderShowcase();
-    document.getElementById(fragment)?.scrollIntoView();
+    revealCapture(fragment.slice('capture-'.length))?.scrollIntoView();
   }
 }
 
@@ -280,37 +288,38 @@ async function load() {
     if (!Array.isArray(data.entries) || data.entries.length === 0) throw new Error('Inventory entries are missing');
     entries = data.entries;
     entryById = new Map(entries.map(item => [item.id, item]));
+    const apiNameCounts = new Map();
+    for (const item of entries) {
+      const name = (item.braceApi || item.blueprintName || item.id).split(' / ')[0];
+      apiNameCounts.set(name, (apiNameCounts.get(name) || 0) + 1);
+    }
+    duplicateApiNames = new Set([...apiNameCounts].filter(([, count]) => count > 1).map(([name]) => name));
     await loadShowcase();
-    const pin = data.baseline || {};
-    baseline.replaceChildren();
-    if (publicSourceRepository) {
-      const sourceLink = el('a', '', 'Comparison source and version ↗');
-      sourceLink.href = `${publicSourceRepository}/blob/main/BLUEPRINT_BASELINE.md`;
-      sourceLink.title = `${pin.releaseTag || pin.version || 'Pinned reference'} · ${pin.commit || pin.sha || 'commit recorded in inventory'}`;
-      baseline.append(sourceLink);
-    } else baseline.textContent = 'Comparison source and version are recorded in the repository.';
+    const pictured = new Set(captures.flatMap(capture => capture.inventoryIds));
+    const rank = item => item.status === 'stable' ? 0 : pictured.has(item.id) ? 1 : item.kind === 'component' ? 2 : 3;
+    entries.sort((a, b) => rank(a) - rank(b) ||
+      String(a.family).localeCompare(String(b.family)) ||
+      String(a.braceApi || a.blueprintName).localeCompare(String(b.braceApi || b.blueprintName)));
     const counts = data.summary || {};
     stats.replaceChildren(
-      stat(`${counts.stableApplicableRows ?? 0}/${counts.applicableRows ?? entries.length}`, 'Android items released'),
-      stat(`${counts.stableComponents ?? 0}/${counts.applicableComponents ?? 0}`, 'Components released'),
+      stat(`${counts.stableApplicableRows ?? 0}/${counts.applicableRows ?? entries.length}`, 'Stable Android items'),
+      stat(`${counts.stableComponents ?? 0}/${counts.applicableComponents ?? 0}`, 'Stable components'),
       stat(`${counts.documentedWebSpecificMappings ?? 0}/${counts.webSpecificMappings ?? 0}`, 'Web behaviors explained'),
       stat(counts.labsRows ?? entries.filter(item => item.track === 'labs').length, 'Early experiments')
     );
-    addOptions(packageSelect, entries.map(item => item.package));
+    addOptions(familySelect, entries.map(item => item.family));
     addOptions(statusSelect, entries.map(item => item.status));
-    addOptions(kindSelect, entries.map(item => item.classification));
     renderStatusChips();
     render();
     revealHash();
   } catch (error) {
-    baseline.textContent = 'Coverage data could not be loaded.';
     resultCount.textContent = 'The generated inventory is unavailable.';
     results.append(el('p', 'empty', `Build the site with node scripts/build-docs.mjs. ${error.message}`));
   }
 }
 
 window.addEventListener('hashchange', revealHash);
-for (const control of [search, packageSelect, statusSelect, kindSelect]) control.addEventListener('input', render);
+for (const control of [search, familySelect, statusSelect, kindSelect]) control.addEventListener('input', render);
 for (const control of [showcaseTheme, showcaseFamily]) control.addEventListener('input', renderShowcase);
 statusChips.addEventListener('click', event => {
   const chip = event.target.closest('[data-status]');
@@ -319,16 +328,18 @@ statusChips.addEventListener('click', event => {
   render();
 });
 results.addEventListener('click', event => {
-  if (!event.target.closest('[data-capture-id]')) return;
-  showcaseTheme.value = '';
-  showcaseFamily.value = '';
+  const link = event.target.closest('[data-capture-id]');
+  if (link) revealCapture(link.dataset.captureId);
+});
+showcaseMore.addEventListener('click', () => {
+  showcaseExpanded = !showcaseExpanded;
   renderShowcase();
 });
 showcaseGrid.addEventListener('click', async event => {
   const inventoryButton = event.target.closest('[data-inventory-id]');
   if (inventoryButton) {
     search.value = inventoryButton.dataset.inventoryId;
-    packageSelect.value = '';
+    familySelect.value = '';
     statusSelect.value = '';
     kindSelect.value = '';
     render();

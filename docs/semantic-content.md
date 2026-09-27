@@ -1,6 +1,6 @@
 # Semantic content and text wrappers
 
-Blueprint's H1–H6, blockquote, code, preformatted text, and ordered/unordered list pages describe HTML elements. Brace provides Compose text equivalents in `brace-core` for common data and documentation views. These rows are **in progress**. They are separate from Blueprint's `Text` utility, which has its own inventory row and milestone.
+Blueprint's H1–H6, blockquote, code, preformatted text, and ordered/unordered list pages describe HTML elements. Brace provides Compose text equivalents in `brace-core` for common data and documentation views. These rows are **in progress**. They are separate from Blueprint's `Text` utility, which has its own inventory row.
 
 ```kotlin
 BraceHeading("Quarterly operations", level = BraceHeadingLevel.One)

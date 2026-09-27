@@ -53,4 +53,4 @@ Blueprint's DOM portal and global React toaster handle have no Android equivalen
 
 ## Verification and limitations
 
-The source slice includes device tests for tooltip triggers and enabled state, toast action and dismissal paths, timeout behavior, keyboard focus, accessibility semantics, host bounds, and queue management. Local and hosted test results are tracked in the [M6 report](milestones/m6-tooltip-toast.md). Manual TalkBack, pointer, light/dark/high-contrast, and form-factor review remain before stable status. No Maven Central version has shipped.
+The source includes device tests for tooltip triggers and enabled state, toast action and dismissal paths, timeout behavior, keyboard focus, accessibility semantics, host bounds, and queue management. Manual TalkBack, pointer, light/dark/high-contrast, and form-factor review remain before stable status. See the [component list](coverage.md) for current availability.

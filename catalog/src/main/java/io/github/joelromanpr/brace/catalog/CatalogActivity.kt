@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
@@ -33,7 +32,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -233,7 +231,6 @@ import org.json.JSONObject
 import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.launch
 
 /** Interactive catalog whose component names and availability come from the pinned inventory. */
 class CatalogActivity : ComponentActivity() {
@@ -250,7 +247,6 @@ internal data class CatalogEntry(
     val status: String,
     val api: String,
     val behavior: String,
-    val classification: String,
     val reason: String,
     val url: String,
 )
@@ -638,7 +634,6 @@ private fun Catalog() {
                 status = row.getString("status"),
                 api = row.getString("braceApi"),
                 behavior = row.getString("behavior"),
-                classification = row.getString("classification"),
                 reason = row.optString("reason"),
                 url = row.getString("blueprintUrl"),
             )
@@ -749,7 +744,7 @@ private fun Catalog() {
                                 val count = if (status == "All") entries.size
                                     else entries.count { it.status == status }
                                 BraceTag("${status.replaceFirstChar { it.uppercase() }} · $count",
-                                    accessibilityLabel = "$status, $count inventory rows",
+                                    accessibilityLabel = "$status, $count items",
                                     rounded = true, minimal = true, selected = statusFilter == status,
                                     intent = catalogStatusIntent(status),
                                     onClick = { statusFilter = status })
@@ -862,32 +857,20 @@ internal fun Detail(entry: CatalogEntry, onBack: () -> Unit) {
     val clipboard = LocalClipboardManager.current
     val toasts = remember(entry.id) { BraceToastState() }
     var toastPosition by rememberSaveable(entry.id) { mutableStateOf(BraceToastPosition.BottomEnd) }
-    val listState = rememberLazyListState()
-    val scope = rememberCoroutineScope()
     val hasLiveSample = entry.id in usageExamples
-    val showNextIconJump = entry.id == "icons-next-glyph-catalog" && hasLiveSample
-    // Back, title, status, jump, behavior, optional reason, source, and sample heading.
-    val liveSampleIndex = 7 + (if (entry.reason.isNotBlank()) 1 else 0)
     Box(Modifier.fillMaxSize()) {
-      LazyColumn(Modifier.fillMaxSize(), state = listState, verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
+      LazyColumn(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
         item { BraceButton("← All components", onClick = onBack, variant = BraceButtonVariant.Outline) }
         item { Text(entry.api, color = semantic.onSurface, style = BraceTheme.typography.title) }
-        item { Text("${entry.status} · ${entry.classification} · ${entry.family}", color = semantic.onSurfaceMuted, style = BraceTheme.typography.label) }
-        if (showNextIconJump) {
-            item {
-                BraceButton("Jump to live icon sample", onClick = {
-                    scope.launch { listState.scrollToItem(liveSampleIndex) }
-                }, variant = BraceButtonVariant.Outline)
-            }
+        item {
+            Text("${entry.status.replaceFirstChar { it.uppercase() }} · ${entry.family.replaceFirstChar { it.uppercase() }}",
+                color = semantic.onSurfaceMuted, style = BraceTheme.typography.label)
         }
-        item { Text(entry.behavior, color = semantic.onSurface, style = BraceTheme.typography.body) }
-        if (entry.reason.isNotBlank()) item { Text(entry.reason, color = semantic.onSurfaceMuted, style = BraceTheme.typography.body) }
-        item { Text("Reference: ${entry.name} · ${entry.url}", color = semantic.onSurfaceMuted, style = BraceTheme.typography.label) }
         if (hasLiveSample) {
-            item { Text("Live sample and states", color = semantic.onSurface, style = BraceTheme.typography.subtitle) }
-            item {
-                ComponentSample(entry.id, toasts, toastPosition) { toastPosition = it }
-            }
+            item { Text("Try it", color = semantic.onSurface, style = BraceTheme.typography.subtitle) }
+            item { ComponentSample(entry.id, toasts, toastPosition) { toastPosition = it } }
+            item { Text("How it works", color = semantic.onSurface, style = BraceTheme.typography.subtitle) }
+            item { Text(entry.behavior, color = semantic.onSurface, style = BraceTheme.typography.body) }
             item { Text("Compose usage", color = semantic.onSurface, style = BraceTheme.typography.subtitle) }
             item { Text(usageExamples.getValue(entry.id), color = semantic.onSurface, style = BraceTheme.typography.body) }
             item {
@@ -895,7 +878,26 @@ internal fun Detail(entry: CatalogEntry, onBack: () -> Unit) {
                     intent = BraceButtonIntent.Secondary)
             }
         } else {
-            item { Text("This component is on the roadmap. No Android API is available yet.", color = semantic.onSurfaceMuted, style = BraceTheme.typography.body) }
+            item { Text("This component is planned. No Android API is available yet.", color = semantic.onSurfaceMuted, style = BraceTheme.typography.body) }
+            item { Text("Planned behavior", color = semantic.onSurface, style = BraceTheme.typography.subtitle) }
+            item { Text(entry.behavior, color = semantic.onSurface, style = BraceTheme.typography.body) }
+        }
+        item {
+            BraceSection(title = "Reference details", collapsible = true, initiallyExpanded = false) {
+                Column(Modifier.padding(BraceTheme.spacing.md),
+                    verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    Text(entry.name, color = semantic.onSurface, style = BraceTheme.typography.body)
+                    if (entry.reason.isNotBlank()) {
+                        Text(entry.reason, color = semantic.onSurfaceMuted, style = BraceTheme.typography.body)
+                    }
+                    BraceLink("Open reference docs",
+                        BraceLinkDestination.Uri(entry.url, "Reference documentation"))
+                    BraceLink("Full coverage record",
+                        BraceLinkDestination.Uri(
+                            "https://github.com/joelromanpr/brace-android/blob/main/docs/coverage.md",
+                            "Component coverage"))
+                }
+            }
         }
       }
       if (entry.id == "core-toast" || entry.id == "core-overlaytoaster") {
@@ -970,9 +972,9 @@ private fun BlueprintNextGlyphSample() {
     }
     val metadata = loadedPack.metadata(chosen)
     Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-        Text("Opt-in /next artwork · ${loadedPack.size} outlined · ${loadedPack.filledCount} filled · Apache-2.0",
+        Text("Licensed icons · ${loadedPack.size} outlined · ${loadedPack.filledCount} filled · Apache-2.0",
             color = BraceTheme.colors.semantic.onSurfaceMuted)
-        BraceTextField(query, { query = it }, "Search next glyph names and tags")
+        BraceTextField(query, { query = it }, "Search icon names and tags")
         Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
             BraceBlueprintNextIconByName(loadedPack, chosen,
                 if (metadata != null) "$chosen icon" else "Unknown icon, help shown",
@@ -990,9 +992,9 @@ private fun BlueprintNextGlyphSample() {
             Text("Directional artwork mirrors in RTL", color = BraceTheme.colors.semantic.onSurface)
         }
         BraceIconButton(BraceBlueprintNextIconNames.MagnifyingGlass,
-            "Search with next icon", onClick = { actions++ }, registry = actionRegistry)
+            "Search with icon", onClick = { actions++ }, registry = actionRegistry)
         Text("Icon action activated $actions times", color = BraceTheme.colors.semantic.onSurfaceMuted)
-        Text("Legacy search → ${loadedPack.nextNameForLegacy("search")?.value}",
+        Text("Search alias → ${loadedPack.nextNameForLegacy("search")?.value}",
             color = BraceTheme.colors.semantic.onSurfaceMuted)
         Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
             BraceButton(if (filled) "Outlined artwork" else "Filled artwork",
@@ -2447,7 +2449,7 @@ private fun IconGlyphCatalogSample() {
             }
             val available = loadedPack.find(chosen) != null
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                Text("Opt-in Blueprint artwork · ${loadedPack.size} pinned names · Apache-2.0",
+                Text("Licensed icons · ${loadedPack.size} searchable names · Apache-2.0",
                     color = BraceTheme.colors.semantic.onSurfaceMuted)
                 BraceTextField(query, { query = it }, "Search glyph names and tags")
                 Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
@@ -2464,7 +2466,7 @@ private fun IconGlyphCatalogSample() {
                         mirrorInRtl = true, intent = BraceIconIntent.Primary)
                     Text("Directional artwork mirrors in RTL", color = BraceTheme.colors.semantic.onSurface)
                 }
-                BraceIconButton(BraceBlueprintIconNames.Search, "Search with Blueprint icon",
+                BraceIconButton(BraceBlueprintIconNames.Search, "Search with icon",
                     onClick = { activations++ }, registry = actionRegistry)
                 Text("Icon action activated $activations times",
                     color = BraceTheme.colors.semantic.onSurfaceMuted)

@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#101d30">
     <meta name="description" content="Brace Android is an open-source Jetpack Compose design system for complex Android apps. Explore runnable catalog examples and check component availability.">
     <title>Brace Android · Compose for apps that do real work</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="./styles.css">
     <script src="./app.js" defer></script>
   </head>
@@ -14,7 +15,7 @@
     <header class="topbar">
       <a class="brand" href="#top" aria-label="Brace Android home"><span class="mark" aria-hidden="true">B</span><span>Brace <b>Android</b></span></a>
       <nav aria-label="Main navigation">
-        <a href="#examples">App examples</a>
+        <a href="#examples">Examples</a>
         <a href="#coverage">Components</a>
         <a href="#guides">Guides</a>
         <a class="nav-github" href="https://github.com/joelromanpr/brace-android">GitHub <span aria-hidden="true">↗</span></a>
@@ -47,11 +48,15 @@
         <p class="section-intro">These are fictional operations apps built with Compose and Brace source. Search, filter, select rows, and change the theme in the Android catalog.</p>
         <div class="example-grid">
           <article class="example-card fleet-example">
-            <div class="example-copy"><span class="example-index">01 / SAN JUAN</span><h3>Electric fleet</h3><p>Track vehicles, routes, charging, and the work that needs attention.</p><div class="example-tags"><span>48 vehicles</span><span>Search and filters</span><span>Data table</span></div><a href="./installation.html">Open in the catalog <span aria-hidden="true">→</span></a></div>
+            <div class="example-copy"><span class="example-index">01 / SAN JUAN</span><h3>Electric fleet</h3><p>Track vehicles, routes, charging, and the work that needs attention.</p>
+              <div class="example-data"><div class="example-metrics" aria-label="Fleet sample data"><div><strong>48</strong><span>Vehicles</span></div><div><strong>34</strong><span>On route</span></div><div><strong>5</strong><span>Attention</span></div></div><div class="example-reading"><span>EV-214 · charge</span><strong>28%</strong><meter min="0" max="100" low="30" optimum="80" value="28" aria-label="EV-214 battery charge">28%</meter></div></div>
+              <a href="./installation.html">Open in the catalog <span aria-hidden="true">→</span></a></div>
             <a class="example-media fleet-media" href="./showcase/fleet-operations-wide.png" aria-label="Open full-size electric fleet Android capture"><img src="./showcase/fleet-operations-wide.png" width="800" height="800" alt="Android electric fleet sample with vehicle status filters and a multi-column table"></a>
           </article>
           <article class="example-card mission-example">
-            <div class="example-copy"><span class="example-index">02 / ORBITAL NETWORK</span><h3>Mission control</h3><p>Review spacecraft signals, act on alerts, and move from an overview into the details.</p><div class="example-tags"><span>8 spacecraft</span><span>Alerts</span><span>Dark theme</span></div><a href="./installation.html">Open in the catalog <span aria-hidden="true">→</span></a></div>
+            <div class="example-copy"><span class="example-index">02 / ORBITAL NETWORK</span><h3>Mission control</h3><p>Review spacecraft signals, act on alerts, and move from an overview into the details.</p>
+              <div class="example-data"><div class="example-metrics" aria-label="Mission sample data"><div><strong>8</strong><span>Spacecraft</span></div><div><strong>6</strong><span>Nominal</span></div><div><strong>1</strong><span>Watch</span></div></div><div class="example-reading"><span>Kestrel-9 · signal</span><strong>67%</strong><meter min="0" max="100" low="70" optimum="90" value="67" aria-label="Kestrel-9 signal strength">67%</meter></div></div>
+              <a href="./installation.html">Open in the catalog <span aria-hidden="true">→</span></a></div>
             <a class="example-media mission-media" href="./showcase/mission-control-dark-400.png" aria-label="Open full-size mission control Android capture"><img src="./showcase/mission-control-dark-400.png" width="400" height="800" alt="Dark Android mission control sample showing spacecraft counts, a signal alert, and an orbit overview"></a>
           </article>
         </div>
@@ -68,15 +73,14 @@
         <div class="inventory-tools">
           <div class="filters">
             <label class="search-label" for="search">Search components<input id="search" type="search" placeholder="Try table, dialog, color…" autocomplete="off"></label>
-            <label for="package">Package<select id="package"><option value="">All packages</option></select></label>
-            <label for="kind">Android form<select id="kind"><option value="">All types</option></select></label>
+            <label for="package">Family<select id="package"><option value="">All families</option></select></label>
+            <label for="kind">Show<select id="kind"><option value="">Components and design tools</option><option value="component">Components</option><option value="capability">Design tools</option></select></label>
           </div>
           <label class="status-select-label" for="status">Status<select id="status"><option value="">All statuses</option></select></label>
           <div class="status-chips" id="status-chips" role="group" aria-label="Filter components by status"></div>
         </div>
         <div class="results-head"><p class="result-count" id="result-count" aria-live="polite">Loading components…</p><span>Select a component to see its details</span></div>
         <div class="components" id="components"></div>
-        <p class="baseline" id="baseline">Loading source baseline…</p>
       </section>
 
       <section class="showcase section" id="showcase" aria-labelledby="showcase-title">
@@ -90,6 +94,7 @@
           <label for="showcase-family">Family <select id="showcase-family"><option value="">All families</option></select></label>
           <span class="showcase-result" id="showcase-result" aria-live="polite">Loading captures…</span>
         </div>
+        <div class="showcase-more" id="showcase-more-wrap" hidden><button id="showcase-more" type="button" aria-controls="showcase-grid" aria-expanded="false">Show all captures</button></div>
         <div class="showcase-grid" id="showcase-grid"></div>
         <div class="showcase-bottom"><p>The web gallery shows static states. Touch, keyboard, screen reader behavior, and runtime theme controls live in the <a href="./installation.html">Android catalog</a>.</p><a class="button secondary" href="#coverage">Check availability <span aria-hidden="true">→</span></a></div>
       </section>
@@ -102,7 +107,7 @@
           <a class="guide" href="./table-viewport.html"><span class="guide-number">03 / WORK WITH DATA</span><h3>Data tables</h3><p>Viewport rendering, fixed headers, selection, and keyboard movement.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
           <a class="guide" href="./core-components.html"><span class="guide-number">04 / EXPLORE</span><h3>Component guides</h3><p>Native behavior, code examples, accessibility, and current limits.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
         </div>
-        <p class="reference-links">Looking for the full record? <a href="https://github.com/joelromanpr/brace-android/blob/main/BLUEPRINT_BASELINE.md">Reference version</a> · <a href="./index.html#coverage">Component status</a> · <a href="./attribution.html">Attribution</a> · <a href="./contributing.html">Contributing</a></p>
+        <p class="reference-links">Looking for the full record? <a href="./index.html#coverage">Component status</a> · <a href="./attribution.html">Attribution</a> · <a href="./contributing.html">Contributing</a></p>
       </section>
     </main>
     <footer><span>Brace Android · Apache-2.0</span><span>Independent Android design system · <a href="./compatibility.html">Compatibility</a> · <a href="https://github.com/joelromanpr/brace-android">Source ↗</a></span></footer>

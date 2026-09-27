@@ -260,7 +260,7 @@ def main() -> int:
         fail("README coverage markers are out of order")
     summary = data["summary"]
     coverage_lines = (
-        f"\n**Released: {summary['stableApplicableRows']} of {summary['applicableRows']} tracked Android items** "
+        f"\n**Stable: {summary['stableApplicableRows']} of {summary['applicableRows']} tracked Android items** "
         f"({summary['stableComponents']} of {summary['applicableComponents']} components; "
         f"{summary['stableCapabilities']} of {summary['applicableCapabilities']} design-system capabilities). "
         f"[See the full coverage record, web mappings, and experimental work](docs/coverage.md).\n"

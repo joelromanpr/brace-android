@@ -1,26 +1,21 @@
-# GitHub repository settings
+# GitHub settings
 
-This page distinguishes configured repository controls from actions still needed. The workflows in this repository are source files; hosted checks, Pages, and Maven Central each need separate verification.
+Checked on 2026-09-27. This is a short record of hosted settings that cannot be expressed fully in repository files.
 
-## Configured repository controls
+## In place
 
-- Discussions and Issues are enabled. Squash merge is the only merge method; merged topic branches are deleted automatically.
-- `main` branch protection requires a pull request, the `verify` and `instrumented` checks, an up-to-date branch, linear history, and resolved review conversations. It applies to admins and blocks force pushes and deletion. The required approval count is **zero** while there is one maintainer; CODEOWNERS approval is not required, so the solo maintainer can review and merge without a second account.
-- The active `Immutable release tags` ruleset blocks updates and deletion of `v*` tags. The release workflow separately requires a GitHub-verified signed annotated tag on `main`.
-- Labels cover inventory claims, core/select/datetime/icons/table families, design tokens, experimental work, releases, accessibility, bugs, and documentation.
-- Dependabot vulnerability alerts and automated security fixes are enabled; `dependabot.yml` supplies scheduled Gradle and Actions update pull requests.
-- M1 [#1](https://github.com/joelromanpr/brace-android/pull/1) and M2 [#2](https://github.com/joelromanpr/brace-android/pull/2) were squash merged after their required hosted checks passed. M3 [#3](https://github.com/joelromanpr/brace-android/pull/3) was also squash merged after the required hosted checks passed.
+- The repository is public. Issues and Discussions are on. Squash merge is the only merge method, and merged branches are deleted automatically.
+- `main` requires a pull request, current `verify` and `instrumented` checks, linear history, and resolved conversations. Protection applies to admins. Zero approvals are required while there is one maintainer.
+- The `v*` tag ruleset prevents tag updates and deletion. The release workflow also checks that a signed annotated tag points at the reviewed tip of `main`.
+- Dependabot alerts, security fixes, and CodeQL are on. Private vulnerability reporting is enabled.
+- [GitHub Pages](https://joelromanpr.github.io/brace-android/) deploys from the `main` branch through Actions. The Pages environment accepts deployments from `main` only.
+- The `maven-central` environment is limited to `main`, requires the maintainer as reviewer, and has a readiness marker. The release workflow must be dispatched manually and stages artifacts for separate Portal review.
 
-## Public site status
+## Before the first release
 
-The source repository is public. GitHub Pages is configured to deploy from GitHub Actions at [joelromanpr.github.io/brace-android](https://joelromanpr.github.io/brace-android/), and the repository homepage points there. [Docs Pages run 36274188920](https://github.com/joelromanpr/brace-android/actions/runs/36274188920) first published the inventory site. After PR #69 merged, [Docs Pages run 36275820116](https://github.com/joelromanpr/brace-android/actions/runs/36275820116) deployed the original nine-image visual gallery. After PR #29 merged to `main` at `8fffe5d`, [Docs Pages run 36278891151](https://github.com/joelromanpr/brace-android/actions/runs/36278891151) deployed the updated gallery; the live site and all 11 captures were verified on 2026-09-26, including HTTP 200 responses for the new Spinner and Skeleton PNGs. New component PRs add captures to this inventory-backed gallery and need deployed-site review after merge. The `github-pages` environment was read back with a custom deployment branch policy restricted to `main` (branch policy ID 61142526).
+1. The [Maven Central account](https://central.sonatype.com/publishing/namespaces) has a verified `io.github.joelromanpr` namespace, which covers the planned `io.github.joelromanpr.brace` group. No Brace deployment exists yet.
+2. Add a dedicated Central Portal user token and signing material to the protected `maven-central` environment as `MAVEN_CENTRAL_USERNAME`, `MAVEN_CENTRAL_PASSWORD`, `SIGNING_IN_MEMORY_KEY`, and `SIGNING_IN_MEMORY_KEY_PASSWORD`. Keep values out of Git and chat. Follow the [release checklist](releasing.md).
+3. Verify that the private vulnerability contact in [SECURITY.md](../../SECURITY.md) reaches the maintainer.
+4. A public project board is optional. The current GitHub CLI authorization lacks `read:project`; use `gh auth refresh -s read:project -s project` before creating a board. The [component inventory](../../inventory/blueprint-components.json) remains the source of truth for coverage.
 
-## Remaining hosted setup
-
-1. **Required CI:** earlier private-repository jobs failed before any steps with a GitHub account billing/spending-limit annotation. After the repository became public, [CI rerun 36270744952](https://github.com/joelromanpr/brace-android/actions/runs/36270744952) executed and passed both `verify` and `instrumented`. Keep branch protection enabled and verify both checks on every reviewed PR head; the earlier zero-step runs are not test results.
-2. **Security:** private vulnerability reporting was enabled and read back on 2026-09-26. Public CodeQL analysis passed on [PR #69](https://github.com/joelromanpr/brace-android/actions/runs/36275418110/job/108497095320) and [PR #30](https://github.com/joelromanpr/brace-android/actions/runs/36276502355/job/108500164447). The `SECURITY.md` contact path still needs a maintainer verification.
-3. **Public project board:** create a board with inventory ID, milestone, status, and priority fields; link component issues to inventory rows. The board is a work view, while `inventory/blueprint-components.json` remains the coverage authority. The current GitHub CLI token lacks `read:project`; refresh it with `gh auth refresh -s read:project -s project`, then create or configure the board. Do not copy a token into repository files.
-4. **Maven Central release environment:** `maven-central` was configured and read back on 2026-09-26 with required reviewer `joelromanpr`, `prevent_self_review=false`, `can_admins_bypass=false`, and a custom deployment branch policy restricted to `main` (branch policy ID 61145643). Only the `MAVEN_CENTRAL_ENVIRONMENT_READY` environment marker was set and its presence read back. The Portal and signing credentials have **not** been added: `MAVEN_CENTRAL_USERNAME`, `MAVEN_CENTRAL_PASSWORD`, `SIGNING_IN_MEMORY_KEY`, and `SIGNING_IN_MEMORY_KEY_PASSWORD` remain a maintainer release prerequisite. The release workflow fails closed without the marker and credentials; no release has been dispatched.
-5. **Sonatype Central Portal:** verify ownership of the exact namespace `io.github.joelromanpr.brace`, create a Portal user token, and confirm signing material is available. Keep credentials in maintainer-controlled secret fields. The [release checklist](releasing.md) stages artifacts after an explicit signed-tag workflow dispatch; publication in the Portal is a separate maintainer action.
-
-After each setting change, read it back through GitHub settings or the API. Never infer hosted success from a local workflow file.
+After changing a hosted setting, read it back in GitHub or the Central Portal. A checked-in workflow alone does not prove a deployment or release.

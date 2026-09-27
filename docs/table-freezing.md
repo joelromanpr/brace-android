@@ -1,6 +1,6 @@
 # Table row and column freezing
 
-The M53 source slice adapts [Blueprint Table freezing](https://blueprintjs.com/docs/#table/features) from `numFrozenRows` and `numFrozenColumns` to caller-controlled Compose counts. The pinned comparison is [Blueprint 6.18.0 table features](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx). This API is **in progress** and unpublished.
+Brace adapts [Blueprint Table freezing](https://blueprintjs.com/docs/#table/features) from `numFrozenRows` and `numFrozenColumns` to caller-controlled Compose counts. The pinned comparison is [Blueprint 6.18.0 table features](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx). This API is **in progress** and unpublished.
 
 ```kotlin
 val viewport = rememberBraceTableViewport()
@@ -24,4 +24,4 @@ Counts pin the leading positions in the current caller-supplied row and column o
 
 Fixed row and column headers remain in their own pane. Frozen body rows remain at the top while the rest of the rows use a lazy vertical list. Frozen body columns remain at the logical start edge while the rest use a horizontal scroll state. The intersection is drawn once, so TalkBack receives one cell node with its absolute row and column index. Frozen cells announce their pinned state. Keyboard navigation crosses pane boundaries and reveals scrollable targets. Selection, copying, editing, resizing, sorting, loading, and reordering continue to use the same stable keys and controlled values.
 
-Instrumented tests cover two-axis pinning, distinct accessibility nodes, keyboard reveal, selection, and RTL. See the [integration report](milestones/table-integration.md) for current device, API, and consumer results. A human TalkBack review remains open. Multi-item drag, drag auto-scroll, and column header menus remain open table work. See the [coverage inventory](coverage.md) for release status.
+Instrumented tests cover two-axis pinning, distinct accessibility nodes, keyboard reveal, selection, and RTL. The [table integration PR](https://github.com/joelromanpr/brace-android/pull/67) records the device, API, and consumer checks. A human TalkBack review remains open. Multi-item drag, drag auto-scroll, and column header menus remain open table work. See the [coverage inventory](coverage.md) for release status.

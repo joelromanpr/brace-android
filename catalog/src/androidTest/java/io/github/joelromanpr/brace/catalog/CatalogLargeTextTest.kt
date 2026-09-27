@@ -15,8 +15,9 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.accessibility.enableAccessibilityChecks
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.tryPerformAccessibilityChecks
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
@@ -33,7 +34,7 @@ class CatalogLargeTextTest {
     @get:Rule val rule = createComposeRule()
 
     @OptIn(ExperimentalTestApi::class)
-    @Test fun nextIconJumpReachesLiveSampleAfterFontScaleChangesToTwo() {
+    @Test fun nextIconSampleStaysReachableAfterFontScaleChangesToTwo() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val rows = JSONObject(context.assets.open("coverage.json").bufferedReader().use { it.readText() })
             .getJSONArray("entries")
@@ -46,7 +47,6 @@ class CatalogLargeTextTest {
             status = source.getString("status"),
             api = source.getString("braceApi"),
             behavior = source.getString("behavior"),
-            classification = source.getString("classification"),
             reason = source.optString("reason"),
             url = source.getString("blueprintUrl"),
         )
@@ -62,20 +62,19 @@ class CatalogLargeTextTest {
             }
         }
 
-        rule.onNodeWithText("Jump to live icon sample").assertIsDisplayed()
+        rule.onNodeWithText("Try it").assertIsDisplayed()
         rule.runOnIdle { fontScale = 2f }
-        val jump = rule.onNodeWithText("Jump to live icon sample")
-            .assertIsDisplayed().assertHeightIsAtLeast(48.dp)
-        if (Build.VERSION.SDK_INT >= 34) {
-            rule.enableAccessibilityChecks()
-            jump.tryPerformAccessibilityChecks()
-        }
-        jump.performClick()
+        rule.onNodeWithText("Try it").assertIsDisplayed()
         rule.waitUntil(15_000) {
-            rule.onAllNodes(hasText("Opt-in /next artwork", substring = true))
+            rule.onAllNodes(hasText("Licensed icons", substring = true))
                 .fetchSemanticsNodes().isNotEmpty()
         }
-        rule.onNodeWithText("Opt-in /next artwork", substring = true).assertIsDisplayed()
-        rule.onNodeWithText("Search next glyph names and tags").assertIsDisplayed()
+        val search = rule.onNodeWithContentDescription("Search icon names and tags")
+            .performScrollTo().assertIsDisplayed().assertHeightIsAtLeast(48.dp)
+        if (Build.VERSION.SDK_INT >= 34) {
+            rule.enableAccessibilityChecks()
+            search.tryPerformAccessibilityChecks()
+        }
+        rule.onNodeWithText("Licensed icons", substring = true).assertIsDisplayed()
     }
 }

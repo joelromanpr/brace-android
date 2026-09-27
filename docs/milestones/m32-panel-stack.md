@@ -1,27 +1,26 @@
 # M32 delivery slice: PanelStack
 
-**Status:** locally verified implementation in progress on `joelromanpr/m32-panel-stack`, based on main `47d2d38`. A draft pull request is pending. The pinned comparison is Blueprint `@blueprintjs/core@6.18.0` at `a60d4c92257612808fbfac81cfeee4fcba91a8b4`. The `core-panelstack` inventory row is **in progress**, with no first release and **0/121** applicable rows stable.
+**Status:** local preflight on protected main `463ea6161dae7df24594dfb31a5d910c6c5f4a47`. [PR #42](https://github.com/joelromanpr/brace-android/pull/42) still points to its earlier draft branch; this replay has not been pushed or reviewed by hosted CI. Protected main has since advanced to M21, so final integration remains. The pinned `core-panelstack` row is **in progress**, with no first release version. Generated coverage is **0/122 applicable rows** and **0/94 components** stable.
 
 ## Scope
 
 - Root-first saveable state and a controlled stack, with unique destination IDs, panel titles, open/close actions, and an unclosable root.
-- Native Android Back and keyboard Escape, a labeled previous-panel action, heading and pane semantics, focus movement after push/pop, a 48 dp back target, and an explicit host Back path at the root.
-- Logical RTL push/pop transitions driven by Brace motion tokens, with no animated transition under reduced motion.
-- Panel-specific platform-neutral color/metric tokens, generated Kotlin tokens, catalog states, an independent Maven-coordinate consumer example, Pages guide, and interaction/accessibility tests.
+- Native Android Back and keyboard Escape, a labeled previous-panel action, heading and pane semantics, focus movement after push/pop, and a 48 dp back target.
+- Logical RTL push/pop transitions driven by Brace motion tokens, with an instantaneous transition under reduced motion.
+- Versioned PanelStack color and metric tokens, interactive catalog sample, copyable usage, Pages guide, independent-consumer source, and six focused device tests.
+- Android adaptation of pinned Blueprint 6.18.0 commit `a60d4c92257612808fbfac81cfeee4fcba91a8b4` [PanelStack documentation](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/panel-stack/panel-stack.mdx).
 
-## Verification
+## Current local verification
 
 | Gate | Result |
 | --- | --- |
-| Pinned source | Blueprint 6.18.0 PanelStack MDX, `panelStack.tsx`, `panelTypes.ts`, `panelView.tsx`, and SCSS inspected at the pinned commit. The public controlled/uncontrolled, root, header, callbacks, active-only, and transition behaviors informed the Compose API. |
-| Inventory, tokens, and Pages | PASS locally: `generate_tokens.py --check`, `generate_coverage.py --check`, `node scripts/build-docs.mjs` (147 rows, 33 guides), JavaScript syntax, XML parse, conflict scan, and `git diff --check`. Static token color calculation found panel title/back text at least 9.06:1 across the four default palettes. Coverage remains generated from the pinned inventory; no stable row is claimed. |
-| Core/Foundation API, build, lint, catalog | PASS locally: exact API dumps and core/catalog compilation (138 tasks); full `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` (467 tasks). API baselines include the PanelStack API and generated foundation token types. |
-| API 36 interaction and accessibility | PASS locally: focused `BracePanelStackTest` 6/6 on isolated `Brace_API36` emulator. It covers root/controlled/saveable state, Escape/system Back and host propagation, RTL/large text/high contrast/reduced motion, native same-node label/action/48 dp target, and automated accessibility checks. |
-| Maven Local and independent consumer | PASS locally: foundation/core/icons/select published to Maven Local with source and Dokka documentation jars (156 tasks); inspected core POM foundation dependency and PanelStack source in source jar. Independent coordinate-only consumer `:app:assembleDebug` passed (37 tasks). |
-| Visual, manual accessibility, hosted CI | PASS local visual smoke: 320 × 640 catalog detail, root/nested panel, and light/dark states show visible header, content, back action, and depth without overlap or clipping. Manual TalkBack/physical keyboard/tablet, hosted required checks, human review, and release remain pending. |
+| Inventory, tokens, and Pages | Generated inventory has 148 rows, 23 authentic Android captures, and 58 guides. Token and coverage generation, JavaScript syntax, XML parse, and Pages build passed. PanelStack remains in progress. |
+| API baselines | `:brace-foundation:apiDump :brace-core:apiDump` passed, 21 actionable Gradle tasks. The generated foundation baseline includes PanelStack tokens alongside current main. |
+| Focused build and lint | Foundation unit tests, core AndroidTest compile and lint, catalog debug assembly and lint, foundation/core API checks, token check, and inventory check passed, 417 actionable Gradle tasks. The catalog PanelStack sample was extracted to a separate composable to stay under Kotlin's JVM method limit. |
+| API 36 device | Focused `BracePanelStackTest` passed **6/6**, zero skipped or failed, 71 actionable Gradle tasks on `Brace_API36(AVD)`. Cases exercise root and controlled state, restoration, Back and Escape, RTL, large text, high contrast, reduced motion, native accessibility bounds and actions, and automated checks where supported. |
+| Maven Local and independent consumer | The old draft branch passed four-artifact publication and a separate consumer at its earlier base. This combined replay has not yet been republished or consumed independently. |
+| Hosted CI and review | Pending the final protected-main integration and push of this replay to draft PR #42. The old branch's billing-blocked run is historical and is not current code evidence. |
 
-## Adaptations and known limits
+## Adaptations and limits
 
-Blueprint's React renderers and injected props become a typed panel ID and `BracePanelScope` actions. `initialPanel` maps to `rememberBracePanelStackState`; Blueprint's controlled `stack` maps to the controlled overload. Blueprint's `renderActivePanelOnly = false` retains arbitrary React trees in the DOM. Brace composes the active panel and preserves `rememberSaveable` state for covered panels by default; callers hoist ordinary `remember` state and ongoing work when needed. HTML titles and CSS classes have no Android component. The header follows Android logical navigation and uses a localized TalkBack label. Push/pop motion mirrors in RTL and follows reduced-motion settings. The content host should provide bounded height for scrolling panes.
-
-The local Gradle checks used a temporary mirror of official Google Maven artifacts because direct dependency downloads stalled in this environment; no dependency or publication task was disabled. The API 36 emulator presented an Android compatibility warning that the native-input tests dismiss only when its exact platform text is present. API 34 hosted checks, manual TalkBack/physical keyboard/tablet review, maintainer review, and publication remain pending before any stable claim. The next concrete branch is `joelromanpr/m33-date-range` for the pinned DateRange row, followed by M34 TimezoneSelect. Full Blueprint parity is not claimed.
+Blueprint React renderers and injected props become typed destination IDs and `BracePanelScope` actions. Brace composes the active panel and retains its `rememberSaveable` state while covered by default; callers hoist ordinary `remember` state and long-running work when it must continue. HTML titles and CSS classes have no Android component. The content host should provide bounded height for scrolling panes. Manual TalkBack, physical keyboard, and tablet review remain before stable status. PanelStack has no Tree source dependency, but their generated tokens, catalog, and documentation will need final integration in merge order. The next step is to integrate the latest protected main, then push the focused branch for hosted CI and review; keep the row in progress until all acceptance criteria are met.

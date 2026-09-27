@@ -24,12 +24,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Verify generated inventory pages
         run: python3 scripts/generate_coverage.py --check
       - name: Build site
         run: node scripts/build-docs.mjs
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
         if: ${{ !github.event.repository.private }}
       - uses: actions/upload-pages-artifact@v4
         if: ${{ !github.event.repository.private }}
@@ -49,4 +49,4 @@ jobs:
     steps:
       - name: Deploy documentation
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

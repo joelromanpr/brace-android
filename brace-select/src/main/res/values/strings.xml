@@ -5,4 +5,7 @@
     <string name="brace_select_active_position">Option %1$d of %2$d: %3$s</string>
     <string name="brace_select_expanded">Expanded</string>
     <string name="brace_select_collapsed">Collapsed</string>
+    <string name="brace_suggest_done">Use typed text</string>
+    <string name="brace_multi_selected_count">%1$d selected</string>
+    <string name="brace_multi_remove">Remove %1$s</string>
 </resources>

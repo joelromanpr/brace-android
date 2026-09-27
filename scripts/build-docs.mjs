@@ -29,6 +29,7 @@ const guideSources = new Map([
   ['docs/numeric-input.md', 'numeric-input'],
   ['docs/icons.md', 'icons'],
   ['docs/select-query.md', 'select-query'],
+  ['docs/suggest-multiselect.md', 'suggest-multiselect'],
   ['docs/top-bar.md', 'top-bar'],
   ['docs/tag-input.md', 'tag-input'],
   ['docs/radio-segmented.md', 'radio-segmented'],
@@ -57,6 +58,7 @@ const guideSources = new Map([
   ['docs/milestones/m11-icons.md', 'milestone-m11'],
   ['docs/milestones/m12-select-query.md', 'milestone-m12'],
   ['docs/milestones/m17-loading-feedback.md', 'milestone-m17'],
+  ['docs/milestones/m16-suggest-multiselect.md', 'milestone-m16'],
   ['docs/milestones/m25-top-bar.md', 'milestone-m25'],
   ['docs/milestones/m15-tag-input.md', 'milestone-m15'],
   ['docs/milestones/m19-radio-segmented.md', 'milestone-m19'],
@@ -280,6 +282,7 @@ await rm(siteOutput, { recursive: true, force: true });
 await mkdir(siteOutput, { recursive: true });
 await cp(siteSource, siteOutput, { recursive: true });
 await cp(coveragePath, resolve(siteOutput, 'coverage.json'));
+await writeFile(resolve(siteOutput, 'guide-map.json'), JSON.stringify(Object.fromEntries([...guideSources].map(([path, slug]) => [path, `${slug}.html`]))));
 for (const [path, slug] of guideSources) {
   const markdown = await readFile(resolve(root, path), 'utf8');
   const title = markdown.match(/^# (.+)$/m)?.[1] || slug;

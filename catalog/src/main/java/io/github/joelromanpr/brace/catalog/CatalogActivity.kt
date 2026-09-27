@@ -47,6 +47,7 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
@@ -155,6 +156,8 @@ import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconPack
 import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconVariant
 import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
+import io.github.joelromanpr.brace.select.BraceSuggest
+import io.github.joelromanpr.brace.select.BraceMultiSelect
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
 import io.github.joelromanpr.brace.select.braceQueryNavigation
 import io.github.joelromanpr.brace.core.BraceLink
@@ -240,6 +243,17 @@ BraceIconRegistryProvider(custom) {
 var expanded by rememberSaveable { mutableStateOf(false) }
 val options = listOf(BraceSelectOption("east", "east", "East"), BraceSelectOption("west", "west", "West"))
 BraceSelect(options, selectedKey, { selectedKey = it.key }, expanded, { expanded = it }, label = "Region")""".trimIndent(),
+    "select-suggest" to """var value by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
+var expanded by rememberSaveable { mutableStateOf(false) }
+var selectedKey by rememberSaveable { mutableStateOf<String?>(null) }
+val options = listOf(BraceSelectOption("east", "east", "East"), BraceSelectOption("west", "west", "West"))
+BraceSuggest(value, { value = it }, options, selectedKey,
+    onSelect = { selectedKey = it.key; value = TextFieldValue(it.label) },
+    expanded = expanded, onExpandedChange = { expanded = it }, label = "Region")""".trimIndent(),
+    "select-multiselect" to """var keys by rememberSaveable { mutableStateOf(listOf("east")) }
+var expanded by rememberSaveable { mutableStateOf(false) }
+val options = listOf(BraceSelectOption("east", "east", "East"), BraceSelectOption("west", "west", "West"))
+BraceMultiSelect(options, keys, { keys = it }, expanded, { expanded = it }, label = "Regions")""".trimIndent(),
     "select-querylist" to """val state = rememberBraceQueryListState()
 val options = listOf(BraceSelectOption("east", "east", "East"), BraceSelectOption("west", "west", "West"))
 val visible = state.filter(options)
@@ -482,7 +496,7 @@ private fun Catalog() {
                         }
                     } else {
                         BraceTextField(search, { search = it }, "Search components",
-                            placeholder = "Name, family, or Brace API")
+                            placeholder = "Component or family")
                         Spacer(Modifier.height(BraceTheme.spacing.sm))
                         FlowRow(Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm),
@@ -502,7 +516,7 @@ private fun Catalog() {
                                 (search.isBlank() || listOf(entry.name, entry.family, entry.api)
                                     .any { it.contains(search, ignoreCase = true) })
                         }
-                        Text("${filtered.size} of ${entries.size} inventory rows",
+                        Text("${filtered.size} of ${entries.size} items",
                             color = semantic.onSurfaceMuted, style = BraceTheme.typography.label,
                             modifier = Modifier.padding(top = BraceTheme.spacing.sm))
                         val families = filtered.groupBy { it.family }.toSortedMap()
@@ -533,9 +547,9 @@ private fun Catalog() {
                                             horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm),
                                             verticalAlignment = Alignment.CenterVertically) {
                                             Column(Modifier.weight(1f)) {
-                                                Text(entry.name, color = semantic.onSurface,
+                                                Text(entry.api, color = semantic.onSurface,
                                                     style = BraceTheme.typography.body)
-                                                Text(entry.api, color = semantic.onSurfaceMuted,
+                                                Text(entry.name, color = semantic.onSurfaceMuted,
                                                     style = BraceTheme.typography.label)
                                             }
                                             CatalogStatusBadge(entry.status)
@@ -613,7 +627,7 @@ internal fun Detail(entry: CatalogEntry, onBack: () -> Unit) {
     Box(Modifier.fillMaxSize()) {
       LazyColumn(Modifier.fillMaxSize(), state = listState, verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
         item { BraceButton("← All components", onClick = onBack, variant = BraceButtonVariant.Outline) }
-        item { Text(entry.name, color = semantic.onSurface, style = BraceTheme.typography.title) }
+        item { Text(entry.api, color = semantic.onSurface, style = BraceTheme.typography.title) }
         item { Text("${entry.status} · ${entry.classification} · ${entry.family}", color = semantic.onSurfaceMuted, style = BraceTheme.typography.label) }
         if (showNextIconJump) {
             item {
@@ -624,7 +638,7 @@ internal fun Detail(entry: CatalogEntry, onBack: () -> Unit) {
         }
         item { Text(entry.behavior, color = semantic.onSurface, style = BraceTheme.typography.body) }
         if (entry.reason.isNotBlank()) item { Text(entry.reason, color = semantic.onSurfaceMuted, style = BraceTheme.typography.body) }
-        item { Text("Blueprint source: ${entry.url}", color = semantic.onSurfaceMuted, style = BraceTheme.typography.label) }
+        item { Text("Reference: ${entry.name} · ${entry.url}", color = semantic.onSurfaceMuted, style = BraceTheme.typography.label) }
         if (hasLiveSample) {
             item { Text("Interactive states", color = semantic.onSurface, style = BraceTheme.typography.subtitle) }
             item {
@@ -1057,39 +1071,7 @@ private fun ComponentSample(
                     color = BraceTheme.colors.semantic.onSurfaceMuted)
             }
         }
-        "select-select", "select-querylist" -> {
-            var selectedKey by rememberSaveable { mutableStateOf<String?>(null) }
-            var expanded by rememberSaveable { mutableStateOf(false) }
-            val state = rememberBraceQueryListState()
-            val choices = listOf(
-                BraceSelectOption("east", "east", "East", description = "Eastern region"),
-                BraceSelectOption("west", "west", "West", description = "Western region"),
-                BraceSelectOption("central", "central", "Central", enabled = false),
-            )
-            val queryKeys = state.filter(choices).filter { it.enabled }.map { it.key }
-            Column(
-                modifier = if (id == "select-querylist") Modifier.braceQueryNavigation(state, queryKeys,
-                    onActivate = { selectedKey = it; state.activeKey = it },
-                    onDismiss = { state.query = "" }) else Modifier,
-                verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm),
-            ) {
-                if (id == "select-select") {
-                    BraceSelect(choices, selectedKey, { selectedKey = it.key }, expanded,
-                        { expanded = it }, label = "Region", state = state)
-                    BraceSelect(choices, "west", {}, false, {}, label = "Unavailable", enabled = false)
-                } else {
-                    BraceTextField(state.query, { state.query = it }, label = "Filter regions")
-                    state.filter(choices).forEach { option ->
-                        BraceButton(option.label, onClick = { state.activeKey = option.key; selectedKey = option.key },
-                            enabled = option.enabled, variant = BraceButtonVariant.Outline)
-                    }
-                }
-                Text("Selected: ${selectedKey ?: "none"} · Query: ${state.query}",
-                    color = BraceTheme.colors.semantic.onSurfaceMuted)
-                BraceButton("Clear", onClick = { selectedKey = null; state.query = "" },
-                    variant = BraceButtonVariant.Outline)
-            }
-        }
+        "select-suggest", "select-multiselect", "select-select", "select-querylist" -> SelectCatalogSample(id)
         "datetime-datepicker" -> {
             var selected by rememberSaveable { mutableStateOf<String?>("2026-09-18") }
             val start = LocalDate.of(2026, 9, 1)

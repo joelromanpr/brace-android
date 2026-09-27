@@ -1,6 +1,6 @@
 # Icons and icon loading
 
-This `brace-icons` source slice maps the pinned Blueprint 6.18.0 [Icon component](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/icon/icon.mdx) and [icon loading](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/src/loading-icons.mdx) capabilities (`@blueprintjs/icons` 6.13.0 at that commit) to Compose. Both inventory rows remain **in progress**. The separate opt-in [legacy Blueprint glyph pack](#optional-legacy-blueprint-glyph-pack) is **in progress** with all 706 legacy names. The pinned package also publishes a distinct [next-generation glyph pack](#optional-next-generation-blueprint-glyph-pack) with 695 outlined names and 386 filled variants; its own inventory row is **in progress**. `brace-icons` continues to bundle only 11 original Brace drawings. All three icon artifacts are available in the `0.1.0-alpha01` preview.
+`brace-icons` provides 11 original Brace drawings, themed icon buttons, and a registry for your own Compose vectors. Add it when an app needs icons without a large artwork pack. Two optional [licensed icon packs](#optional-legacy-blueprint-glyph-pack) offer more drawings. All three artifacts are available in the `0.1.0-alpha01` preview; their [component status](coverage.md) remains in progress.
 
 ## Install and use
 
@@ -24,7 +24,7 @@ BraceTheme {
 }
 ```
 
-`BraceIconSize.Small`, `Medium`, and `Large` use the current Brace sizing tokens (16, 20, and 24dp in the first token source). `customSize` accepts a positive dp size when an app needs a different scale. `BraceIconIntent` uses semantic default, primary, success, warning, or danger colors; `tint` can override that color. Theme, brand, and contrast switches update the rendered tint at runtime. `ChevronForward` mirrors in RTL. These are single 24-unit original drawings scaled to the requested size; Brace does not choose separate Blueprint 16px and 20px assets.
+`BraceIconSize.Small`, `Medium`, and `Large` use Brace sizing tokens (16, 20, and 24dp). `customSize` accepts a positive dp size. `BraceIconIntent` uses semantic default, primary, success, warning, or danger colors; `tint` can override that color. Theme, brand, and contrast switches update the rendered tint at runtime. `ChevronForward` mirrors in RTL. Each bundled icon uses one original drawing scaled to the requested size.
 
 Pass `contentDescription = null` when adjacent text already explains the image. A standalone informative icon needs a localized nonblank description. An actionable glyph should use `BraceIconButton`, which provides a named button role, enabled state, keyboard and pointer activation, visible focus, and a 48dp minimum target even when the drawing is 16dp. Static vectors have no animation to suppress for reduced-motion users. At large text scales, keep a readable adjacent label or use the icon button's spoken label; the glyph itself does not replace text.
 
@@ -46,8 +46,6 @@ BraceIconRegistryProvider(customRegistry) {
 ```
 
 `find` returns null for an unknown key; `resolve` and `BraceIconByName` use the requested fallback, then the bundled Help drawing if needed. Runtime lookup is an in-memory map, with no disk or network work during composition. Apps can pass a registry directly to an icon instead of using the provider. Keep `contentDescription` accurate for the resolved icon when names come from external data.
-
-Blueprint's React static imports, JavaScript dynamic chunks and loader options, SVG/DOM wrapper props, CSS icon fonts, and `tagName` have no independent Android API. Compose `ImageVector`, `Modifier`, composition scoping, and Android semantics provide the native behavior. The pinned `Icon` props for intent and size map to Brace semantic tint and dp sizing; browser effects and HTML attributes remain application-specific Compose drawing or modifiers.
 
 ## Optional legacy Blueprint glyph pack
 
@@ -90,13 +88,13 @@ The [pack manifest](../brace-blueprint-icons/src/main/assets/brace-blueprint-ico
 
 ## Optional next-generation Blueprint glyph pack
 
-The same pinned `@blueprintjs/icons` 6.13.0 package publishes a public [`@blueprintjs/icons/next` subpath](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/next/package.json), backed by a separate [next manifest](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/icons-next.json). Its canonical catalog differs materially from the 706 legacy names: **695 outlined 16px glyphs**, **386 additional filled 16px variants**, and a pinned **706-name legacy-to-next mapping**. Of the canonical next names, 466 do not occur in the legacy catalog. Use the separate, aligned `brace-blueprint-icons-next` artifact to include this artwork; neither it nor the legacy pack changes the 11 original Brace vectors. This API remains **in progress** in the inventory, including after the `0.1.0-alpha01` preview.
+For outlined and filled artwork, add `brace-blueprint-icons-next`. It contains 695 outlined names, 386 filled variants, and a mapping from 706 legacy names. This optional pack does not change the 11 original Brace vectors. Its API remains in progress during the `0.1.0-alpha01` preview; [source and license details](attribution.md) are recorded separately.
 
 ```kotlin
 implementation("io.github.joelromanpr.brace:brace-blueprint-icons-next:0.1.0-alpha01")
 ```
 
-Load its 762 KB packaged manifest once off the UI thread, then retain the immutable pack. `find` returns the exact requested outlined or filled variant and returns null when a glyph has no filled form. The composable draws the outlined form of a known icon if its filled form is absent; an unknown name uses the original Brace Help glyph. Give that unknown fallback an accurate spoken description. Type-safe constants, runtime lookup, metadata/tag search, cache identity and 706 legacy migration names are available. The upstream `/next` JavaScript barrel emits 477 renamed aliases; 221 names are already identity exports and eight colliding names deliberately retain the canonical next export. Brace exposes the [pinned migration map](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/icons-name-map.json) explicitly for all 706 names, so callers can resolve collisions rather than silently assuming an alias:
+Load its 762 KB packaged manifest once off the UI thread, then retain the immutable pack. `find` returns the requested outlined or filled variant, or null when a filled form is unavailable. A missing filled form draws its outline; an unknown name uses the original Brace Help glyph. Give that fallback an accurate spoken description. Type-safe names, runtime lookup, metadata search, and an explicit [legacy name map](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/icons-name-map.json) are available:
 
 ```kotlin
 val pack = withContext(Dispatchers.IO) { BraceBlueprintNextIconPack.load(context) }

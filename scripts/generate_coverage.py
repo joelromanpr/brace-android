@@ -260,10 +260,9 @@ def main() -> int:
         fail("README coverage markers are out of order")
     summary = data["summary"]
     coverage_lines = (
-        f"\n**Stable: {summary['stableApplicableRows']} of {summary['applicableRows']} tracked Android items** "
-        f"({summary['stableComponents']} of {summary['applicableComponents']} components; "
-        f"{summary['stableCapabilities']} of {summary['applicableCapabilities']} design-system capabilities). "
-        f"[See the full coverage record, web mappings, and experimental work](docs/coverage.md).\n"
+        f"\n**Early preview:** {summary['stableComponents']} of {summary['applicableComponents']} components "
+        f"and {summary['stableCapabilities']} of {summary['applicableCapabilities']} design tools are marked stable. "
+        f"[See each component's current status](docs/coverage.md).\n"
     )
     outputs[README] = readme[:start] + coverage_lines + readme[end:]
     stale = []

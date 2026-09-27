@@ -1,8 +1,6 @@
 # Core components
 
-The first `brace-core` slice implements Button, Checkbox, Switch, and a single-line text field mapped to Blueprint InputGroup. These APIs are **in progress** in the pinned inventory. They are available in the `0.1.0-alpha01` preview with catalog examples and interaction tests, but the device acceptance matrix remains incomplete. Do not treat them as full Blueprint parity.
-
-Use `io.github.joelromanpr.brace:brace-core:0.1.0-alpha01` from Maven Central as described in [installation](installation.md). Wrap a screen in `BraceTheme`; every control below reads semantic or component tokens. The catalog's component list and availability labels come from `inventory/blueprint-components.json` through the coverage generator.
+The `0.1.0-alpha01` preview includes buttons, checkboxes, switches, and a single-line text field. [Add `brace-core`](installation.md), wrap your screen in `BraceTheme`, and try the examples below. Their APIs are still in progress; the [component status](coverage.md) lists tests and remaining work.
 
 ## Button
 
@@ -20,7 +18,7 @@ BraceButton(label = "Pending", onClick = {}, loading = true)
 
 The API accepts optional `leadingIcon` and `trailingIcon` composable slots. The text label is mandatory and announced to accessibility services; icon slots are decorative. Optional `accessibilityLabel` and `onClickLabel` supply a more specific spoken label and click action, for example a navigation destination. Filled and outlined visual variants use token colors for default, hover, pressed, focused, disabled, and loading states. Compact density draws a shorter visual control inside a 48 dp minimum hit region; large text may grow the control. Compose `clickable` provides touch, mouse, Enter, and Space activation. A focused button gets a visible token-colored border. `loading` suppresses activation and announces a loading state.
 
-An Android navigation action can call the app's navigator from `onClick`. For an explicit URI or app destination, use [`BraceLinkButton`](links.md) or the text [`BraceLink`](links.md). Blueprint's web anchor attributes map to Android URI handling and callbacks; the inventory keeps this adaptation explicit.
+For navigation, call your app's navigator from `onClick`. For a URI or app destination, use [`BraceLinkButton`](links.md) or the text [`BraceLink`](links.md).
 
 ## Checkbox
 
@@ -62,8 +60,8 @@ BraceTextField(
 )
 ```
 
-`BraceTextField` is a single-line field with hoisted string state, keyboard options, visual transformation, read-only and disabled modes, and an accessibility error message. It maps the first part of Blueprint InputGroup into a labeled Android input. Icon affordances, clear buttons, suggestion popup behavior, multiline input, and format-specific controls are separate follow-up work. On Android, `KeyboardOptions` configures the IME, and the text cursor and border use input tokens. The caller restores value with `rememberSaveable` or a persisted model. Inside `BraceShortcutRegistry`, this built-in field marks its editable focus automatically so ordinary screen shortcuts do not interrupt typing. Custom Compose text inputs can use `Modifier.braceShortcutEditable()`.
+`BraceTextField` is a single-line field with hoisted string state, keyboard options, visual transformation, read-only and disabled modes, and an accessibility error message. Icons, clear buttons, suggestion popups, multiline input, and format-specific controls remain follow-up work. `KeyboardOptions` configures the Android keyboard; the cursor and border use input tokens. Restore the value with `rememberSaveable` or a persisted model. Inside `BraceShortcutRegistry`, this field marks its editable focus automatically so screen shortcuts do not interrupt typing. Custom Compose text inputs can use `Modifier.braceShortcutEditable()`.
 
 ## Verification and acceptance
 
-`BraceCoreInteractionTest` checks enabled/disabled/loading button behavior and 48 dp targeting, controlled checkbox and switch toggling under RTL and compact high-contrast dark mode, field input and its announced label, operation at 2x font scale, and an automated accessibility audit on API 34 or later. Compile it with `./gradlew :brace-core:compileDebugAndroidTestKotlin`; run it on a connected device with `./gradlew :brace-core:connectedDebugAndroidTest`. The theme's unit tests check default contrast pairs. Before marking these inventory rows stable, run the device tests, inspect at 1.3x and 2.0x font scales, and manually check TalkBack, keyboard focus order, mouse hover, and all four color schemes. The inventory's `firstRelease` stays empty until an actual release.
+`BraceCoreInteractionTest` checks enabled/disabled/loading button behavior and 48 dp targeting, controlled checkbox and switch toggling under RTL and compact high-contrast dark mode, field input and its announced label, operation at 2x font scale, and an automated accessibility audit on API 34 or later. Compile it with `./gradlew :brace-core:compileDebugAndroidTestKotlin`; run it on a connected device with `./gradlew :brace-core:connectedDebugAndroidTest`. The theme's unit tests check default contrast pairs. Before marking these rows stable, inspect at 1.3x and 2.0x font scales, and manually check TalkBack, keyboard focus order, mouse hover, and all four color schemes.

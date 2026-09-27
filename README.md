@@ -42,7 +42,7 @@ BraceTheme {
 ## Availability
 
 <!-- coverage:begin -->
-**Stable: 0 of 122 tracked Android items** (0 of 94 components; 0 of 28 design-system capabilities). [See the full coverage record, web mappings, and experimental work](docs/coverage.md).
+**Early preview:** 0 of 94 components and 0 of 28 design tools are marked stable. [See each component's current status](docs/coverage.md).
 <!-- coverage:end -->
 
 The `0.1.0-alpha01` preview is [available on Maven Central](https://central.sonatype.com/artifact/io.github.joelromanpr.brace/brace-core/0.1.0-alpha01). Add only the [artifacts you need](docs/installation.md); all eight use the same version. This is an early API preview. The [component list](docs/coverage.md) shows what is in progress, experimental, or stable. Its counts come from the [machine-readable inventory](inventory/blueprint-components.json), so an installable artifact or screenshot never implies a finished component.

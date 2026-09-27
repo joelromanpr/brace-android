@@ -119,7 +119,8 @@ function render() {
 }
 
 function renderStatusChips() {
-  const statuses = ['', 'in progress', 'planned', 'experimental', 'stable'];
+  const statuses = ['', 'in progress', 'planned', 'experimental', 'stable']
+    .filter(status => !status || entries.some(item => item.status === status));
   statusChips.replaceChildren(...statuses.map(status => {
     const count = status ? entries.filter(item => item.status === status).length : entries.length;
     const button = el('button', 'status-chip');
@@ -304,8 +305,8 @@ async function load() {
     stats.replaceChildren(
       stat(`${counts.stableApplicableRows ?? 0}/${counts.applicableRows ?? entries.length}`, 'Stable Android items'),
       stat(`${counts.stableComponents ?? 0}/${counts.applicableComponents ?? 0}`, 'Stable components'),
-      stat(`${counts.documentedWebSpecificMappings ?? 0}/${counts.webSpecificMappings ?? 0}`, 'Web behaviors explained'),
-      stat(counts.labsRows ?? entries.filter(item => item.track === 'labs').length, 'Labs items tracked')
+      stat(captures.length, 'Android captures'),
+      stat(document.querySelectorAll('.example-card').length, 'Runnable examples')
     );
     addOptions(familySelect, entries.map(item => item.family));
     addOptions(statusSelect, entries.map(item => item.status));

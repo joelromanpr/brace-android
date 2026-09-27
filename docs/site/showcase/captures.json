@@ -245,6 +245,28 @@
       "usage": "BraceTheme(mode = BraceColorMode.Light) {\n    BraceSkeleton(label = \"Loading report title\")\n    BraceSkeleton(width = 180.dp)\n    BraceSkeleton(width = 120.dp)\n}",
       "theme": "light",
       "contrast": "standard"
+    },
+    {
+      "id": "link-action-success-light",
+      "inventoryIds": [
+        "core-link"
+      ],
+      "image": "showcase/link-action-success-light.png",
+      "alt": "Brace Link sample in light mode with underlined green Guide and Reports links, a Reports navigation result, and state controls",
+      "caption": "A live app action updates the destination result, while the success intent recolors both links through semantic tokens.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m20-links",
+      "sourceCommit": "569d2328ceb473f9a145ca8b48d97e01ebce8794",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var destination by rememberSaveable { mutableStateOf(\"No navigation yet\") }\nBraceLink(\n    label = \"Open reports\",\n    destination = BraceLinkDestination.Action(\"Reports\") { destination = \"Reports\" },\n    color = BraceLinkColor.Success,\n)\nText(\"Destination: $destination\")",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800
     }
   ]
 }

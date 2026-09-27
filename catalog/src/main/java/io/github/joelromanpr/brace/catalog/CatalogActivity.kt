@@ -139,6 +139,11 @@ import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconByName
 import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconNames
 import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconPack
 import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconResolution
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIcon
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconByName
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconNames
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconPack
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconVariant
 import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
@@ -191,6 +196,18 @@ pack?.let { icons ->
         resolution = BraceBlueprintIconResolution.Px16)
     val matchingNames = icons.search("map", limit = 20)
 }""".trimIndent(),
+    "icons-next-glyph-catalog" to """val context = LocalContext.current
+val pack by produceState<BraceBlueprintNextIconPack?>(null, context) {
+    value = withContext(Dispatchers.IO) { BraceBlueprintNextIconPack.load(context) }
+}
+pack?.let { icons ->
+    val iconNameFromData = "magnifying-glass"
+    BraceBlueprintNextIcon(icons, BraceBlueprintNextIconNames.MagnifyingGlass,
+        contentDescription = null, variant = BraceBlueprintNextIconVariant.Filled)
+    BraceBlueprintNextIconByName(icons, iconNameFromData,
+        contentDescription = "Selected icon")
+    val migrated = icons.nextNameForLegacy("search") // magnifying-glass
+} """.trimIndent(),
     "icons-icon-loading" to """val custom = remember(customVector) {
     BraceIconRegistry.Default.register("workspace-mark", customVector)
 }
@@ -465,6 +482,62 @@ private fun AnchorButtonSample() {
                     variant = BraceButtonVariant.Outline)
             }
     }
+@Composable
+private fun BlueprintNextGlyphSample() {
+    val context = LocalContext.current
+    val pack by produceState<BraceBlueprintNextIconPack?>(null, context) {
+        value = withContext(Dispatchers.IO) { BraceBlueprintNextIconPack.load(context) }
+    }
+    val loadedPack = pack ?: run {
+        Text("Loading licensed next icon artwork", color = BraceTheme.colors.semantic.onSurfaceMuted)
+        return
+    }
+    var query by rememberSaveable { mutableStateOf("magnifying") }
+    var chosen by rememberSaveable { mutableStateOf("magnifying-glass") }
+    var filled by rememberSaveable { mutableStateOf(false) }
+    var actions by rememberSaveable { mutableStateOf(0) }
+    val actionRegistry = remember(loadedPack) {
+        BraceIconRegistry.empty().register(BraceBlueprintNextIconNames.MagnifyingGlass,
+            loadedPack.find(BraceBlueprintNextIconNames.MagnifyingGlass)!!)
+    }
+    val metadata = loadedPack.metadata(chosen)
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        Text("Opt-in /next artwork · ${loadedPack.size} outlined · ${loadedPack.filledCount} filled · Apache-2.0",
+            color = BraceTheme.colors.semantic.onSurfaceMuted)
+        BraceTextField(query, { query = it }, "Search next glyph names and tags")
+        Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+            BraceBlueprintNextIconByName(loadedPack, chosen,
+                if (metadata != null) "$chosen icon" else "Unknown icon, help shown",
+                size = BraceIconSize.Large,
+                variant = if (filled) BraceBlueprintNextIconVariant.Filled else
+                    BraceBlueprintNextIconVariant.Outlined,
+                intent = BraceIconIntent.Primary)
+            Text(if (metadata == null) "Unknown: $chosen" else
+                "$chosen · ${if (metadata.hasFilled) "filled available" else "outline only"}",
+                color = BraceTheme.colors.semantic.onSurface)
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+            BraceBlueprintNextIcon(loadedPack, BraceBlueprintNextIconNames.ChevronRight, null,
+                mirrorInRtl = true, intent = BraceIconIntent.Primary)
+            Text("Directional artwork mirrors in RTL", color = BraceTheme.colors.semantic.onSurface)
+        }
+        BraceIconButton(BraceBlueprintNextIconNames.MagnifyingGlass,
+            "Search with next icon", onClick = { actions++ }, registry = actionRegistry)
+        Text("Icon action activated $actions times", color = BraceTheme.colors.semantic.onSurfaceMuted)
+        Text("Legacy search → ${loadedPack.nextNameForLegacy("search")?.value}",
+            color = BraceTheme.colors.semantic.onSurfaceMuted)
+        Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+            BraceButton(if (filled) "Outlined artwork" else "Filled artwork",
+                onClick = { filled = !filled }, variant = BraceButtonVariant.Outline)
+            BraceButton("Try fallback", onClick = { chosen = "not-in-pack" },
+                variant = BraceButtonVariant.Outline)
+        }
+        loadedPack.search(query, limit = 8).forEach { glyph ->
+            BraceButton("${glyph.name}${if (glyph.hasFilled) " · filled" else ""}",
+                onClick = { chosen = glyph.name }, variant = BraceButtonVariant.Outline)
+        }
+    }
+}
 
 @Composable
 private fun ComponentSample(
@@ -645,6 +718,7 @@ private fun ComponentSample(
                 }
             }
         }
+        "icons-next-glyph-catalog" -> BlueprintNextGlyphSample()
         "icons-icon-loading" -> {
             var iconName by rememberSaveable { mutableStateOf("search") }
             val registry = remember {

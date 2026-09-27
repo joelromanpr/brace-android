@@ -116,6 +116,10 @@ def validate(data: dict) -> None:
         pinned_url = "https://github.com/palantir/blueprint/blob/" + baseline["commit"] + "/" + source_files[row["sourcePage"]]
         if row["pinnedSourceUrl"] != pinned_url:
             fail(f"{row_id}: pinned source URL differs from baseline source file")
+        if row.get("pinnedAssetUrl") and not row["pinnedAssetUrl"].startswith(
+            "https://github.com/palantir/blueprint/blob/" + baseline["commit"] + "/packages/"
+        ):
+            fail(f"{row_id}: pinned asset URL must use the baseline commit")
         covered_pages.add(row["sourcePage"])
         for field in ("blueprintName", "braceApi", "artifact", "behavior", "milestone", "priority"):
             if not isinstance(row[field], str) or not row[field].strip():
@@ -221,7 +225,8 @@ def markdown(data: dict) -> str:
             if row["firstRelease"]:
                 evidence += f"; since {row['firstRelease']}"
             lines.append("| " + " | ".join(map(escape, [
-                f"[{row['blueprintName']}]({row['blueprintUrl']}) ([pinned source]({row['pinnedSourceUrl']}))",
+                f"[{row['blueprintName']}]({row['blueprintUrl']}) ([pinned source]({row['pinnedSourceUrl']}))" +
+                (f" ([pinned asset]({row['pinnedAssetUrl']}))" if row.get("pinnedAssetUrl") else ""),
                 f"`{row['braceApi']}` / `{row['artifact']}`",
                 row["behavior"], mapping,
                 f"{row['milestone']} / {row['priority']}", row["status"], evidence,

@@ -36,6 +36,6 @@ jobs:
           languages: java-kotlin
           build-mode: manual
       - name: Build analyzed sources
-        run: ./gradlew :brace-foundation:assembleDebug :brace-core:assembleDebug :brace-icons:assembleDebug :brace-blueprint-icons:assembleDebug :brace-select:assembleDebug :brace-datetime:assembleDebug :catalog:assembleDebug
+        run: ./gradlew :brace-foundation:assembleDebug :brace-core:assembleDebug :brace-icons:assembleDebug :brace-blueprint-icons:assembleDebug :brace-blueprint-icons-next:assembleDebug :brace-select:assembleDebug :brace-datetime:assembleDebug :catalog:assembleDebug
       - name: Analyze
         uses: github/codeql-action/analyze@v4

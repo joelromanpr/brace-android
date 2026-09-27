@@ -212,6 +212,7 @@ class BraceLinkTest {
     @OptIn(ExperimentalTestApi::class)
     @Test fun nativeAccessibilityTreeKeepsLinkLabelsActionsAndTargetsTogether() {
         var dashboardNavigations = 0
+        lateinit var inputMode: InputModeManager
         data class NativeCase(val label: String, val actionLabel: String, val enabled: Boolean)
         val cases = listOf(
             NativeCase("Read guide, link to Guide", "Open Guide", true),
@@ -220,6 +221,7 @@ class BraceLinkTest {
             NativeCase("Disabled dashboard, opens Dashboard", "Open Dashboard", false),
         )
         rule.setContent {
+            inputMode = LocalInputModeManager.current
             BraceTheme {
                 Column {
                     BraceLink("Read guide", BraceLinkDestination.Action("Guide") {})
@@ -257,6 +259,7 @@ class BraceLinkTest {
             assertTrue("Native target too narrow: $bounds", bounds.width() >= minTargetPx)
             assertTrue("Native target too short: $bounds", bounds.height() >= minTargetPx)
         }
+        rule.runOnIdle { inputMode.requestInputMode(InputMode.Keyboard) }
         rule.onNodeWithContentDescription("Open dashboard, opens Dashboard")
             .requestFocus().assertIsFocused().performKeyInput { pressKey(Key.Enter) }
         assertEquals(1, dashboardNavigations)

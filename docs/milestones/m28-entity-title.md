@@ -1,6 +1,6 @@
 # M28 — Entity title
 
-**Status:** draft [PR #35](https://github.com/joelromanpr/brace-android/pull/35), locally replayed on protected main `ea47305b54c59a9c42f270cf383d45b2151a8ca7` (M23 CommandPalette). The pinned `core-entitytitle` row remains **in progress**. No first release version or stable coverage claim is assigned.
+**Status:** draft [PR #35](https://github.com/joelromanpr/brace-android/pull/35), locally replayed on protected main `d4d049bba302c1f99a34333599fdd26e109ed41a` (site/README cleanup). The pinned `core-entitytitle` row remains **in progress**. No first release version or stable coverage claim is assigned.
 
 ## Delivered in this slice
 
@@ -14,11 +14,11 @@
 | Gate | Result |
 | --- | --- |
 | Pinned comparison | Reviewed Blueprint 6.18.0 EntityTitle MDX and public React props at commit `a60d4c92257612808fbfac81cfeee4fcba91a8b4`. |
-| Current M23-main source and docs | Token and coverage generation `--check`, Pages build, JavaScript syntax, and Git whitespace passed. Generated output has **148 inventory rows, 0/122 applicable rows stable, 24 existing real catalog captures, and 72 guides**; `docs/entity-title.md` has a generated route and guide link. |
-| Current M23-main focused Gradle/API | Foundation/core compile, core lint and JVM tests, both API checks, catalog APK, token generation, and inventory **passed: 269 tasks**. The regenerated foundation API baseline contains EntityTitle color and metric types. |
-| Current M23-main API 36 | `BraceEntityTitleTest` **passed 11/11**, 0 failures or skips (71 Gradle tasks), on the 320 × 640, 160 dpi emulator. The suite covers native heading/action semantics, loading removal, keyboard activation, independent tags, hover and long-press overflow help, layout wrapping, RTL, 2× font scale, high contrast, and automated Compose accessibility checks. |
-| Current M23-main Maven consumer | All eight aligned `0.1.0-SNAPSHOT` artifacts published to Maven Local (**308 tasks**). The separate coordinate-only consumer, including EntityTitle use, **passed 37 tasks**. This is local validation, not Maven Central publication. |
-| Earlier hosted source checks | [Verify](https://github.com/joelromanpr/brace-android/actions/runs/36245559729/job/108413985864) and API 34 [instrumented](https://github.com/joelromanpr/brace-android/actions/runs/36245559729/job/108413985942) passed on old source commit `fa67345`. Required hosted checks on the current replay are pending. |
+| Current site-main source and docs | Token and coverage generation `--check`, Pages build, JavaScript syntax, and Git whitespace passed. Generated output has **148 inventory rows, 0/122 applicable rows stable, 24 existing real catalog captures, and 72 guides**; `docs/entity-title.md` has a generated route and guide link. |
+| M23-main focused Gradle/API before the site merge | Foundation/core compile, core lint and JVM tests, both API checks, catalog APK, token generation, and inventory **passed: 269 tasks**. The regenerated foundation API baseline contains EntityTitle color and metric types. |
+| M23-main API 36 before the site merge | `BraceEntityTitleTest` **passed 11/11**, 0 failures or skips (71 Gradle tasks), on the 320 × 640, 160 dpi emulator. The suite covers native heading/action semantics, loading removal, keyboard activation, independent tags, hover and long-press overflow help, layout wrapping, RTL, 2× font scale, high contrast, and automated Compose accessibility checks. |
+| M23-main Maven consumer before the site merge | All eight aligned `0.1.0-SNAPSHOT` artifacts published to Maven Local (**308 tasks**). The separate coordinate-only consumer, including EntityTitle use, **passed 37 tasks**. This is local validation, not Maven Central publication. |
+| Earlier hosted source checks | [Verify](https://github.com/joelromanpr/brace-android/actions/runs/36245559729/job/108413985864) and API 34 [instrumented](https://github.com/joelromanpr/brace-android/actions/runs/36245559729/job/108413985942) passed on old source commit `fa67345`. Required hosted checks on the site-main replay are pending. |
 | Earlier visual review | The old topic branch's catalog at 320 × 640 showed title activation, loading hiding title/tags, and no horizontal overflow. That visual review has not been repeated on this replay. |
 
 ## Adaptations and limits

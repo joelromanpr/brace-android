@@ -14,8 +14,9 @@
     <header class="topbar">
       <a class="brand" href="#top" aria-label="Brace Android home"><span class="mark" aria-hidden="true">B</span><span>Brace <b>Android</b></span></a>
       <nav aria-label="Main navigation">
+        <a href="#showcase">Showcase</a>
         <a href="#coverage">Coverage</a>
-        <a href="#get-started">Get started</a>
+        <a href="./installation.html">Get started</a>
         <a href="https://github.com/joelromanpr/brace-android">GitHub ↗</a>
       </nav>
     </header>
@@ -24,10 +25,10 @@
         <div class="hero-copy">
           <p class="eyebrow">Open-source Jetpack Compose design system</p>
           <h1 id="hero-title">Clarity for complex Android interfaces.</h1>
-          <p class="lede">Brace is being built for dense, keyboard-capable, accessible application UI. Explore the pinned Blueprint comparison and see what is implemented, in progress, and planned.</p>
+          <p class="lede">Brace is being built for dense, keyboard-capable, accessible application UI. Explore real Android catalog captures and the pinned Blueprint comparison. The inventory shows what is in progress, planned, and released.</p>
           <div class="hero-actions">
-            <a class="button primary" href="#coverage">Explore coverage <span aria-hidden="true">→</span></a>
-            <a class="button secondary" href="./installation.html">Installation guide <span aria-hidden="true">↗</span></a>
+            <a class="button primary" href="#showcase">See the catalog <span aria-hidden="true">→</span></a>
+            <a class="button secondary" href="#coverage">Explore coverage <span aria-hidden="true">↗</span></a>
           </div>
         </div>
         <div class="hero-panel" aria-label="Coverage status preview">
@@ -35,8 +36,25 @@
           <div class="panel-line"><span>Source</span><strong>Blueprint stable pin</strong></div>
           <div class="panel-line"><span>Platform</span><strong>Android · Compose</strong></div>
           <div class="panel-line"><span>Availability</span><strong>Per component row</strong></div>
+          <div class="panel-line"><span>Visuals</span><strong id="hero-snapshot-count">Loading catalog captures…</strong></div>
+          <div class="hero-image" id="hero-image" aria-label="Featured Android catalog capture">Loading Android capture…</div>
           <div class="panel-foot">A planned API is never shown as shipped.</div>
         </div>
+      </section>
+
+      <section class="showcase section" id="showcase" aria-labelledby="showcase-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">Android catalog · real emulator captures</p><h2 id="showcase-title">See Brace in context.</h2></div>
+          <a class="text-link" href="./showcase-guide.html">How these captures are made ↗</a>
+        </div>
+        <p class="section-intro">These images come from the Compose catalog running on Android. Each card records its source commit and appearance settings. A draft branch capture records a source state under review; the inventory below remains the authority for availability.</p>
+        <div class="showcase-toolbar">
+          <label for="showcase-theme">Appearance <select id="showcase-theme"><option value="">All appearances</option></select></label>
+          <label for="showcase-family">Family <select id="showcase-family"><option value="">All families</option></select></label>
+          <span class="showcase-result" id="showcase-result" aria-live="polite">Loading captures…</span>
+        </div>
+        <div class="showcase-grid" id="showcase-grid"></div>
+        <div class="showcase-bottom"><p>Want to try the interactions? Build the <a href="./installation.html">Android catalog app</a>. The web gallery shows captured states; touch, keyboard, and screen reader behavior lives in the app.</p><a class="button secondary" href="#coverage">Check component availability <span aria-hidden="true">→</span></a></div>
       </section>
 
       <section class="coverage section" id="coverage" aria-labelledby="coverage-title">
@@ -58,23 +76,27 @@
       </section>
 
       <section class="section get-started" id="get-started" aria-labelledby="start-title">
-        <div class="section-heading"><div><p class="eyebrow">Developer guides</p><h2 id="start-title">Start with the source.</h2></div><a class="text-link" href="./milestone-m25.html">M25 milestone report ↗</a></div>
+        <div class="section-heading"><div><p class="eyebrow">Developer guides</p><h2 id="start-title">Start with the source.</h2></div><a class="text-link" href="./milestone-m13.html">M13 milestone report ↗</a></div>
         <div class="guide-grid">
           <a class="guide" href="./installation.html"><span class="guide-number">01</span><h3>Installation</h3><p>Local Maven setup and planned artifact coordinates.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
           <a class="guide" href="./theming.html"><span class="guide-number">02</span><h3>Theming</h3><p>Tokens, variants, density, and Material 3 interoperability.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
           <a class="guide" href="./content-feedback.html"><span class="guide-number">03</span><h3>Content and feedback</h3><p>Cards, sections, dividers, and progress with native behavior.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
-          <a class="guide" href="./navigation-feedback.html"><span class="guide-number">04</span><h3>Navigation and messages</h3><p>Breadcrumb paths, tags, callouts, and empty states.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
-          <a class="guide" href="./overlays.html"><span class="guide-number">05</span><h3>Menus and overlays</h3><p>Native menu, dialog, alert, and overlay behavior.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
-          <a class="guide" href="./drawers-popovers.html"><span class="guide-number">06</span><h3>Drawers and popovers</h3><p>Edge sheets and anchored interactive content.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
-          <a class="guide" href="./tooltip-toast.html"><span class="guide-number">07</span><h3>Tooltips and toasts</h3><p>Native help and scoped notifications.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
-          <a class="guide" href="./context-shortcuts.html"><span class="guide-number">08</span><h3>Context menus and shortcuts</h3><p>Point-anchored actions and discoverable keyboard commands.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
-          <a class="guide" href="./form-text.html"><span class="guide-number">09</span><h3>Form fields and editable text</h3><p>Labels, multiline input, and inline editing for data-heavy forms.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
-          <a class="guide" href="./form-layout.html"><span class="guide-number">10</span><h3>Labels and control groups</h3><p>Focus-linked labels and layouts for independent form controls.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
-          <a class="guide" href="./numeric-input.html"><span class="guide-number">11</span><h3>Numeric input</h3><p>Locale-aware drafts, exact steps, and Android touch controls.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
-          <a class="guide" href="./icons.html"><span class="guide-number">12</span><h3>Icons</h3><p>Original Brace vectors, accessible actions, and optional pinned Blueprint glyphs.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
-          <a class="guide" href="./select-query.html"><span class="guide-number">13</span><h3>Select and query</h3><p>Controlled selection and reusable keyboard query state.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
-          <a class="guide" href="./top-bar.html"><span class="guide-number">14</span><h3>Top bar</h3><p>Token-driven app header groups, title, and dividers.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
-          <a class="guide" href="./contributing.html"><span class="guide-number">15</span><h3>Contributing</h3><p>Claim an inventory row and build an accessible component.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./loading-feedback.html"><span class="guide-number">04</span><h3>Loading feedback</h3><p>Circular progress and accessible placeholders.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./navigation-feedback.html"><span class="guide-number">05</span><h3>Navigation and messages</h3><p>Breadcrumb paths, tags, callouts, and empty states.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./overlays.html"><span class="guide-number">06</span><h3>Menus and overlays</h3><p>Native menu, dialog, alert, and overlay behavior.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./drawers-popovers.html"><span class="guide-number">07</span><h3>Drawers and popovers</h3><p>Edge sheets and anchored interactive content.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./tooltip-toast.html"><span class="guide-number">08</span><h3>Tooltips and toasts</h3><p>Native help and scoped notifications.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./context-shortcuts.html"><span class="guide-number">09</span><h3>Context menus and shortcuts</h3><p>Point-anchored actions and discoverable keyboard commands.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./form-text.html"><span class="guide-number">10</span><h3>Form fields and editable text</h3><p>Labels, multiline input, and inline editing for data-heavy forms.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./form-layout.html"><span class="guide-number">11</span><h3>Labels and control groups</h3><p>Focus-linked labels and layouts for independent form controls.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./numeric-input.html"><span class="guide-number">12</span><h3>Numeric input</h3><p>Locale-aware drafts, exact steps, and Android touch controls.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./icons.html"><span class="guide-number">13</span><h3>Icons</h3><p>Semantic vectors, scoped registration, and accessible actions.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./select-query.html"><span class="guide-number">14</span><h3>Select and query</h3><p>Controlled selection and reusable keyboard query state.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./top-bar.html"><span class="guide-number">15</span><h3>Top bar</h3><p>Token-driven app header groups, title, and dividers.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./radio-segmented.html"><span class="guide-number">16</span><h3>Radio and segmented choices</h3><p>Controlled selection, keyboard navigation, and native semantics.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./datetime-picker-input.html"><span class="guide-number">17</span><h3>Date picker and input</h3><p>Localized calendar selection and validated date entry.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./web-mechanisms.html"><span class="guide-number">18</span><h3>Web mechanisms in Compose</h3><p>CSS classes, resize observation, and provider scopes mapped to Android.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./contributing.html"><span class="guide-number">19</span><h3>Contributing</h3><p>Claim an inventory row and build an accessible component.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
         </div>
       </section>
     </main>

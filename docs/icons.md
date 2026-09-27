@@ -51,7 +51,7 @@ Blueprint's React static imports, JavaScript dynamic chunks and loader options, 
 
 ## Optional legacy Blueprint glyph pack
 
-`brace-blueprint-icons` is an **opt-in**, aligned-version artifact. It does not replace `brace-icons` or change `BraceIconRegistry.Default`. It imports the 706 legacy names in pinned `@blueprintjs/icons` 6.13.0, with distinct 16px and 20px SVG paths. Add it only when the complete pinned legacy artwork is needed:
+`brace-blueprint-icons` is an **opt-in**, aligned-version artifact. It does not replace `brace-icons` or change `BraceIconRegistry.Default`. It imports the 706 legacy names in pinned `@blueprintjs/icons` 6.13.0, with distinct 16px and 20px SVG paths. Add this artifact when the complete pinned legacy artwork is needed:
 
 ```kotlin
 implementation("io.github.joelromanpr.brace:brace-blueprint-icons:0.1.0-SNAPSHOT")
@@ -86,7 +86,7 @@ BraceIconButton(BraceBlueprintIconNames.Search, label = "Search records",
 
 `find` returns null for an unknown name; `BraceBlueprintIconByName` shows Brace's original Help glyph as a fallback. Give that fallback an accurate spoken description. Decorative glyphs use `contentDescription = null`; informative glyphs require a localized nonblank description. A glyph alone is not an action. To make an icon-only action, register the selected vector in a scoped `BraceIconRegistry` and render `BraceIconButton` with a localized label; its target remains at least 48dp and provides keyboard focus. Do not use icon appearance alone to communicate status. The static artwork has no animation and needs no reduced-motion substitution. At large text scales, keep a readable text label near informative glyphs.
 
-The [pack manifest](../brace-blueprint-icons/src/main/assets/brace-blueprint-icons.json) records every pinned name, metadata, exact path/viewBox, and original SVG SHA-256 for both sizes, plus hashes of the upstream metadata and license. [The generator](../scripts/generate_blueprint_icons.py) checks all 1,412 legacy SVGs against a pinned Blueprint checkout with `--check --upstream /path/to/checkout`; CI checks committed assets and generated Kotlin with `--check`. The [copied Apache-2.0 license](../brace-blueprint-icons/src/main/assets/blueprint-icons-LICENSE.txt) and [attribution/modification notice](../brace-blueprint-icons/src/main/assets/blueprint-icons-ATTRIBUTION.txt) ship in the AAR. Search tags and artwork remain Blueprint's licensed material. See the [M35 report](milestones/m35-blueprint-icon-pack.md) for test results and open review gates.
+The [pack manifest](../brace-blueprint-icons/src/main/assets/brace-blueprint-icons.json) records every pinned name, metadata, exact path/viewBox, and original SVG SHA-256 for both sizes, plus hashes of the upstream metadata and license. [The generator](../scripts/generate_blueprint_icons.py) checks all 1,412 legacy SVGs across both sizes against a pinned Blueprint checkout with `--check --upstream /path/to/checkout`; CI checks committed assets and generated Kotlin with `--check`. The [copied Apache-2.0 license](../brace-blueprint-icons/src/main/assets/blueprint-icons-LICENSE.txt) and [attribution/modification notice](../brace-blueprint-icons/src/main/assets/blueprint-icons-ATTRIBUTION.txt) ship in the AAR. Search tags and artwork remain Blueprint's licensed material. See the [M35 report](milestones/m35-blueprint-icon-pack.md) for test results and open review gates.
 
 ## Optional next-generation Blueprint glyph pack
 

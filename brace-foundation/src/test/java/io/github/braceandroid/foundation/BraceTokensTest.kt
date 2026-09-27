@@ -2,6 +2,7 @@ package io.github.braceandroid.foundation
 
 import androidx.compose.ui.graphics.Color
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -38,8 +39,42 @@ class BraceTokensTest {
                 toast.dangerContent to toast.dangerContainer,
                 scheme.components.tooltip.content to scheme.components.tooltip.container,
                 scheme.components.shortcut.content to scheme.components.shortcut.container,
+                scheme.components.datePicker.content to scheme.components.datePicker.container,
+                scheme.components.datePicker.selectedContent to scheme.components.datePicker.selectedContainer,
+                scheme.components.dateInput.content to scheme.components.dateInput.container,
             ).forEach { (text, background) ->
                 assertTrue("feedback text contrast below 4.5", braceContrastRatio(text, background) >= 4.5)
+            }
+            val radio = scheme.components.radio
+            listOf(
+                radio.selectedBorder to radio.container,
+                radio.selectedDot to radio.container,
+                radio.unselectedBorder to radio.container,
+                radio.disabledContent to radio.disabledContainer,
+            ).forEach { (indicator, background) ->
+                assertTrue("radio indicator contrast below 3.0", braceContrastRatio(indicator, background) >= 3.0)
+            }
+            val segmented = scheme.components.segmentedControl
+            listOf(
+                segmented.unselectedContent to segmented.unselectedContainer,
+                segmented.unselectedContent to segmented.hoverContainer,
+                segmented.unselectedContent to segmented.pressedContainer,
+                segmented.selectedContent to segmented.selectedContainer,
+                segmented.selectedContent to segmented.selectedHoverContainer,
+                segmented.selectedContent to segmented.selectedPressedContainer,
+                segmented.selectedPrimaryContent to segmented.selectedPrimaryContainer,
+                segmented.selectedPrimaryContent to segmented.selectedPrimaryHoverContainer,
+                segmented.selectedPrimaryContent to segmented.selectedPrimaryPressedContainer,
+            ).forEach { (text, background) ->
+                assertTrue("segmented text contrast below 4.5", braceContrastRatio(text, background) >= 4.5)
+            }
+            listOf(
+                segmented.selectedContainer,
+                segmented.selectedHoverContainer,
+                segmented.selectedPressedContainer,
+            ).forEach { background ->
+                assertTrue("neutral segment boundary contrast below 3.0",
+                    braceContrastRatio(segmented.selectedBorder, background) >= 3.0)
             }
             val button = scheme.components.button
             listOf(
@@ -79,9 +114,30 @@ class BraceTokensTest {
         assertEquals(custom, components.button.primaryContainer)
         assertEquals(custom, components.progress.indicator)
         assertEquals(Color.Red, components.button.focusRing)
+        assertEquals(custom, components.radio.selectedDot)
+        assertEquals(custom, components.segmentedControl.selectedPrimaryContainer)
+        assertEquals(Color.Red, components.radio.focusRing)
+        assertEquals(Color.Red, components.segmentedControl.focusRing)
         assertEquals(overridden.primarySubtle, components.callout.primaryContainer)
         assertEquals(overridden.selection, components.select.selectedContainer)
         assertEquals(Color.Red, components.select.focusRing)
+    }
+
+    @Test
+    fun loadingIndicatorsStayVisibleInEveryTheme() {
+        listOf(
+            BraceTokenDefaults.light,
+            BraceTokenDefaults.dark,
+            BraceTokenDefaults.highContrastLight,
+            BraceTokenDefaults.highContrastDark,
+        ).forEach { scheme ->
+            val spinner = scheme.components.spinner
+            listOf(spinner.indicator, spinner.successIndicator,
+                spinner.warningIndicator, spinner.dangerIndicator).forEach { indicator ->
+                assertTrue("spinner contrast below 3:1", braceContrastRatio(indicator, spinner.track) >= 3.0)
+            }
+            assertNotEquals(scheme.components.skeleton.base, scheme.components.skeleton.highlight)
+        }
     }
 
     @Test

@@ -527,6 +527,20 @@
       "searchBorder": "{semantic.border}",
       "focusRing": "{semantic.focusRing}"
     },
+    "slider": {
+      "activeTrack": "{semantic.primary}",
+      "inactiveTrack": "{semantic.borderStrong}",
+      "activeTick": "{semantic.onPrimary}",
+      "inactiveTick": "{semantic.surface}",
+      "thumb": "{semantic.primary}",
+      "thumbPressed": "{semantic.primaryHover}",
+      "disabledActiveTrack": "{semantic.disabledContent}",
+      "disabledInactiveTrack": "{semantic.disabledContainer}",
+      "disabledThumb": "{semantic.disabledContent}",
+      "label": "{semantic.onSurface}",
+      "mutedLabel": "{semantic.onSurfaceMuted}",
+      "focusRing": "{semantic.focusRing}"
+    },
     "spinner": {
       "track": "{semantic.surfaceInset}",
       "indicator": "{semantic.primary}",
@@ -778,6 +792,14 @@
       "searchHorizontalPadding": 10,
       "minWidth": 240,
       "maxListHeight": 280
+    },
+    "slider": {
+      "minHeight": 48,
+      "axisLabelGap": 4,
+      "focusCornerRadius": 8,
+      "thumbSlotWidth": 28,
+      "thumbWidth": 16,
+      "thumbHeight": 24
     },
     "spinner": {
       "smallSize": 20,

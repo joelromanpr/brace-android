@@ -31,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -66,6 +67,8 @@ import io.github.joelromanpr.brace.core.BraceHeading
 import io.github.joelromanpr.brace.core.BraceHeadingLevel
 import io.github.joelromanpr.brace.core.BraceOrderedList
 import io.github.joelromanpr.brace.core.BraceUnorderedList
+import io.github.joelromanpr.brace.core.BraceSlider
+import io.github.joelromanpr.brace.core.BraceRangeSlider
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceButtonVariant
@@ -361,6 +364,12 @@ val displayed = remember(rows, sort.value) {
 val columns = listOf(BraceTableColumn<Record>("name", "Name", 160.dp, { it.name }, sortable = true))
 BraceDataTable(displayed, { it.id }, columns, selection, { selection = it },
     sort = sort.value, onSortChange = { sort.value = it })""".trimIndent(),
+    "core-slider" to """var value by rememberSaveable { mutableFloatStateOf(3f) }
+BraceSlider(value, { value = it }, label = "Volume", min = 0f, max = 10f, stepSize = 1f,
+    onRelease = { saveVolume(it) })""",
+    "core-rangeslider" to """var start by rememberSaveable { mutableFloatStateOf(2f) }
+var end by rememberSaveable { mutableFloatStateOf(7f) }
+BraceRangeSlider(start..end, { start = it.start; end = it.endInclusive }, label = "Hours")""",
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
     "core-link" to "BraceLink(\"Read guide\", BraceLinkDestination.Uri(\"https://example.org/guide\", \"Guide\"))",
     "core-anchorbutton" to "BraceLinkButton(\"Open reports\", BraceLinkDestination.Action(\"Reports\") { navigateToReports() })",
@@ -974,6 +983,28 @@ private fun TreeSample() {
 }
 
 @Composable
+private fun SliderSample(id: String) {
+    var value by rememberSaveable { mutableFloatStateOf(3f) }
+    var start by rememberSaveable { mutableFloatStateOf(2f) }
+    var end by rememberSaveable { mutableFloatStateOf(7f) }
+    var enabled by rememberSaveable { mutableStateOf(true) }
+    var released by rememberSaveable { mutableStateOf("No release yet") }
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        if (id == "core-slider") {
+            BraceSlider(value, { value = it }, label = "Volume", enabled = enabled,
+                onRelease = { released = "Released at $it" })
+        } else {
+            BraceRangeSlider(start..end, { start = it.start; end = it.endInclusive },
+                label = "Hours", enabled = enabled,
+                onRelease = { released = "Released at ${it.start}–${it.endInclusive}" })
+        }
+        Text(released, color = BraceTheme.colors.semantic.onSurfaceMuted)
+        BraceButton(if (enabled) "Disable" else "Enable", onClick = { enabled = !enabled },
+            variant = BraceButtonVariant.Outline)
+    }
+}
+
+@Composable
 private fun TagInputSample() {
     var tags by rememberSaveable { mutableStateOf(listOf("Compose", "Android")) }
     var draft by rememberSaveable { mutableStateOf("") }
@@ -1361,6 +1392,7 @@ private fun ComponentSample(
             }
         }
         "core-fileinput" -> FilePickerSample()
+        "core-slider", "core-rangeslider" -> SliderSample(id)
         "core-button" -> {
             var count by rememberSaveable { mutableStateOf(0) }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {

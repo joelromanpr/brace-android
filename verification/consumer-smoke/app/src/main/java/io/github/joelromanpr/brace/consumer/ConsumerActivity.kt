@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
@@ -65,6 +66,15 @@ import io.github.joelromanpr.brace.core.BraceSliderTrackIntent
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonGroup
 import io.github.joelromanpr.brace.core.BraceButtonGroupAction
+import io.github.joelromanpr.brace.core.BraceCollapse
+import io.github.joelromanpr.brace.core.BraceText
+import io.github.joelromanpr.brace.core.BraceTab
+import io.github.joelromanpr.brace.core.BraceTabs
+import io.github.joelromanpr.brace.core.BraceTabPanel
+import io.github.joelromanpr.brace.core.BraceTabSpacer
+import io.github.joelromanpr.brace.core.BraceOverflowCollapseFrom
+import io.github.joelromanpr.brace.core.BraceOverflowList
+import io.github.joelromanpr.brace.core.BraceMenuPopup
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceCallout
 import io.github.joelromanpr.brace.core.BraceCalloutIntent
@@ -230,6 +240,9 @@ class ConsumerActivity : ComponentActivity() {
                 var cardSwitch by rememberSaveable { mutableStateOf(false) }
                 var cardCheckbox by rememberSaveable { mutableStateOf(false) }
                 var cardChoice by rememberSaveable { mutableStateOf<String?>(null) }
+                var detailsOpen by rememberSaveable { mutableStateOf(false) }
+                var activeTab by rememberSaveable { mutableStateOf("summary") }
+                var overflowExpanded by rememberSaveable { mutableStateOf(false) }
                 val panelState = rememberBracePanelStackState(BracePanel("imports", "Imports"))
                 val shortcutState = rememberBraceShortcutRegistryState()
                 val toasts = rememberBraceToastState()
@@ -274,6 +287,42 @@ class ConsumerActivity : ComponentActivity() {
                         BraceCard {
                             BraceButton(label = "Saved $count", onClick = { count++ })
                         }
+                        BraceButton(if (detailsOpen) "Hide details" else "Show details",
+                            onClick = { detailsOpen = !detailsOpen })
+                        BraceCollapse(expanded = detailsOpen) {
+                            BraceText("Import details are available while expanded.")
+                        }
+                        BraceTabs(
+                            tabs = listOf(BraceTab("summary", "Summary"), BraceTab("files", "Files")),
+                            selectedTabId = activeTab,
+                            onTabSelected = { activeTab = it },
+                            trailingContent = { BraceButton("Add", onClick = { count++ }) },
+                        ) { tab -> BraceTag(tab.label) }
+                        BraceTabPanel(BraceTab("files", "Files"), activeTab) {
+                            BraceTag("Detached file details")
+                        }
+                        Row(Modifier.fillMaxWidth()) {
+                            BraceTag("Summary")
+                            BraceTabSpacer()
+                            BraceTag("Details")
+                        }
+                        BraceOverflowList(
+                            items = listOf("Overview", "Pipeline", "Failures", "History"),
+                            itemKey = { it },
+                            modifier = Modifier.width(180.dp),
+                            collapseFrom = BraceOverflowCollapseFrom.Start,
+                            minVisibleItems = 1,
+                            navigationLabel = "Import sections",
+                            visibleItem = { name, _ -> BraceButton(name, onClick = { count++ }) },
+                            overflowContent = { hidden ->
+                                BraceMenuPopup(
+                                    expanded = overflowExpanded,
+                                    onDismissRequest = { overflowExpanded = false },
+                                    anchor = { BraceButton("More", onClick = { overflowExpanded = true }) },
+                                ) { hidden.forEach { name -> BraceMenuItem(name, onClick = { count++; overflowExpanded = false }) } }
+                            },
+                            overflowMeasureContent = { _ -> BraceButton("More", onClick = {}) },
+                        )
                         BraceSwitchCard(cardSwitch, { cardSwitch = it }, "Notifications")
                         BraceCheckboxCard(cardCheckbox, { cardCheckbox = it }, "Include archived")
                         BraceRadioCardGroup(

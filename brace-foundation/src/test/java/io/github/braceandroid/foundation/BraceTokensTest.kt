@@ -48,6 +48,15 @@ class BraceTokensTest {
             ).forEach { (text, background) ->
                 assertTrue("feedback text contrast below 4.5", braceContrastRatio(text, background) >= 4.5)
             }
+            val tabs = scheme.components.tabs
+            listOf(
+                tabs.content to tabs.container,
+                tabs.selectedContent to tabs.selectedContainer,
+                tabs.badgeContent to tabs.badgeContainer,
+                tabs.selectedBadgeContent to tabs.selectedBadgeContainer,
+            ).forEach { (text, background) ->
+                assertTrue("tab text contrast below 4.5", braceContrastRatio(text, background) >= 4.5)
+            }
             val radio = scheme.components.radio
             listOf(
                 radio.selectedBorder to radio.container,
@@ -191,6 +200,8 @@ class BraceTokensTest {
         assertEquals(custom, components.button.primaryContainer)
         assertEquals(custom, components.progress.indicator)
         assertEquals(Color.Red, components.button.focusRing)
+        assertEquals(Color.Red, components.tabs.focusRing)
+        assertEquals(custom, components.tabs.indicator)
         assertEquals(custom, components.radio.selectedDot)
         assertEquals(custom, components.segmentedControl.selectedPrimaryContainer)
         assertEquals(Color.Red, components.radio.focusRing)

@@ -511,6 +511,8 @@ BraceDropdown(
 )""".trimIndent(),
     "core-numericinput" to "var amount by rememberSaveable { mutableStateOf(\"0.2\") }; BraceNumericField(value = amount, onValueChange = { amount = it }, label = \"Amount\", min = 0.0, max = 100.0, stepSize = 1.0, majorStepSize = 10.0, minorStepSize = 0.1)",
     "core-entitytitle" to """BraceEntityTitle(title = "Quarterly report", subtitle = "Updated today", icon = { Text("◆") }, tags = { BraceTag("Draft") }, onTitleClick = { openReport() })""".trimIndent(),
+    "core-collapse" to "var open by rememberSaveable { mutableStateOf(false) }; BraceButton(if (open) \"Hide\" else \"Show\", onClick = { open = !open }); BraceCollapse(expanded = open) { BraceText(\"Report details\") }",
+    "core-text" to "BraceText(\"Long project title\", modifier = Modifier.width(140.dp), ellipsize = true)",
     "core-card" to "BraceCard(elevation = BraceCardElevation.One, onClick = { open() }) { Text(\"Open project\") }",
     "core-cardlist" to "BraceCardList(items = projects, itemKey = { it.id }, onItemClick = { open(it) }) { project -> Text(project.name) }",
     "core-divider" to "BraceDivider(orientation = BraceDividerOrientation.Horizontal)",
@@ -519,6 +521,25 @@ BraceDropdown(
     "core-skeleton" to "BraceSkeleton(label = \"Loading report title\"); BraceSkeleton(width = 180.dp)",
     "core-section" to "BraceSection(title = \"Projects\", collapsible = true) { Text(\"Section content\") }",
     "core-sectioncard" to "BraceSectionCard { Text(\"Project settings\") }",
+    "core-tabs" to """var selected by rememberSaveable { mutableStateOf("overview") }
+BraceTabs(tabs = listOf(BraceTab("overview", "Overview"), BraceTab("activity", "Activity", badge = "3")),
+    selectedTabId = selected, onTabSelected = { selected = it }) { tab -> Text("Panel: ${'$'}{tab.label}") }""".trimIndent(),
+    "core-tab" to "BraceTab(id = \"activity\", label = \"Activity\", badge = \"3\")",
+    "core-tabpanel" to "var selected by rememberSaveable { mutableStateOf(\"overview\") }; BraceTabPanel(tab = BraceTab(\"overview\", \"Overview\"), selectedTabId = selected) { Text(\"Overview content\") }",
+    "core-tabsexpander" to "Row(Modifier.fillMaxWidth()) { Text(\"Start\"); BraceTabSpacer(); BraceButton(\"Search\", onClick = {}) }",
+    "core-overflowlist" to """var expanded by rememberSaveable { mutableStateOf(false) }
+BraceOverflowList(
+    items = listOf("Overview", "Analysis", "Forecast"), itemKey = { it },
+    navigationLabel = "Report sections",
+    visibleItem = { name, _ -> BraceButton(name, onClick = { open(name) }) },
+    overflowContent = { hidden ->
+        BraceMenuPopup(expanded = expanded, onDismissRequest = { expanded = false },
+            anchor = { BraceButton("More", onClick = { expanded = true }) }) {
+            hidden.forEach { name -> BraceMenuItem(name, onClick = { open(name); expanded = false }) }
+        }
+    },
+    overflowMeasureContent = { _ -> BraceButton("More", onClick = {}) },
+)""".trimIndent(),
     "core-breadcrumbs" to "BraceBreadcrumbs(listOf(BraceBreadcrumb(\"Home\", onClick = { home() }), BraceBreadcrumb(\"Projects\")))",
     "core-tree" to """val state = rememberBraceTreeState(
     initialExpandedKeys = setOf("projects"), initialSelectedKeys = setOf("alpha"))
@@ -1917,6 +1938,10 @@ private fun ComponentSample(
                 BraceSectionCard(padded = false) { Text("Edge to edge content", color = BraceTheme.colors.semantic.onSurface) }
             }
         }
+        "core-collapse" -> CollapseCatalogSample()
+        "core-text" -> TextCatalogSample()
+        "core-tabs", "core-tab", "core-tabpanel", "core-tabsexpander" -> TabsCatalogSample()
+        "core-overflowlist" -> OverflowCatalogSample()
         "core-tree", "core-treenode" -> TreeSample()
         "core-breadcrumbs" -> {
             var destination by rememberSaveable { mutableStateOf("Dashboard") }

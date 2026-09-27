@@ -1,6 +1,6 @@
 # M28 — Entity title
 
-**Status:** draft [PR #35](https://github.com/joelromanpr/brace-android/pull/35), locally replayed on protected main `fcc2993cfd7a88a9bfac3063c67fc63fa3525ef3` (MultiSlider). The pinned `core-entitytitle` row remains **in progress**. No first release version or stable coverage claim is assigned.
+**Status:** draft [PR #35](https://github.com/joelromanpr/brace-android/pull/35), locally replayed on protected main `56e719cdf0e3fd07eaefd94b5cb6b93b8f9ce82b` (MultiSlider). The pinned `core-entitytitle` row remains **in progress**. No first release version or stable coverage claim is assigned.
 
 ## Delivered in this slice
 
@@ -14,12 +14,12 @@
 | Gate | Result |
 | --- | --- |
 | Pinned comparison | Reviewed Blueprint 6.18.0 EntityTitle MDX and public React props at commit `a60d4c92257612808fbfac81cfeee4fcba91a8b4`. |
-| Current source and docs | Token and coverage generation `--check`, both pinned icon checks, link contrast, Pages build, JavaScript syntax, and Git whitespace passed. Generated output has **148 inventory rows, 0/122 applicable rows stable, 25 existing real catalog captures, and 82 guides**; `docs/entity-title.md` has a generated route and guide link. |
-| Current-main API and catalog compile | The merged token source generated EntityTitle, Control Card, and Slider type-safe tokens. Foundation `apiDump` passed (10 tasks); foundation/core `apiCheck`, core Android-test Kotlin compilation, and catalog Kotlin compilation passed on `fcc2993` (**151 tasks**). |
+| Current source and docs | Token and coverage generation `--check`, both pinned icon checks, link contrast, Pages build, JavaScript syntax, and Git whitespace passed. Generated output has **148 inventory rows, 0/122 applicable rows stable, 25 existing real catalog captures, and 84 guides**; `docs/entity-title.md` has a generated route and guide link. |
+| Current-main API and catalog compile | The merged token source generated EntityTitle, Control Card, Slider, and MultiSlider type-safe tokens. Foundation `apiDump` passed (10 tasks); foundation/core `apiCheck`, core Android-test Kotlin compilation, and catalog Kotlin compilation passed on `56e719c` (**151 tasks**). |
 | M23-main focused Gradle/API before the site merge | Foundation/core compile, core lint and JVM tests, both API checks, catalog APK, token generation, and inventory **passed: 269 tasks**. The regenerated foundation API baseline contains EntityTitle color and metric types. |
 | M23-main API 36 before the site merge | `BraceEntityTitleTest` **passed 11/11**, 0 failures or skips (71 Gradle tasks), on the 320 × 640, 160 dpi emulator. The suite covers native heading/action semantics, loading removal, keyboard activation, independent tags, hover and long-press overflow help, layout wrapping, RTL, 2× font scale, high contrast, and automated Compose accessibility checks. |
 | M23-main Maven consumer before the site merge | All eight aligned `0.1.0-SNAPSHOT` artifacts published to Maven Local (**308 tasks**). The separate coordinate-only consumer, including EntityTitle use, **passed 37 tasks**. This is local validation, not Maven Central publication. |
-| Earlier hosted source checks | [Verify](https://github.com/joelromanpr/brace-android/actions/runs/36245559729/job/108413985864) and API 34 [instrumented](https://github.com/joelromanpr/brace-android/actions/runs/36245559729/job/108413985942) passed on old source commit `fa67345`. Required hosted checks on the PanelStack-main replay are pending. |
+| Earlier hosted source checks | [Verify](https://github.com/joelromanpr/brace-android/actions/runs/36245559729/job/108413985864) and API 34 [instrumented](https://github.com/joelromanpr/brace-android/actions/runs/36245559729/job/108413985942) passed on old source commit `fa67345`. Required hosted checks on this current-main replay are pending. |
 | Earlier visual review | The old topic branch's catalog at 320 × 640 showed title activation, loading hiding title/tags, and no horizontal overflow. That visual review has not been repeated on this replay. |
 
 ## Adaptations and limits

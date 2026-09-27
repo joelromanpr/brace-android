@@ -326,6 +326,10 @@ public final class io/github/joelromanpr/brace/core/BraceMenuSize : java/lang/En
 	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceMenuSize;
 }
 
+public final class io/github/joelromanpr/brace/core/BraceMultiSliderKt {
+	public static final fun BraceMultiSlider (Ljava/util/List;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;FFFZZLio/github/joelromanpr/brace/core/BraceSliderTrackIntent;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;III)V
+}
+
 public final class io/github/joelromanpr/brace/core/BraceNumericButtonPosition : java/lang/Enum {
 	public static final field End Lio/github/joelromanpr/brace/core/BraceNumericButtonPosition;
 	public static final field None Lio/github/joelromanpr/brace/core/BraceNumericButtonPosition;
@@ -590,9 +594,63 @@ public final class io/github/joelromanpr/brace/core/BraceShortcutRegistryState {
 	public final fun showDiscovery ()V
 }
 
+public final class io/github/joelromanpr/brace/core/BraceSliderHandle {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;FLjava/lang/String;Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;Lio/github/joelromanpr/brace/core/BraceSliderHandleType;Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;)V
+	public synthetic fun <init> (Ljava/lang/String;FLjava/lang/String;Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;Lio/github/joelromanpr/brace/core/BraceSliderHandleType;Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()F
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;
+	public final fun component5 ()Lio/github/joelromanpr/brace/core/BraceSliderHandleType;
+	public final fun component6 ()Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public final fun component7 ()Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public final fun copy (Ljava/lang/String;FLjava/lang/String;Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;Lio/github/joelromanpr/brace/core/BraceSliderHandleType;Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;)Lio/github/joelromanpr/brace/core/BraceSliderHandle;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceSliderHandle;Ljava/lang/String;FLjava/lang/String;Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;Lio/github/joelromanpr/brace/core/BraceSliderHandleType;Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;ILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceSliderHandle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getIntentAfter ()Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public final fun getIntentBefore ()Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public final fun getInteractionKind ()Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getType ()Lio/github/joelromanpr/brace/core/BraceSliderHandleType;
+	public final fun getValue ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSliderHandleInteraction : java/lang/Enum {
+	public static final field Lock Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;
+	public static final field None Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;
+	public static final field Push Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSliderHandleType : java/lang/Enum {
+	public static final field End Lio/github/joelromanpr/brace/core/BraceSliderHandleType;
+	public static final field Full Lio/github/joelromanpr/brace/core/BraceSliderHandleType;
+	public static final field Start Lio/github/joelromanpr/brace/core/BraceSliderHandleType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceSliderHandleType;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceSliderHandleType;
+}
+
 public final class io/github/joelromanpr/brace/core/BraceSliderKt {
 	public static final fun BraceRangeSlider (Lkotlin/ranges/ClosedFloatingPointRange;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;FFFZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
 	public static final fun BraceSlider (FLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;FFFZZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSliderTrackIntent : java/lang/Enum {
+	public static final field Danger Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public static final field Neutral Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public static final field Primary Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public static final field Success Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public static final field Warning Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
 }
 
 public final class io/github/joelromanpr/brace/core/BraceSpinnerSize : java/lang/Enum {

@@ -701,6 +701,19 @@
       "disabledContent": "{semantic.disabledContent}",
       "caret": "{semantic.onSurfaceMuted}",
       "focusRing": "{semantic.focusRing}"
+    },
+    "buttonGroup": {
+      "container": "{semantic.surface}",
+      "content": "{semantic.onSurface}",
+      "border": "{semantic.borderStrong}",
+      "divider": "{semantic.borderStrong}",
+      "hoverContainer": "{semantic.hover}",
+      "pressedContainer": "{semantic.pressed}",
+      "selectedContainer": "{semantic.selection}",
+      "selectedContent": "{semantic.onSelection}",
+      "disabledContainer": "{semantic.disabledContainer}",
+      "disabledContent": "{semantic.disabledContent}",
+      "focusRing": "{semantic.focusRing}"
     }
   },
   "componentMetricsDp": {
@@ -902,6 +915,15 @@
       "indent": 16,
       "horizontalPadding": 8,
       "cornerRadius": 5
+    },
+    "buttonGroup": {
+      "cornerRadius": 5,
+      "separatorWidth": 1,
+      "horizontalPadding": 12,
+      "iconGap": 8,
+      "smallVisualHeight": 32,
+      "mediumVisualHeight": 40,
+      "largeVisualHeight": 56
     }
   }
 }

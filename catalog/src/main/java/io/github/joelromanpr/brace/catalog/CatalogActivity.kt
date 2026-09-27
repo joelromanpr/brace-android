@@ -472,6 +472,14 @@ var selected by rememberSaveable { mutableStateOf<String?>(null) }
 BraceSimpleTable(columns, rows, label = "Job status", bordered = true, striped = true,
     interactive = true, selectedRowKey = selected, onRowClick = { selected = it })""".trimIndent(),
     "core-button" to "BraceTheme { BraceButton(label = \"Save\", onClick = { save() }) }",
+    "core-buttongroup" to """var selected by rememberSaveable { mutableStateOf("List") }
+BraceButtonGroup(
+    actions = listOf(
+        BraceButtonGroupAction("list", "List", onClick = { selected = "List" }, selected = selected == "List"),
+        BraceButtonGroupAction("grid", "Grid", onClick = { selected = "Grid" }, selected = selected == "Grid"),
+    ),
+    fill = true, accessibilityLabel = "Display mode",
+)""".trimIndent(),
     "core-link" to "BraceLink(\"Read guide\", BraceLinkDestination.Uri(\"https://example.org/guide\", \"Guide\"))",
     "core-anchorbutton" to "BraceLinkButton(\"Open reports\", BraceLinkDestination.Action(\"Reports\") { navigateToReports() })",
     "core-checkbox" to "BraceCheckbox(checked = checked, onCheckedChange = { checked = it }, label = \"Include archived\")",
@@ -494,6 +502,13 @@ BraceTextArea(details, { details = it }, accessibilityLabel = "Details", minLine
 BraceEditableText(title, { title = it }, label = "Report title", editActionLabel = "Edit report title", onConfirm = { saveTitle(it) })""".trimIndent(),
     "core-label" to """BraceFieldLabel("Export format", spokenLabel = "Export format, ${'$'}format") { controlModifier -> BraceButton(format, onClick = { format = "JSON" }, modifier = controlModifier) }""",
     "core-controlgroup" to """BraceControlGroup(fill = true, accessibilityLabel = "Report actions") { Item { controlModifier -> BraceButton("Preview", onClick = ::preview, modifier = controlModifier) }; Item(fill = false) { controlModifier -> BraceButton("Export", onClick = ::export, modifier = controlModifier) } }""",
+    "core-htmlselect" to """var region by rememberSaveable { mutableStateOf<String?>(null) }
+BraceDropdown(
+    options = listOf(BraceDropdownOption("east", "East"), BraceDropdownOption("west", "West")),
+    selectedValue = region,
+    onValueChange = { region = it },
+    label = "Region",
+)""".trimIndent(),
     "core-numericinput" to "var amount by rememberSaveable { mutableStateOf(\"0.2\") }; BraceNumericField(value = amount, onValueChange = { amount = it }, label = \"Amount\", min = 0.0, max = 100.0, stepSize = 1.0, majorStepSize = 10.0, minorStepSize = 0.1)",
     "core-entitytitle" to """BraceEntityTitle(title = "Quarterly report", subtitle = "Updated today", icon = { Text("◆") }, tags = { BraceTag("Draft") }, onTitleClick = { openReport() })""".trimIndent(),
     "core-card" to "BraceCard(elevation = BraceCardElevation.One, onClick = { open() }) { Text(\"Open project\") }",
@@ -1532,6 +1547,8 @@ private fun ComponentSample(
         "core-fileinput" -> FilePickerSample()
         "core-multislider", "core-multisliderhandle" -> MultiSliderSample()
         "core-slider", "core-rangeslider" -> SliderSample(id)
+        "core-htmlselect" -> DropdownCatalogSample()
+        "core-buttongroup" -> ButtonGroupCatalogSample()
         "core-button" -> {
             var count by rememberSaveable { mutableStateOf(0) }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {

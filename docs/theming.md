@@ -60,7 +60,7 @@ BraceTheme {
 
 A semantic color override rebuilds component state colors in that nested scope. Other typed groups can be replaced with `BraceThemeOverrides` (`spacing`, `sizing`, `shape`, `elevation`, `motion`, `componentMetrics`, and `typography`). When a nested scope selects a different light/dark or contrast mode, it starts from that mode's base colors and reapplies the inherited brand. Keep local overrides small and review their contrast in every mode they support.
 
-The additive `1.2.0` contract retains the earlier select, radio, segmented-control, date, and table tokens and adds slider colors and dimensions. Existing token names remain unchanged.
+The `1.2.0` contract includes component colors and dimensions for controls, selection cards, sliders, and button groups. Existing semantic role names remain unchanged.
 
 ## Using tokens in components
 

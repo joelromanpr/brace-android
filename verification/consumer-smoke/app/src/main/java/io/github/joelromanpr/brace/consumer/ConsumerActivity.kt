@@ -19,13 +19,18 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.IntOffset
 import io.github.braceandroid.foundation.BraceTheme
+import io.github.joelromanpr.brace.datetime.BraceDatePicker
 import io.github.joelromanpr.brace.datetime.BraceDateRange
 import io.github.joelromanpr.brace.datetime.BraceDateRangePicker
 import io.github.joelromanpr.brace.datetime.BraceDateRangeField
-import io.github.joelromanpr.brace.datetime.BraceDatePicker
 import io.github.joelromanpr.brace.datetime.BraceDateField
+import io.github.joelromanpr.brace.datetime.BraceTimeField
+import io.github.joelromanpr.brace.datetime.BraceTimePicker
 import java.time.LocalDate
+import java.time.LocalTime
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbs
@@ -94,8 +99,11 @@ import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconVari
 import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import io.github.joelromanpr.brace.table.BraceDataTable
+import io.github.joelromanpr.brace.table.BraceTableColumn
+import io.github.joelromanpr.brace.table.BraceTableSelection
+import io.github.joelromanpr.brace.table.rememberBraceTableViewport
+import androidx.compose.ui.unit.dp
 
 /** Compiles against Maven coordinates only, with no dependency on the source checkout. */
 class ConsumerActivity : ComponentActivity() {
@@ -139,6 +147,7 @@ class ConsumerActivity : ComponentActivity() {
                 val regionQuery = rememberBraceQueryListState()
                 var dueDate by remember { mutableStateOf<LocalDate?>(null) }
                 var travelRange by remember { mutableStateOf(BraceDateRange()) }
+                var dueTime by rememberSaveable { mutableStateOf("14:30") }
                 var meal by remember { mutableStateOf("soup") }
                 var layout by remember { mutableStateOf("list") }
                 val shortcutState = rememberBraceShortcutRegistryState()
@@ -157,6 +166,18 @@ class ConsumerActivity : ComponentActivity() {
                         BraceCard {
                             BraceButton(label = "Saved $count", onClick = { count++ })
                         }
+                        val tableRows = remember { listOf("Ready", "Review") }
+                        var selectedTable: BraceTableSelection? by remember { mutableStateOf(null) }
+                        val tableViewport = rememberBraceTableViewport()
+                        BraceDataTable(
+                            rows = tableRows,
+                            rowKey = { it },
+                            columns = listOf(BraceTableColumn<String>("status", "Status", 120.dp, { it })),
+                            selection = selectedTable,
+                            onSelectionChange = { selectedTable = it },
+                            viewport = tableViewport,
+                            height = 160.dp,
+                        )
                         BraceSection(title = "Job status", collapsible = true) {
                             BraceProgressBar(label = "Import progress", value = 0.5f)
                             BraceSpinner(label = "Indexing records", value = 0.5f)
@@ -178,10 +199,14 @@ class ConsumerActivity : ComponentActivity() {
                         BraceNumericField(amount, { amount = it }, label = "Amount",
                             min = 0.0, max = 100.0, minorStepSize = 0.1)
                         BraceDateField(dueDate, { dueDate = it }, "Due date", locale = Locale.US)
-                        BraceDateRangeField(travelRange, { travelRange = it }, "Travel dates", locale = Locale.US)
-                        BraceDateRangePicker(travelRange, { travelRange = it }, locale = Locale.US)
                         BraceDatePicker(dueDate, { dueDate = it }, locale = Locale.US,
                             minDate = LocalDate.of(2026, 1, 1))
+                        BraceDateRangeField(travelRange, { travelRange = it }, "Travel dates", locale = Locale.US)
+                        BraceDateRangePicker(travelRange, { travelRange = it }, locale = Locale.US)
+                        BraceTimeField(LocalTime.parse(dueTime), { dueTime = it?.toString() ?: "14:30" },
+                            label = "Due time", locale = Locale.US, use24Hour = true)
+                        BraceTimePicker(LocalTime.parse(dueTime), { dueTime = it.toString() },
+                            locale = Locale.US, use24Hour = true)
                         BraceRadio(selected = meal == "soup", onSelect = { meal = "soup" }, label = "Soup")
                         BraceRadioGroup(
                             options = listOf(BraceRadioOption("soup", "Soup"), BraceRadioOption("salad", "Salad")),

@@ -561,6 +561,30 @@
       "selectedPrimaryPressedContainer": "{semantic.primaryPressed}",
       "selectedBorder": "{semantic.borderStrong}"
     },
+    "timePicker": {
+      "container": "{semantic.surface}",
+      "content": "{semantic.onSurface}",
+      "mutedContent": "{semantic.onSurfaceMuted}",
+      "border": "{semantic.border}",
+      "stepContainer": "{semantic.surfaceRaised}",
+      "stepContent": "{semantic.onSurface}",
+      "disabledContent": "{semantic.disabledContent}",
+      "errorBorder": "{semantic.danger}",
+      "focusRing": "{semantic.focusRing}",
+      "hoverContainer": "{semantic.hover}"
+    },
+    "timeInput": {
+      "container": "{semantic.surface}",
+      "content": "{semantic.onSurface}",
+      "placeholder": "{semantic.onSurfaceMuted}",
+      "border": "{semantic.border}",
+      "focusedBorder": "{semantic.focusRing}",
+      "errorBorder": "{semantic.danger}",
+      "disabledContainer": "{semantic.disabledContainer}",
+      "disabledContent": "{semantic.disabledContent}",
+      "clockIcon": "{semantic.onSurface}",
+      "focusRing": "{semantic.focusRing}"
+    },
     "dateRangePicker": {
       "container": "{semantic.surface}",
       "content": "{semantic.onSurface}",
@@ -713,6 +737,18 @@
       "itemCornerRadius": 4,
       "horizontalPadding": 12,
       "gap": 2
+    },
+    "timePicker": {
+      "cornerRadius": 5,
+      "contentPadding": 8,
+      "unitWidth": 56,
+      "columnGap": 8,
+      "borderWidth": 1
+    },
+    "timeInput": {
+      "cornerRadius": 5,
+      "horizontalPadding": 10,
+      "borderWidth": 1
     },
     "dateRangePicker": {
       "daySize": 48,

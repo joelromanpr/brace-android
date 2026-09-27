@@ -155,12 +155,21 @@ import io.github.joelromanpr.brace.datetime.BraceDateRangePicker
 import io.github.joelromanpr.brace.datetime.BraceDateRangeField
 import io.github.joelromanpr.brace.datetime.BraceDateRangeShortcut
 import io.github.joelromanpr.brace.datetime.BraceDateShortcut
+import io.github.joelromanpr.brace.datetime.BraceTimeField
+import io.github.joelromanpr.brace.datetime.BraceTimePicker
+import io.github.joelromanpr.brace.datetime.BraceTimePrecision
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.YearMonth
+import io.github.joelromanpr.brace.table.BraceDataTable
+import io.github.joelromanpr.brace.table.BraceTableColumn
+import io.github.joelromanpr.brace.table.BraceTableSelection
 import org.json.JSONObject
 import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+
+private data class DemoTableRecord(val id: String, val case: String, val status: String)
 
 /** Interactive catalog whose component names and availability come from the pinned inventory. */
 class CatalogActivity : ComponentActivity() {
@@ -225,6 +234,11 @@ Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
     BraceTextField(state.query, { state.query = it }, label = "Filter regions")
     visible.forEach { option -> BraceButton(option.label, onClick = { state.activeKey = option.key }) }
 }""".trimIndent(),
+    "table-table" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it })",
+    "table-column" to "BraceTableColumn<Record>(\"name\", \"Name\", 140.dp, { it.name })",
+    "table-viewport-rendering" to "val viewport = rememberBraceTableViewport(); BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, viewport = viewport)",
+    "table-fixed-headers" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // row and column headers stay visible",
+    "table-keyboard-navigation" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // arrows, Home/End, Page Up/Down",
     "core-css-utility-classes" to """val semantic = BraceTheme.colors.semantic
 Box(Modifier.background(semantic.surface).padding(BraceTheme.spacing.md)) {
     BraceButton("Retry", onClick = ::retry, variant = BraceButtonVariant.Outline)
@@ -307,6 +321,11 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "datetime-dateinput" to "var day by rememberSaveable { mutableStateOf<String?>(null) }; BraceDateField(day?.let(LocalDate::parse), { day = it?.toString() }, label = \"Due date\", locale = Locale.US)",
     "datetime-daterangepicker" to "var start by rememberSaveable { mutableStateOf<String?>(null) }; var end by rememberSaveable { mutableStateOf<String?>(null) }; BraceDateRangePicker(BraceDateRange(start?.let(LocalDate::parse), end?.let(LocalDate::parse)), { start = it.start?.toString(); end = it.end?.toString() }, locale = Locale.US)",
     "datetime-daterangeinput" to "var start by rememberSaveable { mutableStateOf<String?>(null) }; var end by rememberSaveable { mutableStateOf<String?>(null) }; BraceDateRangeField(BraceDateRange(start?.let(LocalDate::parse), end?.let(LocalDate::parse)), { start = it.start?.toString(); end = it.end?.toString() }, label = \"Travel dates\", locale = Locale.US)",
+    "datetime-timepicker" to """var time by rememberSaveable { mutableStateOf("23:30") }
+BraceTimePicker(LocalTime.parse(time), { time = it.toString() }, locale = Locale.US,
+    use24Hour = true, minTime = LocalTime.of(22, 0), maxTime = LocalTime.of(2, 0))
+BraceTimeField(LocalTime.parse(time), { time = it?.toString() ?: "23:30" },
+    label = "Time", locale = Locale.US)""",
 
 )
 
@@ -489,6 +508,104 @@ private fun BlueprintNextGlyphSample() {
             BraceButton("${glyph.name}${if (glyph.hasFilled) " · filled" else ""}",
                 onClick = { chosen = glyph.name }, variant = BraceButtonVariant.Outline)
         }
+    }
+}
+
+@Composable
+private fun DateRangePickerSample() {
+    var start by rememberSaveable { mutableStateOf<String?>(null) }
+    var end by rememberSaveable { mutableStateOf<String?>(null) }
+    var allowSingle by rememberSaveable { mutableStateOf(false) }
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        BraceButton(if (allowSingle) "Single day allowed" else "Require two days",
+            onClick = { allowSingle = !allowSingle }, variant = BraceButtonVariant.Outline)
+        BraceDateRangePicker(
+            value = BraceDateRange(start?.let(LocalDate::parse), end?.let(LocalDate::parse)),
+            onValueChange = { start = it.start?.toString(); end = it.end?.toString() },
+            locale = Locale.US, allowSingleDayRange = allowSingle,
+            minDate = LocalDate.of(2026, 1, 1), maxDate = LocalDate.of(2027, 12, 31),
+            shortcuts = listOf(BraceDateRangeShortcut("Sept 14–18",
+                BraceDateRange(LocalDate.of(2026, 9, 14), LocalDate.of(2026, 9, 18)))),
+        )
+        Text("Selected: ${start ?: "none"} → ${end ?: "none"}",
+            color = BraceTheme.colors.semantic.onSurface)
+    }
+}
+
+@Composable
+private fun DateRangeFieldSample() {
+    var start by rememberSaveable { mutableStateOf<String?>(null) }
+    var end by rememberSaveable { mutableStateOf<String?>(null) }
+    var errors by rememberSaveable { mutableStateOf(0) }
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        BraceDateRangeField(
+            value = BraceDateRange(start?.let(LocalDate::parse), end?.let(LocalDate::parse)),
+            onValueChange = { start = it.start?.toString(); end = it.end?.toString() },
+            label = "Travel dates", locale = Locale.US,
+            minDate = LocalDate.of(2026, 1, 1), maxDate = LocalDate.of(2027, 12, 31),
+            onInvalidInput = { _, _ -> errors++ },
+        )
+        Text("Selected: ${start ?: "none"} → ${end ?: "none"} · invalid drafts: $errors",
+            color = BraceTheme.colors.semantic.onSurface)
+        BraceDateRangeField(BraceDateRange(), {}, "Unavailable range", enabled = false,
+            locale = Locale.US)
+    }
+}
+
+@Composable
+private fun TimePickerSample() {
+    var selected by rememberSaveable { mutableStateOf("23:30") }
+    var fieldTime by rememberSaveable { mutableStateOf<String?>(null) }
+    var errors by rememberSaveable { mutableStateOf(0) }
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        Text("Overnight window · 22:00–02:00", color = BraceTheme.colors.semantic.onSurfaceMuted,
+            style = BraceTheme.typography.label)
+        BraceTimePicker(LocalTime.parse(selected), { selected = it.toString() },
+            locale = Locale.US, use24Hour = true,
+            minTime = LocalTime.of(22, 0), maxTime = LocalTime.of(2, 0))
+        Text("Selected: $selected", color = BraceTheme.colors.semantic.onSurface,
+            style = BraceTheme.typography.body)
+        BraceTimeField(fieldTime?.let(LocalTime::parse), { fieldTime = it?.toString() },
+            label = "Meeting time", locale = Locale.US,
+            precision = BraceTimePrecision.Second,
+            supportingText = "Enter a time or open the picker",
+            onInvalidInput = { errors++ })
+        Text("Field: ${fieldTime ?: "none"} · invalid entries: $errors",
+            color = BraceTheme.colors.semantic.onSurface,
+            style = BraceTheme.typography.body)
+        BraceTimeField(null, {}, label = "Unavailable time", enabled = false,
+            locale = Locale.US)
+    }
+}
+
+@Composable
+private fun TableViewportSample() {
+    val records = remember { List(120) { DemoTableRecord("record-$it", "Case ${1000 + it}", if (it % 3 == 0) "Review" else "Ready") } }
+    val tableColumns = remember { listOf(
+        BraceTableColumn<DemoTableRecord>("case", "Case", 140.dp, { it.case }),
+        BraceTableColumn<DemoTableRecord>("status", "Status", 130.dp, { it.status }),
+        BraceTableColumn<DemoTableRecord>("owner", "Owner", 130.dp, { "Team ${(it.id.substringAfter('-').toInt() % 4) + 1}" }),
+    ) }
+    var selectedRow by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedColumn by rememberSaveable { mutableStateOf<String?>(null) }
+    val selection = when {
+        selectedRow == null -> null
+        selectedColumn == null -> BraceTableSelection.Row(selectedRow!!)
+        else -> BraceTableSelection.Cell(selectedRow!!, selectedColumn!!)
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        Text("Scroll in both directions. Tap a cell or row number; focus the table for arrow keys.",
+            color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.body)
+        BraceDataTable(records, { it.id }, tableColumns, selection, {
+            when (it) {
+                is BraceTableSelection.Cell -> { selectedRow = it.rowKey; selectedColumn = it.columnKey }
+                is BraceTableSelection.Row -> { selectedRow = it.rowKey; selectedColumn = null }
+            }
+        }, modifier = Modifier.fillMaxWidth(), height = 260.dp, label = "Cases", rowLabel = { it.case })
+        Text("Selection: ${selection ?: "None"}", color = BraceTheme.colors.semantic.onSurface,
+            style = BraceTheme.typography.body)
+        BraceButton("Clear selection", onClick = { selectedRow = null; selectedColumn = null },
+            variant = BraceButtonVariant.Outline)
     }
 }
 
@@ -778,43 +895,10 @@ private fun ComponentSample(
                     locale = Locale.US)
             }
         }
-        "datetime-daterangepicker" -> {
-            var start by rememberSaveable { mutableStateOf<String?>(null) }
-            var end by rememberSaveable { mutableStateOf<String?>(null) }
-            var allowSingle by rememberSaveable { mutableStateOf(false) }
-            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                BraceButton(if (allowSingle) "Single day allowed" else "Require two days",
-                    onClick = { allowSingle = !allowSingle }, variant = BraceButtonVariant.Outline)
-                BraceDateRangePicker(
-                    value = BraceDateRange(start?.let(LocalDate::parse), end?.let(LocalDate::parse)),
-                    onValueChange = { start = it.start?.toString(); end = it.end?.toString() },
-                    locale = Locale.US, allowSingleDayRange = allowSingle,
-                    minDate = LocalDate.of(2026, 1, 1), maxDate = LocalDate.of(2027, 12, 31),
-                    shortcuts = listOf(BraceDateRangeShortcut("Sept 14–18",
-                        BraceDateRange(LocalDate.of(2026, 9, 14), LocalDate.of(2026, 9, 18)))),
-                )
-                Text("Selected: ${start ?: "none"} → ${end ?: "none"}",
-                    color = BraceTheme.colors.semantic.onSurface)
-            }
-        }
-        "datetime-daterangeinput" -> {
-            var start by rememberSaveable { mutableStateOf<String?>(null) }
-            var end by rememberSaveable { mutableStateOf<String?>(null) }
-            var errors by rememberSaveable { mutableStateOf(0) }
-            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                BraceDateRangeField(
-                    value = BraceDateRange(start?.let(LocalDate::parse), end?.let(LocalDate::parse)),
-                    onValueChange = { start = it.start?.toString(); end = it.end?.toString() },
-                    label = "Travel dates", locale = Locale.US,
-                    minDate = LocalDate.of(2026, 1, 1), maxDate = LocalDate.of(2027, 12, 31),
-                    onInvalidInput = { _, _ -> errors++ },
-                )
-                Text("Selected: ${start ?: "none"} → ${end ?: "none"} · invalid drafts: $errors",
-                    color = BraceTheme.colors.semantic.onSurface)
-                BraceDateRangeField(BraceDateRange(), {}, "Unavailable range", enabled = false,
-                    locale = Locale.US)
-            }
-        }
+        "datetime-daterangepicker" -> DateRangePickerSample()
+        "datetime-daterangeinput" -> DateRangeFieldSample()
+        "datetime-timepicker" -> TimePickerSample()
+        "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation" -> TableViewportSample()
         "core-button" -> {
             var count by rememberSaveable { mutableStateOf(0) }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {

@@ -51,6 +51,9 @@ import io.github.joelromanpr.brace.core.BraceDialog
 import io.github.joelromanpr.brace.core.BraceDrawer
 import io.github.joelromanpr.brace.core.BraceDrawerPosition
 import io.github.joelromanpr.brace.core.BraceEditableText
+import io.github.joelromanpr.brace.core.BraceLink
+import io.github.joelromanpr.brace.core.BraceLinkButton
+import io.github.joelromanpr.brace.core.BraceLinkDestination
 import io.github.joelromanpr.brace.core.BraceFormField
 import io.github.joelromanpr.brace.core.BraceFormIntent
 import io.github.joelromanpr.brace.core.BraceMenu
@@ -184,6 +187,9 @@ class ConsumerActivity : ComponentActivity() {
                             BraceSkeleton(label = "Loading next batch")
                         }
                         BraceBreadcrumbs(listOf(BraceBreadcrumb("Home", onClick = {}), BraceBreadcrumb("Imports")))
+                        BraceLink("Open reports", BraceLinkDestination.Action("Reports") { count++ })
+                        BraceLinkButton("Open guide", BraceLinkDestination.Uri("https://example.org/guide", "Guide"),
+                            onOpenUri = { count++ })
                         BraceTag("Active")
                         BraceFieldLabel("Export format", spokenLabel = "Export format, CSV") { controlModifier ->
                             BraceButton("CSV", onClick = {}, modifier = controlModifier)

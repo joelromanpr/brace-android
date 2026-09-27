@@ -1,8 +1,10 @@
 package io.github.joelromanpr.brace.table
 
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.view.accessibility.AccessibilityNodeInfo
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,6 +24,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import io.github.braceandroid.foundation.BraceTheme
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -43,6 +46,26 @@ class BraceTableClipboardTest {
     private val clipboard: ClipboardManager by lazy {
         InstrumentationRegistry.getInstrumentation().targetContext
             .getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    }
+
+    private fun nativeNodeWithDescription(description: String): AccessibilityNodeInfo {
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        val info = automation.serviceInfo
+        if (info.flags and AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS == 0) {
+            info.flags = info.flags or AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
+            automation.serviceInfo = info
+        }
+        repeat(20) {
+            val roots = automation.windows.mapNotNull { it.root } + listOfNotNull(automation.rootInActiveWindow)
+            fun find(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
+                if (node.contentDescription?.toString() == description) return node
+                for (index in 0 until node.childCount) node.getChild(index)?.let { find(it)?.let { found -> return found } }
+                return null
+            }
+            roots.forEach { root -> find(root)?.let { return it } }
+            Thread.sleep(100)
+        }
+        error("Android accessibility node absent: $description")
     }
 
     @Test fun formatterOrdersReverseRangeAndQuotesEmbeddedSeparators() {
@@ -137,6 +160,9 @@ class BraceTableClipboardTest {
         }
         val actions = rule.onNodeWithTag("brace-table").fetchSemanticsNode()
             .config[SemanticsActions.CustomActions]
+        val nativeTable = nativeNodeWithDescription("Data table")
+        assertTrue("copy action must be exposed on the named Android table node: ${nativeTable.actionList}",
+            nativeTable.isVisibleToUser && nativeTable.actionList.any { it.label?.toString() == "Copy selected cells" })
         rule.runOnIdle { actions.single { it.label == "Copy selected cells" }.action() }
         rule.runOnIdle { assertEquals("Alpha\nBeta", clipboard.primaryClip?.getItemAt(0)?.text.toString()) }
     }

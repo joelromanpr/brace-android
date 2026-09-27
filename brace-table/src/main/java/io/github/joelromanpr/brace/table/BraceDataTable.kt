@@ -1,5 +1,8 @@
 package io.github.joelromanpr.brace.table
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.view.KeyEvent as AndroidKeyEvent
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -49,6 +52,7 @@ import androidx.compose.ui.input.key.isMetaPressed
 import androidx.compose.ui.input.key.isShiftPressed
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.input.pointer.PointerEventPass
@@ -188,6 +192,7 @@ fun <Row> BraceDataTable(
     val spacing = BraceTheme.spacing
     val densityTokens = BraceTheme.densityTokens
     val typography = BraceTheme.typography
+    val context = LocalContext.current
     val density = LocalDensity.current
     val direction = LocalLayoutDirection.current
     val scope = rememberCoroutineScope()

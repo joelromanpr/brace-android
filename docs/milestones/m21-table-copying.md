@@ -11,9 +11,10 @@
 
 ## Verification
 
-- On this M18-main replay, token and pinned icon generation, coverage `--check`, JavaScript syntax, whitespace checks, and the Pages build pass: **148 inventory rows, 14 real Android captures, 52 guides**, and **0/122** stable applicable rows.
-- The earlier M21 stacked source passed **29/29** table instrumentation tests on API 36, a **653-task** build/lint/token/inventory/API gate, six-artifact Maven Local publication, and a **37-task** independent consumer. Its five copying tests covered quoted output and order, controlled updates, offscreen range copying, stale clipboard preservation, and the accessibility action. These are historical results from before the replay; integrated Gradle, device, consumer, and hosted PR gates remain pending on this head.
-- The earlier 320 × 640 catalog review showed selection and the copy preview without horizontal overflow. The replay has not yet had a new device appearance review.
+- On the M18-main replay, `./gradlew build lint checkTokenGeneration checkBlueprintIconGeneration checkBlueprintNextIconGeneration checkInventory apiCheck :catalog:assembleDebug --no-parallel` passed **836 tasks**. The first attempt exposed omitted Android clipboard imports during replay; the targeted table/catalog/test compilation passed after correction, then the full gate passed.
+- On the attached Android 16/API 36 emulator at **320 × 640, 160 dpi, font scale 1.0**, `:brace-table:connectedDebugAndroidTest` passed **37/37**, zero failed or skipped, in **71 Gradle tasks**. This includes 32 viewport/selection/resizing tests and five copying tests for TSV quoting and order, controlled updates, offscreen range copying, stale clipboard preservation, and the native named-table TalkBack copy action.
+- All eight aligned `0.1.0-SNAPSHOT` artifacts published to Maven Local (**308 tasks**). Each has an AAR, sources JAR, KDoc JAR, POM, and Gradle Module Metadata. The separate clean, offline, coordinate-only consumer passed **38/38 tasks**, including the new formatter API. No Maven Central publication or release tag was attempted.
+- Token and pinned icon generation, coverage `--check`, JavaScript syntax, whitespace checks, and the Pages build pass: **148 inventory rows, 14 real Android captures, 52 guides**, and **0/122** stable applicable rows. The earlier 320 × 640 catalog review showed selection and the copy preview without horizontal overflow; this replay has not had a new manual appearance review. Current-head hosted verify, API34 instrumented, and CodeQL remain pending.
 
 ## Limits and next table slice
 

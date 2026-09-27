@@ -18,4 +18,9 @@
     <string name="brace_table_selected_cell_description">%1$s seleccionada, fila %2$d (%3$s), %4$s</string>
     <string name="brace_table_selected_row_description">Fila %1$d seleccionada, %2$s</string>
     <string name="brace_table_extend_range">Iniciar o extender rango</string>
+    <string name="brace_table_edit">Editar celda</string>
+    <string name="brace_table_edit_description">Editar %1$s, fila %2$d (%3$s)</string>
+    <string name="brace_table_save_edit">Guardar cambios</string>
+    <string name="brace_table_cancel_edit">Cancelar edición</string>
+    <string name="brace_table_invalid_value">Valor no válido</string>
 </resources>

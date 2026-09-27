@@ -260,6 +260,12 @@ Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
 BraceDataTable(rows, { it.id }, columns, selection, { selection = it })
 // Tap a cell or header; Shift+arrows extend a rectangular range.""".trimIndent(),
     "table-copying" to "BraceTableClipboard.formatSelection(rows, { it.id }, columns, selection) // Ctrl/Cmd+C also copies in BraceDataTable",
+    "table-editablecell" to """var editing by remember { mutableStateOf<BraceTableSelection.Cell?>(null) }
+val columns = listOf(BraceTableColumn<Record>("title", "Title", 160.dp, { it.title }, editable = true))
+BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
+    editingCell = editing, onEditingCellChange = { editing = it },
+    onCellCommit = { cell, value -> rows = rows.map { if (it.id == cell.rowKey) it.copy(title = value) else it } })""".trimIndent(),
+    "table-editing" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, editingCell = editing, onEditingCellChange = { editing = it }, onCellCommit = { cell, value -> save(cell, value) }) // Enter/F2, double-tap, TalkBack Edit",
     "table-column-and-row-resizing" to """var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
 var widths by remember { mutableStateOf<Map<String, Dp>>(emptyMap()) }
 var heights by remember { mutableStateOf<Map<String, Dp>>(emptyMap()) }
@@ -1177,7 +1183,8 @@ private fun ComponentSample(
         "datetime-daterangeinput" -> DateRangeFieldSample()
         "datetime-timepicker" -> TimePickerSample()
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
-        "table-cell-selection", "table-column-and-row-resizing", "table-copying" -> TableCatalogSample()
+        "table-cell-selection", "table-column-and-row-resizing", "table-copying",
+        "table-editablecell", "table-editing" -> TableCatalogSample()
         "datetime-timezoneselect" -> {
             var selected by rememberSaveable { mutableStateOf<String?>(null) }
             var summer by rememberSaveable { mutableStateOf(true) }

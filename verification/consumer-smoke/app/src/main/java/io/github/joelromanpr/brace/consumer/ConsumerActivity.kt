@@ -182,28 +182,35 @@ class ConsumerActivity : ComponentActivity() {
                         BraceCard {
                             BraceButton(label = "Saved $count", onClick = { count++ })
                         }
-                        val tableRows = remember { listOf("Ready", "Review") }
+                        var tableRows by remember { mutableStateOf(listOf("ready" to "Ready", "review" to "Review")) }
+                        var editingTable by remember { mutableStateOf<BraceTableSelection.Cell?>(null) }
                         var selectedTable: BraceTableSelection? by remember {
-                            mutableStateOf(BraceTableSelection.Range("Ready", "status", "Review", "status"))
+                            mutableStateOf(BraceTableSelection.Range("ready", "status", "review", "status"))
                         }
                         var tableColumnWidth by remember { mutableStateOf(120.dp) }
                         var tableRowHeight by remember { mutableStateOf(64.dp) }
                         val tableViewport = rememberBraceTableViewport()
                         BraceDataTable(
                             rows = tableRows,
-                            rowKey = { it },
-                            columns = listOf(BraceTableColumn<String>("status", "Status", 120.dp, { it })),
+                            rowKey = { it.first },
+                            columns = listOf(BraceTableColumn<Pair<String, String>>("status", "Status", 120.dp, { it.second }, editable = true)),
                             selection = selectedTable,
                             onSelectionChange = { selectedTable = it },
                             viewport = tableViewport,
                             height = 160.dp,
                             columnWidths = mapOf("status" to tableColumnWidth),
                             onColumnWidthChange = { _, width -> tableColumnWidth = width },
-                            rowHeights = mapOf("Ready" to tableRowHeight),
+                            rowHeights = mapOf("ready" to tableRowHeight),
                             onRowHeightChange = { _, height -> tableRowHeight = height },
+                            editingCell = editingTable,
+                            onEditingCellChange = { editingTable = it },
+                            onCellCommit = { cell, value ->
+                                tableRows = tableRows.map { if (it.first == cell.rowKey) it.first to value else it }
+                            },
+                            validateCell = { _, value -> if (value.isBlank()) "Required" else null },
                         )
-                        BasicText("Table copy: ${BraceTableClipboard.formatSelection(tableRows, { it },
-                            listOf(BraceTableColumn<String>("status", "Status", 120.dp, { it })), selectedTable) ?: "none"}")
+                        BasicText("Table copy: ${BraceTableClipboard.formatSelection(tableRows, { it.first },
+                            listOf(BraceTableColumn<Pair<String, String>>("status", "Status", 120.dp, { it.second })), selectedTable) ?: "none"}")
                         BraceButton("Select status column", onClick = {
                             selectedTable = BraceTableSelection.Column("status")
                         })

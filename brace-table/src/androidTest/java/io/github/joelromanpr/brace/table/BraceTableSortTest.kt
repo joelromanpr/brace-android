@@ -167,6 +167,34 @@ class BraceTableSortTest {
         rule.onNodeWithTag("brace-table-header:name").assert(
             SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Sorted ascending"))
         rule.onNodeWithTag("brace-table-resize-column:name").assertHeightIsAtLeast(48.dp)
+        val sortBounds = rule.onNodeWithTag("brace-table-sort:name")
+            .fetchSemanticsNode().boundsInRoot
+        val resizeBounds = rule.onNodeWithTag("brace-table-resize-column:name")
+            .fetchSemanticsNode().boundsInRoot
+        assertTrue(sortBounds.right <= resizeBounds.left + 1f ||
+            resizeBounds.right <= sortBounds.left + 1f)
+    }
+
+    @Test fun unsortableColumnsKeepTheirCompactWidthWhenAnotherColumnSorts() {
+        val mixed = listOf(
+            BraceTableColumn<Record>("name", "Name", 120.dp, { it.name }, sortable = true),
+            BraceTableColumn<Record>("id", "ID", 100.dp, { it.id }),
+        )
+        var pixelsPerDp = 1f
+        rule.setContent {
+            pixelsPerDp = LocalDensity.current.density
+            BraceTheme {
+                BraceDataTable(rows, { it.id }, mixed, null, {}, Modifier.width(360.dp),
+                    height = 230.dp, sort = null, onSortChange = {},
+                    onColumnWidthChange = { _, _ -> })
+            }
+        }
+        val sortedWidth = rule.onNodeWithTag("brace-table-header:name")
+            .fetchSemanticsNode().boundsInRoot.width
+        val plainWidth = rule.onNodeWithTag("brace-table-header:id")
+            .fetchSemanticsNode().boundsInRoot.width
+        assertEquals(144f * pixelsPerDp, sortedWidth, 2f * pixelsPerDp)
+        assertEquals(100f * pixelsPerDp, plainWidth, 2f * pixelsPerDp)
     }
 
     @Test fun activeHeaderEditSuppressesSortWithoutDisplacingItsDraft() {

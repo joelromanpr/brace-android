@@ -5,7 +5,7 @@
 ## Scope
 
 - `BraceTableSort`, direction enum, and saveable sort state; controlled `sort`/`onSortChange` and per-column `sortable` API.
-- Separate 48 dp sort buttons in fixed headers; selection, editable names, and resize grips remain separate actions.
+- Separate 48 dp sort buttons in fixed headers; selection, editable names, and resize grips remain separate actions. Only sortable columns reserve the extra width, preserving dense unsortable columns.
 - Next-action and current-direction TalkBack semantics; English and Spanish labels; keyboard, mouse, touch, RTL, large text, high-contrast, and theme-token states.
 - Catalog and independent Maven consumer examples with host-owned stable ordering, source guide and Pages integration, inventory evidence, and device tests.
 

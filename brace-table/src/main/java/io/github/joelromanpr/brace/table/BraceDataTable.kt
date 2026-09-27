@@ -233,14 +233,17 @@ fun <Row> BraceDataTable(
     val rowIndex = remember(rows) { validateRowKeys(rows, rowKey) }
     val rowIndexes = rowIndex.byKey
     val baseMinColumnWidth = BraceTheme.sizing.tableMinColumnWidth
-    val sortTargetWidth = if (onSortChange != null && columns.any { it.sortable })
-        BraceTheme.sizing.touchTarget else 0.dp
-    val resizeTargetWidth = if (onColumnWidthChange != null) BraceTheme.sizing.touchTarget else 0.dp
-    val minColumnWidth = maxOf(baseMinColumnWidth,
-        if (onColumnWidthChange == null) 0.dp else BraceTheme.sizing.touchTarget * 2,
-        if (sortTargetWidth == 0.dp) 0.dp else
-            BraceTheme.sizing.touchTarget + sortTargetWidth + resizeTargetWidth)
-    val effectiveMaxColumnWidth = maxColumnWidth?.coerceAtLeast(minColumnWidth)
+    val touchTargetWidth = BraceTheme.sizing.touchTarget
+    val resizeTargetWidth = if (onColumnWidthChange != null) touchTargetWidth else 0.dp
+    val columnMinWidths = remember(columns, baseMinColumnWidth, touchTargetWidth,
+        resizeTargetWidth, onSortChange != null) {
+        columns.map { column ->
+            val selectionAndResize = if (resizeTargetWidth == 0.dp) 0.dp else touchTargetWidth * 2
+            val selectionSortAndResize = if (column.sortable && onSortChange != null)
+                touchTargetWidth * 2 + resizeTargetWidth else 0.dp
+            maxOf(baseMinColumnWidth, selectionAndResize, selectionSortAndResize)
+        }
+    }
 
     val colors = BraceTheme.colors.components.table
     val semantic = BraceTheme.colors.semantic
@@ -280,10 +283,12 @@ fun <Row> BraceDataTable(
     val rowSelectWidth = maxOf(BraceTheme.sizing.touchTarget + spacing.sm,
         rowHeaderTextWidth + metrics.cellHorizontalPadding * 2)
     val rowHeaderWidth = rowSelectWidth + if (onRowHeightChange == null) 0.dp else BraceTheme.sizing.touchTarget
-    val widths = remember(columns, columnWidths, minColumnWidth, effectiveMaxColumnWidth) {
-        columns.map { column ->
-            val minimumApplied = maxOf(minColumnWidth, columnWidths[column.key] ?: column.width)
-            if (effectiveMaxColumnWidth == null) minimumApplied else minOf(effectiveMaxColumnWidth, minimumApplied)
+    val widths = remember(columns, columnWidths, columnMinWidths, maxColumnWidth) {
+        columns.mapIndexed { index, column ->
+            val minimum = columnMinWidths[index]
+            val requested = maxOf(minimum, columnWidths[column.key] ?: column.width)
+            val maximum = maxColumnWidth?.coerceAtLeast(minimum)
+            if (maximum == null) requested else minOf(maximum, requested)
         }
     }
     val columnIndex = remember(columns, widths, baseMinColumnWidth) {
@@ -702,20 +707,22 @@ fun <Row> BraceDataTable(
                         visibleColumns.filter { columns[it].key != editingColumnName }.forEach { index ->
                             val column = columns[index]
                             val currentWidth = widths[index]
+                            val minimumWidth = columnMinWidths[index]
+                            val maximumWidth = maxColumnWidth?.coerceAtLeast(minimumWidth)
                             BraceTableResizeHandle(
                                 axis = BraceResizeAxis.Column,
                                 id = column.key,
                                 name = column.title,
                                 size = currentWidth,
-                                minimum = minColumnWidth,
-                                maximum = effectiveMaxColumnWidth,
-                                width = BraceTheme.sizing.touchTarget,
+                                minimum = minimumWidth,
+                                maximum = maximumWidth,
+                                width = touchTargetWidth,
                                 height = headerHeight,
                                 description = columnResizeDescription,
-                                stateLabel = if (effectiveMaxColumnWidth == null)
-                                    sizeMinDescription.format(currentWidth.value.toInt(), minColumnWidth.value.toInt())
+                                stateLabel = if (maximumWidth == null)
+                                    sizeMinDescription.format(currentWidth.value.toInt(), minimumWidth.value.toInt())
                                     else sizeRangeDescription.format(currentWidth.value.toInt(),
-                                        minColumnWidth.value.toInt(), effectiveMaxColumnWidth.value.toInt()),
+                                        minimumWidth.value.toInt(), maximumWidth.value.toInt()),
                                 increaseLabel = increaseSizeLabel,
                                 decreaseLabel = decreaseSizeLabel,
                                 onSizeChange = { onColumnWidthChange(column.key, it) },

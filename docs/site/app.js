@@ -5,7 +5,6 @@ const kindSelect = document.querySelector('#kind');
 const results = document.querySelector('#components');
 const resultCount = document.querySelector('#result-count');
 const stats = document.querySelector('#stats');
-const baseline = document.querySelector('#baseline');
 let publicSourceRepository = null;
 let repository = null;
 let guideMap = {};
@@ -53,7 +52,7 @@ function addFact(grid, label, value, isLink = false) {
     const guide = guideMap[path];
     const href = /^https:\/\//.test(value) ? value : guide ? `./${guide}${fragment ? `#${fragment}` : ''}` : repository ? repository + value.replace(/^\/+/, '') : null;
     if (href) {
-      const text = label === 'Reference documentation' ? 'Open reference docs ↗' : label === 'Pinned source' ? 'Open pinned source ↗' : guide ? 'Read guide ↗' : 'View public source ↗';
+      const text = ({ Code: 'View code ↗', 'Catalog sample': 'View sample ↗', Tests: 'View tests ↗', 'Status record': 'Full coverage record ↗' })[label] || (guide ? 'Read guide ↗' : 'View public source ↗');
       const link = el('a', '', text);
       link.href = href;
       link.rel = 'noopener noreferrer';
@@ -94,18 +93,8 @@ function card(item) {
   addFact(body, 'Guide', item.documentation, true);
   addFact(body, 'Tests', item.tests, true);
   addFact(body, 'First release', item.firstRelease);
-  const reference = el('details', 'reference-notes');
-  reference.append(el('summary', '', 'Reference and planning notes'));
-  const referenceBody = el('dl', 'reference-body');
-  addFact(referenceBody, 'Reference name', item.blueprintName);
-  addFact(referenceBody, 'Android form', item.classification);
-  addFact(referenceBody, 'Why this differs', item.reason);
-  addFact(referenceBody, 'Priority', item.priority);
-  addFact(referenceBody, 'Planned step', item.milestone);
-  addFact(referenceBody, 'Reference documentation', item.blueprintUrl, true);
-  addFact(referenceBody, 'Pinned source', item.pinnedSourceUrl, true);
-  reference.append(referenceBody);
-  details.append(summary, body, reference);
+  addFact(body, 'Status record', 'docs/coverage.md', true);
+  details.append(summary, body);
   return details;
 }
 
@@ -303,14 +292,6 @@ async function load() {
     entries.sort((a, b) => rank(a) - rank(b) ||
       String(a.family).localeCompare(String(b.family)) ||
       String(a.braceApi || a.blueprintName).localeCompare(String(b.braceApi || b.blueprintName)));
-    const pin = data.baseline || {};
-    baseline.replaceChildren();
-    if (publicSourceRepository) {
-      const sourceLink = el('a', '', 'Comparison source and version ↗');
-      sourceLink.href = `${publicSourceRepository}/blob/main/BLUEPRINT_BASELINE.md`;
-      sourceLink.title = `${pin.releaseTag || pin.version || 'Pinned reference'} · ${pin.commit || pin.sha || 'commit recorded in inventory'}`;
-      baseline.append(sourceLink);
-    } else baseline.textContent = 'Comparison source and version are recorded in the repository.';
     const counts = data.summary || {};
     stats.replaceChildren(
       stat(`${counts.stableApplicableRows ?? 0}/${counts.applicableRows ?? entries.length}`, 'Stable Android items'),
@@ -324,7 +305,6 @@ async function load() {
     render();
     revealHash();
   } catch (error) {
-    baseline.textContent = 'Coverage data could not be loaded.';
     resultCount.textContent = 'The generated inventory is unavailable.';
     results.append(el('p', 'empty', `Build the site with node scripts/build-docs.mjs. ${error.message}`));
   }

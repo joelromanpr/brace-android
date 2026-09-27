@@ -11,7 +11,7 @@ The release workflow is manual and requires an annotated tag signed by the Brace
 
 ## Tag and stage
 
-The dedicated release key has fingerprint `F152 FD63 0BE9 9A9B B248 3995 BA23 075E 89D1 23B5`. Confirm the local private key matches [the pinned public key](../../.github/release-signing-key.asc) and that its public half is discoverable from a [Sonatype-supported keyserver](https://central.sonatype.org/publish/requirements/gpg/). The CI workflow imports that public key and checks both the signature and fingerprint. A GitHub Verified badge is useful when available, but is not the release gate.
+The dedicated release key has fingerprint `F152 FD63 0BE9 9A9B B248 3995 BA23 075E 89D1 23B5`. Confirm the local private key matches [the pinned public key](../../.github/release-signing-key.asc). On 2026-09-27, the public key was retrieved from [Ubuntu's keyserver](https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xF152FD630BE99A9BB2483995BA23075E89D123B5) with that exact fingerprint; Ubuntu is [supported by Sonatype](https://central.sonatype.org/publish/requirements/gpg/). Recheck retrieval before staging. CI imports the pinned key and checks both the tag signature and fingerprint. A GitHub Verified badge is useful when available, but is not the release gate.
 
 ```sh
 git switch main

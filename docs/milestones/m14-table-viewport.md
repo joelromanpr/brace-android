@@ -1,6 +1,6 @@
 # M14: first table viewport slice
 
-**Status:** in-progress source in [draft PR #24](https://github.com/joelromanpr/brace-android/pull/24), integrated with `main` at `286d04e` (through M17, M35, and M54). The pinned Blueprint Table rows remain unreleased; generated stable coverage is **0/121 applicable rows**. This report records the current local checks. Hosted verify, API 34 instrumentation, and CodeQL remain required before merge.
+**Status:** in-progress source in [draft PR #24](https://github.com/joelromanpr/brace-android/pull/24), integrated with `main` at `286d04e` (through M17, M35, and M54). The pinned Blueprint Table rows remain unreleased; generated stable coverage is **0/121 applicable rows**. This report records the current local checks. Source-and-showcase head `dadf353` passed hosted verify, API 34 instrumentation, and CodeQL. This report-only update needs the required hosted checks on its own head before merge.
 
 ## Shipped in this branch
 
@@ -25,7 +25,7 @@
 | Maven Local and external consumer | Seven aligned artifacts published with AAR, sources, KDoc JAR, POM, and Gradle module metadata (**271 tasks**). The separate coordinate-only consumer assembled (**37 tasks**). No Maven Central deployment was attempted. |
 | Coverage and documentation site | Token and coverage source checks pass: 147 pinned rows, 0/121 stable applicable rows. `node scripts/build-docs.mjs` builds 12 real Android captures and **43** guides; all local targets resolve across 44 HTML pages. JavaScript syntax and Git whitespace checks pass. |
 | Visual review | Final API 36 catalog inspection at 320 × 640 shows a selected table cell in light and dark high-contrast modes with visible fixed headers and grid lines; a dark high-contrast capture is in the Pages gallery. At 3× text on a 640 × 960 viewport, row headers expand and cells truncate visually as documented; device semantics tests verify the full spoken value. On a 320 × 640 phone at 3× text, the catalog’s persistent header crowds the table sample offscreen; catalog layout work remains open. |
-| Hosted CI | Fresh hosted verify, API 34 instrumentation, and CodeQL results are pending on the integrated head. |
+| Hosted CI | Source-and-showcase head `dadf353` passed [verify and API 34 instrumentation in run 36281315140](https://github.com/joelromanpr/brace-android/actions/runs/36281315140) and [CodeQL run 36281315135](https://github.com/joelromanpr/brace-android/actions/runs/36281315135). API 34 table tests passed **16/16**, zero failed/skipped; the full seven-module device matrix completed **256 tests**, one skipped in core, zero failed. The report-only head requires a fresh hosted rerun. |
 
 ## Next table branch
 

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101d30">
+    <meta name="description" content="Brace Android is an open-source Jetpack Compose design system for complex Android apps. Explore runnable catalog examples and check component availability.">
+    <title>Brace Android · Compose for apps that do real work</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="Brace Android home"><span class="mark" aria-hidden="true">B</span><span>Brace <b>Android</b></span></a>
+      <nav aria-label="Main navigation">
+        <a href="#examples">Examples</a>
+        <a href="#coverage">Components</a>
+        <a href="#guides">Guides</a>
+        <a class="nav-github" href="https://github.com/joelromanpr/brace-android">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-line" aria-hidden="true"></span> Open-source Jetpack Compose</p>
+          <h1 id="hero-title">Build apps for <em>real work.</em></h1>
+          <p class="lede">Brace brings clear controls, rich tables, and flexible themes to complex Android apps. Explore two runnable examples, then check exactly which components are ready to use.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#examples">Explore the app examples <span aria-hidden="true">↗</span></a>
+            <a class="button secondary" href="#coverage">Browse components <span aria-hidden="true">→</span></a>
+          </div>
+          <p class="hero-note"><span class="note-dot" aria-hidden="true"></span><span><a href="https://central.sonatype.com/artifact/io.github.joelromanpr.brace/brace-core/1.0.0">Version 1.0.0 on Maven Central</a> · <a href="./installation.html">Get started</a></span></p>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-visual-top"><span>BUILT WITH BRACE</span><span>ANDROID CATALOG / 01</span></div>
+          <div class="hero-image" id="hero-image" aria-label="Electric fleet Android catalog capture"><a href="#examples" aria-label="Explore the electric fleet example"><img src="./showcase/fleet-operations-wide.png" width="800" height="800" alt="Electric fleet operations screen with vehicle counts, filters, and a multi-column data table"></a></div>
+          <div class="hero-visual-bottom"><span><span class="signal-dot" aria-hidden="true"></span> Electric fleet</span><span>Interactive in the Android app</span></div>
+        </div>
+      </section>
+
+      <section class="examples section" id="examples" aria-labelledby="examples-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">Made for demanding screens</p><h2 id="examples-title">See the pieces work together.</h2></div>
+          <a class="text-link" href="./installation.html">Run the catalog app <span aria-hidden="true">↗</span></a>
+        </div>
+        <p class="section-intro">These are fictional operations apps built with Compose and Brace. Search, filter, select rows, and change the theme in the Android catalog.</p>
+        <div class="example-grid">
+          <article class="example-card fleet-example">
+            <div class="example-copy"><span class="example-index">01 / SAN JUAN</span><h3>Electric fleet</h3><p>Track vehicles, routes, charging, and the work that needs attention.</p>
+              <div class="example-data"><div class="example-metrics" aria-label="Fleet sample data"><div><strong>48</strong><span>Vehicles</span></div><div><strong>34</strong><span>On route</span></div><div><strong>5</strong><span>Attention</span></div></div><div class="example-reading"><span>EV-214 · charge</span><strong>28%</strong><meter min="0" max="100" low="30" optimum="80" value="28" aria-label="EV-214 battery charge">28%</meter></div></div>
+              <a href="./installation.html">Open in the catalog <span aria-hidden="true">→</span></a></div>
+            <a class="example-media fleet-media" href="./showcase/fleet-operations-wide.png" aria-label="Open full-size electric fleet Android capture"><img src="./showcase/fleet-operations-wide.png" width="800" height="800" alt="Android electric fleet sample with vehicle status filters and a multi-column table"></a>
+          </article>
+          <article class="example-card mission-example">
+            <div class="example-copy"><span class="example-index">02 / ORBITAL NETWORK</span><h3>Mission control</h3><p>Review spacecraft signals, act on alerts, and move from an overview into the details.</p>
+              <div class="example-data"><div class="example-metrics" aria-label="Mission sample data"><div><strong>8</strong><span>Spacecraft</span></div><div><strong>6</strong><span>Nominal</span></div><div><strong>1</strong><span>Watch</span></div></div><div class="example-reading"><span>Kestrel-9 · signal</span><strong>67%</strong><meter min="0" max="100" low="70" optimum="90" value="67" aria-label="Kestrel-9 signal strength">67%</meter></div></div>
+              <a href="./installation.html">Open in the catalog <span aria-hidden="true">→</span></a></div>
+            <a class="example-media mission-media" href="./showcase/mission-control-dark-400.png" aria-label="Open full-size mission control Android capture"><img src="./showcase/mission-control-dark-400.png" width="400" height="800" alt="Dark Android mission control sample showing spacecraft counts, a signal alert, and an orbit overview"></a>
+          </article>
+        </div>
+        <p class="example-provenance">Example data and orbit positions are fictional. Images are unedited emulator captures from the catalog source. Check the <a href="#coverage">component index</a> for current status. <a href="./showcase-guide.html">How captures are verified ↗</a></p>
+      </section>
+
+      <section class="coverage section" id="coverage" aria-labelledby="coverage-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">Component index</p><h2 id="coverage-title">Find what you can build with.</h2></div>
+          <a class="text-link" href="https://github.com/joelromanpr/brace-android/blob/main/docs/coverage.md">Full status record <span aria-hidden="true">↗</span></a>
+        </div>
+        <p class="section-intro">Search the component list. Each entry shows Android behavior, source, tests, and current status. “First shipped” is the version where its API first appeared.</p>
+        <div class="stats" id="stats" aria-label="Coverage counts" aria-live="polite"></div>
+        <div class="inventory-tools">
+          <div class="filters">
+            <label class="search-label" for="search">Search components<input id="search" type="search" placeholder="Try table, dialog, color…" autocomplete="off"></label>
+            <label for="package">Family<select id="package"><option value="">All families</option></select></label>
+            <label for="kind">Show<select id="kind"><option value="">Components and design tools</option><option value="component">Components</option><option value="capability">Design tools</option></select></label>
+          </div>
+          <label class="status-select-label" for="status">Status<select id="status"><option value="">All statuses</option></select></label>
+          <div class="status-chips" id="status-chips" role="group" aria-label="Filter components by status"></div>
+        </div>
+        <div class="results-head"><p class="result-count" id="result-count" aria-live="polite">Loading components…</p><span>Select a component to see its details</span></div>
+        <div class="components" id="components"></div>
+      </section>
+
+      <section class="showcase section" id="showcase" aria-labelledby="showcase-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">Real Android captures</p><h2 id="showcase-title">Inspect the catalog.</h2></div>
+          <a class="text-link" href="./showcase-guide.html">How screenshots were made <span aria-hidden="true">↗</span></a>
+        </div>
+        <p class="section-intro">Captured from the Android app. Open a screen to inspect its source and copy a Compose example.</p>
+        <div class="showcase-toolbar">
+          <label for="showcase-theme">Appearance <select id="showcase-theme"><option value="">All appearances</option></select></label>
+          <label for="showcase-family">Family <select id="showcase-family"><option value="">All families</option></select></label>
+          <span class="showcase-result" id="showcase-result" aria-live="polite">Loading captures…</span>
+        </div>
+        <div class="showcase-more" id="showcase-more-wrap" hidden><button id="showcase-more" type="button" aria-controls="showcase-grid" aria-expanded="false">Show all captures</button></div>
+        <div class="showcase-grid" id="showcase-grid"></div>
+        <div class="showcase-bottom"><p>The web gallery shows static states. Touch, keyboard, screen reader behavior, and runtime theme controls live in the <a href="./installation.html">Android catalog</a>.</p><a class="button secondary" href="#coverage">Check availability <span aria-hidden="true">→</span></a></div>
+      </section>
+
+      <section class="section get-started" id="guides" aria-labelledby="start-title">
+        <div class="section-heading"><div><p class="eyebrow">Start building</p><h2 id="start-title">From install to screen.</h2></div><a class="text-link" href="./compatibility.html">Compatibility policy <span aria-hidden="true">↗</span></a></div>
+        <div class="guide-grid">
+          <a class="guide" href="./installation.html"><span class="guide-number">01 / SET UP</span><h3>Installation</h3><p>Add Brace from Maven Central, or run the catalog app.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./theming.html"><span class="guide-number">02 / MAKE IT YOURS</span><h3>Theming</h3><p>Light, dark, contrast, brand, and density from one token system.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./table-viewport.html"><span class="guide-number">03 / WORK WITH DATA</span><h3>Data tables</h3><p>Viewport rendering, fixed headers, selection, and keyboard movement.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+          <a class="guide" href="./core-components.html"><span class="guide-number">04 / EXPLORE</span><h3>Component guides</h3><p>Native behavior, code examples, accessibility, and current limits.</p><span class="guide-arrow" aria-hidden="true">↗</span></a>
+        </div>
+        <p class="reference-links">Looking for the full record? <a href="./index.html#coverage">Component status</a> · <a href="./attribution.html">Attribution</a> · <a href="./contributing.html">Contributing</a></p>
+      </section>
+    </main>
+    <footer><span>Brace Android · Apache-2.0</span><span>Independent Android design system · <a href="./compatibility.html">Compatibility</a> · <a href="https://github.com/joelromanpr/brace-android">Source ↗</a></span></footer>
+  </body>
+</html>

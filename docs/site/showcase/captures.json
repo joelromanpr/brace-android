@@ -1,0 +1,531 @@
+{
+  "schemaVersion": 2,
+  "captures": [
+    {
+      "id": "panel-stack-filters-phone",
+      "title": "Panel stack · filters pane",
+      "inventoryIds": [
+        "core-panelstack"
+      ],
+      "image": "showcase/panel-stack-400.png",
+      "imageSha256": "462a632871e0e7a81907a883e2959ff5970d7a887bafc64ef5b791d5be406d18",
+      "alt": "Brace PanelStack in the Android catalog with the Filters pane open, Back to Workspace action, Open advanced button, and stack depth two",
+      "caption": "The API 36 Compose catalog shows the Filters pane pushed above Workspace, with a named native back action. PanelStack remains in progress.",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "val stack = rememberBracePanelStackState(BracePanel(\"root\", \"Workspace\"))\nBracePanelStack(stack, modifier = Modifier.height(280.dp)) {\n    when (panel.id) {\n        \"root\" -> BraceButton(\"Open filters\", onClick = {\n            openPanel(BracePanel(\"filters\", \"Filters\"))\n        })\n        \"filters\" -> BraceButton(\"Open advanced\", onClick = {\n            openPanel(BracePanel(\"advanced\", \"Advanced filters\"))\n        })\n    }\n}",
+      "format": "phone",
+      "theme": "light",
+      "pixelWidth": 400,
+      "pixelHeight": 960,
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26"
+    },
+    {
+      "id": "tree-selection-phone",
+      "title": "Tree · selected and disabled nodes",
+      "inventoryIds": [
+        "core-tree",
+        "core-treenode"
+      ],
+      "image": "showcase/tree-400.png",
+      "imageSha256": "09b290bdd3428a08a141e520684da913365f62b34b17b136c69c01aa7d50d7bf",
+      "alt": "Brace Tree on an Android phone, with Projects expanded, Alpha selected, Beta disabled, and Gamma and Reports collapsed",
+      "caption": "The API 36 Compose catalog shows a selected child, a disabled child, and expandable branches in the light theme. The Tree and TreeNode inventory rows remain in progress.",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "val tree = rememberBraceTreeState(\n    initialExpandedKeys = setOf(\"projects\"),\n    initialSelectedKeys = setOf(\"alpha\"),\n)\nval nodes = listOf(BraceTreeNode(\"projects\", \"Projects\", children = listOf(\n    BraceTreeNode(\"alpha\", \"Alpha\", secondaryLabel = \"Active\"),\n    BraceTreeNode(\"beta\", \"Beta\", enabled = false),\n)))\nBraceTree(nodes, tree.expandedKeys, { tree.expandedKeys = it },\n    tree.selectedKeys, { tree.selectedKeys = it }, label = \"Workspace tree\")",
+      "format": "phone",
+      "theme": "light",
+      "pixelWidth": 400,
+      "pixelHeight": 960,
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26"
+    },
+    {
+      "id": "fleet-operations-wide",
+      "title": "Electric fleet · wide table",
+      "inventoryIds": [
+        "table-table",
+        "core-card",
+        "core-progressbar",
+        "core-tag",
+        "core-inputgroup"
+      ],
+      "image": "showcase/fleet-operations-wide.png",
+      "imageSha256": "0d7ef8cb03008a8fecf15aed8ec030d4f9f87f0bd16f17da24bce491c5c50223",
+      "alt": "Android fleet operations screen at 800 by 800 with seven table columns, four visible vehicle rows, counts, search, status filters, and selection",
+      "caption": "A fictional San Juan fleet shows table selection, status filters, search, metrics, and charge details together. Seven columns fit the wide emulator view.",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/FleetOperationsSample.kt",
+      "usage": "data class Vehicle(val id: String, val route: String)\nval vehicles = listOf(Vehicle(\"EV-214\", \"Hato Rey\"))\nval columns = listOf(\n    BraceTableColumn<Vehicle>(\"vehicle\", \"Vehicle\", 112.dp, { it.id }),\n    BraceTableColumn<Vehicle>(\"route\", \"Route\", 150.dp, { it.route }),\n)\nBraceDataTable(\n    rows = vehicles,\n    rowKey = { it.id },\n    columns = columns,\n    height = 290.dp,\n)",
+      "format": "landscape",
+      "theme": "light",
+      "pixelWidth": 800,
+      "pixelHeight": 800,
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26"
+    },
+    {
+      "id": "mission-control-dark",
+      "title": "Mission control · dark",
+      "inventoryIds": [
+        "core-callout",
+        "core-card",
+        "table-table",
+        "core-progressbar"
+      ],
+      "image": "showcase/mission-control-dark-400.png",
+      "imageSha256": "d206e5c70389d6dea5f51f185f7f2dce4d269666cad6310f01a6438c4f17de19",
+      "alt": "Dark Android mission screen with eight spacecraft, six nominal, one watch, one downlink, a signal warning, and an illustrated orbit panel",
+      "caption": "A fictional orbital network uses dark semantic tokens for metrics, a signal warning, and an original Compose orbit illustration. Positions and telemetry are sample data.",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/MissionControlSample.kt",
+      "usage": "BraceTheme(mode = BraceColorMode.Dark) {\n    BraceCallout(title = \"Signal watch\", intent = BraceCalloutIntent.Warning) {\n        Text(\"Kestrel-9 is at 67% signal strength\")\n    }\n}",
+      "format": "phone",
+      "theme": "dark",
+      "pixelWidth": 400,
+      "pixelHeight": 800,
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26"
+    },
+    {
+      "id": "fleet-operations-phone",
+      "title": "Electric fleet · phone",
+      "inventoryIds": [
+        "table-table",
+        "core-card",
+        "core-tag",
+        "core-inputgroup"
+      ],
+      "image": "showcase/fleet-operations-320.png",
+      "imageSha256": "71a6c421609df5deee61cb7fc0bfce74e85ecd27ac10b9f4874a54854162bd5e",
+      "alt": "Android fleet operations phone screen with vehicle counts, wrapped status filters, and the start of a horizontally navigable table",
+      "caption": "The same fictional fleet screen fits a 320-pixel phone. Status filters wrap and the data table supports horizontal navigation.",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/FleetOperationsSample.kt",
+      "usage": "data class Vehicle(val id: String, val route: String)\nval vehicles = listOf(Vehicle(\"EV-214\", \"Hato Rey\"))\nval columns = listOf(\n    BraceTableColumn<Vehicle>(\"vehicle\", \"Vehicle\", 112.dp, { it.id }),\n    BraceTableColumn<Vehicle>(\"route\", \"Route\", 150.dp, { it.route }),\n)\nBraceDataTable(\n    rows = vehicles,\n    rowKey = { it.id },\n    columns = columns,\n    height = 290.dp,\n)",
+      "format": "phone",
+      "theme": "light",
+      "pixelWidth": 320,
+      "pixelHeight": 640,
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26"
+    },
+    {
+      "id": "mission-control-light",
+      "title": "Mission control · light",
+      "inventoryIds": [
+        "core-callout",
+        "core-card",
+        "table-table",
+        "core-progressbar"
+      ],
+      "image": "showcase/mission-control-400.png",
+      "imageSha256": "0772e08ccba980bc65b5d5a380e72104f255af39f72816470d99ebcfee6df646",
+      "alt": "Light Android mission screen with spacecraft counts, a signal warning, orbit illustration, and a data table header",
+      "caption": "Light-theme view of the fictional mission workspace; the downlink state is counted separately from nominal and watch.",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/MissionControlSample.kt",
+      "usage": "BraceTheme(mode = BraceColorMode.Dark) {\n    BraceCallout(title = \"Signal watch\", intent = BraceCalloutIntent.Warning) {\n        Text(\"Kestrel-9 is at 67% signal strength\")\n    }\n}",
+      "format": "phone",
+      "theme": "light",
+      "pixelWidth": 400,
+      "pixelHeight": 800,
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26"
+    },
+    {
+      "id": "catalog-home-search",
+      "title": "Catalog search and status",
+      "inventoryIds": [
+        "core-theme-variables"
+      ],
+      "image": "showcase/catalog-home-320.png",
+      "imageSha256": "249bc2ac4310b1f2d8d4af98a5fc116eb44ed304bc5bb70f914f17ffe39911e4",
+      "alt": "Brace Android catalog home at 320 pixels with inventory search, wrapped status filters, availability badges, and padded chevrons",
+      "caption": "The catalog reads component names and availability from the generated inventory. Filters wrap on narrow screens and statuses remain explicit.",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var dark by rememberSaveable { mutableStateOf(false) }\nBraceTheme(mode = if (dark) BraceColorMode.Dark else BraceColorMode.Light) {\n    BraceButton(if (dark) \"Light\" else \"Dark\", onClick = { dark = !dark })\n}",
+      "format": "phone",
+      "theme": "light",
+      "pixelWidth": 320,
+      "pixelHeight": 640,
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26"
+    },
+    {
+      "id": "catalog-app-examples",
+      "title": "Runnable app examples",
+      "inventoryIds": [
+        "core-card"
+      ],
+      "image": "showcase/catalog-examples-320.png",
+      "imageSha256": "10f13052d8d00fa445e5526d955b36cf09de96c90a223eef978629b73918fe88",
+      "alt": "Brace Android catalog app examples list with Electric fleet and Mission control cards and right-aligned chevrons",
+      "caption": "The Android catalog groups two fictional operations examples separately from the component index. Each card opens a runnable Compose screen.",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "BraceCard(onClick = { openFleetSample() }) {\n    Text(\"Electric fleet\")\n    Text(\"Search, filter, and inspect 48 sample vehicles\")\n}",
+      "format": "phone",
+      "theme": "light",
+      "pixelWidth": 320,
+      "pixelHeight": 640,
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26"
+    },
+    {
+      "id": "catalog-light",
+      "inventoryIds": [
+        "core-theme-variables"
+      ],
+      "image": "showcase/01-catalog-light.png",
+      "imageSha256": "6de30a0f204ea3874d49117dee3596256d8a88973416d51767127a8930553169",
+      "alt": "Brace Android catalog in light mode, with theme controls, component search, and in-progress availability labels",
+      "caption": "The Android catalog reads the pinned inventory and exposes runtime theme controls and honest availability labels.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var dark by rememberSaveable { mutableStateOf(false) }\nBraceTheme(\n    mode = if (dark) BraceColorMode.Dark else BraceColorMode.Light,\n    density = BraceDensity.Comfortable,\n) {\n    BraceButton(if (dark) \"Dark\" else \"Light\", onClick = { dark = !dark })\n}",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
+    },
+    {
+      "id": "button-light",
+      "inventoryIds": [
+        "core-button"
+      ],
+      "image": "showcase/02-button-light.png",
+      "imageSha256": "8c8442c2b1824fe5d9fa6cda5323d6e0d41b62d960cc9dca74adc229f1caf9b7",
+      "alt": "Brace Button samples in light mode: primary Save, danger Delete, and outlined Secondary actions",
+      "caption": "Intent-driven Button states in the light theme, rendered by the in-progress core catalog sample.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var saves by rememberSaveable { mutableIntStateOf(0) }\nBraceTheme(mode = BraceColorMode.Light) {\n    BraceButton(\"Save ($saves)\", onClick = { saves++ })\n    BraceButton(\"Delete\", onClick = {}, intent = BraceButtonIntent.Danger)\n    BraceButton(\"Secondary\", onClick = {}, variant = BraceButtonVariant.Outline)\n}",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
+    },
+    {
+      "id": "button-dark-high-contrast",
+      "inventoryIds": [
+        "core-button",
+        "core-theme-variables"
+      ],
+      "image": "showcase/03-button-dark-high-contrast.png",
+      "imageSha256": "53dd25bdc93f2f211d1fbd1b0cd270835777afa7bff47311ffab2234eeaac240",
+      "alt": "The same Brace Button samples on a black dark high-contrast surface",
+      "caption": "The live catalog switches the same Button states to dark high-contrast tokens at runtime.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "BraceTheme(mode = BraceColorMode.Dark, contrast = BraceContrast.High) {\n    BraceButton(\"Save\", onClick = {})\n    BraceButton(\"Delete\", onClick = {}, intent = BraceButtonIntent.Danger)\n}",
+      "format": "phone",
+      "theme": "dark",
+      "contrast": "high",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
+    },
+    {
+      "id": "dialog-dark",
+      "inventoryIds": [
+        "core-dialog"
+      ],
+      "image": "showcase/04-dialog-dark.png",
+      "imageSha256": "539905be0d7c2df315b60edda098d5c5cf42df2b6c9905be181a16c966a9173e",
+      "alt": "Brace Edit project dialog in dark mode with project details and Cancel and Save actions",
+      "caption": "A native Compose dialog with a header, body, and persistent actions in dark mode.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var open by rememberSaveable { mutableStateOf(true) }\nBraceTheme(mode = BraceColorMode.Dark) {\n    BraceDialog(\n        open = open,\n        onDismissRequest = { open = false },\n        title = \"Edit project\",\n        actions = { BraceButton(\"Save\", onClick = { open = false }) },\n    ) { Text(\"Project details\") }\n}",
+      "format": "phone",
+      "theme": "dark",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
+    },
+    {
+      "id": "select-open-light",
+      "inventoryIds": [
+        "select-select"
+      ],
+      "image": "showcase/05-select-open-light.png",
+      "imageSha256": "6ad331e03a09f5b87da97bc31570869c73d26afa81d1d71260b10deda7238f78",
+      "alt": "Open Brace Select popup with search field, East and West choices, disabled Central choice, and Android keyboard",
+      "caption": "A searchable single Select exposes option descriptions and a disabled state with the Android keyboard open.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var selectedKey by rememberSaveable { mutableStateOf<String?>(null) }\nvar expanded by rememberSaveable { mutableStateOf(false) }\nval options = listOf(\n    BraceSelectOption(\"east\", \"east\", \"East\"),\n    BraceSelectOption(\"west\", \"west\", \"West\"),\n)\nBraceSelect(\n    options = options,\n    selectedKey = selectedKey,\n    onSelect = { selectedKey = it.key },\n    expanded = expanded,\n    onExpandedChange = { expanded = it },\n    label = \"Region\",\n)",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
+    },
+    {
+      "id": "table-light",
+      "inventoryIds": [
+        "table-table"
+      ],
+      "image": "showcase/06-table-light.png",
+      "imageSha256": "c1da6ac93371460ac54b9039d2f4dbc0226ce2ea6fc7dcbe823f9d4a61c8a563",
+      "alt": "Brace DataTable viewport in light mode with fixed headers, row labels, and Case 1001 selected",
+      "caption": "The in-progress DataTable renders a bounded viewport with fixed headers and controlled cell selection.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "data class CaseRow(val id: String, val name: String)\nval rows = listOf(CaseRow(\"1\", \"Case 1000\"), CaseRow(\"2\", \"Case 1001\"))\nval columns = listOf(\n    BraceTableColumn<CaseRow>(\"name\", \"Case\", 160.dp, cellText = { it.name }),\n)\nvar selection by remember { mutableStateOf<BraceTableSelection?>(null) }\nBraceDataTable(\n    rows = rows,\n    rowKey = { it.id },\n    columns = columns,\n    selection = selection,\n    onSelectionChange = { selection = it },\n    label = \"Cases\",\n)",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
+    },
+    {
+      "id": "datepicker-light",
+      "inventoryIds": [
+        "datetime-datepicker"
+      ],
+      "image": "showcase/07-datepicker-light.png",
+      "imageSha256": "1b7e8f129d69f7b070e836e71a89e56327f23638f226168d8ac50784977aa44e",
+      "alt": "Brace DatePicker showing September 2026 with selected September 18, disabled weekends, and month shortcut",
+      "caption": "A locale-aware DatePicker with weekday selection, disabled weekends, and an end-of-month shortcut.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var selected by rememberSaveable { mutableStateOf<String?>(\"2026-09-18\") }\nBraceDatePicker(\n    value = selected?.let(LocalDate::parse),\n    onValueChange = { selected = it?.toString() },\n    locale = Locale.US,\n    minDate = LocalDate.of(2026, 9, 1),\n    maxDate = LocalDate.of(2026, 10, 31),\n    isDateEnabled = { it.dayOfWeek.value <= 5 },\n    shortcuts = listOf(BraceDateShortcut(\"End of month\", LocalDate.of(2026, 9, 30))),\n    initialMonth = YearMonth.of(2026, 9),\n)",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
+    },
+    {
+      "id": "icons-next-light",
+      "inventoryIds": [
+        "icons-icon-glyph-catalog"
+      ],
+      "image": "showcase/08-icons-next-light.png",
+      "imageSha256": "bd8d28b084ee255cd1068f981239d994c558292782fc15cec132ed79ba3bff45",
+      "alt": "Brace opt-in Blueprint next icon sample showing filled magnifying glass, directional chevron, and searchable glyph names",
+      "caption": "The optional /next artwork previews a subset of the pinned icon glyph catalog. The inventory row remains in progress.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "val context = LocalContext.current\nval pack by produceState<BraceBlueprintNextIconPack?>(null, context) {\n    value = withContext(Dispatchers.IO) { BraceBlueprintNextIconPack.load(context) }\n}\npack?.let { loaded ->\n    BraceBlueprintNextIcon(\n        loaded,\n        BraceBlueprintNextIconNames.MagnifyingGlass,\n        contentDescription = null,\n        variant = BraceBlueprintNextIconVariant.Filled,\n    )\n}",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
+    },
+    {
+      "id": "table-wide-light",
+      "inventoryIds": [
+        "table-table",
+        "table-fixed-headers",
+        "table-cell-selection"
+      ],
+      "image": "showcase/09-table-wide-light.png",
+      "imageSha256": "f0fd70c95492e2186ed3bf119e32a98a2a4ab77224b4c6fffba0b7722ab98a3f",
+      "alt": "Wide Brace DataTable showing Case, Status, and Owner columns with fixed headers and selected Case 1001 cell",
+      "caption": "A wider emulator viewport shows three columns, fixed headers, controlled selection, and table actions together.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "data class CaseRow(val id: String, val name: String)\nval rows = listOf(CaseRow(\"1\", \"Case 1000\"), CaseRow(\"2\", \"Case 1001\"))\nval columns = listOf(\n    BraceTableColumn<CaseRow>(\"name\", \"Case\", 160.dp, cellText = { it.name }),\n)\nvar selection by remember { mutableStateOf<BraceTableSelection?>(null) }\nBraceDataTable(\n    rows = rows,\n    rowKey = { it.id },\n    columns = columns,\n    selection = selection,\n    onSelectionChange = { selection = it },\n    label = \"Cases\",\n)",
+      "format": "landscape",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 800,
+      "pixelHeight": 600
+    },
+    {
+      "id": "spinner-dark-high-contrast",
+      "inventoryIds": [
+        "core-spinner"
+      ],
+      "image": "showcase/10-spinner-dark-high-contrast.png",
+      "imageSha256": "c1ce9cfa6979963779a789883db674d8cd9f3f96947e68c6739126b245eb90c2",
+      "alt": "Brace Spinner with a small indeterminate arc and medium and large 30 percent progress arcs on a dark high-contrast catalog screen",
+      "caption": "Three token sizes and two intents show indeterminate and known progress in dark high contrast.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "format": "phone",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800,
+      "usage": "BraceTheme(mode = BraceColorMode.Dark, contrast = BraceContrast.High) {\n    BraceSpinner(label = \"Loading small records\", size = BraceSpinnerSize.Small)\n    BraceSpinner(label = \"Loading records\", value = 0.3f)\n    BraceSpinner(\n        label = \"Loading large reports\",\n        value = 0.3f,\n        size = BraceSpinnerSize.Large,\n        intent = BraceProgressIntent.Success,\n    )\n}",
+      "theme": "dark",
+      "contrast": "high"
+    },
+    {
+      "id": "skeleton-light",
+      "inventoryIds": [
+        "core-skeleton"
+      ],
+      "image": "showcase/11-skeleton-light.png",
+      "imageSha256": "bfeb0b9c87918ab9bb31c58a78745ff7d39b64e2b595326564a0afed421c506b",
+      "alt": "Three Brace Skeleton placeholder blocks of descending width in the light catalog, with content and shimmer toggle buttons",
+      "caption": "A noninteractive placeholder stack follows token colors and can switch between animated and static loading states.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "format": "phone",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800,
+      "usage": "BraceTheme(mode = BraceColorMode.Light) {\n    BraceSkeleton(label = \"Loading report title\")\n    BraceSkeleton(width = 180.dp)\n    BraceSkeleton(width = 120.dp)\n}",
+      "theme": "light",
+      "contrast": "standard"
+    },
+    {
+      "id": "link-action-success-light",
+      "inventoryIds": [
+        "core-link"
+      ],
+      "image": "showcase/link-action-success-light.png",
+      "imageSha256": "f26aababd884cdfb712152691143ad1d731e6a565aeb976a30574300de9504fe",
+      "alt": "Brace Link sample in light mode with underlined green Guide and Reports links, a Reports navigation result, and state controls",
+      "caption": "A live app action updates the destination result, while the success intent recolors both links through semantic tokens.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var destination by rememberSaveable { mutableStateOf(\"No navigation yet\") }\nBraceLink(\n    label = \"Open reports\",\n    destination = BraceLinkDestination.Action(\"Reports\") { destination = \"Reports\" },\n    color = BraceLinkColor.Success,\n)\nText(\"Destination: $destination\")",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800
+    },
+    {
+      "id": "table-dark-high-contrast",
+      "inventoryIds": [
+        "table-table",
+        "table-fixed-headers"
+      ],
+      "image": "showcase/12-table-dark-high-contrast.png",
+      "imageSha256": "6465d12b2c114470d79f6ef0c25baf7b26a1dafd0be1dc77a6177557017b631f",
+      "alt": "Brace DataTable in dark high-contrast mode with fixed headers, clear grid borders, and selected Case 1000 cell",
+      "caption": "The M14 table switches to dark high-contrast tokens at runtime; grid lines and the controlled selected cell remain distinct.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var selected by remember { mutableStateOf<BraceTableSelection?>(null) }\nval viewport = rememberBraceTableViewport()\nBraceDataTable(\n    rows = records,\n    rowKey = { it.id },\n    columns = columns,\n    selection = selected,\n    onSelectionChange = { selected = it },\n    viewport = viewport,\n    label = \"Cases\",\n)",
+      "format": "phone",
+      "theme": "dark",
+      "contrast": "high",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 320,
+      "pixelHeight": 640
+    },
+    {
+      "id": "timepicker-light",
+      "inventoryIds": [
+        "datetime-timepicker"
+      ],
+      "image": "showcase/12-timepicker-light.png",
+      "imageSha256": "496331edb6b3fb698ef73fda18ed5cc7a16403e46b70556db45aadbf79ccebfb",
+      "alt": "Brace TimePicker showing hour and minute steppers at 23:30 in an overnight range, a Meeting time field, and a disabled time field in light mode",
+      "caption": "The in-progress native TimePicker pairs bounded hour and minute steppers with a localized editable time field and a disabled state.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var selected by rememberSaveable { mutableStateOf(\"23:30\") }\nBraceTimePicker(\n    value = LocalTime.parse(selected),\n    onValueChange = { selected = it.toString() },\n    locale = Locale.US,\n    use24Hour = true,\n    minTime = LocalTime.of(22, 0),\n    maxTime = LocalTime.of(2, 0),\n)\nBraceTimeField(\n    value = LocalTime.parse(selected),\n    onValueChange = { selected = it?.toString() ?: \"23:30\" },\n    label = \"Meeting time\",\n    locale = Locale.US,\n)",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800
+    },
+    {
+      "id": "date-range-picker-light",
+      "inventoryIds": [
+        "datetime-daterangepicker"
+      ],
+      "image": "showcase/13-date-range-light.png",
+      "imageSha256": "502fa6450b27e66f2d1f6ee50d24eb2c9ae88bdd83492dc0d6bd090f29a9b101",
+      "alt": "Brace DateRangePicker in light mode showing September 2026 with September 14 through 18 selected, an outlined range shortcut and current day, and a clear action",
+      "caption": "The in-progress native DateRangePicker shows two endpoints and the days between them, a supplied shortcut, a clear action, and the current-day outline.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var start by rememberSaveable { mutableStateOf<String?>(null) }\nvar end by rememberSaveable { mutableStateOf<String?>(null) }\nBraceDateRangePicker(\n    value = BraceDateRange(start?.let(LocalDate::parse), end?.let(LocalDate::parse)),\n    onValueChange = { start = it.start?.toString(); end = it.end?.toString() },\n    locale = Locale.US,\n    shortcuts = listOf(BraceDateRangeShortcut(\"Sept 14–18\",\n        BraceDateRange(LocalDate.of(2026, 9, 14), LocalDate.of(2026, 9, 18)))),\n)",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800
+    },
+    {
+      "inventoryIds": [
+        "datetime-timezoneselect"
+      ],
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800,
+      "id": "time-zone-search-light",
+      "image": "showcase/14-time-zone-search-light.png",
+      "imageSha256": "7177e7b9d922ce3369301bfe806075a70d67bc267f076131873aba59bd2b24ba",
+      "alt": "Open Brace TimeZoneSelect popup in light mode filtering Tokyo to the Asia/Tokyo IANA row with UTC+09:00 offset and Android keyboard",
+      "caption": "The native time-zone search filters Android IANA identities and shows the offset and localized name at a summer reference instant.",
+      "usage": "var zoneId by rememberSaveable { mutableStateOf<String?>(null) }\nBraceTimeZoneSelect(\n    value = zoneId?.let(ZoneId::of),\n    onValueChange = { zoneId = it.id },\n    label = \"Reporting time zone\",\n    locale = Locale.US,\n    referenceInstant = Instant.parse(\"2026-07-15T12:00:00Z\"),\n    showLocalTimeZone = true,\n)"
+    },
+    {
+      "inventoryIds": [
+        "datetime-timezoneselect"
+      ],
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800,
+      "id": "time-zone-selected-light",
+      "image": "showcase/15-time-zone-selected-light.png",
+      "imageSha256": "b0a0236ed02f8bfb13dd88e013b9a1255216d0436c784838adcc108e0758247c",
+      "alt": "Brace TimeZoneSelect catalog sample in light mode with Asia/Tokyo selected, its UTC+09:00 offset, display controls, and disabled field",
+      "caption": "A controlled selection keeps the IANA ID, reference offset, display options, and disabled state visible in the catalog.",
+      "usage": "var zoneId by rememberSaveable { mutableStateOf<String?>(null) }\nBraceTimeZoneSelect(\n    value = zoneId?.let(ZoneId::of),\n    onValueChange = { zoneId = it.id },\n    label = \"Reporting time zone\",\n    locale = Locale.US,\n    referenceInstant = Instant.parse(\"2026-07-15T12:00:00Z\"),\n    showLocalTimeZone = true,\n)"
+    }
+  ]
+}

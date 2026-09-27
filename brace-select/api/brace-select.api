@@ -1,0 +1,80 @@
+public final class io/github/joelromanpr/brace/select/BraceCommand {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Object;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Lio/github/joelromanpr/brace/select/BraceCommand;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/select/BraceCommand;Ljava/lang/String;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lio/github/joelromanpr/brace/select/BraceCommand;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getEnabled ()Z
+	public final fun getGroup ()Ljava/lang/String;
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getShortcut ()Ljava/lang/String;
+	public final fun getValue ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/select/BraceCommandPaletteKt {
+	public static final fun BraceCommandPalette (Ljava/util/List;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/select/BraceQueryListState;ZLjava/lang/String;Lkotlin/jvm/functions/Function2;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/ui/focus/FocusRequester;ZLandroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/select/BraceMultiSelectKt {
+	public static final fun BraceMultiSelect (Ljava/util/List;Ljava/util/List;Lkotlin/jvm/functions/Function1;ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/select/BraceQueryListState;ZZLkotlin/jvm/functions/Function2;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/select/BraceQueryListKt {
+	public static final fun braceQueryNavigation (Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/select/BraceQueryListState;Ljava/util/List;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Z)Landroidx/compose/ui/Modifier;
+	public static synthetic fun braceQueryNavigation$default (Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/select/BraceQueryListState;Ljava/util/List;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;ZILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+	public static final fun rememberBraceQueryListState (Ljava/lang/String;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)Lio/github/joelromanpr/brace/select/BraceQueryListState;
+}
+
+public final class io/github/joelromanpr/brace/select/BraceQueryListState {
+	public static final field $stable I
+	public final fun filter (Ljava/util/List;Lkotlin/jvm/functions/Function2;)Ljava/util/List;
+	public static synthetic fun filter$default (Lio/github/joelromanpr/brace/select/BraceQueryListState;Ljava/util/List;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/util/List;
+	public final fun getActiveKey ()Ljava/lang/String;
+	public final fun getQuery ()Ljava/lang/String;
+	public final fun moveActive (Ljava/util/List;I)Ljava/lang/String;
+	public final fun moveToBoundary (Ljava/util/List;Z)Ljava/lang/String;
+	public final fun setActiveKey (Ljava/lang/String;)V
+	public final fun setQuery (Ljava/lang/String;)V
+}
+
+public final class io/github/joelromanpr/brace/select/BraceSelectKt {
+	public static final fun BraceSelect (Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/select/BraceQueryListState;ZZZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/select/BraceSelectOption {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/String;ZLjava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/String;ZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Object;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Z
+	public final fun component5 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/String;ZLjava/lang/String;)Lio/github/joelromanpr/brace/select/BraceSelectOption;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/select/BraceSelectOption;Ljava/lang/String;Ljava/lang/Object;Ljava/lang/String;ZLjava/lang/String;ILjava/lang/Object;)Lio/github/joelromanpr/brace/select/BraceSelectOption;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getEnabled ()Z
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getValue ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/select/BraceSuggestKt {
+	public static final fun BraceSuggest (Landroidx/compose/ui/text/input/TextFieldValue;Lkotlin/jvm/functions/Function1;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/select/BraceQueryListState;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;III)V
+}
+

@@ -8,7 +8,7 @@
 
 ## Verification
 
-The source passed an **836-task** build/lint/API/inventory/catalog gate, **23/23** API 36 TagInput/Tag tests, all **eight** Maven Local snapshots with sources/KDoc/POM/metadata (**308 tasks**), and an offline independent consumer (**37 tasks**). Its hosted verify, API 34, and CodeQL checks passed. The replay on the redesigned showcase base passes a **263-task** catalog/core lint/API/tokens/inventory gate and the Pages build (**148 rows, 21 real captures, 56 guides**). The final branch head still needs hosted checks after this restack.
+The source passed an **836-task** broad build/lint/API/inventory/catalog gate. On the final time-zone/table-copy main, a **263-task** catalog/core lint/API/token/inventory gate, **23/23** API 36 TagInput/Tag tests, all **eight** Maven Local snapshots with AAR/sources/KDoc/POM/metadata (**308 tasks**), and an offline independent consumer (**37 tasks**) pass. Inventory and Pages checks pass with **148 rows, 23 real captures, 60 guides**. The previous head passed hosted verify, API 34, and CodeQL; current-head hosted checks are pending.
 
 ## Remaining acceptance
 

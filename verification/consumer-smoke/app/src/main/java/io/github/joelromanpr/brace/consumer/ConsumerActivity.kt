@@ -86,6 +86,10 @@ import io.github.joelromanpr.brace.icons.BraceIcons
 import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIcon
 import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconNames
 import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconPack
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIcon
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconNames
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconPack
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconVariant
 import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
@@ -124,6 +128,9 @@ class ConsumerActivity : ComponentActivity() {
                 var iconName by remember { mutableStateOf("search") }
                 val blueprintIconPack by produceState<BraceBlueprintIconPack?>(null) {
                     value = withContext(Dispatchers.IO) { BraceBlueprintIconPack.load(applicationContext) }
+                }
+                val blueprintNextIconPack by produceState<BraceBlueprintNextIconPack?>(null) {
+                    value = withContext(Dispatchers.IO) { BraceBlueprintNextIconPack.load(applicationContext) }
                 }
                 val iconRegistry = remember {
                     BraceIconRegistry.Default.register("custom-check",
@@ -202,6 +209,11 @@ class ConsumerActivity : ComponentActivity() {
                                 blueprintIconPack?.let { pack ->
                                     BraceBlueprintIcon(pack, BraceBlueprintIconNames.Search,
                                         contentDescription = null)
+                                }
+                                blueprintNextIconPack?.let { pack ->
+                                    BraceBlueprintNextIcon(pack, BraceBlueprintNextIconNames.MagnifyingGlass,
+                                        contentDescription = null,
+                                        variant = BraceBlueprintNextIconVariant.Filled)
                                 }
                                 BraceIconByName(iconName, contentDescription = "Status icon")
                                 BraceIconButton(BraceIcons.Search, label = "Search records",

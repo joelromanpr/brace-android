@@ -135,7 +135,7 @@ main{overflow:clip}
 .component summary:hover{background:#f2f6fc}
 .component summary::after{content:'⌄';grid-column:3;grid-row:1;font-size:19px;font-weight:600;color:#7390ba;transition:transform .18s ease}
 .component[open] summary::after{content:'⌄';transform:rotate(180deg)}
-.component-name{font-size:14px}
+.component-name{font-size:14px;min-width:0;overflow-wrap:anywhere}
 .component-family{font-size:11px;color:#71839b;margin-top:5px}
 .component summary .pill{grid-column:2;grid-row:1}
 .pill{gap:6px;padding:6px 10px;border-radius:999px;background:#eef1f5;color:#52667e}

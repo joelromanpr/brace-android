@@ -8,6 +8,7 @@ const stats = document.querySelector('#stats');
 const baseline = document.querySelector('#baseline');
 let publicSourceRepository = null;
 let repository = null;
+let guideMap = {};
 const showcaseGrid = document.querySelector('#showcase-grid');
 const showcaseTheme = document.querySelector('#showcase-theme');
 const showcaseFamily = document.querySelector('#showcase-family');
@@ -45,10 +46,10 @@ function addFact(grid, label, value, isLink = false) {
   const description = el('dd');
   if (isLink) {
     const [path, fragment] = String(value).split('#', 2);
-    const guide = { 'docs/core-components.md': 'core-components.html', 'docs/content-feedback.md': 'content-feedback.html', 'docs/loading-feedback.md': 'loading-feedback.html', 'docs/navigation-feedback.md': 'navigation-feedback.html', 'docs/overlays.md': 'overlays.html', 'docs/drawers-popovers.md': 'drawers-popovers.html', 'docs/tooltip-toast.md': 'tooltip-toast.html', 'docs/context-shortcuts.md': 'context-shortcuts.html', 'docs/form-text.md': 'form-text.html', 'docs/form-layout.md': 'form-layout.html', 'docs/numeric-input.md': 'numeric-input.html', 'docs/icons.md': 'icons.html', 'docs/select-query.md': 'select-query.html', 'docs/top-bar.md': 'top-bar.html', 'docs/panel-stack.md': 'panel-stack.html', 'docs/tag-input.md': 'tag-input.html', 'docs/radio-segmented.md': 'radio-segmented.html', 'docs/datetime-picker-input.md': 'datetime-picker-input.html', 'docs/time-picker-input.md': 'time-picker-input.html', 'docs/datetime-range.md': 'datetime-range.html', 'docs/time-zone-select.md': 'time-zone-select.html', 'docs/links.md': 'links.html', 'docs/table-viewport.md': 'table-viewport.html', 'docs/table-selection-resize.md': 'table-selection-resize.html', 'docs/table-copying.md': 'table-copying.html', 'docs/table-editing.md': 'table-editing.html', 'docs/web-mechanisms.md': 'web-mechanisms.html', 'docs/theming.md': 'theming.html', 'docs/installation.md': 'installation.html', 'docs/compatibility.md': 'compatibility.html', 'docs/attribution.md': 'attribution.html' }[path];
+    const guide = guideMap[path];
     const href = /^https:\/\//.test(value) ? value : guide ? `./${guide}${fragment ? `#${fragment}` : ''}` : repository ? repository + value.replace(/^\/+/, '') : null;
     if (href) {
-      const text = label === 'Blueprint documentation' ? 'Open Blueprint docs ↗' : label === 'Pinned Blueprint source' ? 'Open pinned source ↗' : guide ? 'Read guide ↗' : 'View public source ↗';
+      const text = label === 'Reference documentation' ? 'Open reference docs ↗' : label === 'Pinned source' ? 'Open pinned source ↗' : guide ? 'Read guide ↗' : 'View public source ↗';
       const link = el('a', '', text);
       link.href = href;
       link.rel = 'noopener noreferrer';
@@ -63,36 +64,37 @@ function card(item) {
   const details = el('details', 'component');
   details.id = `component-${item.id}`;
   const summary = el('summary');
-  const title = el('span', 'component-name', item.blueprintName || item.id);
+  const title = el('span', 'component-name', (item.braceApi || item.blueprintName || item.id).split(' / ')[0]);
   title.append(el('span', 'component-family', `${item.package || 'Unassigned'} · ${item.family || 'General'}`));
   const badge = el('span', `pill ${String(item.status || 'planned').replace(/\s+/g, '-')}`, item.status || 'planned');
   summary.append(title, badge);
   const body = el('dl', 'component-body');
   addFact(body, 'Brace API', item.braceApi);
-  addFact(body, 'Artifact', item.artifact);
-  addFact(body, 'Android mapping', item.classification);
+  addFact(body, 'Reference name', item.blueprintName);
+  addFact(body, 'Gradle module', item.artifact);
+  addFact(body, 'Android form', item.classification);
   addFact(body, 'Behavior and accessibility', item.behavior);
   const visual = captures.find(capture => capture.inventoryIds.includes(item.id));
   if (visual) {
     const visualFact = el('div', 'fact');
     const visualDescription = el('dd');
-    const visualLink = el('a', '', 'See Android catalog capture ↗');
+    const visualLink = el('a', '', 'See Android screenshot ↗');
     visualLink.href = `#capture-${visual.id}`;
     visualLink.dataset.captureId = visual.id;
     visualDescription.append(visualLink);
-    visualFact.append(el('dt', '', 'Visual preview'), visualDescription);
+    visualFact.append(el('dt', '', 'Android screenshot'), visualDescription);
     body.append(visualFact);
   }
-  addFact(body, 'Adaptation or exclusion', item.reason);
+  addFact(body, 'Why this differs', item.reason);
   addFact(body, 'Priority', item.priority);
-  addFact(body, 'Milestone', item.milestone);
-  addFact(body, 'Blueprint documentation', item.blueprintUrl, true);
-  addFact(body, 'Pinned Blueprint source', item.pinnedSourceUrl, true);
+  addFact(body, 'Planned step', item.milestone);
+  addFact(body, 'Reference documentation', item.blueprintUrl, true);
+  addFact(body, 'Pinned source', item.pinnedSourceUrl, true);
   addFact(body, 'Implementation', item.implementation, true);
   addFact(body, 'Sample', item.sample, true);
   addFact(body, 'Documentation', item.documentation, true);
   addFact(body, 'Tests', item.tests, true);
-  addFact(body, 'First release', item.firstRelease);
+  addFact(body, 'First published version', item.firstRelease);
   details.append(summary, body);
   return details;
 }
@@ -107,8 +109,8 @@ function render() {
       .some(value => String(value || '').toLocaleLowerCase().includes(query)))
   );
   results.replaceChildren(...filtered.map(card));
-  if (filtered.length === 0) results.append(el('p', 'empty', 'No inventory rows match these filters.'));
-  resultCount.textContent = `${filtered.length} of ${entries.length} inventory rows`;
+  if (filtered.length === 0) results.append(el('p', 'empty', 'No components match these filters.'));
+  resultCount.textContent = `${filtered.length} of ${entries.length} entries`;
   for (const chip of statusChips.querySelectorAll('[data-status]')) {
     chip.setAttribute('aria-pressed', String(chip.dataset.status === statusSelect.value));
   }
@@ -175,7 +177,7 @@ function captureCard(capture) {
   }
   body.append(meta);
   const actions = el('div', 'shot-actions');
-  const inventoryButton = el('button', 'shot-inventory', 'View inventory row →');
+  const inventoryButton = el('button', 'shot-inventory', 'View component details →');
   inventoryButton.type = 'button';
   inventoryButton.dataset.inventoryId = item.id;
   const source = publicSourceRepository ? el('a', '', 'View source ↗') : el('span', 'shot-source-pending', 'Source link pending public repository');
@@ -208,8 +210,8 @@ function renderShowcase() {
     (!showcaseFamily.value || entryById.get(capture.inventoryIds[0]).family === showcaseFamily.value)
   );
   showcaseGrid.replaceChildren(...filtered.map(captureCard));
-  if (filtered.length === 0) showcaseGrid.append(el('p', 'empty', 'No captures match these filters.'));
-  showcaseResult.textContent = `${filtered.length} of ${captures.length} Android captures`;
+  if (filtered.length === 0) showcaseGrid.append(el('p', 'empty', 'No screenshots match these filters.'));
+  showcaseResult.textContent = `${filtered.length} of ${captures.length} Android screenshots`;
 }
 
 async function loadShowcase() {
@@ -263,6 +265,10 @@ async function load() {
     const config = await configResponse.json();
     publicSourceRepository = config.publicSourceRepository;
     repository = publicSourceRepository ? `${publicSourceRepository}/blob/main/` : null;
+    const guideResponse = await fetch('./guide-map.json');
+    if (!guideResponse.ok) throw new Error(`Guide map HTTP ${guideResponse.status}`);
+    guideMap = await guideResponse.json();
+    if (!guideMap || Array.isArray(guideMap) || typeof guideMap !== 'object') throw new Error('Guide map is invalid');
     const response = await fetch('./coverage.json');
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
@@ -271,13 +277,13 @@ async function load() {
     entryById = new Map(entries.map(item => [item.id, item]));
     await loadShowcase();
     const pin = data.baseline || {};
-    baseline.textContent = `Blueprint baseline: ${pin.releaseTag || pin.version || 'pinned stable'} · ${pin.commit || pin.sha || 'commit recorded in inventory'}`;
+    baseline.textContent = `Reference version: ${pin.releaseTag || pin.version || 'pinned stable'} · ${pin.commit || pin.sha || 'commit recorded in inventory'}`;
     const counts = data.summary || {};
     stats.replaceChildren(
-      stat(`${counts.stableApplicableRows ?? 0}/${counts.applicableRows ?? entries.length}`, 'Released Android items'),
-      stat(`${counts.stableComponents ?? 0}/${counts.applicableComponents ?? 0}`, 'Released components'),
-      stat(`${counts.documentedWebSpecificMappings ?? 0}/${counts.webSpecificMappings ?? 0}`, 'Web-only cases explained'),
-      stat(counts.labsRows ?? entries.filter(item => item.track === 'labs').length, 'Experimental items')
+      stat(`${counts.stableApplicableRows ?? 0}/${counts.applicableRows ?? entries.length}`, 'Android items released'),
+      stat(`${counts.stableComponents ?? 0}/${counts.applicableComponents ?? 0}`, 'Components released'),
+      stat(`${counts.documentedWebSpecificMappings ?? 0}/${counts.webSpecificMappings ?? 0}`, 'Web behaviors explained'),
+      stat(counts.labsRows ?? entries.filter(item => item.track === 'labs').length, 'Early experiments')
     );
     addOptions(packageSelect, entries.map(item => item.package));
     addOptions(statusSelect, entries.map(item => item.status));

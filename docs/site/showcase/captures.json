@@ -2,6 +2,29 @@
   "schemaVersion": 1,
   "captures": [
     {
+      "id": "panel-stack-filters-phone",
+      "title": "Panel stack · filters pane",
+      "inventoryIds": [
+        "core-panelstack"
+      ],
+      "image": "showcase/panel-stack-400.png",
+      "alt": "Brace PanelStack in the Android catalog with the Filters pane open, Back to Workspace action, Open advanced button, and stack depth two",
+      "caption": "The API 36 Compose catalog shows the Filters pane pushed above Workspace, with a named native back action. PanelStack remains in progress.",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "val stack = rememberBracePanelStackState(BracePanel(\"root\", \"Workspace\"))\nBracePanelStack(stack, modifier = Modifier.height(280.dp)) {\n    when (panel.id) {\n        \"root\" -> BraceButton(\"Open filters\", onClick = {\n            openPanel(BracePanel(\"filters\", \"Filters\"))\n        })\n        \"filters\" -> BraceButton(\"Open advanced\", onClick = {\n            openPanel(BracePanel(\"advanced\", \"Advanced filters\"))\n        })\n    }\n}",
+      "format": "phone",
+      "theme": "light",
+      "pixelWidth": 400,
+      "pixelHeight": 960,
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m32-panel-stack",
+      "sourceCommit": "5ce4796c381e031ffaf6d2d5505295b31b371720",
+      "sourceStage": "draft",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26"
+    },
+    {
       "id": "tree-selection-phone",
       "title": "Tree · selected and disabled nodes",
       "inventoryIds": [

@@ -16,6 +16,7 @@ Changes to released public artifacts are recorded here using [Semantic Versionin
 - Added unreleased controlled Radio, RadioGroup, and SegmentedControl Compose APIs with semantic tokens, keyboard navigation, catalog examples, documentation, and tests.
 - Added a source-only, opt-in `brace-blueprint-icons` pack for the 706 licensed legacy glyphs in the pinned Blueprint comparison; no Maven Central artifact has been released.
 - Added a separate, source-only `brace-blueprint-icons-next` pack for the public `/next` subpath: 695 outlined glyphs, 386 filled variants, and the 706-name migration map. No Maven Central artifact has been released.
+- Added a controlled Android document picker field for single and multiple selection; its inventory row remains in progress pending validation and release.
 - Added an in-progress PanelStack Compose source slice with saveable/controlled navigation, native Back, catalog, docs, and device tests (not yet released).
 - Added Compose heading, quote, code and list adapters for Blueprint HTML content; inventory rows remain in progress pending release and acceptance.
 - Added controlled single and range numeric sliders with Brace component tokens; inventory rows remain in progress pending parity and release.

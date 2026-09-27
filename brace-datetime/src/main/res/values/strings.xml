@@ -45,4 +45,12 @@
     <string name="brace_range_invalid">Enter a valid date</string>
     <string name="brace_range_unavailable">Date is unavailable</string>
     <string name="brace_range_overlapping">Start date must not follow end date</string>
+    <string name="brace_zone_choose">Select time zone</string>
+    <string name="brace_zone_search">Search time zones</string>
+    <string name="brace_zone_empty">No matching time zones</string>
+    <string name="brace_zone_selected">Selected</string>
+    <string name="brace_zone_local">Local time zone</string>
+    <string name="brace_zone_expanded">Expanded</string>
+    <string name="brace_zone_collapsed">Collapsed</string>
+    <string name="brace_zone_position">%1$d of %2$d: %3$s</string>
 </resources>

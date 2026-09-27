@@ -8,6 +8,7 @@ const stats = document.querySelector('#stats');
 const baseline = document.querySelector('#baseline');
 let publicSourceRepository = null;
 let repository = null;
+let guideMap = {};
 const showcaseGrid = document.querySelector('#showcase-grid');
 const showcaseTheme = document.querySelector('#showcase-theme');
 const showcaseFamily = document.querySelector('#showcase-family');
@@ -45,7 +46,7 @@ function addFact(grid, label, value, isLink = false) {
   const description = el('dd');
   if (isLink) {
     const [path, fragment] = String(value).split('#', 2);
-    const guide = { 'docs/core-components.md': 'core-components.html', 'docs/content-feedback.md': 'content-feedback.html', 'docs/loading-feedback.md': 'loading-feedback.html', 'docs/navigation-feedback.md': 'navigation-feedback.html', 'docs/overlays.md': 'overlays.html', 'docs/drawers-popovers.md': 'drawers-popovers.html', 'docs/tooltip-toast.md': 'tooltip-toast.html', 'docs/context-shortcuts.md': 'context-shortcuts.html', 'docs/form-text.md': 'form-text.html', 'docs/form-layout.md': 'form-layout.html', 'docs/numeric-input.md': 'numeric-input.html', 'docs/icons.md': 'icons.html', 'docs/select-query.md': 'select-query.html', 'docs/top-bar.md': 'top-bar.html', 'docs/radio-segmented.md': 'radio-segmented.html', 'docs/datetime-picker-input.md': 'datetime-picker-input.html', 'docs/time-picker-input.md': 'time-picker-input.html', 'docs/datetime-range.md': 'datetime-range.html', 'docs/time-zone-select.md': 'time-zone-select.html', 'docs/table-viewport.md': 'table-viewport.html', 'docs/table-selection-resize.md': 'table-selection-resize.html', 'docs/links.md': 'links.html', 'docs/web-mechanisms.md': 'web-mechanisms.html', 'docs/theming.md': 'theming.html', 'docs/installation.md': 'installation.html', 'docs/compatibility.md': 'compatibility.html', 'docs/attribution.md': 'attribution.html' }[path];
+    const guide = guideMap[path];
     const href = /^https:\/\//.test(value) ? value : guide ? `./${guide}${fragment ? `#${fragment}` : ''}` : repository ? repository + value.replace(/^\/+/, '') : null;
     if (href) {
       const text = label === 'Blueprint documentation' ? 'Open Blueprint docs ↗' : label === 'Pinned Blueprint source' ? 'Open pinned source ↗' : guide ? 'Read guide ↗' : 'View public source ↗';
@@ -263,6 +264,10 @@ async function load() {
     const config = await configResponse.json();
     publicSourceRepository = config.publicSourceRepository;
     repository = publicSourceRepository ? `${publicSourceRepository}/blob/main/` : null;
+    const guideResponse = await fetch('./guide-map.json');
+    if (!guideResponse.ok) throw new Error(`Guide map HTTP ${guideResponse.status}`);
+    guideMap = await guideResponse.json();
+    if (!guideMap || Array.isArray(guideMap) || typeof guideMap !== 'object') throw new Error('Guide map is invalid');
     const response = await fetch('./coverage.json');
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();

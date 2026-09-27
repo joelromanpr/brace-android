@@ -273,6 +273,7 @@ await rm(siteOutput, { recursive: true, force: true });
 await mkdir(siteOutput, { recursive: true });
 await cp(siteSource, siteOutput, { recursive: true });
 await cp(coveragePath, resolve(siteOutput, 'coverage.json'));
+await writeFile(resolve(siteOutput, 'guide-map.json'), JSON.stringify(Object.fromEntries([...guideSources].map(([path, slug]) => [path, `${slug}.html`]))));
 for (const [path, slug] of guideSources) {
   const markdown = await readFile(resolve(root, path), 'utf8');
   const title = markdown.match(/^# (.+)$/m)?.[1] || slug;

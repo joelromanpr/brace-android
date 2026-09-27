@@ -31,4 +31,18 @@
     <string name="brace_time_minute_short">Min</string>
     <string name="brace_time_second_short">Seg</string>
     <string name="brace_time_millisecond_short">Ms</string>
+    <string name="brace_range_start">Fecha de inicio</string>
+    <string name="brace_range_end">Fecha de fin</string>
+    <string name="brace_range_in">Dentro del intervalo seleccionado</string>
+    <string name="brace_range_today">Hoy</string>
+    <string name="brace_range_previous_month">Mes anterior</string>
+    <string name="brace_range_next_month">Mes siguiente</string>
+    <string name="brace_range_previous_year">Año anterior</string>
+    <string name="brace_range_next_year">Año siguiente</string>
+    <string name="brace_range_clear">Borrar intervalo</string>
+    <string name="brace_range_open">Abrir calendario de intervalo</string>
+    <string name="brace_range_title">Elegir intervalo de fechas</string>
+    <string name="brace_range_invalid">Ingresa una fecha válida</string>
+    <string name="brace_range_unavailable">Fecha no disponible</string>
+    <string name="brace_range_overlapping">La fecha de inicio no puede ser posterior a la fecha de fin</string>
 </resources>

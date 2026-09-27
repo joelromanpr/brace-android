@@ -10,6 +10,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,7 +35,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -375,7 +380,12 @@ private fun Catalog() {
     var teal by rememberSaveable { mutableStateOf(false) }
     var reducedMotion by rememberSaveable { mutableStateOf(false) }
     var selectedId by rememberSaveable { mutableStateOf<String?>(null) }
+    var activeScenario by rememberSaveable { mutableStateOf<String?>(null) }
+    var appearanceOpen by rememberSaveable { mutableStateOf(false) }
+    var catalogSection by rememberSaveable { mutableStateOf("Components") }
+    var statusFilter by rememberSaveable { mutableStateOf("All") }
     var search by rememberSaveable { mutableStateOf("") }
+    BackHandler(activeScenario != null) { activeScenario = null }
     BackHandler(selectedId != null) { selectedId = null }
     BraceTheme(
         mode = if (dark) BraceColorMode.Dark else BraceColorMode.Light,
@@ -385,55 +395,193 @@ private fun Catalog() {
         brand = if (teal) BraceBrandColors(Color(0xFF006B5B), Color.White) else null,
     ) {
         val semantic = BraceTheme.colors.semantic
-        Column(
-            Modifier.fillMaxSize().background(semantic.background)
-                .statusBarsPadding().navigationBarsPadding()
-                .padding(horizontal = BraceTheme.spacing.md, vertical = BraceTheme.spacing.sm),
-        ) {
-            Text("Brace Android", color = semantic.onBackground, style = BraceTheme.typography.title)
-            Text("Blueprint comparison catalog · planned items are visible", color = semantic.onSurfaceMuted, style = BraceTheme.typography.body)
-            Spacer(Modifier.height(BraceTheme.spacing.sm))
-            Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                BraceButton(if (dark) "Dark" else "Light", onClick = { dark = !dark }, variant = BraceButtonVariant.Outline)
-                BraceButton(if (highContrast) "High contrast" else "Standard contrast", onClick = { highContrast = !highContrast }, variant = BraceButtonVariant.Outline)
-                BraceButton(if (compact) "Compact" else "Comfortable", onClick = { compact = !compact }, variant = BraceButtonVariant.Outline)
-                BraceButton(if (teal) "Teal brand" else "Indigo brand", onClick = { teal = !teal }, variant = BraceButtonVariant.Outline)
-                BraceButton(if (reducedMotion) "Reduced motion" else "Full motion", onClick = { reducedMotion = !reducedMotion }, variant = BraceButtonVariant.Outline)
-            }
-            Spacer(Modifier.height(BraceTheme.spacing.md))
-            val selected = entries.firstOrNull { it.id == selectedId }
-            if (selected == null) {
-                BraceTextField(search, { search = it }, "Find a component", placeholder = "Name, family, or API")
-                Spacer(Modifier.height(BraceTheme.spacing.sm))
-                val filtered = entries.filter {
-                    search.isBlank() || listOf(it.name, it.family, it.api).any { value -> value.contains(search, ignoreCase = true) }
+        when (activeScenario) {
+            "fleet" -> FleetOperationsSample(onBack = { activeScenario = null }, dark = dark,
+                onToggleTheme = { dark = !dark })
+            "mission" -> MissionControlSample(onBack = { activeScenario = null }, dark = dark,
+                onToggleTheme = { dark = !dark })
+            else -> Column(
+                Modifier.fillMaxSize().background(semantic.background)
+                    .statusBarsPadding().navigationBarsPadding()
+                    .padding(horizontal = BraceTheme.spacing.md, vertical = BraceTheme.spacing.sm),
+            ) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Column(Modifier.weight(1f)) {
+                        Text("Brace Android", color = semantic.onBackground,
+                            style = BraceTheme.typography.title)
+                        Text("Component catalog", color = semantic.onSurfaceMuted,
+                            style = BraceTheme.typography.label)
+                    }
+                    BraceButton(if (appearanceOpen) "Hide settings" else "Appearance",
+                        onClick = { appearanceOpen = !appearanceOpen },
+                        variant = BraceButtonVariant.Outline)
                 }
-                val families = filtered.groupBy { it.family }.toSortedMap()
-                LazyColumn(Modifier.weight(1f)) {
-                    families.forEach { (family, rows) ->
-                        item {
-                            Text(family.replaceFirstChar { it.uppercase() }, color = semantic.primary, style = BraceTheme.typography.subtitle,
-                                modifier = Modifier.padding(top = BraceTheme.spacing.md, bottom = BraceTheme.spacing.sm))
+                if (appearanceOpen) {
+                    Spacer(Modifier.height(BraceTheme.spacing.sm))
+                    Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                        BraceButton(if (dark) "Dark" else "Light", onClick = { dark = !dark },
+                            variant = BraceButtonVariant.Outline)
+                        BraceButton(if (highContrast) "High contrast" else "Standard contrast",
+                            onClick = { highContrast = !highContrast },
+                            variant = BraceButtonVariant.Outline)
+                        BraceButton(if (compact) "Compact" else "Comfortable",
+                            onClick = { compact = !compact }, variant = BraceButtonVariant.Outline)
+                        BraceButton(if (teal) "Teal brand" else "Indigo brand",
+                            onClick = { teal = !teal }, variant = BraceButtonVariant.Outline)
+                        BraceButton(if (reducedMotion) "Reduced motion" else "Full motion",
+                            onClick = { reducedMotion = !reducedMotion },
+                            variant = BraceButtonVariant.Outline)
+                    }
+                }
+                Spacer(Modifier.height(BraceTheme.spacing.md))
+                val selected = entries.firstOrNull { it.id == selectedId }
+                if (selected != null) {
+                    Detail(selected, onBack = { selectedId = null })
+                } else {
+                    Row(Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                        listOf("Components", "App examples").forEach { section ->
+                            BraceTag(section, rounded = true, minimal = true,
+                                selected = catalogSection == section, intent = BraceTagIntent.Primary,
+                                onClick = { catalogSection = section })
                         }
-                        items(rows, key = { it.id }) { entry ->
-                            Row(
-                                Modifier.fillMaxWidth().clickable { selectedId = entry.id }
-                                    .padding(vertical = BraceTheme.spacing.sm),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                            ) {
-                                Column(Modifier.weight(1f)) {
-                                    Text(entry.name, color = semantic.onSurface, style = BraceTheme.typography.body)
-                                    Text(entry.api, color = semantic.onSurfaceMuted, style = BraceTheme.typography.label)
+                    }
+                    Spacer(Modifier.height(BraceTheme.spacing.md))
+                    if (catalogSection == "App examples") {
+                        LazyColumn(Modifier.weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
+                            item {
+                                Text("Brace in a working screen", color = semantic.onSurface,
+                                    style = BraceTheme.typography.subtitle)
+                                Text("Two fictional operations apps. Search, filter, select, and switch theme inside each one.",
+                                    color = semantic.onSurfaceMuted, style = BraceTheme.typography.body)
+                            }
+                            item {
+                                ScenarioCard("01 / SAN JUAN", "Electric fleet",
+                                    "Search 48 vehicles, filter charging states, and inspect a selected row.",
+                                    onClick = { activeScenario = "fleet" })
+                            }
+                            item {
+                                ScenarioCard("02 / ORBITAL NETWORK", "Mission control",
+                                    "Review spacecraft telemetry, watch a signal alert, and move through the table.",
+                                    onClick = { activeScenario = "mission" })
+                            }
+                        }
+                    } else {
+                        BraceTextField(search, { search = it }, "Search components",
+                            placeholder = "Name, family, or Brace API")
+                        Spacer(Modifier.height(BraceTheme.spacing.sm))
+                        FlowRow(Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm),
+                            verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                            listOf("All", "in progress", "planned", "experimental", "stable").forEach { status ->
+                                val count = if (status == "All") entries.size
+                                    else entries.count { it.status == status }
+                                BraceTag("${status.replaceFirstChar { it.uppercase() }} · $count",
+                                    accessibilityLabel = "$status, $count inventory rows",
+                                    rounded = true, minimal = true, selected = statusFilter == status,
+                                    intent = catalogStatusIntent(status),
+                                    onClick = { statusFilter = status })
+                            }
+                        }
+                        val filtered = entries.filter { entry ->
+                            (statusFilter == "All" || entry.status == statusFilter) &&
+                                (search.isBlank() || listOf(entry.name, entry.family, entry.api)
+                                    .any { it.contains(search, ignoreCase = true) })
+                        }
+                        Text("${filtered.size} of ${entries.size} inventory rows",
+                            color = semantic.onSurfaceMuted, style = BraceTheme.typography.label,
+                            modifier = Modifier.padding(top = BraceTheme.spacing.sm))
+                        val families = filtered.groupBy { it.family }.toSortedMap()
+                        LazyColumn(Modifier.weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                            if (filtered.isEmpty()) {
+                                item {
+                                    BraceCard(Modifier.fillMaxWidth()) {
+                                        Text("No components match this search", color = semantic.onSurface,
+                                            style = BraceTheme.typography.body)
+                                    }
                                 }
-                                Text(entry.status, color = if (entry.status == "stable") semantic.success else semantic.onSurfaceMuted,
-                                    style = BraceTheme.typography.label)
+                            }
+                            families.forEach { (family, rows) ->
+                                item {
+                                    Row(Modifier.fillMaxWidth().padding(top = BraceTheme.spacing.sm),
+                                        horizontalArrangement = Arrangement.SpaceBetween) {
+                                        Text(family.replaceFirstChar { it.uppercase() },
+                                            color = semantic.primary, style = BraceTheme.typography.subtitle)
+                                        Text(rows.size.toString(), color = semantic.onSurfaceMuted,
+                                            style = BraceTheme.typography.label)
+                                    }
+                                }
+                                items(rows, key = { it.id }) { entry ->
+                                    BraceCard(Modifier.fillMaxWidth(), compact = true,
+                                        onClick = { selectedId = entry.id }) {
+                                        Row(Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm),
+                                            verticalAlignment = Alignment.CenterVertically) {
+                                            Column(Modifier.weight(1f)) {
+                                                Text(entry.name, color = semantic.onSurface,
+                                                    style = BraceTheme.typography.body)
+                                                Text(entry.api, color = semantic.onSurfaceMuted,
+                                                    style = BraceTheme.typography.label)
+                                            }
+                                            CatalogStatusBadge(entry.status)
+                                            BraceIcon(BraceIcons.ChevronForward, null,
+                                                intent = BraceIconIntent.Primary)
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            } else {
-                Detail(selected, onBack = { selectedId = null })
             }
+        }
+    }
+}
+
+private fun catalogStatusIntent(status: String): BraceTagIntent = when (status) {
+    "in progress" -> BraceTagIntent.Primary
+    "experimental" -> BraceTagIntent.Warning
+    "stable" -> BraceTagIntent.Success
+    else -> BraceTagIntent.Default
+}
+
+@Composable
+private fun CatalogStatusBadge(status: String) {
+    val semantic = BraceTheme.colors.semantic
+    val color = when (status) {
+        "in progress" -> semantic.primary
+        "experimental" -> semantic.warning
+        "stable" -> semantic.success
+        else -> semantic.onSurfaceMuted
+    }
+    Row(
+        modifier = Modifier.background(color.copy(alpha = 0.12f),
+                RoundedCornerShape(BraceTheme.shape.pill))
+            .padding(horizontal = BraceTheme.spacing.sm, vertical = BraceTheme.spacing.xs),
+        horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xs),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(Modifier.size(6.dp).background(color, CircleShape).clearAndSetSemantics { })
+        Text(status.replaceFirstChar { it.uppercase() }, color = color,
+            style = BraceTheme.typography.label)
+    }
+}
+
+@Composable
+private fun ScenarioCard(eyebrow: String, title: String, description: String, onClick: () -> Unit) {
+    val semantic = BraceTheme.colors.semantic
+    BraceCard(Modifier.fillMaxWidth(), onClick = onClick) {
+        Text(eyebrow, color = semantic.primary, style = BraceTheme.typography.label)
+        Text(title, color = semantic.onSurface, style = BraceTheme.typography.subtitle)
+        Spacer(Modifier.height(BraceTheme.spacing.xs))
+        Text(description, color = semantic.onSurfaceMuted, style = BraceTheme.typography.body)
+        Spacer(Modifier.height(BraceTheme.spacing.sm))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            BraceTag("Runnable sample", minimal = true, intent = BraceTagIntent.Success)
+            BraceIcon(BraceIcons.ChevronForward, null, intent = BraceIconIntent.Primary)
         }
     }
 }

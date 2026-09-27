@@ -1392,44 +1392,7 @@ private fun ComponentSample(
             Column { BraceSwitch(checked, { checked = it }, "Notifications")
                 BraceSwitch(false, {}, "Unavailable setting", enabled = false) }
         }
-        "core-switchcard" -> {
-            var checked by rememberSaveable { mutableStateOf(true) }
-            var subtle by rememberSaveable { mutableStateOf(false) }
-            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                BraceSwitchCard(checked, { checked = it }, "Notifications",
-                    description = "Daily summary across projects", modifier = Modifier.fillMaxWidth())
-                BraceSwitchCard(subtle, { subtle = it }, "No selected card tint",
-                    showAsSelectedWhenChecked = false, modifier = Modifier.fillMaxWidth())
-                BraceSwitchCard(true, {}, "Unavailable switch", enabled = false,
-                    modifier = Modifier.fillMaxWidth())
-            }
-        }
-        "core-checkboxcard" -> {
-            var checked by rememberSaveable { mutableStateOf(false) }
-            var mixed by rememberSaveable { mutableStateOf(true) }
-            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                BraceButton("Set mixed state", onClick = { checked = false; mixed = true },
-                    variant = BraceButtonVariant.Outline)
-                BraceCheckboxCard(checked, { checked = it; mixed = false }, "Include archived",
-                    description = "Across all projects", indeterminate = mixed,
-                    modifier = Modifier.fillMaxWidth())
-                BraceCheckboxCard(true, {}, "Unavailable checkbox", enabled = false,
-                    modifier = Modifier.fillMaxWidth())
-            }
-        }
-        "core-radiocard" -> {
-            var selected by rememberSaveable { mutableStateOf<String?>("soup") }
-            BraceRadioCardGroup(
-                options = listOf(
-                    BraceRadioCardOption("soup", "Soup", "Vegetarian"),
-                    BraceRadioCardOption("salad", "Salad", enabled = false),
-                    BraceRadioCardOption("sandwich", "Sandwich"),
-                ),
-                selectedValue = selected,
-                onValueChange = { selected = it },
-                label = "Lunch special",
-            )
-        }
+        "core-switchcard", "core-checkboxcard", "core-radiocard" -> ControlCardsCatalogSample(id)
         "core-inputgroup" -> {
             var value by rememberSaveable { mutableStateOf("") }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {

@@ -95,7 +95,7 @@ function card(item) {
   addFact(body, 'Catalog sample', item.sample, true);
   addFact(body, 'Guide', item.documentation, true);
   addFact(body, 'Tests', item.tests, true);
-  addFact(body, 'First release', item.firstRelease);
+  addFact(body, 'First shipped', item.firstRelease);
   addFact(body, 'Status record', 'docs/coverage.md', true);
   details.append(summary, body);
   return details;

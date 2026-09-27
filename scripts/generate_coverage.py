@@ -31,6 +31,12 @@ README_END = "<!-- coverage:end -->"
 STATUSES = {"planned", "in progress", "experimental", "stable"}
 CLASSIFICATIONS = {"direct", "adaptation", "web-specific"}
 PACKAGES = {"colors", "core", "icons", "datetime", "select", "table", "labs"}
+SEMVER = re.compile(
+    r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)"
+    r"(?:-(?:0|[1-9][0-9]*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*)"
+    r"(?:\.(?:0|[1-9][0-9]*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*))*)?"
+    r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?"
+)
 REQUIRED = {
     "id", "package", "family", "kind", "track", "blueprintName",
     "blueprintUrl", "pinnedSourceUrl", "sourcePage", "braceApi", "artifact", "behavior",
@@ -128,6 +134,9 @@ def validate(data: dict) -> None:
             fail(f"{row_id}: adaptation or web-specific API needs a reason")
         for field in ("implementation", "sample", "documentation", "tests"):
             validate_path(row, field)
+        release = row["firstRelease"]
+        if release is not None and (not isinstance(release, str) or not SEMVER.fullmatch(release)):
+            fail(f"{row_id}: firstRelease must be SemVer")
         if row["status"] == "stable":
             evidence = ("documentation",) if row["classification"] == "web-specific" else (
                 "implementation", "sample", "documentation", "tests", "firstRelease"
@@ -135,8 +144,6 @@ def validate(data: dict) -> None:
             for field in evidence:
                 if not row[field]:
                     fail(f"{row_id}: stable status requires {field}")
-            if row["firstRelease"] and not re.fullmatch(r"\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?", row["firstRelease"]):
-                fail(f"{row_id}: firstRelease must be SemVer")
     uncovered = set(pages) - covered_pages
     if uncovered:
         fail(f"unpinned or unrepresented docs pages: {sorted(uncovered)}")
@@ -192,7 +199,7 @@ def markdown(data: dict) -> str:
         "",
         f"Baseline: [Blueprint `{baseline['releaseTag']}`](https://github.com/palantir/blueprint/releases/tag/{quote(baseline['releaseTag'], safe='@')}), commit [`{baseline['commit']}`](https://github.com/palantir/blueprint/commit/{baseline['commit']}).",
         "",
-        "The inventory follows the pinned source documentation navigation, with nested public components split into rows. Colors, typography, other design-system capabilities, and table behaviors have explicit rows. Blueprint labs are tracked separately. A row is **stable** only when its implementation, interactive sample, documentation, tests, and first release are recorded; web-only APIs require a documented Compose mapping. Counts are generated from the inventory. Planned and in-progress APIs do not count as stable.",
+        "The inventory follows the pinned source documentation navigation, with nested public components split into rows. Colors, typography, other design-system capabilities, and table behaviors have explicit rows. Blueprint labs are tracked separately. A row is **stable** only when its implementation, interactive sample, documentation, tests, and first release are recorded; web-only APIs require a documented Compose mapping. First shipped records when code first appeared in an artifact; an alpha appearance does not mean the API is stable. Counts are generated from the inventory. Planned and in-progress APIs do not count as stable.",
         "",
         f"**Stable applicable rows: {summary['stableApplicableRows']}/{summary['applicableRows']}** ({summary['stableComponents']}/{summary['applicableComponents']} components; {summary['stableCapabilities']}/{summary['applicableCapabilities']} capabilities).",
         "",
@@ -223,7 +230,7 @@ def markdown(data: dict) -> str:
             if row["reason"]:
                 mapping += ": " + row["reason"]
             if row["firstRelease"]:
-                evidence += f"; since {row['firstRelease']}"
+                evidence += f"; first shipped {row['firstRelease']}"
             lines.append("| " + " | ".join(map(escape, [
                 f"[{row['blueprintName']}]({row['blueprintUrl']}) ([pinned source]({row['pinnedSourceUrl']}))" +
                 (f" ([pinned asset]({row['pinnedAssetUrl']}))" if row.get("pinnedAssetUrl") else ""),
@@ -235,7 +242,7 @@ def markdown(data: dict) -> str:
     lines += [
         "## Updating coverage",
         "",
-        "Claim a row in `inventory/blueprint-components.json`, implement it, and update evidence fields in the same pull request. Run `python3 scripts/generate_coverage.py`; CI checks generated files with `--check`. Stable status requires working code, an interactive sample, documentation, meaningful tests, and a first release version. See [baseline methodology](../BLUEPRINT_BASELINE.md).",
+        "Claim a row in `inventory/blueprint-components.json`, implement it, and update evidence fields in the same pull request. Run `python3 scripts/generate_coverage.py`; CI checks generated files with `--check`. Record the first shipped version when code reaches an artifact. Stable status additionally requires a working API, interactive sample, documentation, and meaningful tests; an alpha first release alone is not stable. See [baseline methodology](../BLUEPRINT_BASELINE.md).",
         "",
     ]
     return "\n".join(lines)

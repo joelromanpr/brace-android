@@ -216,7 +216,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/theming.md",
       "tests": "brace-foundation/src/test/java/io/github/braceandroid/foundation/BraceTokensTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/docs/accessibility.mdx"
     },
     {
@@ -240,7 +240,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/web-mechanisms.md",
       "tests": "brace-foundation/src/androidTest/java/io/github/braceandroid/foundation/BraceThemeRuntimeTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/docs/classes.mdx"
     },
     {
@@ -264,7 +264,7 @@
       "sample": null,
       "documentation": "docs/theming.md",
       "tests": "brace-foundation/src/test/java/io/github/braceandroid/foundation/BraceTokensTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/docs/colors.mdx"
     },
     {
@@ -288,7 +288,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/theming.md",
       "tests": null,
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/docs/typography.mdx"
     },
     {
@@ -312,7 +312,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/theming.md",
       "tests": "brace-foundation/src/androidTest/java/io/github/braceandroid/foundation/BraceThemeRuntimeTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/docs/variables.mdx"
     },
     {
@@ -336,7 +336,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/theming.md",
       "tests": "brace-foundation/src/test/java/io/github/braceandroid/foundation/BraceTokensTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/docs/variables.mdx"
     },
     {
@@ -360,7 +360,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/theming.md",
       "tests": null,
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/docs/variables.mdx"
     },
     {
@@ -384,7 +384,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/theming.md",
       "tests": "brace-foundation/src/test/java/io/github/braceandroid/foundation/BraceTokensTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/docs/variables.mdx"
     },
     {
@@ -408,7 +408,7 @@
       "sample": null,
       "documentation": "docs/theming.md",
       "tests": null,
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/docs/variables.mdx"
     },
     {
@@ -432,7 +432,7 @@
       "sample": null,
       "documentation": "docs/theming.md",
       "tests": null,
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/docs/variables.mdx"
     },
     {
@@ -456,7 +456,7 @@
       "sample": null,
       "documentation": "docs/theming.md",
       "tests": "brace-foundation/src/androidTest/java/io/github/braceandroid/foundation/BraceThemeRuntimeTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/docs/variables.mdx"
     },
     {
@@ -480,7 +480,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/theming.md",
       "tests": "brace-foundation/src/androidTest/java/io/github/braceandroid/foundation/BraceThemeRuntimeTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/docs/variables.mdx"
     },
     {
@@ -504,7 +504,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/navigation-feedback.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceBreadcrumbsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/breadcrumbs/breadcrumbs.mdx"
     },
     {
@@ -528,7 +528,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/core-components.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceCoreInteractionTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/button/buttons.mdx"
     },
     {
@@ -552,7 +552,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/ButtonGroupCatalogSample.kt",
       "documentation": "docs/button-group.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceButtonGroupTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/button/button-group.mdx"
     },
     {
@@ -576,7 +576,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/navigation-feedback.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceFeedbackTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/callout/callout.mdx"
     },
     {
@@ -600,7 +600,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/content-feedback.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceContentInteractionTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/card/card.mdx"
     },
     {
@@ -624,7 +624,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/content-feedback.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceContentInteractionTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/card-list/card-list.mdx"
     },
     {
@@ -648,7 +648,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CollapseTextCatalogSample.kt",
       "documentation": "docs/collapse-text.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceCollapseTextTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/collapse/collapse.mdx"
     },
     {
@@ -672,7 +672,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/content-feedback.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceContentInteractionTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/divider/divider.mdx"
     },
     {
@@ -696,7 +696,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/form-text.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceEditableTextTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/editable-text/editable-text.mdx"
     },
     {
@@ -720,7 +720,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/entity-title.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceEntityTitleTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/entity-title/entity-title.mdx"
     },
     {
@@ -744,7 +744,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/simple-table.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceSimpleTableTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/html-table/html-table.mdx"
     },
     {
@@ -768,7 +768,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/icons.md",
       "tests": "brace-icons/src/androidTest/java/io/github/joelromanpr/brace/icons/BraceIconsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/icon/icon.mdx"
     },
     {
@@ -792,7 +792,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/links.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceLinkTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/link/link.mdx"
     },
     {
@@ -816,7 +816,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/overlays.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceMenuTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/menu/menu.mdx"
     },
     {
@@ -840,7 +840,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/top-bar.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceTopBarTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/navbar/navbar.mdx"
     },
     {
@@ -864,7 +864,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/navigation-feedback.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceFeedbackTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/non-ideal-state/non-ideal-state.mdx"
     },
     {
@@ -888,7 +888,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/OverflowCatalogSample.kt",
       "documentation": "docs/overflow-list.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceOverflowListTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/overflow-list/overflow-list.mdx"
     },
     {
@@ -912,7 +912,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/panel-stack.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BracePanelStackTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/panel-stack/panel-stack.mdx"
     },
     {
@@ -936,7 +936,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/content-feedback.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceProgressBarTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/progress-bar/progress-bar.mdx"
     },
     {
@@ -960,7 +960,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/content-feedback.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceSectionsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/section/section.mdx"
     },
     {
@@ -984,7 +984,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/loading-feedback.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceLoadingTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/skeleton/skeleton.mdx"
     },
     {
@@ -1008,7 +1008,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/loading-feedback.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceLoadingTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/spinner/spinner.mdx"
     },
     {
@@ -1032,7 +1032,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TabsCatalogSample.kt",
       "documentation": "docs/tabs.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceTabsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/tabs/tabs.mdx"
     },
     {
@@ -1056,7 +1056,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/navigation-feedback.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceTagsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/tag/tag.mdx"
     },
     {
@@ -1080,7 +1080,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/navigation-feedback.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceTagsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/tag/compound-tag.mdx"
     },
     {
@@ -1104,7 +1104,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CollapseTextCatalogSample.kt",
       "documentation": "docs/collapse-text.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceCollapseTextTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/text/text.mdx"
     },
     {
@@ -1128,7 +1128,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/tree.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceTreeTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/tree/tree.mdx"
     },
     {
@@ -1152,7 +1152,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/navigation-feedback.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceBreadcrumbsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/breadcrumbs/breadcrumbs.mdx"
     },
     {
@@ -1176,7 +1176,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/links.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceLinkTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/button/buttons.mdx"
     },
     {
@@ -1200,7 +1200,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/control-cards.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceControlCardsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/control-card/control-card.mdx"
     },
     {
@@ -1224,7 +1224,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/control-cards.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceControlCardsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/control-card/control-card.mdx"
     },
     {
@@ -1248,7 +1248,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/control-cards.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceControlCardsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/control-card/control-card.mdx"
     },
     {
@@ -1272,7 +1272,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/semantic-content.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceSemanticContentTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/html/html.mdx"
     },
     {
@@ -1296,7 +1296,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/semantic-content.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceSemanticContentTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/html/html.mdx"
     },
     {
@@ -1320,7 +1320,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/semantic-content.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceSemanticContentTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/html/html.mdx"
     },
     {
@@ -1344,7 +1344,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/semantic-content.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceSemanticContentTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/html/html.mdx"
     },
     {
@@ -1368,7 +1368,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/semantic-content.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceSemanticContentTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/html/html.mdx"
     },
     {
@@ -1392,7 +1392,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/semantic-content.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceSemanticContentTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/html/html.mdx"
     },
     {
@@ -1416,7 +1416,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/semantic-content.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceSemanticContentTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/html/html.mdx"
     },
     {
@@ -1440,7 +1440,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/semantic-content.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceSemanticContentTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/html/html.mdx"
     },
     {
@@ -1464,7 +1464,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/semantic-content.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceSemanticContentTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/html/html.mdx"
     },
     {
@@ -1488,7 +1488,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/semantic-content.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceSemanticContentTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/html/html.mdx"
     },
     {
@@ -1512,7 +1512,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/semantic-content.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceSemanticContentTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/html/html.mdx"
     },
     {
@@ -1536,7 +1536,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/context-shortcuts.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceHotkeysTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/hotkeys/hotkeys-target.mdx"
     },
     {
@@ -1560,7 +1560,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/overlays.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceMenuTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/menu/menu.mdx"
     },
     {
@@ -1584,7 +1584,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/overlays.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceMenuTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/menu/menu.mdx"
     },
     {
@@ -1608,7 +1608,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/top-bar.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceTopBarTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/navbar/navbar.mdx"
     },
     {
@@ -1632,7 +1632,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/top-bar.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceTopBarTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/navbar/navbar.mdx"
     },
     {
@@ -1656,7 +1656,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/top-bar.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceTopBarTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/navbar/navbar.mdx"
     },
     {
@@ -1704,7 +1704,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/content-feedback.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceSectionsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/section/section.mdx"
     },
     {
@@ -1728,7 +1728,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TabsCatalogSample.kt",
       "documentation": "docs/tabs.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceTabsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/tabs/tabs.mdx"
     },
     {
@@ -1752,7 +1752,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TabsCatalogSample.kt",
       "documentation": "docs/tabs.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceTabsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/tabs/tabs.mdx"
     },
     {
@@ -1776,7 +1776,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TabsCatalogSample.kt",
       "documentation": "docs/tabs.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceTabsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/tabs/tabs.mdx"
     },
     {
@@ -1800,7 +1800,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/tree.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceTreeTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/tree/tree.mdx"
     },
     {
@@ -1824,7 +1824,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/form-text.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceFormFieldTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/forms/form-group.mdx"
     },
     {
@@ -1848,7 +1848,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/form-layout.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceFormLayoutTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/forms/control-group.mdx"
     },
     {
@@ -1872,7 +1872,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/form-layout.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceFormLayoutTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/forms/label.mdx"
     },
     {
@@ -1896,7 +1896,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/core-components.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceCoreInteractionTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/forms/checkbox.mdx"
     },
     {
@@ -1920,7 +1920,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/radio-segmented.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceRadioSegmentedTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/forms/radio.mdx"
     },
     {
@@ -1944,7 +1944,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/DropdownCatalogSample.kt",
       "documentation": "docs/dropdown.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceDropdownTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/html-select/html-select.mdx"
     },
     {
@@ -1968,7 +1968,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/radio-segmented.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceRadioSegmentedTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/segmented-control/segmented-control.mdx"
     },
     {
@@ -1992,7 +1992,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/sliders.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceSliderTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/slider/sliders.mdx"
     },
     {
@@ -2016,7 +2016,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/core-components.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceCoreInteractionTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/forms/switch.mdx"
     },
     {
@@ -2040,7 +2040,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/core-components.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceCoreInteractionTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/forms/input-group.mdx"
     },
     {
@@ -2064,7 +2064,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/form-text.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceTextAreaTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/forms/text-area.mdx"
     },
     {
@@ -2088,7 +2088,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/file-picker.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceFilePickerFieldTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/forms/file-input.mdx"
     },
     {
@@ -2112,7 +2112,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/numeric-input.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceNumericFieldTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/forms/numeric-input.mdx"
     },
     {
@@ -2136,7 +2136,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/tag-input.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceTagInputTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/tag-input/tag-input.mdx"
     },
     {
@@ -2160,7 +2160,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/radio-segmented.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceRadioSegmentedTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/forms/radio.mdx"
     },
     {
@@ -2184,7 +2184,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/sliders.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceSliderTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/slider/sliders.mdx"
     },
     {
@@ -2208,7 +2208,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/multi-slider.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceMultiSliderTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/slider/sliders.mdx"
     },
     {
@@ -2232,7 +2232,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/multi-slider.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceMultiSliderTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/slider/sliders.mdx"
     },
     {
@@ -2256,7 +2256,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/overlays.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceOverlayTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/overlay/overlay.mdx"
     },
     {
@@ -2280,7 +2280,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/overlays.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceOverlayTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/overlay2/overlay2.mdx"
     },
     {
@@ -2304,7 +2304,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/overlays.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceOverlayTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/portal/portal.mdx"
     },
     {
@@ -2328,7 +2328,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/overlays.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceDialogTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/alert/alert.mdx"
     },
     {
@@ -2352,7 +2352,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/context-shortcuts.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceContextMenuTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/context-menu/context-menu.mdx"
     },
     {
@@ -2376,7 +2376,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/context-shortcuts.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceContextMenuTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/context-menu/context-menu-popover.mdx"
     },
     {
@@ -2400,7 +2400,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/overlays.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceDialogTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/dialog/dialog.mdx"
     },
     {
@@ -2424,7 +2424,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/drawers-popovers.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceDrawerTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/drawer/drawer.mdx"
     },
     {
@@ -2448,7 +2448,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/drawers-popovers.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BracePopoverTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/popover/popover.mdx"
     },
     {
@@ -2472,7 +2472,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/drawers-popovers.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BracePopoverTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/popover-next/popover-next.mdx"
     },
     {
@@ -2496,7 +2496,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/tooltip-toast.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceToastTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/toast/toast.mdx"
     },
     {
@@ -2520,7 +2520,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/tooltip-toast.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceTooltipTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/tooltip/tooltip.mdx"
     },
     {
@@ -2544,7 +2544,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/overlays.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceDialogTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/dialog/dialog.mdx"
     },
     {
@@ -2568,7 +2568,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/overlays.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceDialogTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/dialog/dialog.mdx"
     },
     {
@@ -2592,7 +2592,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/step-dialog.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceStepDialogTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/dialog/dialog.mdx"
     },
     {
@@ -2616,7 +2616,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/step-dialog.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceStepDialogTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/dialog/dialog.mdx"
     },
     {
@@ -2640,7 +2640,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/tooltip-toast.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceToastTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/toast/toast.mdx"
     },
     {
@@ -2664,7 +2664,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/web-mechanisms.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceHotkeysTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/context/blueprint-provider.mdx"
     },
     {
@@ -2688,7 +2688,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/context-shortcuts.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceHotkeysTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/context/hotkeys/hotkeys-provider.mdx"
     },
     {
@@ -2712,7 +2712,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/overlays.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceOverlayTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/context/overlays/overlays-provider.mdx"
     },
     {
@@ -2736,7 +2736,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/overlays.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceOverlayTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/context/portal/portal-provider.mdx"
     },
     {
@@ -2760,7 +2760,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/context-shortcuts.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceHotkeysTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/hooks/hotkeys/use-hotkeys.mdx"
     },
     {
@@ -2784,7 +2784,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/overlays.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceOverlayTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/hooks/overlays/use-overlay-stack.mdx"
     },
     {
@@ -2808,7 +2808,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/context-shortcuts.md",
       "tests": "brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceHotkeysTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/hotkeys/hotkeys-target.mdx"
     },
     {
@@ -2832,7 +2832,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/select-query.md",
       "tests": "brace-select/src/androidTest/java/io/github/joelromanpr/brace/select/BraceSelectTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/select/src/components/select/select-component.mdx"
     },
     {
@@ -2856,7 +2856,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/suggest-multiselect.md",
       "tests": "brace-select/src/androidTest/java/io/github/joelromanpr/brace/select/BraceSuggestMultiSelectTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/select/src/components/suggest/suggest.mdx"
     },
     {
@@ -2880,7 +2880,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/suggest-multiselect.md",
       "tests": "brace-select/src/androidTest/java/io/github/joelromanpr/brace/select/BraceSuggestMultiSelectTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/select/src/components/multi-select/multi-select.mdx"
     },
     {
@@ -2904,7 +2904,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/command-palette.md",
       "tests": "brace-select/src/androidTest/java/io/github/joelromanpr/brace/select/BraceCommandPaletteTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/select/src/components/omnibar/omnibar.mdx"
     },
     {
@@ -2928,7 +2928,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/select-query.md",
       "tests": "brace-select/src/androidTest/java/io/github/joelromanpr/brace/select/BraceSelectTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/select/src/components/query-list/query-list.mdx"
     },
     {
@@ -2952,7 +2952,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/datetime-picker-input.md",
       "tests": "brace-datetime/src/androidTest/java/io/github/joelromanpr/brace/datetime/BraceDatePickerTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/datetime/src/components/date-picker/date-picker.mdx"
     },
     {
@@ -2976,7 +2976,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/datetime-picker-input.md",
       "tests": "brace-datetime/src/androidTest/java/io/github/joelromanpr/brace/datetime/BraceDateFieldTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/datetime/src/components/date-input/date-input.mdx"
     },
     {
@@ -3000,7 +3000,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/datetime-range.md",
       "tests": "brace-datetime/src/androidTest/java/io/github/joelromanpr/brace/datetime/BraceDateRangePickerTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/datetime/src/components/date-range-picker/date-range-picker.mdx"
     },
     {
@@ -3024,7 +3024,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/datetime-range.md",
       "tests": "brace-datetime/src/androidTest/java/io/github/joelromanpr/brace/datetime/BraceDateRangeFieldTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/datetime/src/components/date-range-input/date-range-input.mdx"
     },
     {
@@ -3048,7 +3048,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/time-picker-input.md",
       "tests": "brace-datetime/src/androidTest/java/io/github/joelromanpr/brace/datetime/BraceTimePickerTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/datetime/src/components/time-picker/timepicker.mdx"
     },
     {
@@ -3072,7 +3072,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/time-zone-select.md",
       "tests": "brace-datetime/src/androidTest/java/io/github/joelromanpr/brace/datetime/BraceTimeZoneSelectTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/datetime/src/components/timezone-select/timezone-select.mdx"
     },
     {
@@ -3096,7 +3096,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/icons.md",
       "tests": "brace-icons/src/androidTest/java/io/github/joelromanpr/brace/icons/BraceIconsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/src/loading-icons.mdx"
     },
     {
@@ -3120,7 +3120,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/icons.md",
       "tests": "brace-blueprint-icons/src/androidTest/java/io/github/joelromanpr/brace/blueprinticons/BraceBlueprintIconPackTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/src/icons-list.mdx"
     },
     {
@@ -3144,7 +3144,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/icons.md",
       "tests": "brace-blueprint-icons-next/src/androidTest/java/io/github/joelromanpr/brace/blueprinticonsnext/BraceBlueprintNextIconPackTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/src/icons-list.mdx",
       "pinnedAssetUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/icons-next.json"
     },
@@ -3169,7 +3169,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-viewport.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceDataTableTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx"
     },
     {
@@ -3193,7 +3193,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-viewport.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceDataTableTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx"
     },
     {
@@ -3217,7 +3217,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-cells.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableCellsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx"
     },
     {
@@ -3241,7 +3241,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-cells.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableCellsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx"
     },
     {
@@ -3265,7 +3265,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-column-name.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableEditableNameTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx"
     },
     {
@@ -3289,7 +3289,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-editing.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableEditingTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx"
     },
     {
@@ -3313,7 +3313,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-cells.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableCellsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx"
     },
     {
@@ -3337,7 +3337,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/table-formats.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceCellFormatsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx"
     },
     {
@@ -3361,7 +3361,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/table-formats.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceCellFormatsTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx"
     },
     {
@@ -3385,7 +3385,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-regions.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableRegionTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx"
     },
     {
@@ -3409,7 +3409,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-viewport.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceDataTableTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx"
     },
     {
@@ -3433,7 +3433,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-viewport.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceDataTableTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx"
     },
     {
@@ -3457,7 +3457,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-selection-resize.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableSelectionResizeTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx"
     },
     {
@@ -3481,7 +3481,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-selection-resize.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableSelectionResizeTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx"
     },
     {
@@ -3505,7 +3505,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-copying.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableClipboardTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx"
     },
     {
@@ -3529,7 +3529,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-editing.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableEditingTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx"
     },
     {
@@ -3553,7 +3553,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-viewport.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceDataTableTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx"
     },
     {
@@ -3577,7 +3577,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-accessibility.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableAccessibilityTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx"
     },
     {
@@ -3601,7 +3601,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableSortingCatalogSample.kt",
       "documentation": "docs/table-sorting.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableSortTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx"
     },
     {
@@ -3625,7 +3625,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-reordering.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableReorderTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx"
     },
     {
@@ -3649,7 +3649,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
       "documentation": "docs/table-loading.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableLoadingTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx"
     },
     {
@@ -3673,7 +3673,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableFormattingCatalogSample.kt",
       "documentation": "docs/table-formats.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableFullValueTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx"
     },
     {
@@ -3697,7 +3697,7 @@
       "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt",
       "documentation": "docs/table-freezing.md",
       "tests": "brace-table/src/androidTest/java/io/github/joelromanpr/brace/table/BraceTableFreezingTest.kt",
-      "firstRelease": null,
+      "firstRelease": "0.1.0-alpha01",
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx"
     },
     {

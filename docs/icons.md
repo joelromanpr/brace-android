@@ -1,13 +1,13 @@
 # Icons and icon loading
 
-This `brace-icons` source slice maps the pinned Blueprint 6.18.0 [Icon component](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/icon/icon.mdx) and [icon loading](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/src/loading-icons.mdx) capabilities (`@blueprintjs/icons` 6.13.0 at that commit) to Compose. Both inventory rows remain **in progress**. The separate opt-in [legacy Blueprint glyph pack](#optional-legacy-blueprint-glyph-pack) is **in progress** with all 706 legacy names. The pinned package also publishes a distinct [next-generation glyph pack](#optional-next-generation-blueprint-glyph-pack) with 695 outlined names and 386 filled variants; its own inventory row is **in progress**. `brace-icons` continues to bundle only 11 original Brace drawings. No Maven Central version has shipped.
+This `brace-icons` source slice maps the pinned Blueprint 6.18.0 [Icon component](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/icon/icon.mdx) and [icon loading](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/src/loading-icons.mdx) capabilities (`@blueprintjs/icons` 6.13.0 at that commit) to Compose. Both inventory rows remain **in progress**. The separate opt-in [legacy Blueprint glyph pack](#optional-legacy-blueprint-glyph-pack) is **in progress** with all 706 legacy names. The pinned package also publishes a distinct [next-generation glyph pack](#optional-next-generation-blueprint-glyph-pack) with 695 outlined names and 386 filled variants; its own inventory row is **in progress**. `brace-icons` continues to bundle only 11 original Brace drawings. All three icon artifacts are available in the `0.1.0-alpha01` preview.
 
 ## Install and use
 
-Publish the local source snapshot with `./gradlew :brace-foundation:publishToMavenLocal :brace-icons:publishToMavenLocal`, then add the aligned coordinate:
+Add the icon artifact from Maven Central:
 
 ```kotlin
-implementation("io.github.joelromanpr.brace:brace-icons:0.1.0-SNAPSHOT")
+implementation("io.github.joelromanpr.brace:brace-icons:0.1.0-alpha01")
 ```
 
 ```kotlin
@@ -54,7 +54,7 @@ Blueprint's React static imports, JavaScript dynamic chunks and loader options, 
 `brace-blueprint-icons` is an **opt-in**, aligned-version artifact. It does not replace `brace-icons` or change `BraceIconRegistry.Default`. It imports the 706 legacy names in pinned `@blueprintjs/icons` 6.13.0, with distinct 16px and 20px SVG paths. Add this artifact when the complete pinned legacy artwork is needed:
 
 ```kotlin
-implementation("io.github.joelromanpr.brace:brace-blueprint-icons:0.1.0-SNAPSHOT")
+implementation("io.github.joelromanpr.brace:brace-blueprint-icons:0.1.0-alpha01")
 ```
 
 Load the 844 KB packaged JSON asset once on a background dispatcher, then retain the immutable pack across screens. Loading performs one local read and JSON parse; `find` lazily parses each requested path into a cached Compose `ImageVector`. Rendering after load does no file or network I/O. The 16px and 20px choices are artwork resolution, independent of the Brace theme's display size. Small defaults to the 16px path; medium and large default to the 20px path. The 20px `third-party` drawing retains its original 20×18 viewBox, and `blank` intentionally draws nothing.
@@ -90,10 +90,10 @@ The [pack manifest](../brace-blueprint-icons/src/main/assets/brace-blueprint-ico
 
 ## Optional next-generation Blueprint glyph pack
 
-The same pinned `@blueprintjs/icons` 6.13.0 package publishes a public [`@blueprintjs/icons/next` subpath](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/next/package.json), backed by a separate [next manifest](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/icons-next.json). Its canonical catalog differs materially from the 706 legacy names: **695 outlined 16px glyphs**, **386 additional filled 16px variants**, and a pinned **706-name legacy-to-next mapping**. Of the canonical next names, 466 do not occur in the legacy catalog. Use the separate, aligned `brace-blueprint-icons-next` artifact to include this artwork; neither it nor the legacy pack changes the 11 original Brace vectors. This source slice is **in progress**, with no Maven Central release.
+The same pinned `@blueprintjs/icons` 6.13.0 package publishes a public [`@blueprintjs/icons/next` subpath](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/next/package.json), backed by a separate [next manifest](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/icons-next.json). Its canonical catalog differs materially from the 706 legacy names: **695 outlined 16px glyphs**, **386 additional filled 16px variants**, and a pinned **706-name legacy-to-next mapping**. Of the canonical next names, 466 do not occur in the legacy catalog. Use the separate, aligned `brace-blueprint-icons-next` artifact to include this artwork; neither it nor the legacy pack changes the 11 original Brace vectors. This API remains **in progress** in the inventory, including after the `0.1.0-alpha01` preview.
 
 ```kotlin
-implementation("io.github.joelromanpr.brace:brace-blueprint-icons-next:0.1.0-SNAPSHOT")
+implementation("io.github.joelromanpr.brace:brace-blueprint-icons-next:0.1.0-alpha01")
 ```
 
 Load its 762 KB packaged manifest once off the UI thread, then retain the immutable pack. `find` returns the exact requested outlined or filled variant and returns null when a glyph has no filled form. The composable draws the outlined form of a known icon if its filled form is absent; an unknown name uses the original Brace Help glyph. Give that unknown fallback an accurate spoken description. Type-safe constants, runtime lookup, metadata/tag search, cache identity and 706 legacy migration names are available. The upstream `/next` JavaScript barrel emits 477 renamed aliases; 221 names are already identity exports and eight colliding names deliberately retain the canonical next export. Brace exposes the [pinned migration map](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/icons-name-map.json) explicitly for all 706 names, so callers can resolve collisions rather than silently assuming an alias:

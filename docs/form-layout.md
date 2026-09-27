@@ -1,6 +1,6 @@
 # Labels and control groups
 
-This `brace-core` source slice maps the pinned Blueprint 6.18.0 Label and ControlGroup components to Android Compose. Both inventory rows are **in progress** and have no Maven Central release. The [generated coverage ledger](coverage.md) records release status.
+This `brace-core` source slice maps the pinned Blueprint 6.18.0 Label and ControlGroup components to Android Compose. Both inventory rows are available in the `0.1.0-alpha01` preview and remain **in progress**. The [generated coverage ledger](coverage.md) records release status.
 
 ## Field label
 

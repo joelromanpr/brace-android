@@ -1,6 +1,6 @@
 # Single-choice dropdown
 
-`BraceDropdown` is the `brace-core` Android adaptation of the pinned Blueprint 6.18.0 [HTMLSelect](https://blueprintjs.com/docs/#core/components/html-select). Its inventory row is **in progress**; there is no Maven Central release or stable-coverage claim.
+`BraceDropdown` is the `brace-core` Android adaptation of the pinned Blueprint 6.18.0 [HTMLSelect](https://blueprintjs.com/docs/#core/components/html-select). Its inventory row remains **in progress** in the `0.1.0-alpha01` preview; availability does not mean stable coverage.
 
 ```kotlin
 var region by rememberSaveable { mutableStateOf<String?>(null) }

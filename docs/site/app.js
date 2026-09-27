@@ -305,7 +305,7 @@ async function load() {
       stat(`${counts.stableApplicableRows ?? 0}/${counts.applicableRows ?? entries.length}`, 'Stable Android items'),
       stat(`${counts.stableComponents ?? 0}/${counts.applicableComponents ?? 0}`, 'Stable components'),
       stat(`${counts.documentedWebSpecificMappings ?? 0}/${counts.webSpecificMappings ?? 0}`, 'Web behaviors explained'),
-      stat(counts.labsRows ?? entries.filter(item => item.track === 'labs').length, 'Early experiments')
+      stat(counts.labsRows ?? entries.filter(item => item.track === 'labs').length, 'Labs items tracked')
     );
     addOptions(familySelect, entries.map(item => item.family));
     addOptions(statusSelect, entries.map(item => item.status));

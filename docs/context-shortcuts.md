@@ -1,6 +1,6 @@
 # Context menus and keyboard shortcuts
 
-This `brace-core` source slice maps six pinned Blueprint rows to Android Compose. All six remain **in progress**. The [coverage ledger](coverage.md) records implementation, sample, tests, and release status per row; none has a first Maven Central release.
+This `brace-core` source slice maps six pinned Blueprint rows to Android Compose. All six remain **in progress**. The [coverage ledger](coverage.md) records implementation, sample, tests, and release status per row; all are available in the `0.1.0-alpha01` preview but remain in progress.
 
 ## Context menu
 

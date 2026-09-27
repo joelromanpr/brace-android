@@ -1,10 +1,10 @@
 # Date picker and date input
 
-`brace-datetime` contains the source implementation of two pinned Blueprint datetime rows: [DatePicker](https://blueprintjs.com/docs/#datetime/date-picker) and [DateInput](https://blueprintjs.com/docs/#datetime/date-input). Both rows remain **in progress**; no Brace datetime artifact has been released to Maven Central. The [coverage inventory](coverage.md) tracks the exact source, sample, tests, and status.
+`brace-datetime` contains two pinned Blueprint datetime rows: [DatePicker](https://blueprintjs.com/docs/#datetime/date-picker) and [DateInput](https://blueprintjs.com/docs/#datetime/date-input). Both are available in the `0.1.0-alpha01` preview and remain **in progress** in the [coverage inventory](coverage.md).
 
-## Add the local snapshot
+## Add the datetime artifact
 
-Publish the aligned artifacts to Maven Local and add `implementation("io.github.joelromanpr.brace:brace-datetime:0.1.0-SNAPSHOT")`. The datetime artifact resolves core and foundation transitively. See [installation](installation.md) for the repository block and supported toolchain.
+Add `implementation("io.github.joelromanpr.brace:brace-datetime:0.1.0-alpha01")`. The datetime artifact resolves core and foundation transitively. See [installation](installation.md) for the repository block and supported toolchain.
 
 ## Choose a day
 

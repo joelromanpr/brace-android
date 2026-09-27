@@ -2,7 +2,7 @@
 
 **Status:** In progress, unreleased. These APIs map the pinned Blueprint 6.18.0 [Radio and RadioGroup](https://blueprintjs.com/docs/#core/components/radio) and [SegmentedControl](https://blueprintjs.com/docs/#core/components/segmented-control) rows. The comparison source is commit `a60d4c92257612808fbfac81cfeee4fcba91a8b4`. The [coverage inventory](coverage.md) remains the authority for release status. No Maven Central artifact or full Blueprint parity is claimed.
 
-The APIs live in `io.github.joelromanpr.brace:brace-core`. For local snapshot consumption, follow [installation](installation.md).
+The APIs live in `io.github.joelromanpr.brace:brace-core`. For Maven Central installation, follow [installation](installation.md).
 
 ## Standalone radio
 

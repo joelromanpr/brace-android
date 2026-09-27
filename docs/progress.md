@@ -5,7 +5,7 @@ Brace is a public Android library in active development. The [component list](co
 ## What you can try now
 
 - Run the [Android catalog](installation.md) to explore components, states, themes, and two complete example screens: electric fleet operations and spacecraft mission control.
-- Use the source modules in a separate app through Maven Local. The [installation guide](installation.md) lists the modules and supported build versions.
+- Install the preview artifacts from Maven Central. The [installation guide](installation.md) lists the modules and supported build versions.
 - Inspect the [table guide](table-viewport.md) for viewport rendering, selection, keyboard navigation, copy, edit, and other implemented interactions.
 
 The [live showcase](https://joelromanpr.github.io/brace-android/) shows real catalog captures. A screenshot proves appearance on that device and theme, while behavior and accessibility evidence live with each component's tests and guide.

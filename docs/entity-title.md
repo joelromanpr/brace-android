@@ -1,6 +1,6 @@
 # Entity title
 
-This source slice maps pinned Blueprint [EntityTitle documentation](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/entity-title/entity-title.mdx) and [public props](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/entity-title/entityTitle.tsx) to one native Compose API. The inventory row is **in progress**, with no first release version.
+This source slice maps pinned Blueprint [EntityTitle documentation](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/entity-title/entity-title.mdx) and [public props](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/entity-title/entityTitle.tsx) to one native Compose API. The API is available in the `0.1.0-alpha01` preview; the inventory row remains **in progress** with no stable acceptance version.
 
 ```kotlin
 BraceEntityTitle(

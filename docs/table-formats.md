@@ -1,6 +1,6 @@
 # Table value formatting and reveal
 
-Pinned Blueprint [TruncatedFormat and JSONFormat](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx) display compact cell values and offer a full-value popover. Brace exposes `BraceTruncatedCell`, `BraceJsonCell`, `BraceTruncatedFormatter`, and `BraceJsonFormatter` in `brace-table`. These inventory rows remain **in progress** and unpublished.
+Pinned Blueprint [TruncatedFormat and JSONFormat](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx) display compact cell values and offer a full-value popover. Brace exposes `BraceTruncatedCell`, `BraceJsonCell`, `BraceTruncatedFormatter`, and `BraceJsonFormatter` in `brace-table`. These inventory rows remain **in progress** in the `0.1.0-alpha01` preview.
 
 ```kotlin
 val details = "A long log line that needs room to read..."

@@ -1,6 +1,6 @@
 # Editable table column names
 
-Brace adds `BraceEditableColumnName` and controlled column-header title editing to [BraceDataTable](table-viewport.md). The comparison is the pinned Blueprint [EditableName API](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx) and [implementation](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/headers/editableName.tsx). This inventory row is **in progress** and unpublished.
+Brace adds `BraceEditableColumnName` and controlled column-header title editing to [BraceDataTable](table-viewport.md). The comparison is the pinned Blueprint [EditableName API](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx) and [implementation](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/headers/editableName.tsx). This inventory row is **in progress** in the `0.1.0-alpha01` preview.
 
 ```kotlin
 private data class CaseRow(val id: String, val status: String)

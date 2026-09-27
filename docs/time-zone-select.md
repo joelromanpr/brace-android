@@ -1,6 +1,6 @@
 # Time-zone selection
 
-`brace-datetime` contains the in-progress Android adaptation of the pinned Blueprint 6.18.0 [TimezoneSelect](https://blueprintjs.com/docs/#datetime/timezone-select) row. The catalog app has an interactive search, local-zone ordering, winter/summer reference dates, all five trigger display modes, and a disabled state. This API has not been released to Maven Central or marked stable.
+`brace-datetime` contains the in-progress Android adaptation of the pinned Blueprint 6.18.0 [TimezoneSelect](https://blueprintjs.com/docs/#datetime/timezone-select) row. The catalog app has an interactive search, local-zone ordering, winter/summer reference dates, all five trigger display modes, and a disabled state. This API is available in the `0.1.0-alpha01` preview but has not been marked stable.
 
 ```kotlin
 var selectedId by rememberSaveable { mutableStateOf<String?>(null) }

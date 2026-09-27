@@ -1,6 +1,6 @@
 # Suggestions and multiple selection
 
-`brace-select` now contains source implementations of `BraceSuggest` and `BraceMultiSelect`, mapped to the pinned Blueprint 6.18.0 [Suggest](https://blueprintjs.com/docs/#select/suggest) and [MultiSelect](https://blueprintjs.com/docs/#select/multi-select) pages. Both inventory rows are **in progress**. Neither API has a Maven Central release.
+`brace-select` now contains source implementations of `BraceSuggest` and `BraceMultiSelect`, mapped to the pinned Blueprint 6.18.0 [Suggest](https://blueprintjs.com/docs/#select/suggest) and [MultiSelect](https://blueprintjs.com/docs/#select/multi-select) pages. Both inventory rows are **in progress**. Both APIs are available in the `0.1.0-alpha01` preview.
 
 ## Suggest: free text with explicit suggestions
 

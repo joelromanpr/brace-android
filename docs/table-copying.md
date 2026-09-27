@@ -1,6 +1,6 @@
 # Table copying
 
-Brace adds plain-text copying to the [Brace data table](table-viewport.md). It covers the pinned Blueprint [Copying capability](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx) as an Android adaptation. The inventory row remains **in progress** and unpublished.
+Brace adds plain-text copying to the [Brace data table](table-viewport.md). It covers the pinned Blueprint [Copying capability](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx) as an Android adaptation. The inventory row remains **in progress** in the `0.1.0-alpha01` preview.
 
 `BraceDataTable` copies the current controlled `BraceTableSelection` with Ctrl+C or Meta+C when the table has keyboard focus. Its TalkBack node exposes a localized **Copy selected cells** action. The text goes to the Android system clipboard. The clipboard can surface a system confirmation or preview according to the OS version. Touch users can use the accessibility action or call the formatter from their own toolbar:
 

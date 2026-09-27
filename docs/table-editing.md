@@ -1,6 +1,6 @@
 # Table cell editing
 
-Brace adds `BraceEditableCell` and controlled cell editing to [BraceDataTable](table-viewport.md). It maps the pinned Blueprint [EditableCell API](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx) and [Editing feature](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx) to Compose and Android focus, IME, pointer, and accessibility behavior. Both inventory rows remain **in progress** and unpublished.
+Brace adds `BraceEditableCell` and controlled cell editing to [BraceDataTable](table-viewport.md). It maps the pinned Blueprint [EditableCell API](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-api.mdx) and [Editing feature](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/table/src/docs/table-features.mdx) to Compose and Android focus, IME, pointer, and accessibility behavior. Both inventory rows remain **in progress** in the `0.1.0-alpha01` preview.
 
 ```kotlin
 private data class CaseRow(val id: String, val title: String)

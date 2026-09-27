@@ -20,6 +20,12 @@ Open the app to search components, try their states, and change light or dark th
 
 ## Use a component
 
+Add `brace-core` from Maven Central:
+
+```kotlin
+implementation("io.github.joelromanpr.brace:brace-core:0.1.0-alpha01")
+```
+
 ```kotlin
 var name by rememberSaveable { mutableStateOf("") }
 
@@ -39,7 +45,7 @@ BraceTheme {
 **Stable: 0 of 122 tracked Android items** (0 of 94 components; 0 of 28 design-system capabilities). [See the full coverage record, web mappings, and experimental work](docs/coverage.md).
 <!-- coverage:end -->
 
-Brace is under active development. The source can be built and published to Maven Local, but no version is available on Maven Central yet. The [component list](docs/coverage.md) shows what is in progress, planned, or released. Its counts come from the [machine-readable inventory](inventory/blueprint-components.json), so screenshots never imply a release.
+The `0.1.0-alpha01` preview is [available on Maven Central](https://central.sonatype.com/artifact/io.github.joelromanpr.brace/brace-core/0.1.0-alpha01). Add only the [artifacts you need](docs/installation.md); all eight use the same version. This is an early API preview. The [component list](docs/coverage.md) shows what is in progress, experimental, or stable. Its counts come from the [machine-readable inventory](inventory/blueprint-components.json), so an installable artifact or screenshot never implies a finished component.
 
 The comparison uses a [pinned reference version](BLUEPRINT_BASELINE.md). [License and asset attribution](docs/attribution.md) are recorded separately.
 

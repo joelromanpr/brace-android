@@ -1,6 +1,6 @@
 # Form fields and editable text
 
-This `brace-core` source slice covers the pinned Blueprint 6.18.0 FormGroup, TextArea, and EditableText rows. They remain **in progress**. The [coverage ledger](coverage.md) is the source of truth for release status; no Maven Central version has shipped.
+This `brace-core` source slice covers the pinned Blueprint 6.18.0 FormGroup, TextArea, and EditableText rows. They remain **in progress**. They are available in the `0.1.0-alpha01` preview; the [coverage ledger](coverage.md) records when their behavior reaches stable status.
 
 ## Form field
 

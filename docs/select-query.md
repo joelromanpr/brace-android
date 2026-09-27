@@ -1,6 +1,6 @@
 # Single selection and query state
 
-Brace's `brace-select` artifact introduces the source implementation of `BraceSelect` and `rememberBraceQueryListState`. They correspond to the pinned Blueprint 6.18.0 [Select](https://blueprintjs.com/docs/#select/select-component) and [QueryList](https://blueprintjs.com/docs/#select/query-list) rows. Both remain **in progress**; there is no released Maven Central artifact yet.
+Brace's `brace-select` artifact introduces the source implementation of `BraceSelect` and `rememberBraceQueryListState`. They correspond to the pinned Blueprint 6.18.0 [Select](https://blueprintjs.com/docs/#select/select-component) and [QueryList](https://blueprintjs.com/docs/#select/query-list) rows. Both are available in the `0.1.0-alpha01` preview and remain **in progress**.
 
 ```kotlin
 val choices = listOf(

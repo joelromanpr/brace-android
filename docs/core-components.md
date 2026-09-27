@@ -1,8 +1,8 @@
 # Core components
 
-The first `brace-core` slice implements Button, Checkbox, Switch, and a single-line text field mapped to Blueprint InputGroup. These APIs are **in progress** in the pinned inventory. They compile and have catalog examples and interaction tests, but have no public Maven release or completed device test matrix yet. Do not treat them as full Blueprint parity.
+The first `brace-core` slice implements Button, Checkbox, Switch, and a single-line text field mapped to Blueprint InputGroup. These APIs are **in progress** in the pinned inventory. They are available in the `0.1.0-alpha01` preview with catalog examples and interaction tests, but the device acceptance matrix remains incomplete. Do not treat them as full Blueprint parity.
 
-Use `io.github.joelromanpr.brace:brace-core` after the first Maven release, or publish the current snapshot to Maven Local as described in [installation](installation.md). Wrap a screen in `BraceTheme`; every control below reads semantic or component tokens. The catalog's component list and availability labels come from `inventory/blueprint-components.json` through the coverage generator.
+Use `io.github.joelromanpr.brace:brace-core:0.1.0-alpha01` from Maven Central as described in [installation](installation.md). Wrap a screen in `BraceTheme`; every control below reads semantic or component tokens. The catalog's component list and availability labels come from `inventory/blueprint-components.json` through the coverage generator.
 
 ## Button
 

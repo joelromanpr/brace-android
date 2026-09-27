@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -13,7 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -59,7 +63,8 @@ public enum class BracePopoverPlacement {
  * [target] remains in normal layout and owns the trigger action; the caller changes [expanded]
  * in response to that action and to [onDismissRequest]. A focusable Compose popup handles
  * outside click and system Back. Escape is handled for hardware keyboards. The popup flips
- * and clamps within the window, and an open popup registers in [BraceOverlayHost] if present.
+ * and clamps within the visible window above the software keyboard, and an open popup registers
+ * in [BraceOverlayHost] if present.
  * On close, focus is requested back to the first focusable descendant of [target].
  *
  * Give [title] a localized pane name for TalkBack. [content] should contain focusable controls
@@ -92,11 +97,18 @@ public fun BracePopover(
     val callerLayoutDirection = LocalLayoutDirection.current
     val screen = LocalConfiguration.current
     val maxWidth = max(48, screen.screenWidthDp - 2 * BraceTheme.spacing.sm.value.toInt()).dp
-    val maxHeight = (screen.screenHeightDp * 0.8f).dp
     val gapPx = with(density) { BraceTheme.spacing.xs.roundToPx() }
     val edgePx = with(density) { BraceTheme.spacing.sm.roundToPx() }
-    val positioner = remember(placement, gapPx, edgePx, callerLayoutDirection) {
-        BracePopoverPositionProvider(placement, gapPx, edgePx, callerLayoutDirection)
+    val hostImeBottomPx = WindowInsets.ime.getBottom(density)
+    var popupImeBottomPx by remember { mutableIntStateOf(0) }
+    val imeBottomPx = maxOf(hostImeBottomPx, popupImeBottomPx)
+    val imeBottomDp = with(density) { imeBottomPx.toDp() }
+    val maxHeight = minOf(
+        (screen.screenHeightDp * 0.8f).dp,
+        maxOf(sizing.touchTarget, screen.screenHeightDp.dp - imeBottomDp - BraceTheme.spacing.sm * 2),
+    )
+    val positioner = remember(placement, gapPx, edgePx, callerLayoutDirection, imeBottomPx) {
+        BracePopoverPositionProvider(placement, gapPx, edgePx, callerLayoutDirection, imeBottomPx)
     }
 
     LaunchedEffect(expanded) {
@@ -124,6 +136,11 @@ public fun BracePopover(
                     dismissOnClickOutside = dismissOnClickOutside,
                 ),
             ) {
+                // A focusable Popup owns a separate Android window. Its IME insets may update
+                // even when the anchor activity window reports zero.
+                val popupIme = WindowInsets.ime.getBottom(LocalDensity.current)
+                SideEffect { popupImeBottomPx = popupIme }
+                DisposableEffect(Unit) { onDispose { popupImeBottomPx = 0 } }
                 CompositionLocalProvider(LocalLayoutDirection provides callerLayoutDirection) {
                     Box(
                         modifier = surfaceModifier
@@ -158,6 +175,7 @@ internal class BracePopoverPositionProvider(
     private val gap: Int,
     private val edge: Int,
     private val callerLayoutDirection: LayoutDirection? = null,
+    private val imeBottom: Int = 0,
 ) : PopupPositionProvider {
     override fun calculatePosition(
         anchorBounds: IntRect,
@@ -167,10 +185,11 @@ internal class BracePopoverPositionProvider(
     ): IntOffset {
         val a = anchorBounds
         val p = popupContentSize
+        val visibleHeight = max(edge * 2 + 1, windowSize.height - imeBottom.coerceAtLeast(0))
         val rtl = (callerLayoutDirection ?: layoutDirection) == LayoutDirection.Rtl
         val side = when (placement) {
             BracePopoverPlacement.Auto -> {
-                val below = windowSize.height - a.bottom - edge - gap
+                val below = visibleHeight - a.bottom - edge - gap
                 val above = a.top - edge - gap
                 val logicalEnd = if (rtl) a.left else windowSize.width - a.right
                 val logicalStart = if (rtl) windowSize.width - a.right else a.left
@@ -190,14 +209,14 @@ internal class BracePopoverPositionProvider(
         val start = side in setOf(BracePopoverPlacement.Start, BracePopoverPlacement.StartTop, BracePopoverPlacement.StartBottom)
         val end = side in setOf(BracePopoverPlacement.End, BracePopoverPlacement.EndTop, BracePopoverPlacement.EndBottom)
         val oppositeRoom = when {
-            top -> windowSize.height - a.bottom - edge - gap
+            top -> visibleHeight - a.bottom - edge - gap
             bottom -> a.top - edge - gap
             start -> if (rtl) a.left - edge - gap else windowSize.width - a.right - edge - gap
             else -> if (rtl) windowSize.width - a.right - edge - gap else a.left - edge - gap
         }
         val preferredRoom = when {
             top -> a.top - edge - gap
-            bottom -> windowSize.height - a.bottom - edge - gap
+            bottom -> visibleHeight - a.bottom - edge - gap
             start -> if (rtl) windowSize.width - a.right - edge - gap else a.left - edge - gap
             else -> if (rtl) a.left - edge - gap else windowSize.width - a.right - edge - gap
         }
@@ -223,7 +242,7 @@ internal class BracePopoverPositionProvider(
         }
         return IntOffset(
             x.coerceIn(edge, max(edge, windowSize.width - p.width - edge)),
-            y.coerceIn(edge, max(edge, windowSize.height - p.height - edge)),
+            y.coerceIn(edge, max(edge, visibleHeight - p.height - edge)),
         )
     }
 }

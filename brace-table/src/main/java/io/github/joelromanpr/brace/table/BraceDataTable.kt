@@ -30,10 +30,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.structuralEqualityPolicy
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key as composeKey
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +44,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -91,6 +95,7 @@ import kotlinx.coroutines.launch
  * A typed column with a stable [key], visible [title], and base [width].
  * [cellText] is required even with custom [cellContent] so TalkBack always receives the full value.
  * Keep custom content noninteractive until dedicated cell-action APIs are available.
+ * Set [editable] to opt a column into the controlled [BraceDataTable] edit session.
  */
 class BraceTableColumn<Row>(
     val key: String,
@@ -98,6 +103,7 @@ class BraceTableColumn<Row>(
     val width: Dp,
     val cellText: (Row) -> String,
     val cellContent: (@Composable (Row) -> Unit)? = null,
+    val editable: Boolean = false,
 )
 
 /** Controlled table selection identified by stable row and column keys. */
@@ -154,7 +160,11 @@ fun rememberBraceTableViewport(): BraceTableViewport {
  * Optional controlled width/height maps and callbacks enable 48dp resize handles. Callers
  * must update those maps in response to callbacks for live visual resizing.
  * Ctrl/Cmd+C and the TalkBack copy action place the selected values on the Android clipboard.
- * Editing, disjoint selections, and frozen data regions are not yet exposed.
+ * Opt-in editable columns use [editingCell], [onEditingCellChange], [onCellCommit], and
+ * [validateCell]. The caller owns the confirmed row value and active cell. Enter or F2 edits
+ * the selected cell; double-tap or the TalkBack action edits a visible cell. A successful
+ * commit or cancel returns keyboard focus to the table. Disjoint selections and frozen data
+ * regions are not yet exposed.
  */
 @Composable
 fun <Row> BraceDataTable(
@@ -174,11 +184,22 @@ fun <Row> BraceDataTable(
     onRowHeightChange: ((String, Dp) -> Unit)? = null,
     maxColumnWidth: Dp? = null,
     maxRowHeight: Dp? = null,
+    editingCell: BraceTableSelection.Cell? = null,
+    onEditingCellChange: ((BraceTableSelection.Cell?) -> Unit)? = null,
+    onCellCommit: ((BraceTableSelection.Cell, String) -> Unit)? = null,
+    validateCell: (BraceTableSelection.Cell, String) -> String? = { _, _ -> null },
 ) {
     remember(height, maxColumnWidth, maxRowHeight, columnWidths, rowHeights) {
         validateTableDimensions(height, maxColumnWidth, maxRowHeight, columnWidths, rowHeights)
         true
     }
+    require((onEditingCellChange == null) == (onCellCommit == null)) {
+        "Editing requires both onEditingCellChange and onCellCommit"
+    }
+    require(editingCell == null || onEditingCellChange != null) {
+        "An active editingCell requires editing callbacks"
+    }
+    val editingEnabled = onEditingCellChange != null && onCellCommit != null
     val rowIndex = remember(rows) { validateRowKeys(rows, rowKey) }
     val rowIndexes = rowIndex.byKey
     val baseMinColumnWidth = BraceTheme.sizing.tableMinColumnWidth
@@ -206,7 +227,12 @@ fun <Row> BraceDataTable(
         else with(density) { typography.label.lineHeight.toDp() }
     val defaultRowHeight = maxOf(densityTokens.rowHeightDp + densityTokens.itemGapDp,
         BraceTheme.sizing.touchTarget, maxOf(bodyLineHeight, headerLineHeight) + spacing.sm)
-    val effectiveMaxRowHeight = maxRowHeight?.coerceAtLeast(defaultRowHeight)
+    val captionLineHeight = if (typography.caption.lineHeight == TextUnit.Unspecified) 0.dp
+        else with(density) { typography.caption.lineHeight.toDp() }
+    val editorRowHeight = maxOf(defaultRowHeight,
+        maxOf(bodyLineHeight, BraceTheme.sizing.touchTarget) + captionLineHeight + spacing.sm)
+    val effectiveMaxRowHeight = maxRowHeight?.coerceAtLeast(
+        if (editingCell == null) defaultRowHeight else editorRowHeight)
     val headerHeight = defaultRowHeight
     val rowHeaderName = stringResource(R.string.brace_table_row_header)
     val textMeasurer = rememberTextMeasurer()
@@ -242,6 +268,8 @@ fun <Row> BraceDataTable(
     }
     val selectedAction = stringResource(R.string.brace_table_select)
     val copyAction = stringResource(R.string.brace_table_copy)
+    val editAction = stringResource(R.string.brace_table_edit)
+    val editDescription = stringResource(R.string.brace_table_edit_description)
     val extendRangeAction = stringResource(R.string.brace_table_extend_range)
     val emptyText = stringResource(R.string.brace_table_empty)
     val rowDescription = stringResource(R.string.brace_table_row_description)
@@ -292,6 +320,47 @@ fun <Row> BraceDataTable(
         else -> null
     }
     val canCopySelection = rows.isNotEmpty() && columns.isNotEmpty() && selectionAnnouncement != null
+    LaunchedEffect(editingCell, rowIndexes, columns) {
+        if (editingCell != null && (editingCell.rowKey !in rowIndexes ||
+                columns.none { it.key == editingCell.columnKey && it.editable })) {
+            onEditingCellChange?.invoke(null)
+            withFrameNanos { }
+            requester.requestFocus()
+        }
+    }
+    LaunchedEffect(editingCell, viewportWidthPx, columnIndex, rowIndex) {
+        if (editingCell == null || !editingEnabled || viewportWidthPx <= 0) return@LaunchedEffect
+        val targetRow = rowIndexes[editingCell.rowKey] ?: return@LaunchedEffect
+        val targetColumn = columnIndex.byKey[editingCell.columnKey] ?: return@LaunchedEffect
+        if (!columns[targetColumn].editable) return@LaunchedEffect
+        val visibleRow = viewport.vertical.layoutInfo.visibleItemsInfo.firstOrNull { it.index == targetRow }
+        if (visibleRow == null) viewport.vertical.scrollToItem(targetRow)
+        else {
+            val layout = viewport.vertical.layoutInfo
+            when {
+                visibleRow.offset < layout.viewportStartOffset ->
+                    viewport.vertical.scrollBy((visibleRow.offset - layout.viewportStartOffset).toFloat())
+                visibleRow.offset + visibleRow.size > layout.viewportEndOffset ->
+                    viewport.vertical.scrollBy((visibleRow.offset + visibleRow.size - layout.viewportEndOffset).toFloat())
+            }
+        }
+        val startPx = with(density) { columnIndex.starts[targetColumn].roundToPx() }
+        val endPx = with(density) { columnIndex.ends[targetColumn].roundToPx() }
+        val bodyWidthPx = (viewportWidthPx - with(density) { rowHeaderWidth.roundToPx() }).coerceAtLeast(0)
+        val nextOffset = when {
+            startPx < viewport.horizontal.value -> startPx
+            endPx > viewport.horizontal.value + bodyWidthPx -> endPx - bodyWidthPx
+            else -> viewport.horizontal.value
+        }
+        viewport.horizontal.scrollTo(nextOffset.coerceAtLeast(0))
+    }
+    fun finishEditing() {
+        onEditingCellChange?.invoke(null)
+        scope.launch {
+            withFrameNanos { }
+            requester.requestFocus()
+        }
+    }
 
     BoxWithConstraints(
         modifier.fillMaxWidth().height(height)
@@ -303,6 +372,18 @@ fun <Row> BraceDataTable(
             .onFocusChanged { focused = it.isFocused }
             .onPreviewKeyEvent { event ->
                 if (event.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
+                if (editingCell != null) return@onPreviewKeyEvent false
+                if (focused && focusedResizeHandleId == null && !event.isAltPressed &&
+                    !event.isCtrlPressed && !event.isMetaPressed &&
+                    (event.nativeKeyEvent.keyCode == AndroidKeyEvent.KEYCODE_ENTER ||
+                        event.nativeKeyEvent.keyCode == AndroidKeyEvent.KEYCODE_F2)) {
+                    val chosen = selection as? BraceTableSelection.Cell
+                    if (editingEnabled && chosen != null && chosen.rowKey in rowIndexes &&
+                        columns.any { it.key == chosen.columnKey && it.editable }) {
+                        onEditingCellChange?.invoke(chosen)
+                        return@onPreviewKeyEvent true
+                    }
+                }
                 if (!event.isAltPressed && (event.isCtrlPressed || event.isMetaPressed) &&
                     event.nativeKeyEvent.keyCode == AndroidKeyEvent.KEYCODE_C) {
                     return@onPreviewKeyEvent copySelection()
@@ -329,7 +410,8 @@ fun <Row> BraceDataTable(
                     var coveredPx = 0
                     while (index in rows.indices) {
                         val key = rowIndex.keys[index]
-                        val requested = maxOf(defaultRowHeight, rowHeights[key] ?: defaultRowHeight)
+                        val minimum = if (editingCell?.rowKey == key) editorRowHeight else defaultRowHeight
+                        val requested = maxOf(minimum, rowHeights[key] ?: minimum)
                         val itemHeight = if (effectiveMaxRowHeight == null) requested else
                             minOf(effectiveMaxRowHeight, requested)
                         val rowPx = with(density) { itemHeight.roundToPx() }.coerceAtLeast(1)
@@ -391,7 +473,8 @@ fun <Row> BraceDataTable(
                 contentDescription = tableLabel
                 isTraversalGroup = true
                 if (selectionAnnouncement != null) stateDescription = selectionAnnouncement
-                if (canCopySelection) customActions = listOf(CustomAccessibilityAction(copyAction) { copySelection() })
+                if (canCopySelection && editingCell == null)
+                    customActions = listOf(CustomAccessibilityAction(copyAction) { copySelection() })
             }
             .testTag("brace-table"),
     ) {
@@ -476,7 +559,8 @@ fun <Row> BraceDataTable(
                         val key = rowIndex.keys[rowNumber]
                         val accessibleRowLabel = if (rowLabel === rowKey) key else rowLabel(row)
                         val rowSelected = selection == BraceTableSelection.Row(key)
-                        val requestedHeight = maxOf(defaultRowHeight, rowHeights[key] ?: defaultRowHeight)
+                        val minimumRowHeight = if (editingCell?.rowKey == key) editorRowHeight else defaultRowHeight
+                        val requestedHeight = maxOf(minimumRowHeight, rowHeights[key] ?: minimumRowHeight)
                         val itemHeight = if (effectiveMaxRowHeight == null) requestedHeight else
                             minOf(effectiveMaxRowHeight, requestedHeight)
                         val rowColor = if (rowSelected) colors.selectedRow
@@ -531,7 +615,34 @@ fun <Row> BraceDataTable(
                                     ))
                                     requester.requestFocus()
                                 }
-                                Box(
+                                val cell = BraceTableSelection.Cell(key, column.key)
+                                val isEditing = editingEnabled && editingCell == cell && column.editable
+                                val beginEdit: () -> Unit = {
+                                    if (editingEnabled && column.editable) {
+                                        pendingTouchRangeAnchor = null
+                                        onSelectionChange(cell)
+                                        onEditingCellChange?.invoke(cell)
+                                    }
+                                }
+                                if (isEditing) {
+                                    composeKey(key, column.key) {
+                                        BraceEditableCell(
+                                            value = value,
+                                            label = editDescription.format(column.title, rowNumber + 1, accessibleRowLabel),
+                                            onCommit = { draft ->
+                                                onCellCommit?.invoke(cell, draft)
+                                                finishEditing()
+                                            },
+                                            onCancel = { finishEditing() },
+                                            validate = { draft -> validateCell(cell, draft) },
+                                            rowIndex = rowNumber,
+                                            columnIndex = columnNumber,
+                                            modifier = Modifier.offset(x = rowHeaderWidth + columnIndex.starts[columnNumber])
+                                                .width(widths[columnNumber]).height(itemHeight)
+                                                .testTag("brace-table-editor:$key:${column.key}"),
+                                        )
+                                    }
+                                } else Box(
                                     Modifier.offset(x = rowHeaderWidth + columnIndex.starts[columnNumber])
                                         .width(widths[columnNumber]).height(itemHeight)
                                         .background(cellColor)
@@ -548,7 +659,8 @@ fun <Row> BraceDataTable(
                                         }
                                         .border(if (cellSelected && focused) BraceTheme.sizing.focusRingWidth else metrics.gridLineWidth,
                                             if (cellSelected && focused) semantic.focusRing else colors.gridLine)
-                                        .pointerSelect(key, column.key, selectCell, beginTouchRange)
+                                        .pointerSelect(key, column.key, selectCell, beginTouchRange,
+                                            if (editingEnabled && column.editable) beginEdit else null)
                                         .testTag("brace-table-cell:$key:${column.key}")
                                         .clearAndSetSemantics {
                                             collectionItemInfo = CollectionItemInfo(rowNumber + 1, 1, columnNumber + 1, 1)
@@ -556,9 +668,14 @@ fun <Row> BraceDataTable(
                                             selected = cellSelected
                                             contentDescription = cellDescription.format(column.title, rowNumber + 1, accessibleRowLabel, value)
                                             onClick(selectedAction) { selectCell(); true }
-                                            customActions = listOf(CustomAccessibilityAction(extendRangeAction) {
-                                                beginTouchRange(); true
-                                            })
+                                            customActions = listOfNotNull(
+                                                CustomAccessibilityAction(extendRangeAction) {
+                                                    beginTouchRange(); true
+                                                },
+                                                if (editingEnabled && column.editable)
+                                                    CustomAccessibilityAction(editAction) { beginEdit(); true }
+                                                else null,
+                                            )
                                         },
                                     contentAlignment = Alignment.CenterStart,
                                 ) {
@@ -618,7 +735,7 @@ fun <Row> BraceDataTable(
                                 style = typography.label)
                         }
                         if (onRowHeightChange != null) {
-                            val minimum = defaultRowHeight
+                            val minimum = if (editingCell?.rowKey == key) editorRowHeight else defaultRowHeight
                             BraceTableResizeHandle(
                                 axis = BraceResizeAxis.Row,
                                 id = key,
@@ -675,13 +792,19 @@ private fun Modifier.pointerSelect(
     columnKey: String?,
     select: () -> Unit,
     onLongPress: (() -> Unit)? = null,
+    onDoubleTap: (() -> Unit)? = null,
 ): Modifier {
     val latestSelect = rememberUpdatedState(select)
     val latestLongPress = rememberUpdatedState(onLongPress)
-    return pointerInput(rowKey, columnKey) {
+    val latestDoubleTap = rememberUpdatedState(onDoubleTap)
+    val doubleTapHandler: ((Offset) -> Unit)? = if (onDoubleTap != null) {
+        { latestDoubleTap.value?.invoke() }
+    } else null
+    return pointerInput(rowKey, columnKey, onDoubleTap != null) {
         detectTapGestures(
             onTap = { latestSelect.value() },
             onLongPress = { latestLongPress.value?.invoke() },
+            onDoubleTap = doubleTapHandler,
         )
     }
 }

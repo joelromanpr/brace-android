@@ -14,6 +14,10 @@ Each capture records its source branch and full commit, emulator, pixel dimensio
 
 The static site cannot demonstrate TalkBack, touch, mouse, keyboard, state restoration, or motion behavior. Use the Android catalog and component tests for those checks. Screenshots do not change inventory status or coverage counts.
 
+## Component details
+
+- [Tree and TreeNode](site/showcase/tree-400.png) shows an expanded branch, selected Alpha child, disabled Beta child, and collapsed branches in the real API 36 catalog. The inventory remains in progress.
+
 ## Runnable operations examples
 
 The catalog also contains two fictional screens assembled from Brace source:

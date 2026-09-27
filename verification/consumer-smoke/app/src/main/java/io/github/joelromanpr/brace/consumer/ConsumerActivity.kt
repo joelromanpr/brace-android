@@ -16,9 +16,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
 import io.github.braceandroid.foundation.BraceTheme
 import io.github.joelromanpr.brace.datetime.BraceDatePicker
 import io.github.joelromanpr.brace.datetime.BraceDateRange
@@ -37,11 +39,17 @@ import kotlinx.coroutines.withContext
 import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbs
+import io.github.joelromanpr.brace.core.BraceTree
+import io.github.joelromanpr.brace.core.BraceTreeNode
+import io.github.joelromanpr.brace.core.rememberBraceTreeState
 import io.github.joelromanpr.brace.core.BraceTopBar
 import io.github.joelromanpr.brace.core.BraceTopBarGroup
 import io.github.joelromanpr.brace.core.BraceTopBarTitle
 import io.github.joelromanpr.brace.core.BraceTopBarDivider
 import io.github.joelromanpr.brace.core.BraceFilePickerField
+import io.github.joelromanpr.brace.core.BraceHeading2
+import io.github.joelromanpr.brace.core.BraceCode
+import io.github.joelromanpr.brace.core.BraceOrderedList
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceCallout
@@ -106,6 +114,8 @@ import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconPack
 import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconVariant
 import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
+import io.github.joelromanpr.brace.select.BraceSuggest
+import io.github.joelromanpr.brace.select.BraceMultiSelect
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
 import io.github.joelromanpr.brace.table.BraceTableClipboard
 import io.github.joelromanpr.brace.table.BraceDataTable
@@ -165,6 +175,7 @@ class ConsumerActivity : ComponentActivity() {
                 var reportingZone by remember { mutableStateOf<ZoneId?>(null) }
                 val shortcutState = rememberBraceShortcutRegistryState()
                 val toasts = rememberBraceToastState()
+                val tree = rememberBraceTreeState(initialExpandedKeys = setOf("projects"))
                 Box(Modifier.fillMaxSize()) {
                     Column {
                         BraceFilePickerField(
@@ -176,6 +187,9 @@ class ConsumerActivity : ComponentActivity() {
                             mimeTypes = listOf("application/pdf"),
                             multiple = true,
                         )
+                        BraceHeading2("Consumer smoke")
+                        BraceCode("val ready = true")
+                        BraceOrderedList(listOf("Build", "Publish locally", "Consume"))
                         BraceTopBar(
                             startContent = { BraceTopBarGroup {
                                 BraceTopBarTitle("Imports")
@@ -188,28 +202,35 @@ class ConsumerActivity : ComponentActivity() {
                         BraceCard {
                             BraceButton(label = "Saved $count", onClick = { count++ })
                         }
-                        val tableRows = remember { listOf("Ready", "Review") }
+                        var tableRows by remember { mutableStateOf(listOf("ready" to "Ready", "review" to "Review")) }
+                        var editingTable by remember { mutableStateOf<BraceTableSelection.Cell?>(null) }
                         var selectedTable: BraceTableSelection? by remember {
-                            mutableStateOf(BraceTableSelection.Range("Ready", "status", "Review", "status"))
+                            mutableStateOf(BraceTableSelection.Range("ready", "status", "review", "status"))
                         }
                         var tableColumnWidth by remember { mutableStateOf(120.dp) }
                         var tableRowHeight by remember { mutableStateOf(64.dp) }
                         val tableViewport = rememberBraceTableViewport()
                         BraceDataTable(
                             rows = tableRows,
-                            rowKey = { it },
-                            columns = listOf(BraceTableColumn<String>("status", "Status", 120.dp, { it })),
+                            rowKey = { it.first },
+                            columns = listOf(BraceTableColumn<Pair<String, String>>("status", "Status", 120.dp, { it.second }, editable = true)),
                             selection = selectedTable,
                             onSelectionChange = { selectedTable = it },
                             viewport = tableViewport,
                             height = 160.dp,
                             columnWidths = mapOf("status" to tableColumnWidth),
                             onColumnWidthChange = { _, width -> tableColumnWidth = width },
-                            rowHeights = mapOf("Ready" to tableRowHeight),
+                            rowHeights = mapOf("ready" to tableRowHeight),
                             onRowHeightChange = { _, height -> tableRowHeight = height },
+                            editingCell = editingTable,
+                            onEditingCellChange = { editingTable = it },
+                            onCellCommit = { cell, value ->
+                                tableRows = tableRows.map { if (it.first == cell.rowKey) it.first to value else it }
+                            },
+                            validateCell = { _, value -> if (value.isBlank()) "Required" else null },
                         )
-                        BasicText("Table copy: ${BraceTableClipboard.formatSelection(tableRows, { it },
-                            listOf(BraceTableColumn<String>("status", "Status", 120.dp, { it })), selectedTable) ?: "none"}")
+                        BasicText("Table copy: ${BraceTableClipboard.formatSelection(tableRows, { it.first },
+                            listOf(BraceTableColumn<Pair<String, String>>("status", "Status", 120.dp, { it.second })), selectedTable) ?: "none"}")
                         BraceButton("Select status column", onClick = {
                             selectedTable = BraceTableSelection.Column("status")
                         })
@@ -222,6 +243,13 @@ class ConsumerActivity : ComponentActivity() {
                         BraceLink("Open reports", BraceLinkDestination.Action("Reports") { count++ })
                         BraceLinkButton("Open guide", BraceLinkDestination.Uri("https://example.org/guide", "Guide"),
                             onOpenUri = { count++ })
+                        BraceTree(
+                            nodes = listOf(BraceTreeNode("projects", "Projects", children = listOf(
+                                BraceTreeNode("imports", "Imports"), BraceTreeNode("exports", "Exports")))),
+                            expandedKeys = tree.expandedKeys, onExpandedKeysChange = { tree.expandedKeys = it },
+                            selectedKeys = tree.selectedKeys, onSelectedKeysChange = { tree.selectedKeys = it },
+                            label = "Workspace tree", maxHeight = 160.dp,
+                        )
                         BraceTag("Active")
                         BraceFieldLabel("Export format", spokenLabel = "Export format, CSV") { controlModifier ->
                             BraceButton("CSV", onClick = {}, modifier = controlModifier)
@@ -342,6 +370,25 @@ class ConsumerActivity : ComponentActivity() {
                                     onValueChange = { reportTitle = it },
                                     label = "Report title",
                                     editActionLabel = "Edit report title",
+                                )
+                                BraceSuggest(
+                                    value = TextFieldValue("North"),
+                                    onValueChange = {},
+                                    options = listOf(BraceSelectOption("north", "north", "North")),
+                                    selectedKey = "north",
+                                    onSelect = {},
+                                    expanded = false,
+                                    onExpandedChange = {},
+                                    label = "Suggested region",
+                                )
+                                BraceMultiSelect(
+                                    options = listOf(BraceSelectOption("east", "east", "East"),
+                                        BraceSelectOption("west", "west", "West")),
+                                    selectedKeys = listOf("east"),
+                                    onSelectedKeysChange = {},
+                                    expanded = false,
+                                    onExpandedChange = {},
+                                    label = "Regions",
                                 )
                                 BraceSelect(
                                     options = listOf(BraceSelectOption("east", "east", "East"),

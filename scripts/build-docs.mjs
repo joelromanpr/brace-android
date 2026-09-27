@@ -18,6 +18,7 @@ const guideSources = new Map([
   ['docs/compatibility.md', 'compatibility'],
   ['docs/core-components.md', 'core-components'],
   ['docs/content-feedback.md', 'content-feedback'],
+  ['docs/semantic-content.md', 'semantic-content'],
   ['docs/loading-feedback.md', 'loading-feedback'],
   ['docs/navigation-feedback.md', 'navigation-feedback'],
   ['docs/overlays.md', 'overlays'],
@@ -29,7 +30,9 @@ const guideSources = new Map([
   ['docs/numeric-input.md', 'numeric-input'],
   ['docs/icons.md', 'icons'],
   ['docs/select-query.md', 'select-query'],
+  ['docs/suggest-multiselect.md', 'suggest-multiselect'],
   ['docs/top-bar.md', 'top-bar'],
+  ['docs/tree.md', 'tree'],
   ['docs/tag-input.md', 'tag-input'],
   ['docs/radio-segmented.md', 'radio-segmented'],
   ['docs/datetime-picker-input.md', 'datetime-picker-input'],
@@ -38,6 +41,8 @@ const guideSources = new Map([
   ['docs/table-viewport.md', 'table-viewport'],
   ['docs/table-selection-resize.md', 'table-selection-resize'],
   ['docs/table-copying.md', 'table-copying'],
+  ['docs/table-editing.md', 'table-editing'],
+  ['docs/milestones/m22-table-editing.md', 'milestone-m22'],
   ['docs/milestones/m21-table-copying.md', 'milestone-m21'],
   ['docs/web-mechanisms.md', 'web-mechanisms'],
   ['docs/links.md', 'links'],
@@ -56,6 +61,7 @@ const guideSources = new Map([
   ['docs/milestones/m11-icons.md', 'milestone-m11'],
   ['docs/milestones/m12-select-query.md', 'milestone-m12'],
   ['docs/milestones/m17-loading-feedback.md', 'milestone-m17'],
+  ['docs/milestones/m16-suggest-multiselect.md', 'milestone-m16'],
   ['docs/milestones/m25-top-bar.md', 'milestone-m25'],
   ['docs/milestones/m15-tag-input.md', 'milestone-m15'],
   ['docs/milestones/m19-radio-segmented.md', 'milestone-m19'],
@@ -65,11 +71,13 @@ const guideSources = new Map([
   ['docs/milestones/m14-table-viewport.md', 'milestone-m14'],
   ['docs/milestones/m18-table-selection-resize.md', 'milestone-m18'],
   ['docs/milestones/m35-blueprint-icon-pack.md', 'milestone-m35'],
+  ['docs/milestones/m36-semantic-content.md', 'milestone-m36'],
   ['docs/milestones/m54-web-mechanisms.md', 'milestone-m54'],
   ['docs/milestones/m20-links.md', 'milestone-m20'],
   ['docs/milestones/m55-blueprint-next-icons.md', 'milestone-m55'],
   ['docs/milestones/m57-icon-large-text.md', 'milestone-m57'],
   ['docs/milestones/m34-timezone-select.md', 'milestone-m34'],
+  ['docs/milestones/m31-tree.md', 'milestone-m31'],
   ['docs/milestones/m59-visual-catalog.md', 'milestone-m59'],
   ['docs/milestones/m39-file-picker.md', 'milestone-m39'],
   ['CONTRIBUTING.md', 'contributing'],
@@ -229,15 +237,18 @@ const primaryGuideLinks = [
 ];
 const componentGuideLinks = [
   ['Core controls', 'core-components'],
+  ['Semantic content', 'semantic-content'],
   ['Forms and text', 'form-text'],
   ['File picker', 'file-picker'],
   ['Select and query', 'select-query'],
   ['Date and time', 'datetime-picker-input'],
   ['Date ranges', 'datetime-range'],
+  ['Trees', 'tree'],
   ['Time-zone selection', 'time-zone-select'],
   ['Data tables', 'table-viewport'],
   ['Selection and resizing', 'table-selection-resize'],
   ['Copying cells', 'table-copying'],
+  ['Editing cells', 'table-editing'],
   ['Icons', 'icons'],
 ];
 const extraGuideLinks = [
@@ -280,6 +291,7 @@ await rm(siteOutput, { recursive: true, force: true });
 await mkdir(siteOutput, { recursive: true });
 await cp(siteSource, siteOutput, { recursive: true });
 await cp(coveragePath, resolve(siteOutput, 'coverage.json'));
+await writeFile(resolve(siteOutput, 'guide-map.json'), JSON.stringify(Object.fromEntries([...guideSources].map(([path, slug]) => [path, `${slug}.html`]))));
 for (const [path, slug] of guideSources) {
   const markdown = await readFile(resolve(root, path), 'utf8');
   const title = markdown.match(/^# (.+)$/m)?.[1] || slug;

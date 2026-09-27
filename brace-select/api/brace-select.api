@@ -1,3 +1,7 @@
+public final class io/github/joelromanpr/brace/select/BraceMultiSelectKt {
+	public static final fun BraceMultiSelect (Ljava/util/List;Ljava/util/List;Lkotlin/jvm/functions/Function1;ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/select/BraceQueryListState;ZZLkotlin/jvm/functions/Function2;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/runtime/Composer;III)V
+}
+
 public final class io/github/joelromanpr/brace/select/BraceQueryListKt {
 	public static final fun braceQueryNavigation (Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/select/BraceQueryListState;Ljava/util/List;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Z)Landroidx/compose/ui/Modifier;
 	public static synthetic fun braceQueryNavigation$default (Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/select/BraceQueryListState;Ljava/util/List;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;ZILjava/lang/Object;)Landroidx/compose/ui/Modifier;
@@ -39,5 +43,9 @@ public final class io/github/joelromanpr/brace/select/BraceSelectOption {
 	public final fun getValue ()Ljava/lang/Object;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/select/BraceSuggestKt {
+	public static final fun BraceSuggest (Landroidx/compose/ui/text/input/TextFieldValue;Lkotlin/jvm/functions/Function1;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/select/BraceQueryListState;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;III)V
 }
 

@@ -136,6 +136,27 @@ class BracePopoverTest {
         rule.runOnIdle { assertEquals(LayoutDirection.Rtl, seenDirection) }
     }
 
+    @Test fun positionerKeepsLowAnchorsAboveImeOcclusion() {
+        val window = IntSize(320, 640)
+        val popup = IntSize(296, 250)
+        val anchor = IntRect(12, 510, 308, 558)
+        val keyboardTop = 380
+        val withIme = BracePopoverPositionProvider(
+            BracePopoverPlacement.Auto, gap = 4, edge = 8, imeBottom = 260,
+        )
+        val position = withIme.calculatePosition(anchor, window, LayoutDirection.Ltr, popup)
+        assertTrue(position.y >= 8)
+        assertTrue(position.y + popup.height <= keyboardTop - 8)
+        assertTrue(position.x >= 8)
+        assertTrue(position.x + popup.width <= window.width - 8)
+
+        val explicitBottom = BracePopoverPositionProvider(
+            BracePopoverPlacement.BottomStart, gap = 4, edge = 8, imeBottom = 260,
+        )
+        val flipped = explicitBottom.calculatePosition(anchor, window, LayoutDirection.Ltr, popup)
+        assertTrue(flipped.y + popup.height <= keyboardTop - 8)
+    }
+
     @Test fun positionerMirrorsLogicalAlignmentAndFlipsAtEdges() {
         val anchor = IntRect(100, 100, 140, 130)
         val window = IntSize(300, 300)

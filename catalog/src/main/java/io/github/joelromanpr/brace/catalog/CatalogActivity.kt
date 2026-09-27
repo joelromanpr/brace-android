@@ -151,7 +151,11 @@ import io.github.joelromanpr.brace.select.braceQueryNavigation
 import io.github.joelromanpr.brace.datetime.BraceDateField
 import io.github.joelromanpr.brace.datetime.BraceDatePicker
 import io.github.joelromanpr.brace.datetime.BraceDateShortcut
+import io.github.joelromanpr.brace.datetime.BraceTimeField
+import io.github.joelromanpr.brace.datetime.BraceTimePicker
+import io.github.joelromanpr.brace.datetime.BraceTimePrecision
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.YearMonth
 import io.github.joelromanpr.brace.table.BraceDataTable
 import io.github.joelromanpr.brace.table.BraceTableColumn
@@ -497,6 +501,63 @@ private fun BlueprintNextGlyphSample() {
 }
 
 @Composable
+private fun TimePickerSample() {
+    var selected by rememberSaveable { mutableStateOf("23:30") }
+    var fieldTime by rememberSaveable { mutableStateOf<String?>(null) }
+    var errors by rememberSaveable { mutableStateOf(0) }
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        Text("Overnight window · 22:00–02:00", color = BraceTheme.colors.semantic.onSurfaceMuted,
+            style = BraceTheme.typography.label)
+        BraceTimePicker(LocalTime.parse(selected), { selected = it.toString() },
+            locale = Locale.US, use24Hour = true,
+            minTime = LocalTime.of(22, 0), maxTime = LocalTime.of(2, 0))
+        Text("Selected: $selected", color = BraceTheme.colors.semantic.onSurface,
+            style = BraceTheme.typography.body)
+        BraceTimeField(fieldTime?.let(LocalTime::parse), { fieldTime = it?.toString() },
+            label = "Meeting time", locale = Locale.US,
+            precision = BraceTimePrecision.Second,
+            supportingText = "Enter a time or open the picker",
+            onInvalidInput = { errors++ })
+        Text("Field: ${fieldTime ?: "none"} · invalid entries: $errors",
+            color = BraceTheme.colors.semantic.onSurface,
+            style = BraceTheme.typography.body)
+        BraceTimeField(null, {}, label = "Unavailable time", enabled = false,
+            locale = Locale.US)
+    }
+}
+
+@Composable
+private fun TableViewportSample() {
+    val records = remember { List(120) { DemoTableRecord("record-$it", "Case ${1000 + it}", if (it % 3 == 0) "Review" else "Ready") } }
+    val tableColumns = remember { listOf(
+        BraceTableColumn<DemoTableRecord>("case", "Case", 140.dp, { it.case }),
+        BraceTableColumn<DemoTableRecord>("status", "Status", 130.dp, { it.status }),
+        BraceTableColumn<DemoTableRecord>("owner", "Owner", 130.dp, { "Team ${(it.id.substringAfter('-').toInt() % 4) + 1}" }),
+    ) }
+    var selectedRow by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedColumn by rememberSaveable { mutableStateOf<String?>(null) }
+    val selection = when {
+        selectedRow == null -> null
+        selectedColumn == null -> BraceTableSelection.Row(selectedRow!!)
+        else -> BraceTableSelection.Cell(selectedRow!!, selectedColumn!!)
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        Text("Scroll in both directions. Tap a cell or row number; focus the table for arrow keys.",
+            color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.body)
+        BraceDataTable(records, { it.id }, tableColumns, selection, {
+            when (it) {
+                is BraceTableSelection.Cell -> { selectedRow = it.rowKey; selectedColumn = it.columnKey }
+                is BraceTableSelection.Row -> { selectedRow = it.rowKey; selectedColumn = null }
+            }
+        }, modifier = Modifier.fillMaxWidth(), height = 260.dp, label = "Cases", rowLabel = { it.case })
+        Text("Selection: ${selection ?: "None"}", color = BraceTheme.colors.semantic.onSurface,
+            style = BraceTheme.typography.body)
+        BraceButton("Clear selection", onClick = { selectedRow = null; selectedColumn = null },
+            variant = BraceButtonVariant.Outline)
+    }
+}
+
+@Composable
 private fun ComponentSample(
     id: String,
     toasts: BraceToastState,
@@ -782,35 +843,8 @@ private fun ComponentSample(
                     locale = Locale.US)
             }
         }
-        "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation" -> {
-            val records = remember { List(120) { DemoTableRecord("record-$it", "Case ${1000 + it}", if (it % 3 == 0) "Review" else "Ready") } }
-            val tableColumns = remember { listOf(
-                BraceTableColumn<DemoTableRecord>("case", "Case", 140.dp, { it.case }),
-                BraceTableColumn<DemoTableRecord>("status", "Status", 130.dp, { it.status }),
-                BraceTableColumn<DemoTableRecord>("owner", "Owner", 130.dp, { "Team ${(it.id.substringAfter('-').toInt() % 4) + 1}" }),
-            ) }
-            var selectedRow by rememberSaveable { mutableStateOf<String?>(null) }
-            var selectedColumn by rememberSaveable { mutableStateOf<String?>(null) }
-            val selection = when {
-                selectedRow == null -> null
-                selectedColumn == null -> BraceTableSelection.Row(selectedRow!!)
-                else -> BraceTableSelection.Cell(selectedRow!!, selectedColumn!!)
-            }
-            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                Text("Scroll in both directions. Tap a cell or row number; focus the table for arrow keys.",
-                    color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.body)
-                BraceDataTable(records, { it.id }, tableColumns, selection, {
-                    when (it) {
-                        is BraceTableSelection.Cell -> { selectedRow = it.rowKey; selectedColumn = it.columnKey }
-                        is BraceTableSelection.Row -> { selectedRow = it.rowKey; selectedColumn = null }
-                    }
-                }, modifier = Modifier.fillMaxWidth(), height = 260.dp, label = "Cases", rowLabel = { it.case })
-                Text("Selection: ${selection ?: "None"}", color = BraceTheme.colors.semantic.onSurface,
-                    style = BraceTheme.typography.body)
-                BraceButton("Clear selection", onClick = { selectedRow = null; selectedColumn = null },
-                    variant = BraceButtonVariant.Outline)
-            }
-        }
+        "datetime-timepicker" -> TimePickerSample()
+        "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation" -> TableViewportSample()
         "core-button" -> {
             var count by rememberSaveable { mutableStateOf(0) }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {

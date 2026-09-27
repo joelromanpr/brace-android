@@ -49,4 +49,10 @@
     <string name="brace_link_button_description">%1$s, abre %2$s</string>
     <string name="brace_link_open">Abrir %1$s</string>
     <string name="brace_panel_stack_back_to">Volver a %1$s</string>
+    <string name="brace_tree_expand">Expandir nodo</string>
+    <string name="brace_tree_collapse">Contraer nodo</string>
+    <string name="brace_tree_expanded">Expandido</string>
+    <string name="brace_tree_collapsed">Contraído</string>
+    <string name="brace_tree_select">Seleccionar nodo</string>
+    <string name="brace_tree_node_position">%1$s, nivel %2$d, elemento %3$d de %4$d</string>
 </resources>

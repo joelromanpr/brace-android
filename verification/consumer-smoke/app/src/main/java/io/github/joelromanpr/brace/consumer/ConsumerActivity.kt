@@ -40,6 +40,9 @@ import kotlinx.coroutines.withContext
 import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbs
+import io.github.joelromanpr.brace.core.BraceTree
+import io.github.joelromanpr.brace.core.BraceTreeNode
+import io.github.joelromanpr.brace.core.rememberBraceTreeState
 import io.github.joelromanpr.brace.core.BraceTopBar
 import io.github.joelromanpr.brace.core.BraceTopBarGroup
 import io.github.joelromanpr.brace.core.BraceTopBarTitle
@@ -172,6 +175,7 @@ class ConsumerActivity : ComponentActivity() {
                 val panelState = rememberBracePanelStackState(BracePanel("imports", "Imports"))
                 val shortcutState = rememberBraceShortcutRegistryState()
                 val toasts = rememberBraceToastState()
+                val tree = rememberBraceTreeState(initialExpandedKeys = setOf("projects"))
                 Box(Modifier.fillMaxSize()) {
                     Column {
                         BraceTopBar(
@@ -236,6 +240,13 @@ class ConsumerActivity : ComponentActivity() {
                                 BraceButton("Close settings", onClick = { closePanel() })
                             }
                         }
+                        BraceTree(
+                            nodes = listOf(BraceTreeNode("projects", "Projects", children = listOf(
+                                BraceTreeNode("imports", "Imports"), BraceTreeNode("exports", "Exports")))),
+                            expandedKeys = tree.expandedKeys, onExpandedKeysChange = { tree.expandedKeys = it },
+                            selectedKeys = tree.selectedKeys, onSelectedKeysChange = { tree.selectedKeys = it },
+                            label = "Workspace tree", maxHeight = 160.dp,
+                        )
                         BraceTag("Active")
                         BraceFieldLabel("Export format", spokenLabel = "Export format, CSV") { controlModifier ->
                             BraceButton("CSV", onClick = {}, modifier = controlModifier)

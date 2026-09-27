@@ -8,6 +8,10 @@
 .showcase-toolbar label{display:flex;flex-direction:column;gap:7px;min-width:170px;color:#455d5b;font-size:11px;font-weight:750}
 .showcase-toolbar select{height:48px;border:1px solid #bbccc5;border-radius:8px;padding:0 12px;background:#fff;color:var(--ink);font:inherit;font-size:13px}
 .showcase-result{margin-left:auto;padding-bottom:14px;color:var(--muted);font-size:12px;font-weight:650}
+.showcase-more{display:flex;justify-content:flex-end;margin:0 0 18px}
+.showcase-more[hidden]{display:none}
+.showcase-more button{min-height:44px;padding:10px 14px;border:1px solid #cbd7e7;border-radius:8px;background:#fff;color:#3156b8;font:inherit;font-size:12px;font-weight:750;cursor:pointer}
+.showcase-more button:hover{background:#f2f6fc}
 .showcase-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-flow:dense;gap:18px;align-items:start}
 .shot-card{min-width:0;overflow:hidden;border:1px solid #cbdcd1;border-radius:17px;background:#fff;box-shadow:var(--shadow)}
 .shot-landscape{grid-column:span 2}

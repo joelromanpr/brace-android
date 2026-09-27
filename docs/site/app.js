@@ -13,6 +13,10 @@ const showcaseGrid = document.querySelector('#showcase-grid');
 const showcaseTheme = document.querySelector('#showcase-theme');
 const showcaseFamily = document.querySelector('#showcase-family');
 const showcaseResult = document.querySelector('#showcase-result');
+const showcaseMore = document.querySelector('#showcase-more');
+const showcaseMoreWrap = document.querySelector('#showcase-more-wrap');
+const featuredCaptureCount = 8;
+let showcaseExpanded = false;
 const statusChips = document.querySelector('#status-chips');
 let entries = [];
 let captures = [];
@@ -214,9 +218,16 @@ function renderShowcase() {
     (!showcaseTheme.value || captureAppearance(capture) === showcaseTheme.value) &&
     (!showcaseFamily.value || entryById.get(capture.inventoryIds[0]).family === showcaseFamily.value)
   );
-  showcaseGrid.replaceChildren(...filtered.map(captureCard));
+  const hasFilter = Boolean(showcaseTheme.value || showcaseFamily.value);
+  const visible = hasFilter || showcaseExpanded ? filtered : filtered.slice(0, featuredCaptureCount);
+  showcaseGrid.replaceChildren(...visible.map(captureCard));
   if (filtered.length === 0) showcaseGrid.append(el('p', 'empty', 'No screenshots match these filters.'));
-  showcaseResult.textContent = `${filtered.length} of ${captures.length} Android screenshots`;
+  showcaseResult.textContent = `Showing ${visible.length} of ${captures.length} Android screenshots`;
+  showcaseMoreWrap.hidden = hasFilter || captures.length <= featuredCaptureCount;
+  showcaseMore.setAttribute('aria-expanded', String(showcaseExpanded));
+  showcaseMore.textContent = showcaseExpanded
+    ? `Show ${Math.min(featuredCaptureCount, captures.length)} featured captures`
+    : `Show all ${captures.length} captures`;
 }
 
 async function loadShowcase() {
@@ -242,6 +253,16 @@ async function loadShowcase() {
   }
 }
 
+function revealCapture(id) {
+  const index = captures.findIndex(capture => capture.id === id);
+  if (index < 0) return null;
+  showcaseExpanded ||= index >= featuredCaptureCount;
+  showcaseTheme.value = '';
+  showcaseFamily.value = '';
+  renderShowcase();
+  return document.getElementById(`capture-${id}`);
+}
+
 function revealHash() {
   const fragment = decodeURIComponent(location.hash.slice(1));
   if (fragment.startsWith('component-')) {
@@ -255,11 +276,7 @@ function revealHash() {
     const match = document.getElementById(fragment);
     if (match) { match.open = true; match.scrollIntoView(); }
   } else if (fragment.startsWith('capture-')) {
-    if (!captures.some(capture => `capture-${capture.id}` === fragment)) return;
-    showcaseTheme.value = '';
-    showcaseFamily.value = '';
-    renderShowcase();
-    document.getElementById(fragment)?.scrollIntoView();
+    revealCapture(fragment.slice('capture-'.length))?.scrollIntoView();
   }
 }
 
@@ -296,8 +313,8 @@ async function load() {
     } else baseline.textContent = 'Comparison source and version are recorded in the repository.';
     const counts = data.summary || {};
     stats.replaceChildren(
-      stat(`${counts.stableApplicableRows ?? 0}/${counts.applicableRows ?? entries.length}`, 'Android items released'),
-      stat(`${counts.stableComponents ?? 0}/${counts.applicableComponents ?? 0}`, 'Components released'),
+      stat(`${counts.stableApplicableRows ?? 0}/${counts.applicableRows ?? entries.length}`, 'Stable Android items'),
+      stat(`${counts.stableComponents ?? 0}/${counts.applicableComponents ?? 0}`, 'Stable components'),
       stat(`${counts.documentedWebSpecificMappings ?? 0}/${counts.webSpecificMappings ?? 0}`, 'Web behaviors explained'),
       stat(counts.labsRows ?? entries.filter(item => item.track === 'labs').length, 'Early experiments')
     );
@@ -323,9 +340,11 @@ statusChips.addEventListener('click', event => {
   render();
 });
 results.addEventListener('click', event => {
-  if (!event.target.closest('[data-capture-id]')) return;
-  showcaseTheme.value = '';
-  showcaseFamily.value = '';
+  const link = event.target.closest('[data-capture-id]');
+  if (link) revealCapture(link.dataset.captureId);
+});
+showcaseMore.addEventListener('click', () => {
+  showcaseExpanded = !showcaseExpanded;
   renderShowcase();
 });
 showcaseGrid.addEventListener('click', async event => {

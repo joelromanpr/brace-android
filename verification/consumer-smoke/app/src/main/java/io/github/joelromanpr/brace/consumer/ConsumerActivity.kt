@@ -48,6 +48,7 @@ import io.github.joelromanpr.brace.core.BraceTopBar
 import io.github.joelromanpr.brace.core.BraceTopBarGroup
 import io.github.joelromanpr.brace.core.BraceTopBarTitle
 import io.github.joelromanpr.brace.core.BraceTopBarDivider
+import io.github.joelromanpr.brace.core.BraceFilePickerField
 import io.github.joelromanpr.brace.core.BracePanel
 import io.github.joelromanpr.brace.core.BracePanelStack
 import io.github.joelromanpr.brace.core.rememberBracePanelStackState
@@ -150,6 +151,7 @@ class ConsumerActivity : ComponentActivity() {
         setContent {
             BraceTheme {
                 var count by remember { mutableStateOf(0) }
+                var fileNames by rememberSaveable { mutableStateOf(emptyList<String>()) }
                 var volume by rememberSaveable { mutableFloatStateOf(3f) }
                 var rangeStart by rememberSaveable { mutableFloatStateOf(2f) }
                 var rangeEnd by rememberSaveable { mutableFloatStateOf(7f) }
@@ -207,6 +209,15 @@ class ConsumerActivity : ComponentActivity() {
                 val tree = rememberBraceTreeState(initialExpandedKeys = setOf("projects"))
                 Box(Modifier.fillMaxSize()) {
                     Column {
+                        BraceFilePickerField(
+                            label = "Import files",
+                            selectedNames = fileNames,
+                            onFilesPicked = { uris ->
+                                fileNames = uris.map { it.lastPathSegment ?: "Document" }
+                            },
+                            mimeTypes = listOf("application/pdf"),
+                            multiple = true,
+                        )
                         BraceHeading2("Consumer smoke")
                         BraceCode("val ready = true")
                         BraceOrderedList(listOf("Build", "Publish locally", "Consume"))

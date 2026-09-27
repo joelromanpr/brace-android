@@ -58,6 +58,8 @@ import io.github.braceandroid.foundation.BraceContrast
 import io.github.braceandroid.foundation.BraceDensity
 import io.github.braceandroid.foundation.BraceMotion
 import io.github.braceandroid.foundation.BraceTheme
+import io.github.joelromanpr.brace.core.BraceFilePickerField
+import io.github.joelromanpr.brace.core.BraceFilePickerSize
 import io.github.joelromanpr.brace.core.BraceBlockquote
 import io.github.joelromanpr.brace.core.BraceCode
 import io.github.joelromanpr.brace.core.BraceCodeBlock
@@ -342,6 +344,10 @@ BraceTheme {
         }
     }
 }""".trimIndent(),
+    "core-fileinput" to """var names by rememberSaveable { mutableStateOf(emptyList<String>()) }
+BraceFilePickerField(label = "Attachments", selectedNames = names,
+    onFilesPicked = { uris -> names = uris.mapIndexed { index, _ -> "Document ${'$'}{index + 1}" } },
+    mimeTypes = listOf("application/pdf", "image/*"), multiple = true)""",
     "core-h1" to """BraceHeading("Summary", level = BraceHeadingLevel.One)""",
     "core-h2" to """BraceHeading("Projects", level = BraceHeadingLevel.Two)""",
     "core-h3" to """BraceHeading("Recent activity", level = BraceHeadingLevel.Three)""",
@@ -1092,6 +1098,37 @@ private fun TagInputSample() {
 }
 
 @Composable
+private fun FilePickerSample() {
+    var names by rememberSaveable { mutableStateOf(emptyList<String>()) }
+    var multiple by rememberSaveable { mutableStateOf(false) }
+    var enabled by rememberSaveable { mutableStateOf(true) }
+    var showError by rememberSaveable { mutableStateOf(false) }
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        BraceFilePickerField(
+            label = "Attachments",
+            selectedNames = names,
+            onFilesPicked = { uris ->
+                names = uris.mapIndexed { index, _ -> "Selected document ${index + 1}" }
+            },
+            mimeTypes = listOf("application/pdf", "image/*"),
+            multiple = multiple,
+            enabled = enabled,
+            size = BraceFilePickerSize.Medium,
+            helperText = "Files stay on your device until the app reads them.",
+            errorText = if (showError) "Select a supported document" else null,
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+            BraceButton(if (multiple) "Single" else "Multiple", onClick = { multiple = !multiple },
+                variant = BraceButtonVariant.Outline)
+            BraceButton(if (enabled) "Disable" else "Enable", onClick = { enabled = !enabled },
+                variant = BraceButtonVariant.Outline)
+        }
+        BraceButton(if (showError) "Clear error" else "Show error",
+            onClick = { showError = !showError }, variant = BraceButtonVariant.Outline)
+    }
+}
+
+@Composable
 private fun SemanticContentSample(id: String) {
     when (id) {
         "core-h1", "core-h2", "core-h3", "core-h4", "core-h5", "core-h6" -> {
@@ -1446,6 +1483,7 @@ private fun ComponentSample(
                     locale = Locale.US)
             }
         }
+        "core-fileinput" -> FilePickerSample()
         "core-multislider", "core-multisliderhandle" -> MultiSliderSample()
         "core-slider", "core-rangeslider" -> SliderSample(id)
         "core-button" -> {

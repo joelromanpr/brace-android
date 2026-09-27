@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.LaunchedEffect
@@ -39,6 +40,8 @@ import kotlinx.coroutines.withContext
 import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbs
+import io.github.joelromanpr.brace.core.BraceOverflowCollapseFrom
+import io.github.joelromanpr.brace.core.BraceOverflowList
 import io.github.joelromanpr.brace.core.BraceTree
 import io.github.joelromanpr.brace.core.BraceTreeNode
 import io.github.joelromanpr.brace.core.rememberBraceTreeState
@@ -138,6 +141,7 @@ class ConsumerActivity : ComponentActivity() {
                 var popoverOpen by remember { mutableStateOf(false) }
                 var contextOpen by remember { mutableStateOf(false) }
                 var pointMenuOpen by remember { mutableStateOf(false) }
+                var overflowMenuOpen by rememberSaveable { mutableStateOf(false) }
                 val pointMenuTrigger = remember { FocusRequester() }
                 var hadPointMenuOpen by remember { mutableStateOf(false) }
                 LaunchedEffect(pointMenuOpen) {
@@ -243,6 +247,30 @@ class ConsumerActivity : ComponentActivity() {
                             expandedKeys = tree.expandedKeys, onExpandedKeysChange = { tree.expandedKeys = it },
                             selectedKeys = tree.selectedKeys, onSelectedKeysChange = { tree.selectedKeys = it },
                             label = "Workspace tree", maxHeight = 160.dp,
+                        )
+                        BraceOverflowList(
+                            items = listOf("Overview", "Pipeline", "Failures", "History"),
+                            itemKey = { it },
+                            modifier = Modifier.width(180.dp),
+                            collapseFrom = BraceOverflowCollapseFrom.Start,
+                            minVisibleItems = 1,
+                            navigationLabel = "Import sections",
+                            visibleItem = { section, _ -> BraceButton(section, onClick = { count++ }) },
+                            overflowContent = { hidden ->
+                                BraceMenuPopup(
+                                    expanded = overflowMenuOpen,
+                                    onDismissRequest = { overflowMenuOpen = false },
+                                    anchor = { BraceButton("More " + hidden.size,
+                                        onClick = { overflowMenuOpen = true }) },
+                                ) {
+                                    hidden.forEach { section ->
+                                        BraceMenuItem(section, onClick = { count++; overflowMenuOpen = false })
+                                    }
+                                }
+                            },
+                            overflowMeasureContent = { hidden ->
+                                BraceButton("More " + hidden.size, onClick = {})
+                            },
                         )
                         BraceTag("Active")
                         BraceFieldLabel("Export format", spokenLabel = "Export format, CSV") { controlModifier ->

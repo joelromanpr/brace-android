@@ -375,6 +375,22 @@ BraceTree(nodes, state.expandedKeys, { state.expandedKeys = it },
     "core-navbargroup" to "BraceTopBarGroup { BraceTopBarTitle(\"Reports\"); BraceTopBarDivider() }",
     "core-navbarheading" to "BraceTopBarGroup { BraceTopBarTitle(\"Reports\") }",
     "core-navbardivider" to "BraceTopBarGroup { BraceTopBarTitle(\"Reports\"); BraceTopBarDivider() }",
+    "core-overflowlist" to """var open by rememberSaveable { mutableStateOf(false) }
+var selected by rememberSaveable { mutableStateOf("Overview") }
+val sections = listOf("Overview", "Analysis", "Forecast", "Exports")
+BraceOverflowList(
+    items = sections, itemKey = { it }, navigationLabel = "Report sections",
+    visibleItem = { section, _ -> BraceButton(section, onClick = { selected = section }) },
+    overflowContent = { hidden ->
+        BraceMenuPopup(open, { open = false },
+            anchor = { BraceButton("More " + hidden.size, onClick = { open = true }) }) {
+            hidden.forEach { section ->
+                BraceMenuItem(section, onClick = { selected = section; open = false })
+            }
+        }
+    },
+    overflowMeasureContent = { hidden -> BraceButton("More " + hidden.size, onClick = {}) },
+)""".trimIndent(),
     "core-breadcrumb" to "BraceBreadcrumbItem(label = \"Home\", onClick = { home() })",
     "core-tag" to "BraceTag(label = \"Finance\", intent = BraceTagIntent.Primary, onRemove = { removeFilter() })",
     "core-taginput" to "BraceTagInput(values = tags, onValuesChange = { tags = it }, draft = draft, onDraftChange = { draft = it }, label = \"Skills\")",
@@ -1634,6 +1650,7 @@ private fun ComponentSample(
                 Text("Opened: $destination", color = BraceTheme.colors.semantic.onSurfaceMuted)
             }
         }
+        "core-overflowlist" -> OverflowListCatalogSample()
         "core-breadcrumb" -> {
             var opened by rememberSaveable { mutableStateOf(false) }
             Column {

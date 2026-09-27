@@ -330,6 +330,18 @@ public final class io/github/joelromanpr/brace/core/BraceNumericIntent : java/la
 	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceNumericIntent;
 }
 
+public final class io/github/joelromanpr/brace/core/BraceOverflowCollapseFrom : java/lang/Enum {
+	public static final field End Lio/github/joelromanpr/brace/core/BraceOverflowCollapseFrom;
+	public static final field Start Lio/github/joelromanpr/brace/core/BraceOverflowCollapseFrom;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceOverflowCollapseFrom;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceOverflowCollapseFrom;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceOverflowListKt {
+	public static final fun BraceOverflowList (Ljava/util/List;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BraceOverflowCollapseFrom;IZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function4;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;III)V
+}
+
 public final class io/github/joelromanpr/brace/core/BraceOverlayKt {
 	public static final fun BraceOverlay (ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZZLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
 	public static final fun BraceOverlayHost (Lio/github/joelromanpr/brace/core/BraceOverlayState;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V

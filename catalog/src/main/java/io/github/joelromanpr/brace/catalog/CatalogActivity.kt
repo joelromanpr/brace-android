@@ -67,6 +67,10 @@ import io.github.joelromanpr.brace.core.BraceUnorderedList
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceButtonVariant
+import io.github.joelromanpr.brace.core.BraceCheckboxCard
+import io.github.joelromanpr.brace.core.BraceRadioCardGroup
+import io.github.joelromanpr.brace.core.BraceRadioCardOption
+import io.github.joelromanpr.brace.core.BraceSwitchCard
 import io.github.joelromanpr.brace.core.BraceCheckbox
 import io.github.joelromanpr.brace.core.BraceControlGroup
 import io.github.joelromanpr.brace.core.BraceFieldLabel
@@ -347,6 +351,9 @@ BraceTheme {
     "core-radio" to "BraceRadio(selected = meal == \"soup\", onSelect = { meal = \"soup\" }, label = \"Soup\")",
     "core-radiogroup" to "BraceRadioGroup(options = listOf(BraceRadioOption(\"soup\", \"Soup\"), BraceRadioOption(\"salad\", \"Salad\")), selectedValue = meal, onValueChange = { meal = it }, label = \"Lunch special\")",
     "core-segmentedcontrol" to "BraceSegmentedControl(options = listOf(BraceSegmentedOption(\"list\", \"List\"), BraceSegmentedOption(\"grid\", \"Grid\")), value = layout, onValueChange = { layout = it }, label = \"Layout\")",
+    "core-switchcard" to "var enabled by rememberSaveable { mutableStateOf(false) }; BraceSwitchCard(enabled, { enabled = it }, label = \"Notifications\", description = \"Daily summary\", modifier = Modifier.fillMaxWidth())",
+    "core-checkboxcard" to "var mixed by rememberSaveable { mutableStateOf(true) }; var checked by rememberSaveable { mutableStateOf(false) }; BraceCheckboxCard(checked, { checked = it; mixed = false }, label = \"Include archived\", indeterminate = mixed, modifier = Modifier.fillMaxWidth())",
+    "core-radiocard" to "var choice by rememberSaveable { mutableStateOf<String?>(null) }; BraceRadioCardGroup(listOf(BraceRadioCardOption(\"soup\", \"Soup\"), BraceRadioCardOption(\"salad\", \"Salad\")), choice, { choice = it }, label = \"Lunch special\")",
     "core-inputgroup" to "BraceTextField(value = query, onValueChange = { query = it }, label = \"Search\")",
     "core-formgroup" to """var notes by rememberSaveable { mutableStateOf("") }
 BraceFormField(label = "Case notes", helperText = "Include the event time", required = true, requiredDescription = "Required") { controlModifier ->
@@ -1385,6 +1392,7 @@ private fun ComponentSample(
             Column { BraceSwitch(checked, { checked = it }, "Notifications")
                 BraceSwitch(false, {}, "Unavailable setting", enabled = false) }
         }
+        "core-switchcard", "core-checkboxcard", "core-radiocard" -> ControlCardsCatalogSample(id)
         "core-inputgroup" -> {
             var value by rememberSaveable { mutableStateOf("") }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {

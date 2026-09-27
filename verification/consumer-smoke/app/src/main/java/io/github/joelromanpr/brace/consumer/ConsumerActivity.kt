@@ -58,6 +58,10 @@ import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceCallout
 import io.github.joelromanpr.brace.core.BraceCalloutIntent
 import io.github.joelromanpr.brace.core.BraceCard
+import io.github.joelromanpr.brace.core.BraceRadioCardOption
+import io.github.joelromanpr.brace.core.BraceRadioCardGroup
+import io.github.joelromanpr.brace.core.BraceCheckboxCard
+import io.github.joelromanpr.brace.core.BraceSwitchCard
 import io.github.joelromanpr.brace.core.BraceContextMenu
 import io.github.joelromanpr.brace.core.BraceContextMenuPopup
 import io.github.joelromanpr.brace.core.BraceControlGroup
@@ -180,6 +184,9 @@ class ConsumerActivity : ComponentActivity() {
                 var meal by remember { mutableStateOf("soup") }
                 var layout by remember { mutableStateOf("list") }
                 var reportingZone by remember { mutableStateOf<ZoneId?>(null) }
+                var cardSwitch by rememberSaveable { mutableStateOf(false) }
+                var cardCheckbox by rememberSaveable { mutableStateOf(false) }
+                var cardChoice by rememberSaveable { mutableStateOf<String?>(null) }
                 val panelState = rememberBracePanelStackState(BracePanel("imports", "Imports"))
                 val shortcutState = rememberBraceShortcutRegistryState()
                 val toasts = rememberBraceToastState()
@@ -201,6 +208,14 @@ class ConsumerActivity : ComponentActivity() {
                         BraceCard {
                             BraceButton(label = "Saved $count", onClick = { count++ })
                         }
+                        BraceSwitchCard(cardSwitch, { cardSwitch = it }, "Notifications")
+                        BraceCheckboxCard(cardCheckbox, { cardCheckbox = it }, "Include archived")
+                        BraceRadioCardGroup(
+                            options = listOf(BraceRadioCardOption("soup", "Soup"),
+                                BraceRadioCardOption("salad", "Salad")),
+                            selectedValue = cardChoice, onValueChange = { cardChoice = it },
+                            label = "Lunch special",
+                        )
                         var tableRows by remember { mutableStateOf(listOf("ready" to "Ready", "review" to "Review")) }
                         var editingTable by remember { mutableStateOf<BraceTableSelection.Cell?>(null) }
                         var statusColumnTitle by remember { mutableStateOf("Status") }

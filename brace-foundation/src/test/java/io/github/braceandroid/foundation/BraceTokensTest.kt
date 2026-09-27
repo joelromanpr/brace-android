@@ -137,6 +137,34 @@ class BraceTokensTest {
     }
 
     @Test
+    fun multiSliderIntentSegmentsContrastWithNeutralTrack() {
+        val schemes = listOf(
+            BraceTokenDefaults.light,
+            BraceTokenDefaults.dark,
+            BraceTokenDefaults.highContrastLight,
+            BraceTokenDefaults.highContrastDark,
+        )
+        schemes.forEach { scheme ->
+            val slider = scheme.components.slider
+            assertTrue("multi-slider outline and surface below 3:1",
+                braceContrastRatio(slider.multiTrackOutline, scheme.semantic.surface) >= 3.0)
+            assertTrue("multi-slider outline and neutral track below 3:1",
+                braceContrastRatio(slider.multiTrackOutline, slider.multiInactiveTrack) >= 3.0)
+            listOf(
+                slider.activeTrack,
+                slider.successTrack,
+                slider.warningTrack,
+                slider.dangerTrack,
+            ).forEach { intent ->
+                assertTrue("multi-slider intent and surface below 3:1",
+                    braceContrastRatio(intent, scheme.semantic.surface) >= 3.0)
+                assertTrue("multi-slider intent and neutral tracks below 3:1",
+                    braceContrastRatio(intent, slider.multiInactiveTrack) >= 3.0)
+            }
+        }
+    }
+
+    @Test
     fun highContrastBodyTextMeetsSevenToOne() {
         listOf(BraceTokenDefaults.highContrastLight, BraceTokenDefaults.highContrastDark)
             .forEach { scheme ->

@@ -56,6 +56,10 @@ import io.github.joelromanpr.brace.core.BraceCode
 import io.github.joelromanpr.brace.core.BraceOrderedList
 import io.github.joelromanpr.brace.core.BraceSlider
 import io.github.joelromanpr.brace.core.BraceRangeSlider
+import io.github.joelromanpr.brace.core.BraceMultiSlider
+import io.github.joelromanpr.brace.core.BraceSliderHandle
+import io.github.joelromanpr.brace.core.BraceSliderHandleInteraction
+import io.github.joelromanpr.brace.core.BraceSliderTrackIntent
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceCallout
@@ -148,6 +152,7 @@ class ConsumerActivity : ComponentActivity() {
                 var volume by rememberSaveable { mutableFloatStateOf(3f) }
                 var rangeStart by rememberSaveable { mutableFloatStateOf(2f) }
                 var rangeEnd by rememberSaveable { mutableFloatStateOf(7f) }
+                var multiPositions by rememberSaveable { mutableStateOf(listOf(2f, 5f, 8f)) }
                 var dialogOpen by remember { mutableStateOf(false) }
                 var alertOpen by remember { mutableStateOf(false) }
                 var drawerOpen by remember { mutableStateOf(false) }
@@ -207,6 +212,17 @@ class ConsumerActivity : ComponentActivity() {
                         BraceSlider(volume, { volume = it }, label = "Volume")
                         BraceRangeSlider(rangeStart..rangeEnd,
                             { rangeStart = it.start; rangeEnd = it.endInclusive }, label = "Hours")
+                        BraceMultiSlider(
+                            handles = listOf(
+                                BraceSliderHandle("minimum", multiPositions[0], "Minimum",
+                                    intentAfter = BraceSliderTrackIntent.Primary),
+                                BraceSliderHandle("target", multiPositions[1], "Target",
+                                    BraceSliderHandleInteraction.Push),
+                                BraceSliderHandle("maximum", multiPositions[2], "Maximum"),
+                            ),
+                            onChange = { multiPositions = it.map(BraceSliderHandle::value) },
+                            label = "Thresholds",
+                        )
                         BraceTopBar(
                             startContent = { BraceTopBarGroup {
                                 BraceTopBarTitle("Imports")

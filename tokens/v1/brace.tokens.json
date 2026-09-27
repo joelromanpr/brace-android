@@ -215,7 +215,8 @@
       "onInverseSurface": "{palette.slate0}",
       "tableAlternateRow": "{palette.slate25}",
       "dangerHover": "{palette.red900}",
-      "dangerPressed": "{palette.red950}"
+      "dangerPressed": "{palette.red950}",
+      "controlTrackInactive": "{palette.slate300}"
     },
     "dark": {
       "background": "{palette.slate950}",
@@ -257,7 +258,8 @@
       "onInverseSurface": "{palette.slate950}",
       "tableAlternateRow": "{palette.slate800}",
       "dangerHover": "{palette.red100}",
-      "dangerPressed": "{palette.red50}"
+      "dangerPressed": "{palette.red50}",
+      "controlTrackInactive": "{palette.slate600}"
     },
     "highContrastLight": {
       "background": "{palette.slate0}",
@@ -299,7 +301,8 @@
       "onInverseSurface": "{palette.slate0}",
       "tableAlternateRow": "{palette.slate50}",
       "dangerHover": "{palette.red700}",
-      "dangerPressed": "{palette.red950}"
+      "dangerPressed": "{palette.red950}",
+      "controlTrackInactive": "{palette.slate300}"
     },
     "highContrastDark": {
       "background": "{palette.black}",
@@ -341,7 +344,8 @@
       "onInverseSurface": "{palette.black}",
       "tableAlternateRow": "{palette.slate950}",
       "dangerHover": "{palette.red100}",
-      "dangerPressed": "{palette.red50}"
+      "dangerPressed": "{palette.red50}",
+      "controlTrackInactive": "{palette.slate700}"
     }
   },
   "componentColors": {
@@ -539,7 +543,13 @@
       "disabledThumb": "{semantic.disabledContent}",
       "label": "{semantic.onSurface}",
       "mutedLabel": "{semantic.onSurfaceMuted}",
-      "focusRing": "{semantic.focusRing}"
+      "focusRing": "{semantic.focusRing}",
+      "successTrack": "{semantic.success}",
+      "warningTrack": "{semantic.warning}",
+      "dangerTrack": "{semantic.danger}",
+      "hoverThumb": "{semantic.primaryHover}",
+      "multiInactiveTrack": "{semantic.controlTrackInactive}",
+      "multiTrackOutline": "{semantic.borderStrong}"
     },
     "spinner": {
       "track": "{semantic.surfaceInset}",
@@ -799,7 +809,8 @@
       "focusCornerRadius": 8,
       "thumbSlotWidth": 28,
       "thumbWidth": 16,
-      "thumbHeight": 24
+      "thumbHeight": 24,
+      "trackHeight": 6
     },
     "spinner": {
       "smallSize": 20,

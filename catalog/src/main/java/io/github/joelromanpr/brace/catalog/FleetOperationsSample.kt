@@ -83,6 +83,8 @@ internal fun FleetOperationsSample(
     var filter by rememberSaveable { mutableStateOf("All") }
     var selectedRow by rememberSaveable { mutableStateOf<String?>(fleet.first().id) }
     var selectedColumn by rememberSaveable { mutableStateOf<String?>("vehicle") }
+    var anchorRow by rememberSaveable { mutableStateOf<String?>(null) }
+    var anchorColumn by rememberSaveable { mutableStateOf<String?>(null) }
     val visible = fleet.filter { vehicle ->
         (filter == "All" || vehicle.status == filter) &&
             (query.isBlank() || listOf(vehicle.id, vehicle.route, vehicle.depot, vehicle.status)
@@ -92,6 +94,7 @@ internal fun FleetOperationsSample(
         listOf(
             BraceTableColumn<FleetVehicle>("vehicle", "Vehicle", 112.dp, { it.id }),
             BraceTableColumn<FleetVehicle>("route", "Route", 150.dp, { it.route }),
+            BraceTableColumn<FleetVehicle>("depot", "Depot", 150.dp, { it.depot }),
             BraceTableColumn<FleetVehicle>("charge", "Charge", 96.dp, { "${it.charge}%" }),
             BraceTableColumn<FleetVehicle>("status", "Status", 122.dp, { it.status },
                 cellContent = { vehicle ->
@@ -101,7 +104,10 @@ internal fun FleetOperationsSample(
         )
     }
     val selection = when {
+        selectedRow == null && selectedColumn != null -> BraceTableSelection.Column(selectedColumn!!)
         selectedRow == null -> null
+        anchorRow != null && anchorColumn != null && selectedColumn != null ->
+            BraceTableSelection.Range(anchorRow!!, anchorColumn!!, selectedRow!!, selectedColumn!!)
         selectedColumn == null -> BraceTableSelection.Row(selectedRow!!)
         else -> BraceTableSelection.Cell(selectedRow!!, selectedColumn!!)
     }
@@ -173,10 +179,26 @@ internal fun FleetOperationsSample(
                             is BraceTableSelection.Cell -> {
                                 selectedRow = chosen.rowKey
                                 selectedColumn = chosen.columnKey
+                                anchorRow = null
+                                anchorColumn = null
                             }
                             is BraceTableSelection.Row -> {
                                 selectedRow = chosen.rowKey
                                 selectedColumn = null
+                                anchorRow = null
+                                anchorColumn = null
+                            }
+                            is BraceTableSelection.Column -> {
+                                selectedRow = null
+                                selectedColumn = chosen.columnKey
+                                anchorRow = null
+                                anchorColumn = null
+                            }
+                            is BraceTableSelection.Range -> {
+                                selectedRow = chosen.extentRowKey
+                                selectedColumn = chosen.extentColumnKey
+                                anchorRow = chosen.anchorRowKey
+                                anchorColumn = chosen.anchorColumnKey
                             }
                         }
                     },

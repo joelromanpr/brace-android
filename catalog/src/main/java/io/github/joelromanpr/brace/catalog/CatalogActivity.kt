@@ -567,7 +567,9 @@ private fun ScenarioCard(eyebrow: String, title: String, description: String, on
     BraceCard(Modifier.fillMaxWidth(), onClick = onClick) {
         Text(eyebrow, color = semantic.primary, style = BraceTheme.typography.label)
         Text(title, color = semantic.onSurface, style = BraceTheme.typography.subtitle)
+        Spacer(Modifier.height(BraceTheme.spacing.xs))
         Text(description, color = semantic.onSurfaceMuted, style = BraceTheme.typography.body)
+        Spacer(Modifier.height(BraceTheme.spacing.sm))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             BraceTag("Runnable sample", minimal = true, intent = BraceTagIntent.Success)
             BraceIcon(BraceIcons.ChevronForward, null, intent = BraceIconIntent.Primary)

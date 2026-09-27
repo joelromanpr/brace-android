@@ -74,12 +74,20 @@ internal fun MissionControlSample(
     val assets = remember { missionAssets }
     var watchOnly by rememberSaveable { mutableStateOf(false) }
     var acknowledged by rememberSaveable { mutableStateOf(false) }
-    var selectedRow by rememberSaveable { mutableStateOf("Kestrel-9") }
+    var selectedRow by rememberSaveable { mutableStateOf<String?>("Kestrel-9") }
     var selectedColumn by rememberSaveable { mutableStateOf<String?>("craft") }
+    var anchorRow by rememberSaveable { mutableStateOf<String?>(null) }
+    var anchorColumn by rememberSaveable { mutableStateOf<String?>(null) }
     val visible = if (watchOnly) assets.filter { it.state == "Watch" } else assets
     val selected = assets.firstOrNull { it.id == selectedRow } ?: assets.first()
-    val selection = if (selectedColumn == null) BraceTableSelection.Row(selectedRow)
-        else BraceTableSelection.Cell(selectedRow, selectedColumn!!)
+    val selection = when {
+        selectedRow == null && selectedColumn != null -> BraceTableSelection.Column(selectedColumn!!)
+        selectedRow == null -> null
+        anchorRow != null && anchorColumn != null && selectedColumn != null ->
+            BraceTableSelection.Range(anchorRow!!, anchorColumn!!, selectedRow!!, selectedColumn!!)
+        selectedColumn == null -> BraceTableSelection.Row(selectedRow!!)
+        else -> BraceTableSelection.Cell(selectedRow!!, selectedColumn!!)
+    }
     val columns = remember {
         listOf(
             BraceTableColumn<Spacecraft>("craft", "Spacecraft", 132.dp, { it.id }),
@@ -127,6 +135,8 @@ internal fun MissionControlSample(
                 MissionMetric("Nominal", assets.count { it.state == "Nominal" }.toString(), Modifier.weight(1f))
                 MissionMetric("Watch", assets.count { it.state == "Watch" }.toString(), Modifier.weight(1f))
             }
+            Text("${assets.count { it.state == "Downlink" }} downlink in progress",
+                color = semantic.onSurfaceMuted, style = BraceTheme.typography.label)
         }
         item {
             BraceCallout(title = if (acknowledged) "Signal watch acknowledged" else "Signal watch",
@@ -148,10 +158,26 @@ internal fun MissionControlSample(
                                 is BraceTableSelection.Cell -> {
                                     selectedRow = chosen.rowKey
                                     selectedColumn = chosen.columnKey
+                                    anchorRow = null
+                                    anchorColumn = null
                                 }
                                 is BraceTableSelection.Row -> {
                                     selectedRow = chosen.rowKey
                                     selectedColumn = null
+                                    anchorRow = null
+                                    anchorColumn = null
+                                }
+                                is BraceTableSelection.Column -> {
+                                    selectedRow = null
+                                    selectedColumn = chosen.columnKey
+                                    anchorRow = null
+                                    anchorColumn = null
+                                }
+                                is BraceTableSelection.Range -> {
+                                    selectedRow = chosen.extentRowKey
+                                    selectedColumn = chosen.extentColumnKey
+                                    anchorRow = chosen.anchorRowKey
+                                    anchorColumn = chosen.anchorColumnKey
                                 }
                             }
                         }, watchOnly, { watchOnly = !watchOnly }, Modifier.weight(1.7f))
@@ -164,10 +190,26 @@ internal fun MissionControlSample(
                                 is BraceTableSelection.Cell -> {
                                     selectedRow = chosen.rowKey
                                     selectedColumn = chosen.columnKey
+                                    anchorRow = null
+                                    anchorColumn = null
                                 }
                                 is BraceTableSelection.Row -> {
                                     selectedRow = chosen.rowKey
                                     selectedColumn = null
+                                    anchorRow = null
+                                    anchorColumn = null
+                                }
+                                is BraceTableSelection.Column -> {
+                                    selectedRow = null
+                                    selectedColumn = chosen.columnKey
+                                    anchorRow = null
+                                    anchorColumn = null
+                                }
+                                is BraceTableSelection.Range -> {
+                                    selectedRow = chosen.extentRowKey
+                                    selectedColumn = chosen.extentColumnKey
+                                    anchorRow = chosen.anchorRowKey
+                                    anchorColumn = chosen.anchorColumnKey
                                 }
                             }
                         }, watchOnly, { watchOnly = !watchOnly }, Modifier.fillMaxWidth())
@@ -240,7 +282,7 @@ private fun OrbitPanel(modifier: Modifier) {
 private fun MissionTable(
     rows: List<Spacecraft>,
     columns: List<BraceTableColumn<Spacecraft>>,
-    selection: BraceTableSelection,
+    selection: BraceTableSelection?,
     onSelectionChange: (BraceTableSelection) -> Unit,
     watchOnly: Boolean,
     onToggleWatch: () -> Unit,

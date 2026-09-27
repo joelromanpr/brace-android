@@ -26,6 +26,8 @@ import io.github.joelromanpr.brace.datetime.BraceTimePicker
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbs
@@ -94,8 +96,11 @@ import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconVari
 import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import io.github.joelromanpr.brace.table.BraceDataTable
+import io.github.joelromanpr.brace.table.BraceTableColumn
+import io.github.joelromanpr.brace.table.BraceTableSelection
+import io.github.joelromanpr.brace.table.rememberBraceTableViewport
+import androidx.compose.ui.unit.dp
 
 /** Compiles against Maven coordinates only, with no dependency on the source checkout. */
 class ConsumerActivity : ComponentActivity() {
@@ -157,6 +162,18 @@ class ConsumerActivity : ComponentActivity() {
                         BraceCard {
                             BraceButton(label = "Saved $count", onClick = { count++ })
                         }
+                        val tableRows = remember { listOf("Ready", "Review") }
+                        var selectedTable: BraceTableSelection? by remember { mutableStateOf(null) }
+                        val tableViewport = rememberBraceTableViewport()
+                        BraceDataTable(
+                            rows = tableRows,
+                            rowKey = { it },
+                            columns = listOf(BraceTableColumn<String>("status", "Status", 120.dp, { it })),
+                            selection = selectedTable,
+                            onSelectionChange = { selectedTable = it },
+                            viewport = tableViewport,
+                            height = 160.dp,
+                        )
                         BraceSection(title = "Job status", collapsible = true) {
                             BraceProgressBar(label = "Import progress", value = 0.5f)
                             BraceSpinner(label = "Indexing records", value = 0.5f)

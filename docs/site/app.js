@@ -1,5 +1,5 @@
 const search = document.querySelector('#search');
-const packageSelect = document.querySelector('#package');
+const familySelect = document.querySelector('#package');
 const statusSelect = document.querySelector('#status');
 const kindSelect = document.querySelector('#kind');
 const results = document.querySelector('#components');
@@ -108,15 +108,15 @@ function card(item) {
 function render() {
   const query = search.value.trim().toLocaleLowerCase();
   const filtered = entries.filter(item =>
-    (!packageSelect.value || item.package === packageSelect.value) &&
+    (!familySelect.value || item.family === familySelect.value) &&
     (!statusSelect.value || item.status === statusSelect.value) &&
-    (!kindSelect.value || item.classification === kindSelect.value) &&
+    (!kindSelect.value || item.kind === kindSelect.value) &&
     (!query || [item.id, item.blueprintName, item.family, item.braceApi, item.artifact]
       .some(value => String(value || '').toLocaleLowerCase().includes(query)))
   );
   results.replaceChildren(...filtered.map(card));
   if (filtered.length === 0) results.append(el('p', 'empty', 'No components match these filters.'));
-  resultCount.textContent = `${filtered.length} of ${entries.length} entries`;
+  resultCount.textContent = `${filtered.length} of ${entries.length} items`;
   for (const chip of statusChips.querySelectorAll('[data-status]')) {
     chip.setAttribute('aria-pressed', String(chip.dataset.status === statusSelect.value));
   }
@@ -248,7 +248,7 @@ function revealHash() {
     const id = fragment.slice('component-'.length);
     if (!entryById.has(id)) return;
     search.value = id;
-    packageSelect.value = '';
+    familySelect.value = '';
     statusSelect.value = '';
     kindSelect.value = '';
     render();
@@ -281,6 +281,11 @@ async function load() {
     entries = data.entries;
     entryById = new Map(entries.map(item => [item.id, item]));
     await loadShowcase();
+    const pictured = new Set(captures.flatMap(capture => capture.inventoryIds));
+    const rank = item => item.status === 'stable' ? 0 : pictured.has(item.id) ? 1 : item.kind === 'component' ? 2 : 3;
+    entries.sort((a, b) => rank(a) - rank(b) ||
+      String(a.family).localeCompare(String(b.family)) ||
+      String(a.braceApi || a.blueprintName).localeCompare(String(b.braceApi || b.blueprintName)));
     const pin = data.baseline || {};
     baseline.replaceChildren();
     if (publicSourceRepository) {
@@ -296,9 +301,8 @@ async function load() {
       stat(`${counts.documentedWebSpecificMappings ?? 0}/${counts.webSpecificMappings ?? 0}`, 'Web behaviors explained'),
       stat(counts.labsRows ?? entries.filter(item => item.track === 'labs').length, 'Early experiments')
     );
-    addOptions(packageSelect, entries.map(item => item.package));
+    addOptions(familySelect, entries.map(item => item.family));
     addOptions(statusSelect, entries.map(item => item.status));
-    addOptions(kindSelect, entries.map(item => item.classification));
     renderStatusChips();
     render();
     revealHash();
@@ -310,7 +314,7 @@ async function load() {
 }
 
 window.addEventListener('hashchange', revealHash);
-for (const control of [search, packageSelect, statusSelect, kindSelect]) control.addEventListener('input', render);
+for (const control of [search, familySelect, statusSelect, kindSelect]) control.addEventListener('input', render);
 for (const control of [showcaseTheme, showcaseFamily]) control.addEventListener('input', renderShowcase);
 statusChips.addEventListener('click', event => {
   const chip = event.target.closest('[data-status]');
@@ -328,7 +332,7 @@ showcaseGrid.addEventListener('click', async event => {
   const inventoryButton = event.target.closest('[data-inventory-id]');
   if (inventoryButton) {
     search.value = inventoryButton.dataset.inventoryId;
-    packageSelect.value = '';
+    familySelect.value = '';
     statusSelect.value = '';
     kindSelect.value = '';
     render();

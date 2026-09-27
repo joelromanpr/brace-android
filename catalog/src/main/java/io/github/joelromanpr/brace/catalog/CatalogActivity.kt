@@ -169,6 +169,8 @@ import io.github.joelromanpr.brace.datetime.BraceDateRange
 import io.github.joelromanpr.brace.datetime.BraceDateRangePicker
 import io.github.joelromanpr.brace.datetime.BraceDateRangeField
 import io.github.joelromanpr.brace.datetime.BraceDateRangeShortcut
+import io.github.joelromanpr.brace.datetime.BraceTimeZoneSelect
+import io.github.joelromanpr.brace.datetime.BraceTimeZoneDisplay
 import io.github.joelromanpr.brace.datetime.BraceDateShortcut
 import io.github.joelromanpr.brace.datetime.BraceTimeField
 import io.github.joelromanpr.brace.datetime.BraceTimePicker
@@ -176,6 +178,8 @@ import io.github.joelromanpr.brace.datetime.BraceTimePrecision
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.YearMonth
+import java.time.ZoneId
+import java.time.Instant
 import org.json.JSONObject
 import java.util.Locale
 import kotlinx.coroutines.Dispatchers
@@ -361,6 +365,7 @@ BraceTimePicker(LocalTime.parse(time), { time = it.toString() }, locale = Locale
     use24Hour = true, minTime = LocalTime.of(22, 0), maxTime = LocalTime.of(2, 0))
 BraceTimeField(LocalTime.parse(time), { time = it?.toString() ?: "23:30" },
     label = "Time", locale = Locale.US)""",
+    "datetime-timezoneselect" to "var zone by rememberSaveable { mutableStateOf<String?>(null) }; BraceTimeZoneSelect(zone?.let(ZoneId::of), { zone = it.id }, label = \"Reporting time zone\", referenceInstant = Instant.parse(\"2026-07-15T12:00:00Z\"))",
 
 )
 
@@ -1074,6 +1079,38 @@ private fun ComponentSample(
         "datetime-timepicker" -> TimePickerSample()
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
         "table-cell-selection", "table-column-and-row-resizing" -> TableCatalogSample()
+        "datetime-timezoneselect" -> {
+            var selected by rememberSaveable { mutableStateOf<String?>(null) }
+            var summer by rememberSaveable { mutableStateOf(true) }
+            var showLocal by rememberSaveable { mutableStateOf(true) }
+            var displayName by rememberSaveable { mutableStateOf(BraceTimeZoneDisplay.Composite.name) }
+            val displayMode = BraceTimeZoneDisplay.valueOf(displayName)
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xs)) {
+                    BraceButton(if (summer) "Summer offset" else "Winter offset",
+                        onClick = { summer = !summer }, variant = BraceButtonVariant.Outline)
+                    BraceButton(if (showLocal) "Local first" else "Alphabetical",
+                        onClick = { showLocal = !showLocal }, variant = BraceButtonVariant.Outline)
+                }
+                BraceButton("Display: ${displayMode.name}",
+                    onClick = { displayName = BraceTimeZoneDisplay.entries[
+                        (displayMode.ordinal + 1) % BraceTimeZoneDisplay.entries.size].name },
+                    variant = BraceButtonVariant.Outline)
+                BraceTimeZoneSelect(
+                    value = selected?.let(ZoneId::of),
+                    onValueChange = { selected = it.id },
+                    label = "Reporting time zone", locale = Locale.US,
+                    referenceInstant = Instant.parse(if (summer) "2026-07-15T12:00:00Z"
+                        else "2026-01-15T12:00:00Z"),
+                    showLocalTimeZone = showLocal,
+                    display = displayMode,
+                )
+                Text("Selected IANA ID: ${selected ?: "none"}",
+                    color = BraceTheme.colors.semantic.onSurface)
+                BraceTimeZoneSelect(null, {}, "Unavailable time zone", enabled = false,
+                    locale = Locale.US)
+            }
+        }
         "core-button" -> {
             var count by rememberSaveable { mutableStateOf(0) }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {

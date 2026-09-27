@@ -2894,16 +2894,16 @@
       "sourcePage": "select/omnibar",
       "braceApi": "BraceCommandPalette",
       "artifact": "io.github.joelromanpr.brace:brace-select",
-      "behavior": "Open a searchable command dialog with keyboard navigation and Escape dismissal. Expose option count, active and selected state; support touch, arrows, Enter, Escape, and TalkBack.",
+      "behavior": "Open a controlled, searchable command dialog with grouped actions and optional selected state. Announce active command position and support touch, mouse, arrows, Enter, Escape, Back, and TalkBack.",
       "classification": "adaptation",
-      "reason": "Fullscreen web overlay becomes an Android command dialog.",
+      "reason": "Blueprint Overlay2 and React provider behavior become a native Android modal window. The caller controls opening and can supply a focus target for dismissal; command groups and a visible default list improve native discovery.",
       "milestone": "M3",
       "priority": "P1",
-      "status": "planned",
-      "implementation": null,
-      "sample": null,
-      "documentation": null,
-      "tests": null,
+      "status": "in progress",
+      "implementation": "brace-select/src/main/java/io/github/joelromanpr/brace/select/BraceCommandPalette.kt",
+      "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "documentation": "docs/command-palette.md",
+      "tests": "brace-select/src/androidTest/java/io/github/joelromanpr/brace/select/BraceCommandPaletteTest.kt",
       "firstRelease": null,
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/select/src/components/omnibar/omnibar.mdx"
     },
@@ -3804,8 +3804,7 @@
         "total": 5,
         "stable": 0,
         "status": {
-          "in progress": 4,
-          "planned": 1
+          "in progress": 5
         }
       },
       "table": {

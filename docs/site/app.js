@@ -70,10 +70,7 @@ function card(item) {
   summary.append(title, badge);
   const body = el('dl', 'component-body');
   addFact(body, 'Brace API', item.braceApi);
-  addFact(body, 'Reference name', item.blueprintName);
-  addFact(body, 'Gradle module', item.artifact);
-  addFact(body, 'Android form', item.classification);
-  addFact(body, 'Behavior and accessibility', item.behavior);
+  addFact(body, 'How it works', item.behavior);
   const visual = captures.find(capture => capture.inventoryIds.includes(item.id));
   if (visual) {
     const visualFact = el('div', 'fact');
@@ -85,17 +82,24 @@ function card(item) {
     visualFact.append(el('dt', '', 'Android screenshot'), visualDescription);
     body.append(visualFact);
   }
-  addFact(body, 'Why this differs', item.reason);
-  addFact(body, 'Priority', item.priority);
-  addFact(body, 'Planned step', item.milestone);
-  addFact(body, 'Reference documentation', item.blueprintUrl, true);
-  addFact(body, 'Pinned source', item.pinnedSourceUrl, true);
-  addFact(body, 'Implementation', item.implementation, true);
-  addFact(body, 'Sample', item.sample, true);
-  addFact(body, 'Documentation', item.documentation, true);
+  addFact(body, 'Module', item.artifact);
+  addFact(body, 'Code', item.implementation, true);
+  addFact(body, 'Catalog sample', item.sample, true);
+  addFact(body, 'Guide', item.documentation, true);
   addFact(body, 'Tests', item.tests, true);
-  addFact(body, 'First published version', item.firstRelease);
-  details.append(summary, body);
+  addFact(body, 'First release', item.firstRelease);
+  const reference = el('details', 'reference-notes');
+  reference.append(el('summary', '', 'Reference and planning notes'));
+  const referenceBody = el('dl', 'reference-body');
+  addFact(referenceBody, 'Reference name', item.blueprintName);
+  addFact(referenceBody, 'Android form', item.classification);
+  addFact(referenceBody, 'Why this differs', item.reason);
+  addFact(referenceBody, 'Priority', item.priority);
+  addFact(referenceBody, 'Planned step', item.milestone);
+  addFact(referenceBody, 'Reference documentation', item.blueprintUrl, true);
+  addFact(referenceBody, 'Pinned source', item.pinnedSourceUrl, true);
+  reference.append(referenceBody);
+  details.append(summary, body, reference);
   return details;
 }
 
@@ -124,7 +128,7 @@ function renderStatusChips() {
     button.type = 'button';
     button.dataset.status = status;
     button.setAttribute('aria-pressed', String(status === statusSelect.value));
-    button.append(el('span', 'status-chip-dot'), el('span', '', `${status ? status.replace(/^./, c => c.toUpperCase()) : 'All'} · ${count}`));
+    button.textContent = `${status ? status.replace(/^./, c => c.toUpperCase()) : 'All'} (${count})`;
     return button;
   }));
 }
@@ -154,7 +158,6 @@ function captureCard(capture) {
   const body = el('div', 'shot-body');
   const badges = el('div', 'shot-badges');
   badges.append(el('span', `pill ${item.status.replace(/\s+/g, '-')}`, item.status));
-  badges.append(el('span', `shot-stage ${capture.sourceStage}`, capture.sourceStage === 'draft' ? 'Draft branch capture' : 'Merged source'));
   body.append(badges);
   body.append(el('p', 'shot-family', `${item.package} · ${item.family}`));
   body.append(el('h3', '', capture.title || item.blueprintName));
@@ -277,7 +280,13 @@ async function load() {
     entryById = new Map(entries.map(item => [item.id, item]));
     await loadShowcase();
     const pin = data.baseline || {};
-    baseline.textContent = `Reference version: ${pin.releaseTag || pin.version || 'pinned stable'} · ${pin.commit || pin.sha || 'commit recorded in inventory'}`;
+    baseline.replaceChildren();
+    if (publicSourceRepository) {
+      const sourceLink = el('a', '', 'Comparison source and version ↗');
+      sourceLink.href = `${publicSourceRepository}/blob/main/BLUEPRINT_BASELINE.md`;
+      sourceLink.title = `${pin.releaseTag || pin.version || 'Pinned reference'} · ${pin.commit || pin.sha || 'commit recorded in inventory'}`;
+      baseline.append(sourceLink);
+    } else baseline.textContent = 'Comparison source and version are recorded in the repository.';
     const counts = data.summary || {};
     stats.replaceChildren(
       stat(`${counts.stableApplicableRows ?? 0}/${counts.applicableRows ?? entries.length}`, 'Android items released'),

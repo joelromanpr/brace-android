@@ -21,7 +21,10 @@ import androidx.compose.ui.unit.IntOffset
 import io.github.braceandroid.foundation.BraceTheme
 import io.github.joelromanpr.brace.datetime.BraceDatePicker
 import io.github.joelromanpr.brace.datetime.BraceDateField
+import io.github.joelromanpr.brace.datetime.BraceTimeField
+import io.github.joelromanpr.brace.datetime.BraceTimePicker
 import java.time.LocalDate
+import java.time.LocalTime
 import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -143,6 +146,7 @@ class ConsumerActivity : ComponentActivity() {
                 var regionExpanded by remember { mutableStateOf(false) }
                 val regionQuery = rememberBraceQueryListState()
                 var dueDate by remember { mutableStateOf<LocalDate?>(null) }
+                var dueTime by rememberSaveable { mutableStateOf("14:30") }
                 var meal by remember { mutableStateOf("soup") }
                 var layout by remember { mutableStateOf("list") }
                 val shortcutState = rememberBraceShortcutRegistryState()
@@ -199,6 +203,10 @@ class ConsumerActivity : ComponentActivity() {
                         BraceDateField(dueDate, { dueDate = it }, "Due date", locale = Locale.US)
                         BraceDatePicker(dueDate, { dueDate = it }, locale = Locale.US,
                             minDate = LocalDate.of(2026, 1, 1))
+                        BraceTimeField(LocalTime.parse(dueTime), { dueTime = it?.toString() ?: "14:30" },
+                            label = "Due time", locale = Locale.US, use24Hour = true)
+                        BraceTimePicker(LocalTime.parse(dueTime), { dueTime = it.toString() },
+                            locale = Locale.US, use24Hour = true)
                         BraceRadio(selected = meal == "soup", onSelect = { meal = "soup" }, label = "Soup")
                         BraceRadioGroup(
                             options = listOf(BraceRadioOption("soup", "Soup"), BraceRadioOption("salad", "Salad")),

@@ -290,6 +290,28 @@
       "capturedAt": "2026-09-26",
       "pixelWidth": 320,
       "pixelHeight": 640
+    },
+    {
+      "id": "timepicker-light",
+      "inventoryIds": [
+        "datetime-timepicker"
+      ],
+      "image": "showcase/12-timepicker-light.png",
+      "alt": "Brace TimePicker showing hour and minute steppers at 23:30 in an overnight range, a Meeting time field, and a disabled time field in light mode",
+      "caption": "The in-progress native TimePicker pairs bounded hour and minute steppers with a localized editable time field and a disabled state.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m30-time-picker",
+      "sourceCommit": "78f71f291b563e2b266576c5d0cab8277d34a319",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var selected by rememberSaveable { mutableStateOf(\"23:30\") }\nBraceTimePicker(\n    value = LocalTime.parse(selected),\n    onValueChange = { selected = it.toString() },\n    locale = Locale.US,\n    use24Hour = true,\n    minTime = LocalTime.of(22, 0),\n    maxTime = LocalTime.of(2, 0),\n)\nBraceTimeField(\n    value = LocalTime.parse(selected),\n    onValueChange = { selected = it?.toString() ?: \"23:30\" },\n    label = \"Meeting time\",\n    locale = Locale.US,\n)",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800
     }
   ]
 }

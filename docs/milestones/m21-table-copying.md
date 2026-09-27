@@ -1,0 +1,21 @@
+# M21: table copying
+
+**Status:** draft PR [#26](https://github.com/joelromanpr/brace-android/pull/26), integrated onto protected main `463ea61` (through M18, M57, M33, M59, and M34). This source is **in progress**, `firstRelease` is null, and generated released coverage is **0/122** applicable rows (0/94 components). It is not a Maven Central release or a Blueprint parity claim.
+
+## Source in this slice
+
+- `BraceTableClipboard.formatSelection` exports a controlled cell, row, column, or rectangular range as quoted tab-separated text in logical table order. Stale selections return `null`. It validates standalone row keys; the table reuses its cached row and column indexes.
+- `BraceDataTable` handles Ctrl/Cmd+C from its keyboard focus stop and exposes a localized TalkBack copy action on the same named table node. The Android clipboard receives plain text. The catalog's 120-row sample offers a touch copy button and preview; the independent Maven consumer compiles the public formatter API.
+- The pinned Copying capability row is **in progress** with implementation, sample, guide, and tests linked in the inventory. Eight of 23 main-track table rows are in progress and 15 remain planned. The [guide](../table-copying.md) documents output format, stale selections, and the cost of very large selections.
+- The replay retains M14 viewport virtualization and measured headers, M18 controlled selection and resize handles, row-major traversal, finite-size checks, and focused resize-handle identity.
+
+## Verification
+
+- On the M18-main replay before the M57 docs/catalog integration, `./gradlew build lint checkTokenGeneration checkBlueprintIconGeneration checkBlueprintNextIconGeneration checkInventory apiCheck :catalog:assembleDebug --no-parallel` passed **836 tasks**. The first attempt exposed omitted Android clipboard imports during replay; the targeted table/catalog/test compilation passed after correction, then the full gate passed.
+- On the attached Android 16/API 36 emulator at **320 × 640, 160 dpi, font scale 1.0**, `:brace-table:connectedDebugAndroidTest` passed **37/37**, zero failed or skipped, in **71 Gradle tasks**. This includes 32 viewport/selection/resizing tests and five copying tests for TSV quoting and order, controlled updates, offscreen range copying, stale clipboard preservation, and the native named-table TalkBack copy action.
+- All eight aligned `0.1.0-SNAPSHOT` artifacts published to Maven Local (**308 tasks**). Each has an AAR, sources JAR, KDoc JAR, POM, and Gradle Module Metadata. The separate clean, offline, coordinate-only consumer passed **38/38 tasks**, including the new formatter API. No Maven Central publication or release tag was attempted.
+- Token and pinned icon generation, coverage `--check`, JavaScript syntax, whitespace checks, and the Pages build pass: **148 inventory rows, 23 real Android captures, 58 guides**, and **0/122** stable applicable rows. The earlier 320 × 640 catalog review showed selection and the copy preview without horizontal overflow; this replay has not had a new manual appearance review. The M59 showcase integration passes static site and coverage checks. On the preceding M59-integrated tree, `:brace-foundation:apiCheck :brace-table:build :brace-table:lint :brace-table:apiCheck :catalog:assembleDebug checkTokenGeneration checkBlueprintIconGeneration checkBlueprintNextIconGeneration checkInventory --no-parallel` passed **297 tasks** (65 executed) in 20 seconds. The earlier pushed M21 head `f9b7528` passed hosted verify, API34 instrumented (37/37 table tests), and CodeQL; those results precede this integration. The subsequent M34 time-zone integration also passed scoped foundation/datetime/table API, table build/lint, catalog assemble, token/icon generation, and inventory checks: **316 tasks** (73 executed) in 19 seconds. Its current-head hosted checks remain pending.
+
+## Limits and next table slice
+
+This copies one contiguous selection as plain text. Disjoint regions, HTML clipboard formats, editing, sorting, reordering, freezing, and advanced formatting remain separate slices. Formatting a very large whole-column selection is synchronous and may allocate a large string; callers should use an app-specific background export for such data. Manual TalkBack spoken-order QA remains open. M22 is the next controlled cell-editing slice.

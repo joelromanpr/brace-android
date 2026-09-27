@@ -8,7 +8,9 @@
 
 ## Verification
 
-The earlier dependent source branch passed a 467-task build/lint/API/inventory gate, 14/14 palette tests, and a core overlay regression suite with one preexisting skipped Back-injection test. Four Maven Local artifacts and a separate 37-task consumer built. A 320×640 Gboard review found commands and Close visible above the keyboard. Those results predate this replay. The replay incorporating selection, time zone, table editing, and the redesigned showcase passed a **228-task** catalog/select API/token/inventory gate and **14/14** API 36 command-palette tests before the final selection squash. The final source is rebuilt as a focused patch on protected main; generated inventory and Pages checks pass (**148 rows, 23 real captures, 66 guides**). Final-head hosted checks and combined Maven consumer verification remain pending.
+The earlier dependent source passed a **467-task** build/lint/API/inventory gate and **14/14** focused API 36 palette tests. On the focused M16 main source, the final local API/catalog/device gate passed **261 tasks** and **46/46** select tests on API 36, including the palette suite. All **eight** aligned Maven Local artifacts were published with AAR, sources, documentation, POM, and Gradle metadata; the independent coordinate-only Android consumer built. Hosted verify, API 34 instrumentation, CodeQL, and analysis all passed on source head `64a6dcf`.
+
+The Tree milestone is now integrated. Generated inventory and Pages checks pass with **148 rows, 24 real captures, 68 guides**. The Tree-integrated head still needs its own hosted checks; release status remains in progress.
 
 ## Limits
 

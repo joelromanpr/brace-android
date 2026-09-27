@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Brace platform-neutral design tokens. Lengths are dp-like logical units; type is sp-like scalable units; motion is milliseconds.",
   "palette": {
     "slate0": "#FFFFFF",
@@ -379,6 +379,25 @@
       "content": "{semantic.onSurface}",
       "border": "{semantic.border}"
     },
+    "controlCard": {
+      "container": "{semantic.surfaceRaised}",
+      "content": "{semantic.onSurface}",
+      "mutedContent": "{semantic.onSurfaceMuted}",
+      "border": "{semantic.border}",
+      "hoverContainer": "{semantic.hover}",
+      "pressedContainer": "{semantic.pressed}",
+      "selectedContainer": "{semantic.selection}",
+      "selectedContent": "{semantic.onSelection}",
+      "selectedBorder": "{semantic.primary}",
+      "disabledContainer": "{semantic.disabledContainer}",
+      "disabledContent": "{semantic.disabledContent}",
+      "disabledSwitchTrack": "{semantic.disabledContent}",
+      "disabledSwitchThumb": "{semantic.surface}",
+      "focusRing": "{semantic.focusRing}",
+      "radioRing": "{semantic.borderStrong}",
+      "radioSelectedRing": "{semantic.primary}",
+      "radioDot": "{semantic.primary}"
+    },
     "topBar": {
       "container": "{semantic.surfaceRaised}",
       "title": "{semantic.onSurface}",
@@ -674,6 +693,15 @@
     "card": {
       "cornerRadius": 8,
       "contentPadding": 16
+    },
+    "controlCard": {
+      "cornerRadius": 8,
+      "contentPadding": 16,
+      "indicatorGap": 12,
+      "descriptionGap": 2,
+      "radioSize": 20,
+      "radioDotRadius": 5,
+      "radioStrokeWidth": 2
     },
     "topBar": {
       "minHeight": 56,

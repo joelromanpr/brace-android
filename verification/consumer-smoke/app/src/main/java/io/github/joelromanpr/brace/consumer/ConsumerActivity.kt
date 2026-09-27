@@ -58,6 +58,10 @@ import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceCallout
 import io.github.joelromanpr.brace.core.BraceCalloutIntent
 import io.github.joelromanpr.brace.core.BraceCard
+import io.github.joelromanpr.brace.core.BraceRadioCardOption
+import io.github.joelromanpr.brace.core.BraceRadioCardGroup
+import io.github.joelromanpr.brace.core.BraceCheckboxCard
+import io.github.joelromanpr.brace.core.BraceSwitchCard
 import io.github.joelromanpr.brace.core.BraceContextMenu
 import io.github.joelromanpr.brace.core.BraceContextMenuPopup
 import io.github.joelromanpr.brace.core.BraceControlGroup
@@ -181,6 +185,9 @@ class ConsumerActivity : ComponentActivity() {
                 var meal by remember { mutableStateOf("soup") }
                 var layout by remember { mutableStateOf("list") }
                 var reportingZone by remember { mutableStateOf<ZoneId?>(null) }
+                var cardSwitch by rememberSaveable { mutableStateOf(false) }
+                var cardCheckbox by rememberSaveable { mutableStateOf(false) }
+                var cardChoice by rememberSaveable { mutableStateOf<String?>(null) }
                 val panelState = rememberBracePanelStackState(BracePanel("imports", "Imports"))
                 val shortcutState = rememberBraceShortcutRegistryState()
                 val toasts = rememberBraceToastState()
@@ -202,8 +209,18 @@ class ConsumerActivity : ComponentActivity() {
                         BraceCard {
                             BraceButton(label = "Saved $count", onClick = { count++ })
                         }
+                        BraceSwitchCard(cardSwitch, { cardSwitch = it }, "Notifications")
+                        BraceCheckboxCard(cardCheckbox, { cardCheckbox = it }, "Include archived")
+                        BraceRadioCardGroup(
+                            options = listOf(BraceRadioCardOption("soup", "Soup"),
+                                BraceRadioCardOption("salad", "Salad")),
+                            selectedValue = cardChoice, onValueChange = { cardChoice = it },
+                            label = "Lunch special",
+                        )
                         var tableRows by remember { mutableStateOf(listOf("ready" to "Ready", "review" to "Review")) }
                         var editingTable by remember { mutableStateOf<BraceTableSelection.Cell?>(null) }
+                        var statusColumnTitle by remember { mutableStateOf("Status") }
+                        var editingColumnName by remember { mutableStateOf<String?>(null) }
                         var selectedTable: BraceTableSelection? by remember {
                             mutableStateOf(BraceTableSelection.Range("ready", "status", "review", "status"))
                         }
@@ -213,7 +230,8 @@ class ConsumerActivity : ComponentActivity() {
                         BraceDataTable(
                             rows = tableRows,
                             rowKey = { it.first },
-                            columns = listOf(BraceTableColumn<Pair<String, String>>("status", "Status", 120.dp, { it.second }, editable = true)),
+                            columns = listOf(BraceTableColumn<Pair<String, String>>("status", statusColumnTitle, 120.dp,
+                                { it.second }, editable = true, editableName = true)),
                             selection = selectedTable,
                             onSelectionChange = { selectedTable = it },
                             viewport = tableViewport,
@@ -228,10 +246,18 @@ class ConsumerActivity : ComponentActivity() {
                                 tableRows = tableRows.map { if (it.first == cell.rowKey) it.first to value else it }
                             },
                             validateCell = { _, value -> if (value.isBlank()) "Required" else null },
+                            editingColumnName = editingColumnName,
+                            onEditingColumnNameChange = { editingColumnName = it },
+                            onColumnNameCommit = { key, value -> if (key == "status") statusColumnTitle = value },
+                            validateColumnName = { _, value -> if (value.length < 3) "Too short" else null },
                         )
                         BasicText("Table copy: ${BraceTableClipboard.formatSelection(tableRows, { it.first },
                             listOf(BraceTableColumn<Pair<String, String>>("status", "Status", 120.dp, { it.second })), selectedTable) ?: "none"}")
                         BraceButton("Select status column", onClick = {
+                            selectedTable = BraceTableSelection.Column("status")
+                        })
+                        BraceButton("Rename selected column", onClick = {
+                            editingColumnName = "status"
                             selectedTable = BraceTableSelection.Column("status")
                         })
                         BraceSection(title = "Job status", collapsible = true) {

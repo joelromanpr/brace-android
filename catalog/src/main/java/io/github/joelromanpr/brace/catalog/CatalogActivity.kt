@@ -67,6 +67,10 @@ import io.github.joelromanpr.brace.core.BraceUnorderedList
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceButtonVariant
+import io.github.joelromanpr.brace.core.BraceCheckboxCard
+import io.github.joelromanpr.brace.core.BraceRadioCardGroup
+import io.github.joelromanpr.brace.core.BraceRadioCardOption
+import io.github.joelromanpr.brace.core.BraceSwitchCard
 import io.github.joelromanpr.brace.core.BraceCheckbox
 import io.github.joelromanpr.brace.core.BraceControlGroup
 import io.github.joelromanpr.brace.core.BraceFieldLabel
@@ -300,6 +304,12 @@ BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
     editingCell = editing, onEditingCellChange = { editing = it },
     onCellCommit = { cell, value -> rows = rows.map { if (it.id == cell.rowKey) it.copy(title = value) else it } })""".trimIndent(),
     "table-editing" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, editingCell = editing, onEditingCellChange = { editing = it }, onCellCommit = { cell, value -> save(cell, value) }) // Enter/F2, double-tap, TalkBack Edit",
+    "table-editablename" to """var editingName by remember { mutableStateOf<String?>(null) }
+var titles by remember { mutableStateOf(mapOf("status" to "Status")) }
+val columns = listOf(BraceTableColumn<Record>("status", titles.getValue("status"), 160.dp, { it.status }, editableName = true))
+BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
+    editingColumnName = editingName, onEditingColumnNameChange = { editingName = it },
+    onColumnNameCommit = { key, title -> titles = titles + (key to title) })""".trimIndent(),
     "table-column-and-row-resizing" to """var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
 var widths by remember { mutableStateOf<Map<String, Dp>>(emptyMap()) }
 var heights by remember { mutableStateOf<Map<String, Dp>>(emptyMap()) }
@@ -343,6 +353,9 @@ BraceTheme {
     "core-radio" to "BraceRadio(selected = meal == \"soup\", onSelect = { meal = \"soup\" }, label = \"Soup\")",
     "core-radiogroup" to "BraceRadioGroup(options = listOf(BraceRadioOption(\"soup\", \"Soup\"), BraceRadioOption(\"salad\", \"Salad\")), selectedValue = meal, onValueChange = { meal = it }, label = \"Lunch special\")",
     "core-segmentedcontrol" to "BraceSegmentedControl(options = listOf(BraceSegmentedOption(\"list\", \"List\"), BraceSegmentedOption(\"grid\", \"Grid\")), value = layout, onValueChange = { layout = it }, label = \"Layout\")",
+    "core-switchcard" to "var enabled by rememberSaveable { mutableStateOf(false) }; BraceSwitchCard(enabled, { enabled = it }, label = \"Notifications\", description = \"Daily summary\", modifier = Modifier.fillMaxWidth())",
+    "core-checkboxcard" to "var mixed by rememberSaveable { mutableStateOf(true) }; var checked by rememberSaveable { mutableStateOf(false) }; BraceCheckboxCard(checked, { checked = it; mixed = false }, label = \"Include archived\", indeterminate = mixed, modifier = Modifier.fillMaxWidth())",
+    "core-radiocard" to "var choice by rememberSaveable { mutableStateOf<String?>(null) }; BraceRadioCardGroup(listOf(BraceRadioCardOption(\"soup\", \"Soup\"), BraceRadioCardOption(\"salad\", \"Salad\")), choice, { choice = it }, label = \"Lunch special\")",
     "core-inputgroup" to "BraceTextField(value = query, onValueChange = { query = it }, label = \"Search\")",
     "core-formgroup" to """var notes by rememberSaveable { mutableStateOf("") }
 BraceFormField(label = "Case notes", helperText = "Include the event time", required = true, requiredDescription = "Required") { controlModifier ->
@@ -1296,7 +1309,7 @@ private fun ComponentSample(
         "datetime-timepicker" -> TimePickerSample()
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
         "table-cell-selection", "table-column-and-row-resizing", "table-copying",
-        "table-editablecell", "table-editing" -> TableCatalogSample()
+        "table-editablecell", "table-editing", "table-editablename" -> TableCatalogSample()
         "core-h1", "core-h2", "core-h3", "core-h4", "core-h5", "core-h6",
         "core-blockquote", "core-code", "core-pre", "core-ol", "core-ul" -> SemanticContentSample(id)
         "datetime-timezoneselect" -> {
@@ -1413,6 +1426,7 @@ private fun ComponentSample(
             Column { BraceSwitch(checked, { checked = it }, "Notifications")
                 BraceSwitch(false, {}, "Unavailable setting", enabled = false) }
         }
+        "core-switchcard", "core-checkboxcard", "core-radiocard" -> ControlCardsCatalogSample(id)
         "core-inputgroup" -> {
             var value by rememberSaveable { mutableStateOf("") }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {

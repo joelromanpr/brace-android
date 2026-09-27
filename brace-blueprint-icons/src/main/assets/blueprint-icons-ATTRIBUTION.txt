@@ -1,0 +1,11 @@
+Palantir Blueprint icons, @blueprintjs/icons 6.13.0 at Blueprint commit
+a60d4c92257612808fbfac81cfeee4fcba91a8b4.
+Source: https://github.com/palantir/blueprint/tree/a60d4c92257612808fbfac81cfeee4fcba91a8b4/resources/icons
+License: Apache-2.0. The accompanying blueprint-icons-LICENSE.txt is copied
+from packages/icons/LICENSE at that commit.
+Changes: SVG path data and viewBox values were extracted into
+brace-blueprint-icons.json; runtime Compose ImageVectors are reconstructed from
+those values. The empty blank glyph remains empty. The manifest contains
+SHA-256 checksums for every source SVG and for icons.json and LICENSE.
+Brace Android is independent of Palantir. The original `brace-icons` artwork
+and default registry are separate and unchanged.

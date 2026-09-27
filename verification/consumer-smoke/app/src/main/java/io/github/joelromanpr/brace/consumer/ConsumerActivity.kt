@@ -7,33 +7,61 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
 import io.github.braceandroid.foundation.BraceTheme
+import io.github.joelromanpr.brace.datetime.BraceDatePicker
+import io.github.joelromanpr.brace.datetime.BraceDateRange
+import io.github.joelromanpr.brace.datetime.BraceDateRangePicker
+import io.github.joelromanpr.brace.datetime.BraceDateRangeField
+import io.github.joelromanpr.brace.datetime.BraceDateField
+import io.github.joelromanpr.brace.datetime.BraceTimeField
+import io.github.joelromanpr.brace.datetime.BraceTimePicker
+import io.github.joelromanpr.brace.datetime.BraceTimeZoneSelect
+import java.time.ZoneId
+import java.time.LocalDate
+import java.time.LocalTime
+import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import io.github.joelromanpr.brace.core.BraceAlertDialog
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbs
+import io.github.joelromanpr.brace.core.BraceTree
+import io.github.joelromanpr.brace.core.BraceTreeNode
+import io.github.joelromanpr.brace.core.rememberBraceTreeState
 import io.github.joelromanpr.brace.core.BraceTopBar
 import io.github.joelromanpr.brace.core.BraceTopBarGroup
 import io.github.joelromanpr.brace.core.BraceTopBarTitle
 import io.github.joelromanpr.brace.core.BraceTopBarDivider
+import io.github.joelromanpr.brace.core.BracePanel
+import io.github.joelromanpr.brace.core.BracePanelStack
+import io.github.joelromanpr.brace.core.rememberBracePanelStackState
+import io.github.joelromanpr.brace.core.BraceHeading2
+import io.github.joelromanpr.brace.core.BraceCode
+import io.github.joelromanpr.brace.core.BraceOrderedList
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceCallout
 import io.github.joelromanpr.brace.core.BraceCalloutIntent
 import io.github.joelromanpr.brace.core.BraceCard
-import io.github.joelromanpr.brace.core.BraceSwitchCard
-import io.github.joelromanpr.brace.core.BraceCheckboxCard
-import io.github.joelromanpr.brace.core.BraceRadioCardGroup
 import io.github.joelromanpr.brace.core.BraceRadioCardOption
+import io.github.joelromanpr.brace.core.BraceRadioCardGroup
+import io.github.joelromanpr.brace.core.BraceCheckboxCard
+import io.github.joelromanpr.brace.core.BraceSwitchCard
 import io.github.joelromanpr.brace.core.BraceContextMenu
 import io.github.joelromanpr.brace.core.BraceContextMenuPopup
 import io.github.joelromanpr.brace.core.BraceControlGroup
@@ -42,6 +70,9 @@ import io.github.joelromanpr.brace.core.BraceDialog
 import io.github.joelromanpr.brace.core.BraceDrawer
 import io.github.joelromanpr.brace.core.BraceDrawerPosition
 import io.github.joelromanpr.brace.core.BraceEditableText
+import io.github.joelromanpr.brace.core.BraceLink
+import io.github.joelromanpr.brace.core.BraceLinkButton
+import io.github.joelromanpr.brace.core.BraceLinkDestination
 import io.github.joelromanpr.brace.core.BraceFormField
 import io.github.joelromanpr.brace.core.BraceFormIntent
 import io.github.joelromanpr.brace.core.BraceMenu
@@ -50,6 +81,8 @@ import io.github.joelromanpr.brace.core.BraceMenuItem
 import io.github.joelromanpr.brace.core.BraceOverlayHost
 import io.github.joelromanpr.brace.core.BracePopover
 import io.github.joelromanpr.brace.core.BraceProgressBar
+import io.github.joelromanpr.brace.core.BraceSpinner
+import io.github.joelromanpr.brace.core.BraceSkeleton
 import io.github.joelromanpr.brace.core.BraceSection
 import io.github.joelromanpr.brace.core.BraceShortcut
 import io.github.joelromanpr.brace.core.BraceShortcutLabel
@@ -59,9 +92,15 @@ import io.github.joelromanpr.brace.core.BraceTextField
 import io.github.joelromanpr.brace.core.BraceTextArea
 import io.github.joelromanpr.brace.core.BraceTextAreaSize
 import io.github.joelromanpr.brace.core.BraceNumericField
+import io.github.joelromanpr.brace.core.BraceRadio
+import io.github.joelromanpr.brace.core.BraceRadioGroup
+import io.github.joelromanpr.brace.core.BraceRadioOption
+import io.github.joelromanpr.brace.core.BraceSegmentedControl
+import io.github.joelromanpr.brace.core.BraceSegmentedOption
 import io.github.joelromanpr.brace.core.braceShortcuts
 import io.github.joelromanpr.brace.core.rememberBraceShortcutRegistryState
 import io.github.joelromanpr.brace.core.BraceTag
+import io.github.joelromanpr.brace.core.BraceTagInput
 import io.github.joelromanpr.brace.core.BraceToastHost
 import io.github.joelromanpr.brace.core.BraceToastIntent
 import io.github.joelromanpr.brace.core.BraceToastSpec
@@ -73,9 +112,26 @@ import io.github.joelromanpr.brace.icons.BraceIconButton
 import io.github.joelromanpr.brace.icons.BraceIconRegistry
 import io.github.joelromanpr.brace.icons.BraceIconRegistryProvider
 import io.github.joelromanpr.brace.icons.BraceIcons
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIcon
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconNames
+import io.github.joelromanpr.brace.blueprinticons.BraceBlueprintIconPack
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIcon
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconNames
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconPack
+import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconVariant
 import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
+import io.github.joelromanpr.brace.select.BraceSuggest
+import io.github.joelromanpr.brace.select.BraceCommand
+import io.github.joelromanpr.brace.select.BraceCommandPalette
+import io.github.joelromanpr.brace.select.BraceMultiSelect
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
+import io.github.joelromanpr.brace.table.BraceTableClipboard
+import io.github.joelromanpr.brace.table.BraceDataTable
+import io.github.joelromanpr.brace.table.BraceTableColumn
+import io.github.joelromanpr.brace.table.BraceTableSelection
+import io.github.joelromanpr.brace.table.rememberBraceTableViewport
+import androidx.compose.ui.unit.dp
 
 /** Compiles against Maven coordinates only, with no dependency on the source checkout. */
 class ConsumerActivity : ComponentActivity() {
@@ -103,10 +159,13 @@ class ConsumerActivity : ComponentActivity() {
                 var caseNotes by remember { mutableStateOf("") }
                 var reportTitle by remember { mutableStateOf("Quarterly report") }
                 var amount by rememberSaveable { mutableStateOf("0.2") }
-                var cardSwitch by rememberSaveable { mutableStateOf(false) }
-                var cardCheckbox by rememberSaveable { mutableStateOf(false) }
-                var cardChoice by rememberSaveable { mutableStateOf<String?>(null) }
                 var iconName by remember { mutableStateOf("search") }
+                val blueprintIconPack by produceState<BraceBlueprintIconPack?>(null) {
+                    value = withContext(Dispatchers.IO) { BraceBlueprintIconPack.load(applicationContext) }
+                }
+                val blueprintNextIconPack by produceState<BraceBlueprintNextIconPack?>(null) {
+                    value = withContext(Dispatchers.IO) { BraceBlueprintNextIconPack.load(applicationContext) }
+                }
                 val iconRegistry = remember {
                     BraceIconRegistry.Default.register("custom-check",
                         BraceIconRegistry.Default.resolve("check"))
@@ -114,10 +173,29 @@ class ConsumerActivity : ComponentActivity() {
                 var regionKey by remember { mutableStateOf<String?>(null) }
                 var regionExpanded by remember { mutableStateOf(false) }
                 val regionQuery = rememberBraceQueryListState()
+                var commandOpen by rememberSaveable { mutableStateOf(false) }
+                val commandQuery = rememberBraceQueryListState()
+                val commandTrigger = remember { FocusRequester() }
+                var tags by remember { mutableStateOf(listOf("Compose")) }
+                var tagDraft by remember { mutableStateOf("") }
+                var dueDate by remember { mutableStateOf<LocalDate?>(null) }
+                var travelRange by remember { mutableStateOf(BraceDateRange()) }
+                var dueTime by rememberSaveable { mutableStateOf("14:30") }
+                var meal by remember { mutableStateOf("soup") }
+                var layout by remember { mutableStateOf("list") }
+                var reportingZone by remember { mutableStateOf<ZoneId?>(null) }
+                var cardSwitch by rememberSaveable { mutableStateOf(false) }
+                var cardCheckbox by rememberSaveable { mutableStateOf(false) }
+                var cardChoice by rememberSaveable { mutableStateOf<String?>(null) }
+                val panelState = rememberBracePanelStackState(BracePanel("imports", "Imports"))
                 val shortcutState = rememberBraceShortcutRegistryState()
                 val toasts = rememberBraceToastState()
+                val tree = rememberBraceTreeState(initialExpandedKeys = setOf("projects"))
                 Box(Modifier.fillMaxSize()) {
                     Column {
+                        BraceHeading2("Consumer smoke")
+                        BraceCode("val ready = true")
+                        BraceOrderedList(listOf("Build", "Publish locally", "Consume"))
                         BraceTopBar(
                             startContent = { BraceTopBarGroup {
                                 BraceTopBarTitle("Imports")
@@ -138,10 +216,63 @@ class ConsumerActivity : ComponentActivity() {
                             selectedValue = cardChoice, onValueChange = { cardChoice = it },
                             label = "Lunch special",
                         )
+                        var tableRows by remember { mutableStateOf(listOf("ready" to "Ready", "review" to "Review")) }
+                        var editingTable by remember { mutableStateOf<BraceTableSelection.Cell?>(null) }
+                        var selectedTable: BraceTableSelection? by remember {
+                            mutableStateOf(BraceTableSelection.Range("ready", "status", "review", "status"))
+                        }
+                        var tableColumnWidth by remember { mutableStateOf(120.dp) }
+                        var tableRowHeight by remember { mutableStateOf(64.dp) }
+                        val tableViewport = rememberBraceTableViewport()
+                        BraceDataTable(
+                            rows = tableRows,
+                            rowKey = { it.first },
+                            columns = listOf(BraceTableColumn<Pair<String, String>>("status", "Status", 120.dp, { it.second }, editable = true)),
+                            selection = selectedTable,
+                            onSelectionChange = { selectedTable = it },
+                            viewport = tableViewport,
+                            height = 160.dp,
+                            columnWidths = mapOf("status" to tableColumnWidth),
+                            onColumnWidthChange = { _, width -> tableColumnWidth = width },
+                            rowHeights = mapOf("ready" to tableRowHeight),
+                            onRowHeightChange = { _, height -> tableRowHeight = height },
+                            editingCell = editingTable,
+                            onEditingCellChange = { editingTable = it },
+                            onCellCommit = { cell, value ->
+                                tableRows = tableRows.map { if (it.first == cell.rowKey) it.first to value else it }
+                            },
+                            validateCell = { _, value -> if (value.isBlank()) "Required" else null },
+                        )
+                        BasicText("Table copy: ${BraceTableClipboard.formatSelection(tableRows, { it.first },
+                            listOf(BraceTableColumn<Pair<String, String>>("status", "Status", 120.dp, { it.second })), selectedTable) ?: "none"}")
+                        BraceButton("Select status column", onClick = {
+                            selectedTable = BraceTableSelection.Column("status")
+                        })
                         BraceSection(title = "Job status", collapsible = true) {
                             BraceProgressBar(label = "Import progress", value = 0.5f)
+                            BraceSpinner(label = "Indexing records", value = 0.5f)
+                            BraceSkeleton(label = "Loading next batch")
                         }
                         BraceBreadcrumbs(listOf(BraceBreadcrumb("Home", onClick = {}), BraceBreadcrumb("Imports")))
+                        BraceLink("Open reports", BraceLinkDestination.Action("Reports") { count++ })
+                        BraceLinkButton("Open guide", BraceLinkDestination.Uri("https://example.org/guide", "Guide"),
+                            onOpenUri = { count++ })
+                        BracePanelStack(panelState, Modifier.height(180.dp)) {
+                            if (panel.id == "imports") {
+                                BraceButton("Configure imports", onClick = {
+                                    openPanel(BracePanel("import-settings", "Import settings"))
+                                })
+                            } else {
+                                BraceButton("Close settings", onClick = { closePanel() })
+                            }
+                        }
+                        BraceTree(
+                            nodes = listOf(BraceTreeNode("projects", "Projects", children = listOf(
+                                BraceTreeNode("imports", "Imports"), BraceTreeNode("exports", "Exports")))),
+                            expandedKeys = tree.expandedKeys, onExpandedKeysChange = { tree.expandedKeys = it },
+                            selectedKeys = tree.selectedKeys, onSelectedKeysChange = { tree.selectedKeys = it },
+                            label = "Workspace tree", maxHeight = 160.dp,
+                        )
                         BraceTag("Active")
                         BraceFieldLabel("Export format", spokenLabel = "Export format, CSV") { controlModifier ->
                             BraceButton("CSV", onClick = {}, modifier = controlModifier)
@@ -156,10 +287,39 @@ class ConsumerActivity : ComponentActivity() {
                         }
                         BraceNumericField(amount, { amount = it }, label = "Amount",
                             min = 0.0, max = 100.0, minorStepSize = 0.1)
+                        BraceTagInput(tags, { tags = it }, tagDraft, { tagDraft = it }, "Skills")
+                        BraceDateField(dueDate, { dueDate = it }, "Due date", locale = Locale.US)
+                        BraceTimeZoneSelect(reportingZone, { reportingZone = it }, "Reporting time zone", locale = Locale.US)
+                        BraceDatePicker(dueDate, { dueDate = it }, locale = Locale.US,
+                            minDate = LocalDate.of(2026, 1, 1))
+                        BraceDateRangeField(travelRange, { travelRange = it }, "Travel dates", locale = Locale.US)
+                        BraceDateRangePicker(travelRange, { travelRange = it }, locale = Locale.US)
+                        BraceTimeField(LocalTime.parse(dueTime), { dueTime = it?.toString() ?: "14:30" },
+                            label = "Due time", locale = Locale.US, use24Hour = true)
+                        BraceTimePicker(LocalTime.parse(dueTime), { dueTime = it.toString() },
+                            locale = Locale.US, use24Hour = true)
+                        BraceRadio(selected = meal == "soup", onSelect = { meal = "soup" }, label = "Soup")
+                        BraceRadioGroup(
+                            options = listOf(BraceRadioOption("soup", "Soup"), BraceRadioOption("salad", "Salad")),
+                            selectedValue = meal, onValueChange = { meal = it }, label = "Lunch special",
+                        )
+                        BraceSegmentedControl(
+                            options = listOf(BraceSegmentedOption("list", "List"), BraceSegmentedOption("grid", "Grid")),
+                            value = layout, onValueChange = { layout = it }, label = "Layout",
+                        )
                         BraceCallout(title = "Ready", intent = BraceCalloutIntent.Success)
                         BraceIconRegistryProvider(iconRegistry) {
                             Row {
                                 BraceIcon(BraceIcons.Info, contentDescription = null)
+                                blueprintIconPack?.let { pack ->
+                                    BraceBlueprintIcon(pack, BraceBlueprintIconNames.Search,
+                                        contentDescription = null)
+                                }
+                                blueprintNextIconPack?.let { pack ->
+                                    BraceBlueprintNextIcon(pack, BraceBlueprintNextIconNames.MagnifyingGlass,
+                                        contentDescription = null,
+                                        variant = BraceBlueprintNextIconVariant.Filled)
+                                }
                                 BraceIconByName(iconName, contentDescription = "Status icon")
                                 BraceIconButton(BraceIcons.Search, label = "Search records",
                                     onClick = { iconName = "custom-check" })
@@ -233,6 +393,37 @@ class ConsumerActivity : ComponentActivity() {
                                     onValueChange = { reportTitle = it },
                                     label = "Report title",
                                     editActionLabel = "Edit report title",
+                                )
+                                BraceSuggest(
+                                    value = TextFieldValue("North"),
+                                    onValueChange = {},
+                                    options = listOf(BraceSelectOption("north", "north", "North")),
+                                    selectedKey = "north",
+                                    onSelect = {},
+                                    expanded = false,
+                                    onExpandedChange = {},
+                                    label = "Suggested region",
+                                )
+                                BraceMultiSelect(
+                                    options = listOf(BraceSelectOption("east", "east", "East"),
+                                        BraceSelectOption("west", "west", "West")),
+                                    selectedKeys = listOf("east"),
+                                    onSelectedKeysChange = {},
+                                    expanded = false,
+                                    onExpandedChange = {},
+                                    label = "Regions",
+                                )
+                                BraceButton("Commands", onClick = { commandOpen = true },
+                                    modifier = Modifier.focusRequester(commandTrigger))
+                                BraceCommandPalette(
+                                    commands = listOf(BraceCommand("open", "open", "Open record",
+                                        group = "Records")),
+                                    open = commandOpen,
+                                    onOpenChange = { commandOpen = it },
+                                    onExecute = { count++ },
+                                    title = "Commands",
+                                    state = commandQuery,
+                                    restoreFocusTo = commandTrigger,
                                 )
                                 BraceSelect(
                                     options = listOf(BraceSelectOption("east", "east", "East"),

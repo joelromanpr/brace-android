@@ -1,6 +1,6 @@
 # Control cards
 
-`brace-core` provides in-progress Compose equivalents for the three public Blueprint 6.18.0 [control cards](https://blueprintjs.com/docs/#core/components/control-card): `SwitchCard`, `CheckboxCard`, and `RadioCard`. A card's entire surface is one control and one focus stop. The switch, checkbox, or radio mark is drawn as decoration inside it. None is released to Maven Central or marked stable.
+Brace has three selection cards: `BraceSwitchCard`, `BraceCheckboxCard`, and `BraceRadioCard`. Each card is one touch and focus target, with its indicator drawn inside. All three are in progress and available from source. [Pinned comparison](https://blueprintjs.com/docs/#core/components/control-card).
 
 ```kotlin
 var notifications by rememberSaveable { mutableStateOf(true) }

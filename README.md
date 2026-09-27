@@ -1,58 +1,48 @@
 # Brace Android
 
-An open-source Jetpack Compose design system for complex, data-dense Android apps. Brace has its own tokens, visual language, and Android behavior. The long-term comparison target is the public user-facing surface of [Palantir Blueprint](https://github.com/palantir/blueprint), pinned to [`@blueprintjs/core@6.18.0`](BLUEPRINT_BASELINE.md) at commit `a60d4c92257612808fbfac81cfeee4fcba91a8b4`. Blueprint is a web toolkit; the [inventory](docs/coverage.md) records Android adaptations and web-specific mappings explicitly. Brace is independent of Palantir.
+Compose components for Android apps with a lot going on: forms, filters, dialogs, and data tables. Brace has its own look and works with touch, keyboard, and screen readers.
 
-## Coverage
+![Electric fleet example in the Android catalog](docs/site/showcase/fleet-operations-wide.png)
 
-<!-- coverage:begin -->
-**Released coverage: 0/121 applicable rows** (0/94 components; 0/27 capabilities). Web-specific mappings: 0/24. Labs tracked separately: 2 rows. Full applicable parity: no.
-<!-- coverage:end -->
+**[Explore the live showcase](https://joelromanpr.github.io/brace-android/)** · [Browse components](https://joelromanpr.github.io/brace-android/#coverage) · [View the Android captures](https://joelromanpr.github.io/brace-android/#showcase)
 
-[Browse every row and its evidence](docs/coverage.md) · [Machine-readable inventory](inventory/blueprint-components.json) · [Roadmap](ROADMAP.md)
+The catalog includes two runnable examples: an electric fleet workspace and a spacecraft mission screen. The data is fictional; the screenshots come from the Android app.
 
-The source milestones contain versioned platform-neutral design tokens, a generated Kotlin token API, `BraceTheme`, an interactive inventory-driven catalog, a documentation site source, actions and form controls, M2 content and progress feedback, M3 navigation labels and messages, M4 menu and modal overlay source, M5 drawer and anchored popover source, M6 tooltip and toast source, M7 context-menu and shortcut source, M8 form-field and editable-text source, M9 labels/control groups, M10 numeric input, M11 icon foundation, M12 select/query state, and M41 selection-card source. These APIs remain **in progress** until release evidence is recorded. Blueprint parity is a project goal, not a current claim. Suggest, MultiSelect, date/time, the full icon glyph catalog, and the data table are planned work in the pinned inventory.
+## Try the catalog
 
-## Try the source build
-
-Requires JDK 21 and Android SDK 36. The Gradle wrapper uses 8.14.3; the build pins AGP 8.13.2, Kotlin/Compose compiler 2.2.20, Compose BOM 2025.08.00, and minSdk 26.
+With JDK 21 and Android SDK 36 installed, run:
 
 ```sh
-./gradlew :catalog:assembleDebug
-./gradlew build lint checkTokenGeneration checkInventory apiCheck
+./gradlew :catalog:installDebug
 ```
 
-The catalog APK is `catalog/build/outputs/apk/debug/catalog-debug.apk`. It lists component names and availability from the generated inventory asset, with runnable examples for implemented controls and runtime light/dark, high-contrast, brand, density, and motion controls. The [core](docs/core-components.md), [control cards](docs/control-cards.md), [content and feedback](docs/content-feedback.md), [navigation and messages](docs/navigation-feedback.md), [menus and overlays](docs/overlays.md), [drawers and popovers](docs/drawers-popovers.md), [tooltips and toasts](docs/tooltip-toast.md), [context menus and shortcuts](docs/context-shortcuts.md), [form fields and editable text](docs/form-text.md), [labels and control groups](docs/form-layout.md), [numeric input](docs/numeric-input.md), [icons](docs/icons.md), and [select/query](docs/select-query.md) guides document APIs, states, accessibility, and current limits. The [M1](docs/milestones/m1-foundation-core.md), [M2](docs/milestones/m2-content-feedback.md), [M3](docs/milestones/m3-navigation-feedback.md), [M4](docs/milestones/m4-overlays.md), [M5](docs/milestones/m5-drawers-popovers.md), [M6](docs/milestones/m6-tooltip-toast.md), [M7](docs/milestones/m7-context-shortcuts.md), [M8](docs/milestones/m8-form-text.md), [M9](docs/milestones/m9-form-layout.md), [M10](docs/milestones/m10-numeric-input.md), [M11](docs/milestones/m11-icons.md), [M12](docs/milestones/m12-select-query.md), and [M41](docs/milestones/m41-control-cards.md) reports track verification and open work.
+Open the app to search components, try their states, and change light or dark theme, contrast, brand color, and density. [Setup and supported versions](docs/installation.md)
 
-No Maven Central release has been published. To try the local snapshot, publish the foundation, core, icons, and select AARs to Maven Local, then compile the [independent consumer sample](verification/consumer-smoke/README.md):
-
-```sh
-./gradlew :brace-foundation:publishToMavenLocal :brace-core:publishToMavenLocal :brace-icons:publishToMavenLocal :brace-select:publishToMavenLocal
-./gradlew -p verification/consumer-smoke :app:assembleDebug
-```
-
-The consumer uses aligned `brace-core`, `brace-icons`, and `brace-select` Maven Local coordinates at `0.1.0-SNAPSHOT`. Core exposes foundation transitively; icons can be added separately without bundling artwork into core. The [installation guide](docs/installation.md) has complete dependency snippets and the supported toolchain. Maven Central publishing is a manual, protected maintainer action after a verified release tag.
-
-## A Compose screen
+## Use a component
 
 ```kotlin
-var projectName by rememberSaveable { mutableStateOf("") }
-var includeArchived by rememberSaveable { mutableStateOf(false) }
+var name by rememberSaveable { mutableStateOf("") }
 
 BraceTheme {
     Column {
-        BraceTextField(projectName, { projectName = it }, label = "Project name")
-        BraceCheckbox(includeArchived, { includeArchived = it }, label = "Include archived")
-        BraceButton(label = "Save", onClick = { save(projectName, includeArchived) })
+        BraceTextField(name, { name = it }, label = "Project name")
+        BraceButton("Save", onClick = { save(name) })
     }
 }
 ```
 
-Theme tokens support light, dark, and high-contrast schemes, brand colors, scoped overrides, compact/comfortable density, and reduced motion. See [theming](docs/theming.md) for the token contract and Material 3 interoperability.
+[Theming](docs/theming.md) · [Component guides](docs/core-components.md) · [Data tables](docs/table-viewport.md)
 
-## Documentation and contribution
+## Availability
 
-The GitHub Pages source is in `docs/site`, built by `node scripts/build-docs.mjs`. Its intended address is [joelromanpr.github.io/brace-android](https://joelromanpr.github.io/brace-android/); Pages must be enabled before that URL is treated as live. Coverage counts on both the site and this README come from the pinned inventory and are checked in CI.
+<!-- coverage:begin -->
+**Released: 0 of 122 tracked Android items** (0 of 94 components; 0 of 28 design-system capabilities). [See the full coverage record, web mappings, and experimental work](docs/coverage.md).
+<!-- coverage:end -->
 
-[Contributing](CONTRIBUTING.md) · [Code of conduct](CODE_OF_CONDUCT.md) · [Security](SECURITY.md) · [Support](SUPPORT.md) · [Governance](GOVERNANCE.md) · [Maintainer guide](MAINTAINERS.md) · [Attribution](docs/attribution.md)
+Brace is under active development. The source can be built and published to Maven Local, but no version is available on Maven Central yet. The [component list](docs/coverage.md) shows what is in progress, planned, or released. Its counts come from the [machine-readable inventory](inventory/blueprint-components.json), so screenshots never imply a release.
 
-Apache-2.0 licensed; see [LICENSE](LICENSE).
+The comparison uses a [pinned reference version](BLUEPRINT_BASELINE.md). [License and asset attribution](docs/attribution.md) are recorded separately.
+
+## Contribute
+
+Pick a component from the [roadmap](ROADMAP.md) and follow [the contribution guide](CONTRIBUTING.md). See [security](SECURITY.md) for private vulnerability reports and [support](SUPPORT.md) for help. Apache-2.0 [license](LICENSE).

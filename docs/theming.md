@@ -60,6 +60,8 @@ BraceTheme {
 
 A semantic color override rebuilds component state colors in that nested scope. Other typed groups can be replaced with `BraceThemeOverrides` (`spacing`, `sizing`, `shape`, `elevation`, `motion`, `componentMetrics`, and `typography`). When a nested scope selects a different light/dark or contrast mode, it starts from that mode's base colors and reapplies the inherited brand. Keep local overrides small and review their contrast in every mode they support.
 
+The additive token contract version `1.1.0` adds select, radio, segmented-control, date-picker, and date-input semantic visual states and dimensions. Existing token names remain unchanged.
+
 ## Using tokens in components
 
 ```kotlin

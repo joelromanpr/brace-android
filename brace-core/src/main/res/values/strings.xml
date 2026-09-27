@@ -35,4 +35,24 @@
     <string name="brace_numeric_range">Minimum %1$s, maximum %2$s</string>
     <string name="brace_numeric_minimum">Minimum %1$s</string>
     <string name="brace_numeric_maximum">Maximum %1$s</string>
+    <plurals name="brace_tag_input_count">
+        <item quantity="one">%1$d tag</item>
+        <item quantity="other">%1$d tags</item>
+    </plurals>
+    <string name="brace_tag_input_remove">Remove %1$s</string>
+    <string name="brace_tag_input_duplicate">Already added: %1$s</string>
+    <string name="brace_tag_input_invalid">Tag not accepted: %1$s</string>
+    <string name="brace_tag_input_selected">Selected tag: %1$s</string>
+    <string name="brace_tag_input_error">Invalid tags</string>
+    <string name="brace_button_loading">Loading</string>
+    <string name="brace_link_description">%1$s, link to %2$s</string>
+    <string name="brace_link_button_description">%1$s, opens %2$s</string>
+    <string name="brace_link_open">Open %1$s</string>
+    <string name="brace_panel_stack_back_to">Back to %1$s</string>
+    <string name="brace_tree_expand">Expand node</string>
+    <string name="brace_tree_collapse">Collapse node</string>
+    <string name="brace_tree_expanded">Expanded</string>
+    <string name="brace_tree_collapsed">Collapsed</string>
+    <string name="brace_tree_select">Select node</string>
+    <string name="brace_tree_node_position">%1$s, level %2$d, item %3$d of %4$d</string>
 </resources>

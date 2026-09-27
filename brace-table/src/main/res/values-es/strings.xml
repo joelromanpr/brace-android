@@ -1,0 +1,26 @@
+<resources>
+    <string name="brace_table_default_label">Tabla de datos</string>
+    <string name="brace_table_row_header">Fila</string>
+    <string name="brace_table_select">Seleccionar</string>
+    <string name="brace_table_copy">Copiar celdas seleccionadas</string>
+    <string name="brace_table_empty">Sin filas</string>
+    <string name="brace_table_row_description">Fila %1$d, %2$s</string>
+    <string name="brace_table_cell_description">%1$s, fila %2$d (%3$s), %4$s</string>
+    <string name="brace_table_column_description">%1$s, columna %2$d</string>
+    <string name="brace_table_column_resize">Cambiar el ancho de la columna %1$s</string>
+    <string name="brace_table_row_resize">Cambiar la altura de la fila %1$s</string>
+    <string name="brace_table_increase_size">Aumentar tamaño</string>
+    <string name="brace_table_decrease_size">Reducir tamaño</string>
+    <string name="brace_table_size_min">%1$d dp; mínimo %2$d dp</string>
+    <string name="brace_table_size_range">%1$d dp; mínimo %2$d dp; máximo %3$d dp</string>
+    <string name="brace_table_range_description">Filas seleccionadas de %1$d a %2$d, columnas de %3$d a %4$d</string>
+    <string name="brace_table_selected_column_description">Columna %1$d seleccionada</string>
+    <string name="brace_table_selected_cell_description">%1$s seleccionada, fila %2$d (%3$s), %4$s</string>
+    <string name="brace_table_selected_row_description">Fila %1$d seleccionada, %2$s</string>
+    <string name="brace_table_extend_range">Iniciar o extender rango</string>
+    <string name="brace_table_edit">Editar celda</string>
+    <string name="brace_table_edit_description">Editar %1$s, fila %2$d (%3$s)</string>
+    <string name="brace_table_save_edit">Guardar cambios</string>
+    <string name="brace_table_cancel_edit">Cancelar edición</string>
+    <string name="brace_table_invalid_value">Valor no válido</string>
+</resources>

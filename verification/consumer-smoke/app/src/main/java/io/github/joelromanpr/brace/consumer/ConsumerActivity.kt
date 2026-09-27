@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -104,6 +105,7 @@ import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconVari
 import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
+import io.github.joelromanpr.brace.table.BraceTableClipboard
 import io.github.joelromanpr.brace.table.BraceDataTable
 import io.github.joelromanpr.brace.table.BraceTableColumn
 import io.github.joelromanpr.brace.table.BraceTableSelection
@@ -192,6 +194,8 @@ class ConsumerActivity : ComponentActivity() {
                             rowHeights = mapOf("Ready" to tableRowHeight),
                             onRowHeightChange = { _, height -> tableRowHeight = height },
                         )
+                        BasicText("Table copy: ${BraceTableClipboard.formatSelection(tableRows, { it },
+                            listOf(BraceTableColumn<String>("status", "Status", 120.dp, { it })), selectedTable) ?: "none"}")
                         BraceButton("Select status column", onClick = {
                             selectedTable = BraceTableSelection.Column("status")
                         })

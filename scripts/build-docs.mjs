@@ -36,6 +36,8 @@ const guideSources = new Map([
   ['docs/datetime-range.md', 'datetime-range'],
   ['docs/table-viewport.md', 'table-viewport'],
   ['docs/table-selection-resize.md', 'table-selection-resize'],
+  ['docs/table-copying.md', 'table-copying'],
+  ['docs/milestones/m21-table-copying.md', 'milestone-m21'],
   ['docs/web-mechanisms.md', 'web-mechanisms'],
   ['docs/links.md', 'links'],
   ['docs/time-zone-select.md', 'time-zone-select'],
@@ -230,6 +232,7 @@ const componentGuideLinks = [
   ['Time-zone selection', 'time-zone-select'],
   ['Data tables', 'table-viewport'],
   ['Selection and resizing', 'table-selection-resize'],
+  ['Copying cells', 'table-copying'],
   ['Icons', 'icons'],
 ];
 const extraGuideLinks = [

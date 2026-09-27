@@ -12,12 +12,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import io.github.braceandroid.foundation.BraceTheme
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonVariant
 import io.github.joelromanpr.brace.table.BraceDataTable
 import io.github.joelromanpr.brace.table.BraceTableColumn
+import io.github.joelromanpr.brace.table.BraceTableClipboard
 import io.github.joelromanpr.brace.table.BraceTableSelection
 
 private data class DemoTableRecord(val id: String, val case: String, val status: String)
@@ -38,6 +41,8 @@ internal fun TableCatalogSample() {
     var extentColumn by rememberSaveable { mutableStateOf("") }
     var columnWidths by remember { mutableStateOf<Map<String, androidx.compose.ui.unit.Dp>>(emptyMap()) }
     var rowHeights by remember { mutableStateOf<Map<String, androidx.compose.ui.unit.Dp>>(emptyMap()) }
+    val catalogClipboard = LocalClipboardManager.current
+    var copiedPreview by remember { mutableStateOf<String?>(null) }
     val selection = when (selectedKind) {
         "cell" -> BraceTableSelection.Cell(selectedRow, selectedColumn)
         "row" -> BraceTableSelection.Row(selectedRow)
@@ -83,5 +88,13 @@ internal fun TableCatalogSample() {
             BraceButton("Reset sizes", onClick = { columnWidths = emptyMap(); rowHeights = emptyMap() },
                 variant = BraceButtonVariant.Outline)
         }
+        BraceButton("Copy selected cells", onClick = {
+            BraceTableClipboard.formatSelection(records, { it.id }, tableColumns, selection)?.let { value ->
+                catalogClipboard.setText(AnnotatedString(value))
+                copiedPreview = value.replace("\n", " ↵ ").take(80)
+            }
+        }, enabled = selection != null, variant = BraceButtonVariant.Outline)
+        copiedPreview?.let { Text("Copied: $it", color = BraceTheme.colors.semantic.onSurfaceMuted,
+            style = BraceTheme.typography.body) }
     }
 }

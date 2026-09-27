@@ -21,6 +21,9 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.IntOffset
 import io.github.braceandroid.foundation.BraceTheme
 import io.github.joelromanpr.brace.datetime.BraceDatePicker
+import io.github.joelromanpr.brace.datetime.BraceDateRange
+import io.github.joelromanpr.brace.datetime.BraceDateRangePicker
+import io.github.joelromanpr.brace.datetime.BraceDateRangeField
 import io.github.joelromanpr.brace.datetime.BraceDateField
 import io.github.joelromanpr.brace.datetime.BraceTimeField
 import io.github.joelromanpr.brace.datetime.BraceTimePicker
@@ -149,6 +152,7 @@ class ConsumerActivity : ComponentActivity() {
                 var regionExpanded by remember { mutableStateOf(false) }
                 val regionQuery = rememberBraceQueryListState()
                 var dueDate by remember { mutableStateOf<LocalDate?>(null) }
+                var travelRange by remember { mutableStateOf(BraceDateRange()) }
                 var dueTime by rememberSaveable { mutableStateOf("14:30") }
                 var meal by remember { mutableStateOf("soup") }
                 var layout by remember { mutableStateOf("list") }
@@ -217,6 +221,8 @@ class ConsumerActivity : ComponentActivity() {
                         BraceDateField(dueDate, { dueDate = it }, "Due date", locale = Locale.US)
                         BraceDatePicker(dueDate, { dueDate = it }, locale = Locale.US,
                             minDate = LocalDate.of(2026, 1, 1))
+                        BraceDateRangeField(travelRange, { travelRange = it }, "Travel dates", locale = Locale.US)
+                        BraceDateRangePicker(travelRange, { travelRange = it }, locale = Locale.US)
                         BraceTimeField(LocalTime.parse(dueTime), { dueTime = it?.toString() ?: "14:30" },
                             label = "Due time", locale = Locale.US, use24Hour = true)
                         BraceTimePicker(LocalTime.parse(dueTime), { dueTime = it.toString() },

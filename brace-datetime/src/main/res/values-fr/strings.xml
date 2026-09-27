@@ -31,4 +31,18 @@
     <string name="brace_time_minute_short">Min</string>
     <string name="brace_time_second_short">Sec</string>
     <string name="brace_time_millisecond_short">Ms</string>
+    <string name="brace_range_start">Date de début</string>
+    <string name="brace_range_end">Date de fin</string>
+    <string name="brace_range_in">Dans la plage sélectionnée</string>
+    <string name="brace_range_today">Aujourd’hui</string>
+    <string name="brace_range_previous_month">Mois précédent</string>
+    <string name="brace_range_next_month">Mois suivant</string>
+    <string name="brace_range_previous_year">Année précédente</string>
+    <string name="brace_range_next_year">Année suivante</string>
+    <string name="brace_range_clear">Effacer la plage</string>
+    <string name="brace_range_open">Ouvrir le calendrier de plage</string>
+    <string name="brace_range_title">Choisir une plage de dates</string>
+    <string name="brace_range_invalid">Saisissez une date valide</string>
+    <string name="brace_range_unavailable">Date indisponible</string>
+    <string name="brace_range_overlapping">La date de début doit précéder la date de fin</string>
 </resources>

@@ -172,6 +172,7 @@ fun <Row> BraceDataTable(
 ) {
     remember(height, maxColumnWidth, maxRowHeight, columnWidths, rowHeights) {
         validateTableDimensions(height, maxColumnWidth, maxRowHeight, columnWidths, rowHeights)
+        true
     }
     val rowIndex = remember(rows) { validateRowKeys(rows, rowKey) }
     val rowIndexes = rowIndex.byKey

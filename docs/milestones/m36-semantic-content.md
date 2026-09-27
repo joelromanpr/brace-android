@@ -1,6 +1,6 @@
 # M36 — semantic content adapters
 
-**Status:** source replay on the current protected main in review; no public artifact or stable inventory claim.
+**Status:** current-main replay verified locally; draft PR and hosted checks pending. No public artifact or stable inventory claim.
 
 ## Delivered in this slice
 
@@ -11,9 +11,12 @@
 ## Verification
 
 - Current replay on protected main `47989fc0f56652bee74223e08760907eeb6d9107`: inventory and documentation generation pass, 148 rows, 0/122 applicable rows stable. The site build validates 21 existing captures and 56 guides, including direct semantic-content and M36 audit routes.
+- Combined `build lint checkTokenGeneration checkBlueprintIconGeneration checkBlueprintNextIconGeneration checkInventory apiCheck :catalog:assembleDebug` passed offline on the replay (836 tasks). The API dump was regenerated to match canonical class ordering; the exported semantic-content signatures did not change.
+- API 36 at 320×640, 160 dpi, font scale 1.0: focused `BraceSemanticContentTest` passed 3/3 (71 Gradle tasks), covering headings through theme changes, RTL list collection/order semantics, and readable noninteractive quote/code semantics.
+- Eight aligned `0.1.0-SNAPSHOT` artifacts published to Maven Local (308 tasks). Each has an AAR, sources JAR, KDoc JAR, POM, and Gradle Module Metadata. The separate Maven-coordinate-only consumer compiled with `BraceHeading2` and `BraceOrderedList` (37 tasks). This is local verification, not a Maven Central release.
 - Default inset text contrast from the platform-neutral token source: 13.65:1 light, 17.16:1 dark, 19.54:1 high-contrast light, 21.0:1 high-contrast dark. Muted quote citation text against the same inset surface: 5.59:1, 10.53:1, 12.22:1, and 15.47:1 respectively. Brand and scoped override colors still need consumer review.
-- Earlier M36 topic branch, before the current-main replay: exact core API dump/check, Kotlin compilation, and broad `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` passed (467 tasks). API 36 semantic-content tests: 3/3 passed. Full core suite: 174 tests total, 173 passed, one pre-existing overlay test skipped, zero failures. Earlier-topic Maven Local publication of four artifacts passed (156 tasks); a separate consumer app compiled from those artifacts (37 tasks). The current replay needs a fresh combined Gradle, device, and all-artifact consumer gate before PR readiness.
-- The 320×640 catalog heading detail was visually inspected in light and dark high-contrast modes; 2× system text remained scrollable. Manual TalkBack and brand/scoped-override visual review remain pending.
+- Earlier M36 topic branch, before the current-main replay: full core API 36 suite had 174 tests total, 173 passed, one pre-existing overlay test skipped, zero failures. This full suite has not been rerun on the replay; the current combined build and focused device test above passed.
+- On the earlier M36 topic branch, the 320×640 catalog heading detail was visually inspected in light and dark high-contrast modes, and 2× system text remained scrollable. That visual pass has not been repeated after the current-main replay. Manual TalkBack and brand/scoped-override visual review remain pending.
 
 ## Limits and remaining work
 

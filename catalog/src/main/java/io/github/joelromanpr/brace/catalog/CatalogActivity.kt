@@ -225,9 +225,18 @@ Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
     "table-column" to "BraceTableColumn<Record>(\"name\", \"Name\", 140.dp, { it.name })",
     "table-viewport-rendering" to "val viewport = rememberBraceTableViewport(); BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, viewport = viewport)",
     "table-fixed-headers" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // row and column headers stay visible",
-    "table-keyboard-navigation" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // Shift+arrows extend a range",
-    "table-cell-selection" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // Cell, Row, Column, or Range",
-    "table-column-and-row-resizing" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, columnWidths = widths, onColumnWidthChange = { key, width -> widths = widths + (key to width) }, rowHeights = heights, onRowHeightChange = { key, height -> heights = heights + (key to height) })",
+    "table-keyboard-navigation" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // arrows/Home/End/Page; Shift extends a range",
+    "table-cell-selection" to """var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
+BraceDataTable(rows, { it.id }, columns, selection, { selection = it })
+// Tap a cell or header; Shift+arrows extend a rectangular range.""".trimIndent(),
+    "table-column-and-row-resizing" to """var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
+var widths by remember { mutableStateOf<Map<String, Dp>>(emptyMap()) }
+var heights by remember { mutableStateOf<Map<String, Dp>>(emptyMap()) }
+BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
+    columnWidths = widths,
+    onColumnWidthChange = { key, width -> widths = widths + (key to width) },
+    rowHeights = heights,
+    onRowHeightChange = { key, height -> heights = heights + (key to height) })""".trimIndent(),
     "core-css-utility-classes" to """val semantic = BraceTheme.colors.semantic
 Box(Modifier.background(semantic.surface).padding(BraceTheme.spacing.md)) {
     BraceButton("Retry", onClick = ::retry, variant = BraceButtonVariant.Outline)

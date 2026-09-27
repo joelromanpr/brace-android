@@ -1,6 +1,6 @@
 # M36 — semantic content adapters
 
-**Status:** source integrated through M21 protected main; final-head checks and hosted review pending. No public artifact or stable inventory claim.
+**Status:** source integrated through M15 protected main; final-head checks and hosted review pending. No public artifact or stable inventory claim.
 
 ## Delivered in this slice
 
@@ -10,7 +10,7 @@
 
 ## Verification
 
-- On protected main `47989fc0f56652bee74223e08760907eeb6d9107`, inventory and documentation generation passed with 148 rows and 0/122 applicable rows stable. M34 and M21 were then integrated; generated coverage and site/static checks still pass on M21 main `61ab3e20b06693c5678935a52d7f979cb7489530`. The site build validates 23 existing captures and 60 guides, including direct semantic-content and M36 audit routes. The combined Gradle and device gates below were run before M34/M21 integration; final-head verification remains pending.
+- On protected main `47989fc0f56652bee74223e08760907eeb6d9107`, inventory and documentation generation passed with 148 rows and 0/122 applicable rows stable. M34, M21, and M15 were then integrated; generated coverage and site/static checks still pass on M15 main `98f3d46065b63116dbed249ea60550d7e794f2d4`. The site build validates 23 existing captures and 62 guides, including direct semantic-content and M36 audit routes. The combined Gradle and device gates below were run before M34/M21/M15 integration; final-head verification remains pending.
 - Combined `build lint checkTokenGeneration checkBlueprintIconGeneration checkBlueprintNextIconGeneration checkInventory apiCheck :catalog:assembleDebug` passed offline on the replay (836 tasks). The API dump was regenerated to match canonical class ordering; the exported semantic-content signatures did not change.
 - API 36 at 320×640, 160 dpi, font scale 1.0: focused `BraceSemanticContentTest` passed 3/3 (71 Gradle tasks), covering headings through theme changes, RTL list collection/order semantics, and readable noninteractive quote/code semantics.
 - Eight aligned `0.1.0-SNAPSHOT` artifacts published to Maven Local (308 tasks). Each has an AAR, sources JAR, KDoc JAR, POM, and Gradle Module Metadata. The separate Maven-coordinate-only consumer compiled with `BraceHeading2` and `BraceOrderedList` (37 tasks). This is local verification, not a Maven Central release.

@@ -7,4 +7,4 @@ This independent Gradle project resolves Brace **only by Maven coordinates**. Fr
 ./gradlew -p verification/consumer-smoke :app:assembleDebug
 ```
 
-This separate Gradle app imports Brace by Maven coordinates from `mavenLocal()`; it does not include the source modules. It exercises the theme, core controls, icons, select and date inputs, TagInput, and table selection, resizing, and copying. `0.1.0-SNAPSHOT` is local only. Before claiming a publication check, confirm each AAR, sources jar, documentation jar, POM, and Gradle metadata file exists in Maven Local.
+This separate Gradle app imports Brace by Maven coordinates from `mavenLocal()`; it does not include source modules. It exercises the theme, core controls, radio and segmented choices, TagInput, overlays, context menus, shortcuts, forms, icons, select and date inputs, links, tooltip, toast, and table selection, resizing, copying, and single-cell editing. `0.1.0-SNAPSHOT` is local only. Before claiming a publication check, confirm each AAR, sources jar, documentation jar, POM, and Gradle metadata file exists in Maven Local.

@@ -130,6 +130,8 @@ import io.github.joelromanpr.brace.table.BraceTableClipboard
 import io.github.joelromanpr.brace.table.BraceDataTable
 import io.github.joelromanpr.brace.table.BraceTableColumn
 import io.github.joelromanpr.brace.table.BraceTableSelection
+import io.github.joelromanpr.brace.table.BraceTableSortDirection
+import io.github.joelromanpr.brace.table.rememberBraceTableSortState
 import io.github.joelromanpr.brace.table.rememberBraceTableViewport
 import androidx.compose.ui.unit.dp
 
@@ -217,24 +219,36 @@ class ConsumerActivity : ComponentActivity() {
                             label = "Lunch special",
                         )
                         var tableRows by remember { mutableStateOf(listOf("ready" to "Ready", "review" to "Review")) }
+                        val tableSort = rememberBraceTableSortState()
+                        val displayedTableRows = remember(tableRows, tableSort.value) {
+                            val current = tableSort.value
+                            if (current == null) tableRows else tableRows.withIndex().sortedWith { a, b ->
+                                val comparison = a.value.second.compareTo(b.value.second)
+                                val directed = if (current.direction == BraceTableSortDirection.Ascending)
+                                    comparison else -comparison
+                                if (directed == 0) a.index.compareTo(b.index) else directed
+                            }.map { it.value }
+                        }
                         var editingTable by remember { mutableStateOf<BraceTableSelection.Cell?>(null) }
                         var statusColumnTitle by remember { mutableStateOf("Status") }
                         var editingColumnName by remember { mutableStateOf<String?>(null) }
                         var selectedTable: BraceTableSelection? by remember {
                             mutableStateOf(BraceTableSelection.Range("ready", "status", "review", "status"))
                         }
-                        var tableColumnWidth by remember { mutableStateOf(120.dp) }
+                        var tableColumnWidth by remember { mutableStateOf(160.dp) }
                         var tableRowHeight by remember { mutableStateOf(64.dp) }
                         val tableViewport = rememberBraceTableViewport()
                         BraceDataTable(
-                            rows = tableRows,
+                            rows = displayedTableRows,
                             rowKey = { it.first },
-                            columns = listOf(BraceTableColumn<Pair<String, String>>("status", statusColumnTitle, 120.dp,
-                                { it.second }, editable = true, editableName = true)),
+                            columns = listOf(BraceTableColumn<Pair<String, String>>("status", statusColumnTitle, 160.dp,
+                                { it.second }, editable = true, editableName = true, sortable = true)),
                             selection = selectedTable,
                             onSelectionChange = { selectedTable = it },
                             viewport = tableViewport,
                             height = 160.dp,
+                            sort = tableSort.value,
+                            onSortChange = { tableSort.value = it },
                             columnWidths = mapOf("status" to tableColumnWidth),
                             onColumnWidthChange = { _, width -> tableColumnWidth = width },
                             rowHeights = mapOf("ready" to tableRowHeight),

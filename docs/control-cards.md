@@ -48,4 +48,4 @@ A standalone `BraceRadioCard(selected, onSelect, label)` works with app-managed 
 
 All card color and size values come from versioned `controlCard`, checkbox, and switch tokens. The theme supplies light, dark, high-contrast, brand, compact/comfortable density, and font scaling. Labels are mandatory; optional descriptions are included in the spoken name. Place actions outside the card so each card remains a single focus target. Blueprint's `inputProps`, DOM refs, and arbitrary HTML children map to typed Compose parameters, `Modifier`, and caller-managed state rather than web attributes. Rich Compose content slots, manual TalkBack/physical keyboard/mouse/large-text/RTL review, and CardList composition remain open before stable acceptance.
 
-See the [M41 report](milestones/m41-control-cards.md) and [coverage inventory](coverage.md) for exact row status and verification.
+See the [component list](coverage.md) for current status and links to code, examples, and tests.

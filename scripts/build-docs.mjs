@@ -1,4 +1,5 @@
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { resolve, posix } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -46,50 +47,12 @@ const guideSources = new Map([
   ['docs/table-editing.md', 'table-editing'],
   ['docs/table-column-name.md', 'table-column-name'],
   ['docs/table-sorting.md', 'table-sorting'],
-  ['docs/milestones/m22-table-editing.md', 'milestone-m22'],
-  ['docs/milestones/m26-table-editable-name.md', 'milestone-m26'],
-  ['docs/milestones/m46-table-sorting.md', 'milestone-m46'],
-  ['docs/milestones/m21-table-copying.md', 'milestone-m21'],
   ['docs/web-mechanisms.md', 'web-mechanisms'],
   ['docs/links.md', 'links'],
   ['docs/time-zone-select.md', 'time-zone-select'],
   ['docs/panel-stack.md', 'panel-stack'],
   ['docs/sliders.md', 'sliders'],
-  ['docs/milestones/m1-foundation-core.md', 'milestone-m1'],
-  ['docs/milestones/m2-content-feedback.md', 'milestone-m2'],
-  ['docs/milestones/m3-navigation-feedback.md', 'milestone-m3'],
-  ['docs/milestones/m4-overlays.md', 'milestone-m4'],
-  ['docs/milestones/m5-drawers-popovers.md', 'milestone-m5'],
-  ['docs/milestones/m6-tooltip-toast.md', 'milestone-m6'],
-  ['docs/milestones/m7-context-shortcuts.md', 'milestone-m7'],
-  ['docs/milestones/m8-form-text.md', 'milestone-m8'],
-  ['docs/milestones/m9-form-layout.md', 'milestone-m9'],
-  ['docs/milestones/m10-numeric-input.md', 'milestone-m10'],
-  ['docs/milestones/m11-icons.md', 'milestone-m11'],
-  ['docs/milestones/m12-select-query.md', 'milestone-m12'],
-  ['docs/milestones/m17-loading-feedback.md', 'milestone-m17'],
-  ['docs/milestones/m16-suggest-multiselect.md', 'milestone-m16'],
-  ['docs/milestones/m23-command-palette.md', 'milestone-m23'],
-  ['docs/milestones/m25-top-bar.md', 'milestone-m25'],
-  ['docs/milestones/m41-control-cards.md', 'milestone-m41'],
-  ['docs/milestones/m15-tag-input.md', 'milestone-m15'],
-  ['docs/milestones/m19-radio-segmented.md', 'milestone-m19'],
-  ['docs/milestones/m13-datetime-picker.md', 'milestone-m13'],
-  ['docs/milestones/m30-time-picker-input.md', 'milestone-m30'],
-  ['docs/milestones/m33-date-range.md', 'milestone-m33'],
-  ['docs/milestones/m14-table-viewport.md', 'milestone-m14'],
-  ['docs/milestones/m18-table-selection-resize.md', 'milestone-m18'],
-  ['docs/milestones/m35-blueprint-icon-pack.md', 'milestone-m35'],
-  ['docs/milestones/m36-semantic-content.md', 'milestone-m36'],
-  ['docs/milestones/m54-web-mechanisms.md', 'milestone-m54'],
-  ['docs/milestones/m20-links.md', 'milestone-m20'],
-  ['docs/milestones/m55-blueprint-next-icons.md', 'milestone-m55'],
-  ['docs/milestones/m57-icon-large-text.md', 'milestone-m57'],
-  ['docs/milestones/m34-timezone-select.md', 'milestone-m34'],
-  ['docs/milestones/m31-tree.md', 'milestone-m31'],
-  ['docs/milestones/m59-visual-catalog.md', 'milestone-m59'],
-  ['docs/milestones/m32-panel-stack.md', 'milestone-m32'],
-  ['docs/milestones/m37-sliders.md', 'milestone-m37'],
+  ['docs/progress.md', 'progress'],
   ['CONTRIBUTING.md', 'contributing'],
   ['docs/attribution.md', 'attribution'],
 ]);
@@ -103,7 +66,7 @@ if (!Array.isArray(coverage.entries) || coverage.entries.length === 0 || coverag
 }
 
 async function validateCaptures() {
-  if (captureManifest.schemaVersion !== 1 || !Array.isArray(captureManifest.captures) || captureManifest.captures.length === 0) {
+  if (captureManifest.schemaVersion !== 2 || !Array.isArray(captureManifest.captures) || captureManifest.captures.length === 0) {
     throw new Error('The showcase needs at least one catalog capture in docs/site/showcase/captures.json');
   }
   const inventoryIds = new Set(coverage.entries.map(entry => entry.id));
@@ -117,22 +80,21 @@ async function validateCaptures() {
         capture.inventoryIds.some(id => !inventoryIds.has(id)) || new Set(capture.inventoryIds).size !== capture.inventoryIds.length) {
       throw new Error(`${capture.id}: inventoryIds must name unique pinned inventory rows`);
     }
-    for (const field of ['alt', 'caption', 'device', 'sourceBranch', 'sourceFile', 'usage']) {
+    for (const field of ['alt', 'caption', 'device', 'sourceFile', 'usage']) {
       if (typeof capture[field] !== 'string' || !capture[field].trim()) throw new Error(`${capture.id}: missing ${field}`);
     }
     if (!/^showcase\/[a-z0-9-]+\.png$/.test(capture.image)) throw new Error(`${capture.id}: invalid image path`);
-    if (!/^[a-f0-9]{40}$/.test(capture.sourceCommit)) throw new Error(`${capture.id}: sourceCommit must be a full Git SHA`);
     if (!/^catalog\/src\/main\/.+\.kt$/.test(capture.sourceFile)) throw new Error(`${capture.id}: sourceFile must point to a Kotlin catalog source file`);
-    if (!/^(main|joelromanpr\/[a-z0-9-]+)$/.test(capture.sourceBranch)) throw new Error(`${capture.id}: invalid sourceBranch`);
-    if (!['draft', 'merged'].includes(capture.sourceStage) || (capture.sourceStage === 'merged') !== (capture.sourceBranch === 'main')) {
-      throw new Error(`${capture.id}: sourceStage and sourceBranch disagree`);
-    }
+    if (!/^[a-f0-9]{64}$/.test(capture.imageSha256)) throw new Error(`${capture.id}: invalid image hash`);
     if (!['phone', 'landscape'].includes(capture.format) || !['light', 'dark'].includes(capture.theme) ||
         !['standard', 'high'].includes(capture.contrast) || !['comfortable', 'compact'].includes(capture.density)) {
       throw new Error(`${capture.id}: invalid capture appearance metadata`);
     }
     if (!/^\d{4}-\d{2}-\d{2}$/.test(capture.capturedAt)) throw new Error(`${capture.id}: invalid capture date`);
     const bytes = await readFile(resolve(siteSource, capture.image));
+    if (createHash('sha256').update(bytes).digest('hex') !== capture.imageSha256) {
+      throw new Error(`${capture.id}: image differs from the recorded capture`);
+    }
     if (!bytes.subarray(0, 8).equals(pngSignature) || bytes.toString('ascii', 12, 16) !== 'IHDR') {
       throw new Error(`${capture.id}: image is not a PNG`);
     }
@@ -283,15 +245,10 @@ const extraGuideLinks = [
 function guidePage(title, body, sourcePath) {
   const current = guideSources.get(sourcePath);
   const navLink = ([label, id]) => `<a href="./${id}.html"${current === id ? ' aria-current="page"' : ''}>${label}</a>`;
-  const milestoneLinks = [...guideSources.values()]
-    .filter(id => /^milestone-m\d+$/.test(id))
-    .sort((a, b) => Number(a.slice(11)) - Number(b.slice(11)))
-    .map(id => [`M${id.slice(11)} report`, id]);
   const navSections = `
       <div class="guide-nav-group"><span class="guide-nav-title">Start here</span>${primaryGuideLinks.map(navLink).join('')}</div>
       <details class="guide-nav-details"${[...componentGuideLinks, ...extraGuideLinks].some(([, id]) => id === current) ? ' open' : ''}><summary>Component guides</summary><div>${[...componentGuideLinks, ...extraGuideLinks].filter(([, id]) => [...guideSources.values()].includes(id)).map(navLink).join('')}</div></details>
-      <div class="guide-nav-group"><span class="guide-nav-title">Reference</span><a href="./index.html#coverage">Coverage inventory</a><a href="./contributing.html"${current === 'contributing' ? ' aria-current="page"' : ''}>Contributing</a><a href="./attribution.html"${current === 'attribution' ? ' aria-current="page"' : ''}>Attribution</a></div>
-      <details class="guide-nav-details"${current?.startsWith('milestone-') ? ' open' : ''}><summary>Milestone audit</summary><div>${milestoneLinks.map(navLink).join('')}</div></details>`;
+      <div class="guide-nav-group"><span class="guide-nav-title">Project</span><a href="./progress.html"${current === 'progress' ? ' aria-current="page"' : ''}>Progress</a><a href="./index.html#coverage">Component status</a><a href="./contributing.html"${current === 'contributing' ? ' aria-current="page"' : ''}>Contributing</a><a href="./attribution.html"${current === 'attribution' ? ' aria-current="page"' : ''}>Attribution</a></div>`;
   const navigation = `<aside class="guide-nav" aria-label="Documentation"><details class="guide-nav-mobile"><summary>Browse documentation</summary>${navSections}</details><div class="guide-nav-desktop">${navSections}</div></aside>`;
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142338"><title>${escapeHtml(title)} · Brace Android</title><link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./guide.css"></head>

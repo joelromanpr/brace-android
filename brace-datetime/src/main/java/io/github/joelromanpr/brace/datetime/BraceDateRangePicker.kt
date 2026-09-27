@@ -116,9 +116,8 @@ internal fun rangeLabels(locale: Locale): RangeLabels {
  * A first day starts a selection, and a second day completes it in chronological order.
  * [allowSingleDayRange] controls whether tapping the same first day again completes or clears.
  * [boundaryToModify] lets a focused range field replace a particular endpoint, swapping
- * endpoints if needed to preserve order. Disabled and bounded days cannot be endpoints.
- * Interior disabled days may still appear inside a range; applications requiring fully
- * contiguous availability should validate the returned range before accepting it.
+ * endpoints if needed to preserve order. Complete selections and shortcuts require every
+ * calendar day, including the interior, to satisfy bounds and [isDateEnabled].
  * Arrow keys move by day/week, Page Up/Down by month, and Ctrl+Page Up/Down by year.
  */
 @Composable
@@ -186,7 +185,8 @@ public fun BraceDateRangePicker(
             candidate = runCatching { candidate.plusDays(delta.toLong()) }.getOrNull() ?: return
             if (minDate != null && candidate.isBefore(minDate)) return
             if (maxDate != null && candidate.isAfter(maxDate)) return
-            if (canSelectDate(candidate, minDate, maxDate, isDateEnabled)) {
+            if (canSelectRangeCandidate(value, candidate, allowSingleDayRange, boundaryToModify,
+                    minDate, maxDate, isDateEnabled)) {
                 focusedDayText = candidate.toString()
                 val candidateMonth = YearMonth.from(candidate)
                 if (candidateMonth != firstMonth && candidateMonth != runCatching { firstMonth.plusMonths(1) }.getOrNull()) {
@@ -243,15 +243,21 @@ public fun BraceDateRangePicker(
                     val month = firstMonth.plusMonths(offset.toLong())
                     RangeMonth(month, value, resolvedLocale, today, labels, fullDateFormatter,
                         dayFormatter, enabled, minDate, maxDate, isDateEnabled,
-                        requesters, layoutDirection,
+                        allowSingleDayRange, boundaryToModify, requesters, layoutDirection,
                         onSelect = { date ->
-                            onValueChange(nextDateRange(value, date, allowSingleDayRange, boundaryToModify))
-                            focusedDayText = date.toString()
+                            if (canSelectRangeCandidate(value, date, allowSingleDayRange,
+                                    boundaryToModify, minDate, maxDate, isDateEnabled)) {
+                                onValueChange(nextDateRange(value, date, allowSingleDayRange,
+                                    boundaryToModify))
+                                focusedDayText = date.toString()
+                            }
                         },
                         onNavigate = { date, delta -> moveDay(date, delta) },
                         onNavigateMonth = { date, amount ->
                             val candidate = runCatching { date.plusMonths(amount) }.getOrNull()
-                            if (candidate != null && canSelectDate(candidate, minDate, maxDate, isDateEnabled)) {
+                            if (candidate != null && canSelectRangeCandidate(value, candidate,
+                                    allowSingleDayRange, boundaryToModify, minDate, maxDate,
+                                    isDateEnabled)) {
                                 focusedDayText = candidate.toString()
                                 firstMonthText = YearMonth.from(candidate).toString()
                                 requestDayFocus = true
@@ -293,6 +299,8 @@ private fun RangeMonth(
     minDate: LocalDate?,
     maxDate: LocalDate?,
     isDateEnabled: (LocalDate) -> Boolean,
+    allowSingleDayRange: Boolean,
+    boundaryToModify: BraceRangeBoundary?,
     requesters: Map<LocalDate, FocusRequester>,
     layoutDirection: LayoutDirection,
     onSelect: (LocalDate) -> Unit,
@@ -326,7 +334,9 @@ private fun RangeMonth(
                     week.forEachIndexed { columnIndex, date ->
                         if (date == null) Spacer(Modifier.size(metrics.daySize))
                         else {
-                            val selectable = enabled && canSelectDate(date, minDate, maxDate, isDateEnabled)
+                            val selectable = enabled && canSelectRangeCandidate(value, date,
+                                allowSingleDayRange, boundaryToModify, minDate, maxDate,
+                                isDateEnabled)
                             val endpoint = date == value.start || date == value.end
                             val inRange = dateInSelectedRange(date, value)
                             val source = remember(date) { MutableInteractionSource() }
@@ -337,6 +347,7 @@ private fun RangeMonth(
                                 labels.end.takeIf { date == value.end },
                                 labels.inRange.takeIf { inRange && !endpoint },
                                 labels.today.takeIf { date == today },
+                                labels.unavailable.takeIf { !selectable },
                             ).joinToString(", ")
                             Box(Modifier.size(metrics.daySize)
                                 .focusRequester(requesters.getValue(date))

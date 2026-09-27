@@ -117,4 +117,21 @@ class BraceDateRangeFieldTest {
         rule.onNodeWithText("Open range calendar").assertIsNotEnabled()
         rule.onNodeWithText("Server rejected the range").assertIsDisplayed()
     }
+
+    @Test fun typedEndCannotSpanDisabledInteriorDay() {
+        var range by mutableStateOf(BraceDateRange(LocalDate.of(2026, 2, 10), null))
+        val errors = mutableListOf<Pair<BraceRangeBoundary, String>>()
+        rule.setContent { BraceTheme { BraceDateRangeField(range, { range = it }, "Trip",
+            locale = Locale.US, isDateEnabled = { it != LocalDate.of(2026, 2, 15) },
+            onInvalidInput = { boundary, draft -> errors += boundary to draft },
+            clock = fixedClock) } }
+        val end = rule.onNodeWithContentDescription("End date")
+        end.performTextInput("2/20/26")
+        rule.onNodeWithText("Date is unavailable").assertIsDisplayed()
+        end.performImeAction()
+        rule.runOnIdle {
+            assertEquals(BraceDateRange(LocalDate.of(2026, 2, 10), null), range)
+            assertEquals(listOf(BraceRangeBoundary.End to "2/20/26"), errors)
+        }
+    }
 }

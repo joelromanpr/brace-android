@@ -1,10 +1,13 @@
 package io.github.joelromanpr.brace.datetime
 
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.input.InputMode
 import androidx.compose.ui.input.InputModeManager
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.LocalInputModeManager
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -26,6 +29,8 @@ import androidx.compose.ui.test.performMouseInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.tryPerformAccessibilityChecks
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.github.braceandroid.foundation.BraceColorMode
@@ -131,5 +136,49 @@ class BraceDateRangePickerTest {
             .assertHeightIsAtLeast(48.dp).assertIsSelected().tryPerformAccessibilityChecks()
         rule.onNodeWithContentDescription("Previous month").assertHeightIsAtLeast(48.dp)
         assertTrue(androidDateNodesForLabel("Tuesday, February 10, 2026").single().isClickable)
+    }
+
+    @Test fun disabledInteriorDayBlocksLaterEndpointAndShortcut() {
+        var range by mutableStateOf(BraceDateRange())
+        val blocked = LocalDate.of(2026, 2, 15)
+        val shortcut = BraceDateRangeShortcut("Blocked trip", BraceDateRange(feb10, feb20))
+        rule.setContent { BraceTheme {
+            BraceDateRangePicker(range, { range = it }, locale = Locale.US,
+                isDateEnabled = { it != blocked }, shortcuts = listOf(shortcut),
+                initialMonth = YearMonth.of(2026, 2), clock = fixedClock)
+        } }
+        rule.onNodeWithText("Blocked trip").assertIsNotEnabled()
+        rule.onNodeWithContentDescription("Tuesday, February 10, 2026").performClick()
+        rule.onNodeWithContentDescription("Friday, February 20, 2026")
+            .assertIsNotEnabled()
+        rule.runOnIdle { assertEquals(BraceDateRange(feb10, null), range) }
+        rule.onNodeWithContentDescription("Saturday, February 14, 2026")
+            .assertIsEnabled().performClick()
+        rule.runOnIdle { assertEquals(BraceDateRange(feb10, blocked.minusDays(1)), range) }
+    }
+
+    @Test fun rtlKeyboardDirectionAndLargeTextKeepUsableTargets() {
+        var range by mutableStateOf(BraceDateRange())
+        lateinit var inputMode: InputModeManager
+        rule.setContent {
+            inputMode = LocalInputModeManager.current
+            val density = LocalDensity.current
+            CompositionLocalProvider(
+                LocalLayoutDirection provides LayoutDirection.Rtl,
+                LocalDensity provides Density(density.density, fontScale = 2f),
+            ) { BraceTheme {
+                BraceDateRangePicker(range, { range = it }, locale = Locale.US,
+                    initialMonth = YearMonth.of(2026, 2), clock = fixedClock)
+            } }
+        }
+        rule.onNodeWithText("February 2026").assertExists()
+        rule.onNodeWithContentDescription("Tuesday, February 10, 2026")
+            .assertHeightIsAtLeast(48.dp).tryPerformAccessibilityChecks()
+        rule.runOnIdle { inputMode.requestInputMode(InputMode.Keyboard) }
+        rule.onNodeWithContentDescription("Tuesday, February 10, 2026")
+            .requestFocus().performKeyInput { pressKey(Key.DirectionLeft) }
+        rule.onNodeWithContentDescription("Wednesday, February 11, 2026")
+            .assertIsFocused().performKeyInput { pressKey(Key.Enter) }
+        rule.runOnIdle { assertEquals(BraceDateRange(LocalDate.of(2026, 2, 11), null), range) }
     }
 }

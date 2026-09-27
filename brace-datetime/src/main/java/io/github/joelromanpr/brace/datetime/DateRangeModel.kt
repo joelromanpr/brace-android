@@ -59,6 +59,38 @@ internal fun dateInSelectedRange(date: LocalDate, value: BraceDateRange): Boolea
     value.start != null && value.end != null &&
         !date.isBefore(value.start) && !date.isAfter(value.end)
 
+/** Validates every calendar day in a complete range, including days between its endpoints. */
+internal fun canSelectContinuousRange(
+    range: BraceDateRange,
+    minDate: LocalDate?,
+    maxDate: LocalDate?,
+    isDateEnabled: (LocalDate) -> Boolean,
+): Boolean {
+    val start = range.start ?: return false
+    val end = range.end ?: return false
+    var day = start
+    while (true) {
+        if (!canSelectDate(day, minDate, maxDate, isDateEnabled)) return false
+        if (day == end) return true
+        day = day.plusDays(1)
+    }
+}
+
+internal fun canSelectRangeCandidate(
+    current: BraceDateRange,
+    date: LocalDate,
+    allowSingleDayRange: Boolean,
+    boundary: BraceRangeBoundary?,
+    minDate: LocalDate?,
+    maxDate: LocalDate?,
+    isDateEnabled: (LocalDate) -> Boolean,
+): Boolean {
+    if (!canSelectDate(date, minDate, maxDate, isDateEnabled)) return false
+    val next = nextDateRange(current, date, allowSingleDayRange, boundary)
+    return next.start == null || next.end == null ||
+        canSelectContinuousRange(next, minDate, maxDate, isDateEnabled)
+}
+
 internal fun canSelectRangeShortcut(
     shortcut: BraceDateRangeShortcut,
     minDate: LocalDate?,
@@ -70,6 +102,5 @@ internal fun canSelectRangeShortcut(
     val end = shortcut.range.end
     if (start == null || end == null) return false
     if (!allowSingleDayRange && start == end) return false
-    return canSelectDate(start, minDate, maxDate, isDateEnabled) &&
-        canSelectDate(end, minDate, maxDate, isDateEnabled)
+    return canSelectContinuousRange(shortcut.range, minDate, maxDate, isDateEnabled)
 }

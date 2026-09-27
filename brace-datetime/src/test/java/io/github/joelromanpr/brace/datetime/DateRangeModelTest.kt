@@ -53,4 +53,25 @@ class DateRangeModelTest {
         assertFalse(canSelectRangeShortcut(oneDay, null, null, { true }, false))
         assertTrue(canSelectRangeShortcut(oneDay, null, null, { true }, true))
     }
+
+    @Test fun completeRangesRejectDisabledInteriorDays() {
+        val blocked = early.plusDays(5)
+        val available: (LocalDate) -> Boolean = { it != blocked }
+        assertFalse(canSelectContinuousRange(BraceDateRange(early, late), null, null, available))
+        assertFalse(canSelectRangeCandidate(BraceDateRange(early, null), late, false, null,
+            null, null, available))
+        assertTrue(canSelectRangeCandidate(BraceDateRange(early, null), blocked.minusDays(1),
+            false, null, null, null, available))
+        assertFalse(canSelectRangeShortcut(
+            BraceDateRangeShortcut("Blocked interior", BraceDateRange(early, late)),
+            null, null, available, false))
+    }
+
+    @Test fun focusedBoundaryCannotCrossDisabledInteriorDay() {
+        val blocked = early.plusDays(5)
+        assertFalse(canSelectRangeCandidate(BraceDateRange(early, null), late, false,
+            BraceRangeBoundary.End, null, null, { it != blocked }))
+        assertTrue(canSelectRangeCandidate(BraceDateRange(early, late), early, false,
+            BraceRangeBoundary.Start, null, null, { it != blocked }))
+    }
 }

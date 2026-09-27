@@ -99,7 +99,11 @@ public fun BraceDateRangeField(
         if (parsed != null && !canSelectDate(parsed, minDate, maxDate, isDateEnabled)) return null
         val start = if (boundary == BraceRangeBoundary.Start) parsed else value.start
         val end = if (boundary == BraceRangeBoundary.End) parsed else value.end
-        return if (start != null && end != null && start.isAfter(end)) null else BraceDateRange(start, end)
+        if (start != null && end != null &&
+            (start.isAfter(end) || (start == end && !allowSingleDayRange))) return null
+        val next = BraceDateRange(start, end)
+        return if (start != null && end != null &&
+            !canSelectContinuousRange(next, minDate, maxDate, isDateEnabled)) null else next
     }
     fun commit(boundary: BraceRangeBoundary, draft: String) {
         candidateRange(boundary, draft)?.let { next ->
@@ -147,6 +151,12 @@ public fun BraceDateRangeField(
         if (boundary == BraceRangeBoundary.End && value.start != null && candidate.isBefore(value.start)) {
             return labels.overlapping
         }
+        val start = if (boundary == BraceRangeBoundary.Start) candidate else value.start
+        val end = if (boundary == BraceRangeBoundary.End) candidate else value.end
+        if (start != null && end != null &&
+            (start == end && !allowSingleDayRange ||
+                !canSelectContinuousRange(BraceDateRange(start, end), minDate, maxDate,
+                    isDateEnabled))) return labels.unavailable
         return validationError
     }
     val startError = draftError(BraceRangeBoundary.Start, startDraft)

@@ -1,6 +1,6 @@
 # M46 delivery slice: table sorting
 
-**Status:** sorting is rebased onto protected main `283dfba` after the editable-header slice merged. PR #55 remains draft until hosted checks pass. The pinned Blueprint Table `Sorting` row is **in progress**. Stable coverage stays **0/122** applicable rows, and no first release is assigned.
+**Status:** sorting is replayed onto protected main after editable headers and selection cards merged. PR #55 remains draft until hosted checks pass. The pinned Blueprint Table `Sorting` row is **in progress**. Stable coverage stays **0/122** applicable rows, and no first release is assigned.
 
 ## Scope
 
@@ -14,11 +14,11 @@
 | Gate | Result |
 | --- | --- |
 | Inventory and tokens | Passed `python3 scripts/generate_coverage.py --check` (148 rows, 0/122 stable) and `python3 scripts/generate_tokens.py --check`. This slice uses existing table and semantic tokens. |
-| Pages and JavaScript | Passed `node scripts/build-docs.mjs --check` (76 guides, 25 real Android captures) and JavaScript syntax checks. English/Spanish string XML parses; whitespace check passes. |
-| Kotlin build and API baseline | On exact M26-merged main, `:brace-table:apiCheck :brace-table:assembleDebugAndroidTest :catalog:assembleDebug :brace-table:lintDebug checkInventory checkTokenGeneration` passed in **292 actionable tasks**. The sorting API snapshot matches. |
+| Pages and JavaScript | Passed `node scripts/build-docs.mjs --check` (78 guides, 25 real Android captures) and JavaScript syntax checks. English/Spanish string XML parses; whitespace check passes. |
+| Kotlin build and API baseline | On the M26/M41 integration base, API check, Android test APK, catalog assembly, inventory and token checks passed in **249 actionable tasks**. Table lint passed on the M26 base in a separate **292-task** run. The sorting API snapshot matches. |
 | API 36 interaction and accessibility | Focused `BraceTableSortTest` passed **7/7** on exact main; the complete table module passed **70/70** on API 36, with zero failed or skipped. Tests cover cycle, stable row-key selection, independent header and resize controls, native accessibility action and direction, keyboard/mouse, RTL/high contrast/2× text, viewport and state restoration. |
 | Maven Local and separate consumer | All eight aligned `0.1.0-SNAPSHOT` artifacts published to Maven Local in **308 actionable tasks**; each has AAR, sources, documentation jar, POM, and Gradle metadata. The independent coordinate-only consumer assembled in **37 tasks**. |
-| Visual, manual TalkBack, hosted CI | Hosted verify and CodeQL passed on the prior exact-main head; API 34 instrumentation and the final evidence commit are running. Manual TalkBack, mouse and tablet review remain. |
+| Visual, manual TalkBack, hosted CI | Hosted verify and CodeQL passed on the M26-based head. The final protected-main CI run is pending. Manual TalkBack, mouse and tablet review remain. |
 
 ## Known limits and next branch
 

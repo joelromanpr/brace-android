@@ -76,6 +76,8 @@ import io.github.joelromanpr.brace.core.BraceContextMenuPopup
 import io.github.joelromanpr.brace.core.BraceControlGroup
 import io.github.joelromanpr.brace.core.BraceFieldLabel
 import io.github.joelromanpr.brace.core.BraceDialog
+import io.github.joelromanpr.brace.core.BraceDialogStep
+import io.github.joelromanpr.brace.core.BraceStepDialog
 import io.github.joelromanpr.brace.core.BraceDrawer
 import io.github.joelromanpr.brace.core.BraceDrawerPosition
 import io.github.joelromanpr.brace.core.BraceEditableText
@@ -173,6 +175,10 @@ class ConsumerActivity : ComponentActivity() {
                 var rangeEnd by rememberSaveable { mutableFloatStateOf(7f) }
                 var multiPositions by rememberSaveable { mutableStateOf(listOf(2f, 5f, 8f)) }
                 var dialogOpen by remember { mutableStateOf(false) }
+                var wizardOpen by rememberSaveable { mutableStateOf(false) }
+                var wizardStep by rememberSaveable { mutableStateOf("details") }
+                var wizardName by rememberSaveable { mutableStateOf("") }
+                val wizardLauncher = remember { FocusRequester() }
                 var alertOpen by remember { mutableStateOf(false) }
                 var drawerOpen by remember { mutableStateOf(false) }
                 var popoverOpen by remember { mutableStateOf(false) }
@@ -634,6 +640,28 @@ class ConsumerActivity : ComponentActivity() {
                                 position = BraceDrawerPosition.End,
                                 footer = { BraceButton("Apply", onClick = { drawerOpen = false }) },
                             ) { BraceTag("Active records") }
+                            BraceButton("New report", onClick = {
+                                wizardStep = "details"; wizardOpen = true
+                            }, modifier = Modifier.focusRequester(wizardLauncher))
+                            BraceStepDialog(
+                                open = wizardOpen,
+                                selectedStepId = wizardStep,
+                                onStepChange = { next, _ -> wizardStep = next },
+                                onDismissRequest = { wizardOpen = false },
+                                onComplete = { wizardOpen = false },
+                                title = "Create report",
+                                focusReturnRequester = wizardLauncher,
+                                steps = listOf(
+                                    BraceDialogStep("details", "Details",
+                                        validate = { wizardName.isNotBlank() }) {
+                                        BraceTextField(wizardName, { wizardName = it },
+                                            label = "Report name")
+                                    },
+                                    BraceDialogStep("review", "Review") {
+                                        BraceTag("Report: $wizardName")
+                                    },
+                                ),
+                            )
                             BraceDialog(
                                 open = dialogOpen,
                                 onDismissRequest = { dialogOpen = false },

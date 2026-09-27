@@ -1181,7 +1181,7 @@ private fun ComponentSample(
                     label = "Attachments",
                     selectedNames = names,
                     onFilesPicked = { uris ->
-                        names = uris.map { it.lastPathSegment ?: "Selected document" }
+                        names = uris.mapIndexed { index, _ -> "Selected document ${index + 1}" }
                     },
                     mimeTypes = listOf("application/pdf", "image/*"),
                     multiple = multiple,

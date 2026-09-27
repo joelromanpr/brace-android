@@ -131,7 +131,9 @@ class BraceFilePickerFieldTest {
             assertTrue(registry.launches.all {
                 !it.multiple && it.mimeTypes == listOf("application/pdf") &&
                     it.intent.action == Intent.ACTION_OPEN_DOCUMENT &&
-                    it.intent.type == "*/*"
+                    it.intent.type == "*/*" &&
+                    it.intent.getStringArrayExtra(Intent.EXTRA_MIME_TYPES)?.toList() ==
+                        listOf("application/pdf")
             })
             assertEquals(List(4) { registry.first }, picked)
         }
@@ -198,6 +200,8 @@ class BraceFilePickerFieldTest {
             assertEquals(listOf("image/png", "image/jpeg"), launch.mimeTypes)
             assertEquals(Intent.ACTION_OPEN_DOCUMENT, launch.intent.action)
             assertEquals("*/*", launch.intent.type)
+            assertEquals(listOf("image/png", "image/jpeg"),
+                launch.intent.getStringArrayExtra(Intent.EXTRA_MIME_TYPES)?.toList())
             assertTrue(launch.intent.getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false))
             assertEquals(listOf("first", "second"), selected.value)
         }

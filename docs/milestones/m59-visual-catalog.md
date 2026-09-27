@@ -13,7 +13,7 @@ Status: in review. Branch: `joelromanpr/m59-visual-catalog`. No Maven Central re
 
 - `:catalog:assembleDebug` passed after integrating protected main `217b1b9f253bca79dcd57ea5d9071fbc9724e2a6` and the table selection API. The six final sample captures were inspected on API 36 at 320 × 640, 400 × 800, and 800 × 800, all at 160 dpi and font scale 1.0. The shared emulator was restored to 320 × 640 afterward.
 - `python3 scripts/generate_coverage.py --check`, `node --check docs/site/app.js`, `node --check scripts/build-docs.mjs`, and `node scripts/build-docs.mjs` passed. The site build validated 148 inventory rows, 21 capture records, and 54 guides.
-- The built site loaded at true 390 × 844 and 1440 × 900 Chrome viewports with `scrollWidth` equal to `innerWidth` in both. The Planned chip selected 60 of 148 rows at 390 px. The phone guide page shows a compact, collapsed navigation menu.
+- The built site loaded at true 390 × 844 and 1440 × 900 Chrome viewports with `scrollWidth` equal to `innerWidth` in both. The Planned chip selected 58 of 148 rows at 390 px. The phone guide page shows a compact, collapsed navigation menu.
 
 ## Open work and limits
 

@@ -136,6 +136,16 @@ jobs:
         shell: bash
         run: |
           [[ -n "$CENTRAL_USER" && -n "$CENTRAL_PASSWORD" && -n "$SIGNING_KEY" && -n "$SIGNING_PASSWORD" ]] || { echo 'Release credentials are missing'; exit 1; }
+      - name: Build signed candidate in Maven Local
+        env:
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_IN_MEMORY_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_IN_MEMORY_KEY_PASSWORD }}
+          RELEASE_VERSION: ${{ needs.verify-tag.outputs.version }}
+        run: ./gradlew -PreleaseVersion="$RELEASE_VERSION" publishToMavenLocal --stacktrace
+      - name: Verify all signed candidate artifacts
+        env:
+          RELEASE_VERSION: ${{ needs.verify-tag.outputs.version }}
+        run: python3 verification/check-maven-publication.py "$RELEASE_VERSION" --require-signatures
       - name: Stage signed artifacts in Maven Central Portal
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}

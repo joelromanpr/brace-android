@@ -21,7 +21,7 @@ git tag -v v0.1.0-alpha01
 git push origin v0.1.0-alpha01
 ```
 
-Use the actual release version. Confirm the tag points to the reviewed `main` commit. Run the **Release to Maven Central** workflow manually from `main` and enter that tag as its input. The workflow verifies the tag against the pinned public key, then checks the Maven Local artifacts and independent consumer before requesting approval for its protected `maven-central` stage. That environment needs the readiness marker, a Central Portal user token, and an in-memory signing key and password; see [GitHub settings](github-settings.md). It stages via `publishToMavenCentral`; the maintainer reviews the validated deployment in the Central Portal and explicitly publishes it there. The workflow never publishes a deployment automatically.
+Use the actual release version. Confirm the tag points to the reviewed `main` commit. Run the **Release to Maven Central** workflow manually from `main` and enter that tag as its input. The workflow verifies the tag against the pinned public key, then checks eight Maven Local artifact sets and the independent consumer. Inside the protected `maven-central` stage it builds a signed candidate and verifies all 40 AAR, POM, module, sources, and docs signatures against that key before uploading. The environment needs the readiness marker, a Central Portal user token, and an in-memory signing key and password; see [GitHub settings](github-settings.md). It stages via `publishToMavenCentral`; the maintainer reviews the validated deployment in the Central Portal and explicitly publishes it there. The workflow never publishes a deployment automatically.
 
 ## After publishing
 

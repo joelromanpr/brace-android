@@ -28,7 +28,7 @@ jobs:
           packages: platform-tools
       - name: Install Android SDK platform
         run: sdkmanager 'platforms;android-36'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - name: Build, lint, tests, tokens, inventory, and public API
         run: ./gradlew build lint checkTokenGeneration checkBlueprintIconGeneration checkBlueprintNextIconGeneration checkInventory apiCheck --stacktrace
       - name: Build documentation site
@@ -50,7 +50,7 @@ jobs:
           packages: platform-tools
       - name: Install compile SDK platform
         run: sdkmanager 'platforms;android-36'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - name: Free unused hosted tools for the Android emulator
         run: |
           df -h /

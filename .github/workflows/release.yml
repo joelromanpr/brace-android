@@ -60,7 +60,7 @@ jobs:
           packages: platform-tools
       - name: Install Android SDK platform
         run: sdkmanager 'platforms;android-36'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - name: Verify protected release environment is configured
         env:
           RELEASE_ENV_READY: ${{ secrets.MAVEN_CENTRAL_ENVIRONMENT_READY }}

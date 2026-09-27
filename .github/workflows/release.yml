@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Signed annotated release tag on main, for example v0.1.0
+        description: Signed annotated release tag on main, for example v0.1.0-alpha01
         required: true
         type: string
 
@@ -42,8 +42,52 @@ jobs:
           [[ "$commit_sha" == "$(git rev-parse origin/main)" ]] || { echo 'Tag must point to the current reviewed main commit'; exit 1; }
           echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
           echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
-  stage:
+  preflight:
     needs: verify-tag
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.verify-tag.outputs.commit_sha }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - name: Install Android SDK platform
+        run: sdkmanager 'platforms;android-36'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Verify aligned artifact versions
+        env:
+          EXPECTED_VERSION: ${{ needs.verify-tag.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for module in brace-foundation brace-core brace-icons brace-blueprint-icons brace-blueprint-icons-next brace-select brace-datetime brace-table; do
+            actual=$(./gradlew -PreleaseVersion="$EXPECTED_VERSION" -q ":$module:properties" --console=plain | awk '/^version: / {print $2; exit}')
+            [[ "$actual" == "$EXPECTED_VERSION" ]] || { echo "$module version $actual does not match $EXPECTED_VERSION"; exit 1; }
+          done
+      - name: Verify release commit
+        env:
+          RELEASE_VERSION: ${{ needs.verify-tag.outputs.version }}
+        run: ./gradlew -PreleaseVersion="$RELEASE_VERSION" build lint checkTokenGeneration checkBlueprintIconGeneration checkBlueprintNextIconGeneration checkInventory apiCheck --stacktrace
+      - name: Publish candidate to Maven Local
+        env:
+          RELEASE_VERSION: ${{ needs.verify-tag.outputs.version }}
+        run: ./gradlew -PreleaseVersion="$RELEASE_VERSION" publishToMavenLocal --stacktrace
+      - name: Check all publication files and metadata
+        env:
+          RELEASE_VERSION: ${{ needs.verify-tag.outputs.version }}
+        run: python3 verification/check-maven-publication.py "$RELEASE_VERSION"
+      - name: Build the independent Maven-coordinate consumer
+        env:
+          RELEASE_VERSION: ${{ needs.verify-tag.outputs.version }}
+        run: ./gradlew -p verification/consumer-smoke -PbraceVersion="$RELEASE_VERSION" :app:assembleDebug --stacktrace
+  stage:
+    needs: [verify-tag, preflight]
     runs-on: ubuntu-latest
     timeout-minutes: 60
     environment: maven-central
@@ -78,20 +122,6 @@ jobs:
         shell: bash
         run: |
           [[ -n "$CENTRAL_USER" && -n "$CENTRAL_PASSWORD" && -n "$SIGNING_KEY" && -n "$SIGNING_PASSWORD" ]] || { echo 'Release credentials are missing'; exit 1; }
-      - name: Verify aligned artifact versions
-        env:
-          EXPECTED_VERSION: ${{ needs.verify-tag.outputs.version }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          for module in brace-foundation brace-core brace-icons brace-blueprint-icons brace-blueprint-icons-next brace-select brace-datetime brace-table; do
-            actual=$(./gradlew -PreleaseVersion="$EXPECTED_VERSION" -q ":$module:properties" --console=plain | awk '/^version: / {print $2; exit}')
-            [[ "$actual" == "$EXPECTED_VERSION" ]] || { echo "$module version $actual does not match $EXPECTED_VERSION"; exit 1; }
-          done
-      - name: Verify release commit
-        env:
-          RELEASE_VERSION: ${{ needs.verify-tag.outputs.version }}
-        run: ./gradlew -PreleaseVersion="$RELEASE_VERSION" build lint checkTokenGeneration checkBlueprintIconGeneration checkBlueprintNextIconGeneration checkInventory apiCheck --stacktrace
       - name: Stage signed artifacts in Maven Central Portal
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}

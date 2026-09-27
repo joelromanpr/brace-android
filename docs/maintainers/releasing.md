@@ -1,11 +1,11 @@
 # Release checklist
 
-The release workflow is manual and must use a signed annotated tag that GitHub marks verified. This is a preparation guide; there is no published Brace Android version yet.
+The release workflow is manual and must use a signed annotated tag that GitHub marks verified. This is a preparation guide; there is no published Brace Android version yet. The first proposed version is `0.1.0-alpha01`, a preview with no claim of full Blueprint coverage or stable inventory rows.
 
 ## Before tagging
 
 - Finish milestone issue/PRs and review the generated coverage counts. Verify every stable row links to real implementation, catalog sample, docs, and meaningful tests.
-- Run `./gradlew build lint checkTokenGeneration checkBlueprintIconGeneration checkBlueprintNextIconGeneration checkInventory apiCheck` and the local Maven consumer smoke test. Review Android accessibility checks, table/overlay interaction tests, and known limitations.
+- Run `./gradlew build lint checkTokenGeneration checkBlueprintIconGeneration checkBlueprintNextIconGeneration checkInventory apiCheck` and the local Maven consumer smoke test. Review Android accessibility checks, table/overlay interaction tests, and known limitations. For the preview version, use `./gradlew -PreleaseVersion=0.1.0-alpha01 publishToMavenLocal`, `python3 verification/check-maven-publication.py 0.1.0-alpha01`, and `./gradlew -p verification/consumer-smoke -PbraceVersion=0.1.0-alpha01 :app:assembleDebug`.
 - Verify `-PreleaseVersion=<version>` aligns all published modules and update `CHANGELOG.md`, migration notes, artifact list, dependency snippets, and API baselines in one release PR. Confirm Maven POM name, description, URL, Apache-2.0 license, developer, SCM metadata, sources jar, documentation jar, and signing. For `brace-blueprint-icons`, confirm the AAR includes the pinned path manifest, Apache-2.0 license, attribution/modification notice, and all 706 names; review the upstream generator audit on the release commit.
 - Merge the release PR by squash after CI passes. Confirm the final `main` commit SHA.
 
@@ -16,12 +16,12 @@ Configure a signing key in Git and add its public key to GitHub first. See [GitH
 ```sh
 git switch main
 git pull --ff-only
-git tag -s v0.1.0 -m "Brace Android 0.1.0"
-git tag -v v0.1.0
-git push origin v0.1.0
+git tag -s v0.1.0-alpha01 -m "Brace Android 0.1.0-alpha01"
+git tag -v v0.1.0-alpha01
+git push origin v0.1.0-alpha01
 ```
 
-Use the actual release version. Confirm GitHub reports the tag as verified and that it points to the reviewed `main` commit. Run the **Release to Maven Central** workflow manually from `main` and enter that tag as its input. Its protected `maven-central` environment requires maintainer approval and the `MAVEN_CENTRAL_ENVIRONMENT_READY=configured` environment secret. It stages via `publishToMavenCentral`; the maintainer reviews the Central Portal staging deployment and explicitly releases it there. The workflow should never close and publish a deployment automatically.
+Use the actual release version. Confirm GitHub reports the tag as verified and that it points to the reviewed `main` commit. Run the **Release to Maven Central** workflow manually from `main` and enter that tag as its input. The workflow checks the Maven Local artifacts and independent consumer before requesting approval for its protected `maven-central` stage. That environment needs the readiness marker, a Central Portal user token, and an in-memory signing key and password; see [GitHub settings](github-settings.md). It stages via `publishToMavenCentral`; the maintainer reviews the validated deployment in the Central Portal and explicitly publishes it there. The workflow never publishes a deployment automatically.
 
 ## After publishing
 

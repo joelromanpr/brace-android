@@ -3,9 +3,9 @@
 
 Baseline: [Blueprint `@blueprintjs/core@6.18.0`](https://github.com/palantir/blueprint/releases/tag/@blueprintjs%2Fcore@6.18.0), commit [`a60d4c92257612808fbfac81cfeee4fcba91a8b4`](https://github.com/palantir/blueprint/commit/a60d4c92257612808fbfac81cfeee4fcba91a8b4).
 
-The inventory follows the pinned source documentation navigation, with nested public components split into rows. Colors, typography, other design-system capabilities, and table behaviors have explicit rows. Blueprint labs are tracked separately. A row is **stable** only when its implementation, interactive sample, documentation, tests, and first release are recorded; web-only APIs require a documented Compose mapping. Counts are generated from the inventory. Planned and in-progress APIs are not shipped coverage.
+The inventory follows the pinned source documentation navigation, with nested public components split into rows. Colors, typography, other design-system capabilities, and table behaviors have explicit rows. Blueprint labs are tracked separately. A row is **stable** only when its implementation, interactive sample, documentation, tests, and first release are recorded; web-only APIs require a documented Compose mapping. Counts are generated from the inventory. Planned and in-progress APIs do not count as stable.
 
-**Shipped applicable rows: 0/122** (0/94 components; 0/28 capabilities).
+**Stable applicable rows: 0/122** (0/94 components; 0/28 capabilities).
 
 Web-specific mappings documented: 24/24 (stable: 0). Labs rows: 2 (stable: 0). Full applicable coverage: **no**.
 

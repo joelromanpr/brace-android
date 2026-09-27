@@ -385,6 +385,16 @@
       "border": "{semantic.borderStrong}",
       "divider": "{semantic.borderStrong}"
     },
+    "panelStack": {
+      "container": "{semantic.surfaceRaised}",
+      "header": "{semantic.surfaceRaised}",
+      "title": "{semantic.onSurface}",
+      "backContent": "{semantic.onSurface}",
+      "backHover": "{semantic.hover}",
+      "backPressed": "{semantic.pressed}",
+      "border": "{semantic.borderStrong}",
+      "focusRing": "{semantic.focusRing}"
+    },
     "menu": {
       "container": "{semantic.surfaceRaised}",
       "itemContent": "{semantic.onSurface}",
@@ -676,6 +686,13 @@
       "verticalPadding": 4,
       "groupGap": 8,
       "dividerHeight": 24
+    },
+    "panelStack": {
+      "minHeight": 56,
+      "horizontalPadding": 12,
+      "verticalPadding": 4,
+      "itemGap": 8,
+      "backMaxWidth": 144
     },
     "menu": {
       "cornerRadius": 8,

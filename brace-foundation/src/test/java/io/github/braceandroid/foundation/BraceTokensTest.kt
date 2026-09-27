@@ -85,6 +85,15 @@ class BraceTokensTest {
             ).forEach { (text, background) ->
                 assertTrue("tab text contrast below 4.5", braceContrastRatio(text, background) >= 4.5)
             }
+            val panel = scheme.components.panelStack
+            listOf(
+                panel.title to panel.header,
+                panel.backContent to panel.header,
+                panel.backContent to panel.backHover,
+                panel.backContent to panel.backPressed,
+            ).forEach { (text, background) ->
+                assertTrue("panel stack text contrast below 4.5", braceContrastRatio(text, background) >= 4.5)
+            }
             val button = scheme.components.button
             listOf(
                 button.primaryContent to button.primaryHoverContainer,

@@ -590,6 +590,11 @@ public final class io/github/joelromanpr/brace/core/BraceShortcutRegistryState {
 	public final fun showDiscovery ()V
 }
 
+public final class io/github/joelromanpr/brace/core/BraceSliderKt {
+	public static final fun BraceRangeSlider (Lkotlin/ranges/ClosedFloatingPointRange;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;FFFZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceSlider (FLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;FFFZZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;III)V
+}
+
 public final class io/github/joelromanpr/brace/core/BraceSpinnerSize : java/lang/Enum {
 	public static final field Large Lio/github/joelromanpr/brace/core/BraceSpinnerSize;
 	public static final field Medium Lio/github/joelromanpr/brace/core/BraceSpinnerSize;

@@ -20,3 +20,4 @@ Changes to released public artifacts are recorded here using [Semantic Versionin
 - Added a separate, source-only `brace-blueprint-icons-next` pack for the public `/next` subpath: 695 outlined glyphs, 386 filled variants, and the 706-name migration map. No Maven Central artifact has been released.
 - Added an in-progress PanelStack Compose source slice with saveable/controlled navigation, native Back, catalog, docs, and device tests (not yet released).
 - Added Compose heading, quote, code and list adapters for Blueprint HTML content; inventory rows remain in progress pending release and acceptance.
+- Added controlled single and range numeric sliders with Brace component tokens; inventory rows remain in progress pending parity and release.

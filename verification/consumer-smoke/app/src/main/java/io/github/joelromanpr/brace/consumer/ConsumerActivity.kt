@@ -13,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -53,6 +54,8 @@ import io.github.joelromanpr.brace.core.rememberBracePanelStackState
 import io.github.joelromanpr.brace.core.BraceHeading2
 import io.github.joelromanpr.brace.core.BraceCode
 import io.github.joelromanpr.brace.core.BraceOrderedList
+import io.github.joelromanpr.brace.core.BraceSlider
+import io.github.joelromanpr.brace.core.BraceRangeSlider
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceCallout
@@ -143,6 +146,9 @@ class ConsumerActivity : ComponentActivity() {
         setContent {
             BraceTheme {
                 var count by remember { mutableStateOf(0) }
+                var volume by rememberSaveable { mutableFloatStateOf(3f) }
+                var rangeStart by rememberSaveable { mutableFloatStateOf(2f) }
+                var rangeEnd by rememberSaveable { mutableFloatStateOf(7f) }
                 var dialogOpen by remember { mutableStateOf(false) }
                 var alertOpen by remember { mutableStateOf(false) }
                 var drawerOpen by remember { mutableStateOf(false) }
@@ -199,6 +205,9 @@ class ConsumerActivity : ComponentActivity() {
                         BraceHeading2("Consumer smoke")
                         BraceCode("val ready = true")
                         BraceOrderedList(listOf("Build", "Publish locally", "Consume"))
+                        BraceSlider(volume, { volume = it }, label = "Volume")
+                        BraceRangeSlider(rangeStart..rangeEnd,
+                            { rangeStart = it.start; rangeEnd = it.endInclusive }, label = "Hours")
                         BraceTopBar(
                             startContent = { BraceTopBarGroup {
                                 BraceTopBarTitle("Imports")

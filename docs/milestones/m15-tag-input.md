@@ -8,7 +8,7 @@
 
 ## Verification
 
-The M20-based source passed an **836-task** build/lint/API/inventory/catalog gate, **23/23** API 36 TagInput/Tag tests, all **eight** Maven Local snapshots with sources/KDoc/POM/metadata (**308 tasks**), and an offline independent consumer (**37 tasks**). Its hosted verify, API 34, and CodeQL checks passed. This replay also passes the inventory and Pages build on the M57 source base (**148 rows, 53 guides**). A final integrated gate is pending after the current main merges.
+The source passed an **836-task** build/lint/API/inventory/catalog gate, **23/23** API 36 TagInput/Tag tests, all **eight** Maven Local snapshots with sources/KDoc/POM/metadata (**308 tasks**), and an offline independent consumer (**37 tasks**). Its hosted verify, API 34, and CodeQL checks passed. The replay on the redesigned showcase base passes a **263-task** catalog/core lint/API/tokens/inventory gate and the Pages build (**148 rows, 21 real captures, 56 guides**). The final branch head still needs hosted checks after this restack.
 
 ## Remaining acceptance
 

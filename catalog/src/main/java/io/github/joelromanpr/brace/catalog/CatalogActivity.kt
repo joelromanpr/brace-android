@@ -90,6 +90,9 @@ import io.github.joelromanpr.brace.core.BraceTopBar
 import io.github.joelromanpr.brace.core.BraceTopBarGroup
 import io.github.joelromanpr.brace.core.BraceTopBarTitle
 import io.github.joelromanpr.brace.core.BraceTopBarDivider
+import io.github.joelromanpr.brace.core.BracePanel
+import io.github.joelromanpr.brace.core.BracePanelStack
+import io.github.joelromanpr.brace.core.rememberBracePanelStackState
 import io.github.joelromanpr.brace.core.BraceCallout
 import io.github.joelromanpr.brace.core.BraceCalloutIntent
 import io.github.joelromanpr.brace.core.BraceCompoundTag
@@ -382,6 +385,11 @@ BraceTree(nodes, state.expandedKeys, { state.expandedKeys = it },
     "core-navbarheading" to "BraceTopBarGroup { BraceTopBarTitle(\"Reports\") }",
     "core-navbardivider" to "BraceTopBarGroup { BraceTopBarTitle(\"Reports\"); BraceTopBarDivider() }",
     "core-breadcrumb" to "BraceBreadcrumbItem(label = \"Home\", onClick = { home() })",
+    "core-panelstack" to """val stack = rememberBracePanelStackState(BracePanel("root", "Workspace"))
+BracePanelStack(stack, modifier = Modifier.height(280.dp)) {
+    if (panel.id == "root") BraceButton("Open settings", onClick = { openPanel(BracePanel("settings", "Settings")) })
+    else Text("Settings content")
+}""",
     "core-tag" to "BraceTag(label = \"Finance\", intent = BraceTagIntent.Primary, onRemove = { removeFilter() })",
     "core-taginput" to "BraceTagInput(values = tags, onValuesChange = { tags = it }, draft = draft, onDraftChange = { draft = it }, label = \"Skills\")",
     "core-compoundtag" to "BraceCompoundTag(label = \"Status\", value = \"Active\", onRemove = { clearStatus() })",
@@ -873,6 +881,39 @@ private fun TimePickerSample() {
             style = BraceTheme.typography.body)
         BraceTimeField(null, {}, label = "Unavailable time", enabled = false,
             locale = Locale.US)
+    }
+}
+
+@Composable
+private fun PanelStackSample() {
+    val state = rememberBracePanelStackState(BracePanel("root", "Workspace"))
+    var showHeader by rememberSaveable { mutableStateOf(true) }
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+            BraceButton(if (showHeader) "Hide header" else "Show header",
+                onClick = { showHeader = !showHeader }, variant = BraceButtonVariant.Outline)
+            if (state.stack.size > 1) BraceButton("Pop panel", onClick = { state.closePanel() },
+                variant = BraceButtonVariant.Outline)
+        }
+        BracePanelStack(state, modifier = Modifier.fillMaxWidth().height(260.dp), showHeader = showHeader) {
+            Column(
+                modifier = Modifier.padding(BraceTheme.spacing.md),
+                verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm),
+            ) {
+                when (panel.id) {
+                    "root" -> {
+                        Text("Choose a workspace view", color = BraceTheme.colors.semantic.onSurface)
+                        BraceButton("Open filters", onClick = { openPanel(BracePanel("filters", "Filters")) })
+                    }
+                    "filters" -> {
+                        Text("Filter the current workspace", color = BraceTheme.colors.semantic.onSurface)
+                        BraceButton("Open advanced", onClick = { openPanel(BracePanel("advanced", "Advanced filters")) })
+                    }
+                    else -> Text("Advanced filters", color = BraceTheme.colors.semantic.onSurface)
+                }
+            }
+        }
+        Text("Stack depth: ${state.stack.size}", color = BraceTheme.colors.semantic.onSurfaceMuted)
     }
 }
 
@@ -1672,6 +1713,7 @@ private fun ComponentSample(
                 Text("Opened: $destination", color = BraceTheme.colors.semantic.onSurfaceMuted)
             }
         }
+        "core-panelstack" -> PanelStackSample()
         "core-breadcrumb" -> {
             var opened by rememberSaveable { mutableStateOf(false) }
             Column {

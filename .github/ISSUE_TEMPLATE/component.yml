@@ -1,0 +1,36 @@
+name: Component proposal or claim
+description: Propose or claim an inventory row and describe its Android behavior.
+title: "[Component] "
+labels: ["component", "needs design"]
+body:
+  - type: input
+    id: inventory
+    attributes:
+      label: Inventory ID and Blueprint documentation URL
+      placeholder: "core.button — https://blueprintjs.com/docs/..."
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Scope
+      options:
+        - Claim an existing row
+        - Correct an existing row
+        - Add a missing documented row
+    validations:
+      required: true
+  - type: textarea
+    id: native
+    attributes:
+      label: Proposed Compose API and Android interaction
+      description: Include state, keyboard, touch, mouse, TalkBack, and restoration behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: adaptation
+    attributes:
+      label: Adaptation, tests, and module
+      description: Explain web-only mechanisms, planned tests, and artifact boundary.
+    validations:
+      required: true

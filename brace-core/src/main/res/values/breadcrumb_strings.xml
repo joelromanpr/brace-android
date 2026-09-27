@@ -1,0 +1,5 @@
+<resources>
+    <string name="brace_breadcrumb_current">Current location</string>
+    <string name="brace_breadcrumb_navigation">Breadcrumb navigation</string>
+    <string name="brace_breadcrumb_overflow">Show hidden breadcrumbs</string>
+</resources>

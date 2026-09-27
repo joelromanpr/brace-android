@@ -1,0 +1,158 @@
+name: Release to Maven Central
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Signed annotated release tag on main, for example v0.1.0-alpha01
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  verify-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      commit_sha: ${{ steps.check.outputs.commit_sha }}
+      version: ${{ steps.check.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Verify signed annotated tag points to reviewed main
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$ ]] || { echo 'Invalid semantic version tag'; exit 1; }
+          ref_json=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG")
+          [[ "$(jq -r '.object.type' <<<"$ref_json")" == tag ]] || { echo 'Tag must be annotated'; exit 1; }
+          tag_sha=$(jq -r '.object.sha' <<<"$ref_json")
+          tag_json=$(gh api "repos/$GITHUB_REPOSITORY/git/tags/$tag_sha")
+          [[ "$(jq -r '.tag' <<<"$tag_json")" == "$TAG" ]] || exit 1
+          [[ "$(jq -r '.object.type' <<<"$tag_json")" == commit ]] || exit 1
+          commit_sha=$(jq -r '.object.sha' <<<"$tag_json")
+          git fetch origin "refs/tags/$TAG:refs/tags/$TAG"
+          [[ "$(git rev-parse "refs/tags/$TAG")" == "$tag_sha" ]] || { echo 'Fetched tag differs from the GitHub tag object'; exit 1; }
+          [[ "$(git cat-file -t "refs/tags/$TAG")" == tag ]] || { echo 'Release tag must be annotated'; exit 1; }
+          expected_fingerprint=F152FD630BE99A9BB2483995BA23075E89D123B5
+          export GNUPGHOME="$RUNNER_TEMP/brace-release-gnupg"
+          mkdir -m 700 "$GNUPGHOME"
+          key_fingerprint=$(gpg --show-keys --with-colons --fingerprint .github/release-signing-key.asc |
+            awk -F: '$1 == "fpr" { print $10; exit }')
+          [[ "$key_fingerprint" == "$expected_fingerprint" ]] || { echo 'Pinned release key fingerprint mismatch'; exit 1; }
+          gpg --batch --import .github/release-signing-key.asc
+          signature_status=$(git -c gpg.format=openpgp verify-tag --raw "$TAG" 2>&1) ||
+            { echo "$signature_status"; echo 'Release tag signature is invalid'; exit 1; }
+          grep -Fq "[GNUPG:] VALIDSIG $expected_fingerprint " <<<"$signature_status" ||
+            { echo 'Release tag was not signed by the pinned Brace release key'; exit 1; }
+          [[ "$(git rev-parse "$TAG^{commit}")" == "$commit_sha" ]] || { echo 'Signed tag target differs from the GitHub tag object'; exit 1; }
+          git fetch origin main
+          [[ "$commit_sha" == "$(git rev-parse origin/main)" ]] || { echo 'Tag must point to the current reviewed main commit'; exit 1; }
+          echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
+          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+  preflight:
+    needs: verify-tag
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.verify-tag.outputs.commit_sha }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - name: Install Android SDK platform
+        run: sdkmanager 'platforms;android-36'
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-provider: basic
+      - name: Verify aligned artifact versions
+        env:
+          EXPECTED_VERSION: ${{ needs.verify-tag.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for module in brace-foundation brace-core brace-icons brace-blueprint-icons brace-blueprint-icons-next brace-select brace-datetime brace-table; do
+            actual=$(./gradlew -PreleaseVersion="$EXPECTED_VERSION" -q ":$module:properties" --console=plain | awk '/^version: / {print $2; exit}')
+            [[ "$actual" == "$EXPECTED_VERSION" ]] || { echo "$module version $actual does not match $EXPECTED_VERSION"; exit 1; }
+          done
+      - name: Verify release commit
+        env:
+          RELEASE_VERSION: ${{ needs.verify-tag.outputs.version }}
+        run: ./gradlew -PreleaseVersion="$RELEASE_VERSION" build lint checkTokenGeneration checkBlueprintIconGeneration checkBlueprintNextIconGeneration checkInventory apiCheck --stacktrace
+      - name: Publish candidate to Maven Local
+        env:
+          RELEASE_VERSION: ${{ needs.verify-tag.outputs.version }}
+        run: ./gradlew -PreleaseVersion="$RELEASE_VERSION" publishToMavenLocal --stacktrace
+      - name: Check all publication files and metadata
+        env:
+          RELEASE_VERSION: ${{ needs.verify-tag.outputs.version }}
+        run: python3 verification/check-maven-publication.py "$RELEASE_VERSION"
+      - name: Build the independent Maven-coordinate consumer
+        env:
+          RELEASE_VERSION: ${{ needs.verify-tag.outputs.version }}
+        run: ./gradlew -p verification/consumer-smoke -PbraceVersion="$RELEASE_VERSION" :app:assembleDebug --stacktrace
+  stage:
+    needs: [verify-tag, preflight]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: maven-central
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.verify-tag.outputs.commit_sha }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - name: Install Android SDK platform
+        run: sdkmanager 'platforms;android-36'
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-provider: basic
+      - name: Verify protected release environment is configured
+        env:
+          RELEASE_ENV_READY: ${{ secrets.MAVEN_CENTRAL_ENVIRONMENT_READY }}
+        shell: bash
+        run: |
+          [[ "$RELEASE_ENV_READY" == configured ]] || { echo "Maven Central environment gate is not configured"; exit 1; }
+      - name: Verify signing and Central Portal credentials are present
+        env:
+          CENTRAL_USER: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          SIGNING_KEY: ${{ secrets.SIGNING_IN_MEMORY_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_IN_MEMORY_KEY_PASSWORD }}
+        shell: bash
+        run: |
+          [[ -n "$CENTRAL_USER" && -n "$CENTRAL_PASSWORD" && -n "$SIGNING_KEY" && -n "$SIGNING_PASSWORD" ]] || { echo 'Release credentials are missing'; exit 1; }
+      - name: Build signed candidate in Maven Local
+        env:
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_IN_MEMORY_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_IN_MEMORY_KEY_PASSWORD }}
+          RELEASE_VERSION: ${{ needs.verify-tag.outputs.version }}
+        run: ./gradlew -PreleaseVersion="$RELEASE_VERSION" publishToMavenLocal --stacktrace
+      - name: Verify all signed candidate artifacts
+        env:
+          RELEASE_VERSION: ${{ needs.verify-tag.outputs.version }}
+        run: python3 verification/check-maven-publication.py "$RELEASE_VERSION" --require-signatures
+      - name: Stage signed artifacts in Maven Central Portal
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_IN_MEMORY_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_IN_MEMORY_KEY_PASSWORD }}
+          RELEASE_VERSION: ${{ needs.verify-tag.outputs.version }}
+        run: ./gradlew -PreleaseVersion="$RELEASE_VERSION" publishToMavenCentral --stacktrace

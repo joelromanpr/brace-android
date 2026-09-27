@@ -1,0 +1,5 @@
+<resources>
+    <string name="brace_breadcrumb_current">Ubicación actual</string>
+    <string name="brace_breadcrumb_navigation">Navegación de migas de pan</string>
+    <string name="brace_breadcrumb_overflow">Mostrar rutas ocultas</string>
+</resources>

@@ -1,0 +1,1137 @@
+public final class io/github/joelromanpr/brace/core/BraceBreadcrumb {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;)V
+	public synthetic fun <init> (Ljava/lang/String;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Z
+	public final fun component3 ()Lkotlin/jvm/functions/Function0;
+	public final fun component4 ()Lkotlin/jvm/functions/Function2;
+	public final fun copy (Ljava/lang/String;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;)Lio/github/joelromanpr/brace/core/BraceBreadcrumb;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceBreadcrumb;Ljava/lang/String;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceBreadcrumb;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEnabled ()Z
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getLeadingIcon ()Lkotlin/jvm/functions/Function2;
+	public final fun getOnClick ()Lkotlin/jvm/functions/Function0;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceBreadcrumbCollapseFrom : java/lang/Enum {
+	public static final field End Lio/github/joelromanpr/brace/core/BraceBreadcrumbCollapseFrom;
+	public static final field Start Lio/github/joelromanpr/brace/core/BraceBreadcrumbCollapseFrom;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceBreadcrumbCollapseFrom;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceBreadcrumbCollapseFrom;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceBreadcrumbsKt {
+	public static final fun BraceBreadcrumbItem (Ljava/lang/String;Landroidx/compose/ui/Modifier;ZZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceBreadcrumbs (Ljava/util/List;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BraceBreadcrumbCollapseFrom;ILandroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceButtonGroupAction {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ZZLjava/lang/Boolean;Lio/github/joelromanpr/brace/core/BraceButtonIntent;ZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ZZLjava/lang/Boolean;Lio/github/joelromanpr/brace/core/BraceButtonIntent;ZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getEnabled ()Z
+	public final fun getIntent ()Lio/github/joelromanpr/brace/core/BraceButtonIntent;
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getLeadingIcon ()Lkotlin/jvm/functions/Function2;
+	public final fun getLoading ()Z
+	public final fun getOnClick ()Lkotlin/jvm/functions/Function0;
+	public final fun getSelected ()Ljava/lang/Boolean;
+	public final fun getShowLabel ()Z
+	public final fun getTrailingIcon ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceButtonGroupAlignment : java/lang/Enum {
+	public static final field Center Lio/github/joelromanpr/brace/core/BraceButtonGroupAlignment;
+	public static final field End Lio/github/joelromanpr/brace/core/BraceButtonGroupAlignment;
+	public static final field Start Lio/github/joelromanpr/brace/core/BraceButtonGroupAlignment;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceButtonGroupAlignment;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceButtonGroupAlignment;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceButtonGroupKt {
+	public static final fun BraceButtonGroup (Ljava/util/List;Landroidx/compose/ui/Modifier;ZZLio/github/joelromanpr/brace/core/BraceButtonGroupVariant;Lio/github/joelromanpr/brace/core/BraceButtonGroupSize;Lio/github/joelromanpr/brace/core/BraceButtonGroupAlignment;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceButtonGroupSize : java/lang/Enum {
+	public static final field Large Lio/github/joelromanpr/brace/core/BraceButtonGroupSize;
+	public static final field Medium Lio/github/joelromanpr/brace/core/BraceButtonGroupSize;
+	public static final field Small Lio/github/joelromanpr/brace/core/BraceButtonGroupSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceButtonGroupSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceButtonGroupSize;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceButtonGroupVariant : java/lang/Enum {
+	public static final field Minimal Lio/github/joelromanpr/brace/core/BraceButtonGroupVariant;
+	public static final field Outline Lio/github/joelromanpr/brace/core/BraceButtonGroupVariant;
+	public static final field Solid Lio/github/joelromanpr/brace/core/BraceButtonGroupVariant;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceButtonGroupVariant;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceButtonGroupVariant;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceButtonIntent : java/lang/Enum {
+	public static final field Danger Lio/github/joelromanpr/brace/core/BraceButtonIntent;
+	public static final field Primary Lio/github/joelromanpr/brace/core/BraceButtonIntent;
+	public static final field Secondary Lio/github/joelromanpr/brace/core/BraceButtonIntent;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceButtonIntent;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceButtonIntent;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceButtonKt {
+	public static final fun BraceButton (Ljava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;ZZLio/github/joelromanpr/brace/core/BraceButtonIntent;Lio/github/joelromanpr/brace/core/BraceButtonVariant;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceButtonVariant : java/lang/Enum {
+	public static final field Outline Lio/github/joelromanpr/brace/core/BraceButtonVariant;
+	public static final field Solid Lio/github/joelromanpr/brace/core/BraceButtonVariant;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceButtonVariant;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceButtonVariant;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceCalloutIntent : java/lang/Enum {
+	public static final field Danger Lio/github/joelromanpr/brace/core/BraceCalloutIntent;
+	public static final field Neutral Lio/github/joelromanpr/brace/core/BraceCalloutIntent;
+	public static final field Primary Lio/github/joelromanpr/brace/core/BraceCalloutIntent;
+	public static final field Success Lio/github/joelromanpr/brace/core/BraceCalloutIntent;
+	public static final field Warning Lio/github/joelromanpr/brace/core/BraceCalloutIntent;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceCalloutIntent;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceCalloutIntent;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceCardElevation : java/lang/Enum {
+	public static final field Four Lio/github/joelromanpr/brace/core/BraceCardElevation;
+	public static final field One Lio/github/joelromanpr/brace/core/BraceCardElevation;
+	public static final field Three Lio/github/joelromanpr/brace/core/BraceCardElevation;
+	public static final field Two Lio/github/joelromanpr/brace/core/BraceCardElevation;
+	public static final field Zero Lio/github/joelromanpr/brace/core/BraceCardElevation;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceCardElevation;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceCardElevation;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceCollapseKt {
+	public static final fun BraceCollapse (ZLandroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceContentKt {
+	public static final fun BraceCard (Landroidx/compose/ui/Modifier;ZLio/github/joelromanpr/brace/core/BraceCardElevation;ZZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceCardList (Ljava/util/List;Landroidx/compose/ui/Modifier;ZZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceDivider (Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BraceDividerOrientation;ZLandroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceContextMenuKt {
+	public static final fun BraceContextMenu (ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Lkotlin/jvm/functions/Function3;Landroidx/compose/ui/Modifier;ZZLjava/lang/String;Lio/github/joelromanpr/brace/core/BraceMenuSize;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceContextMenuPopup-KJGI1gg (ZLkotlin/jvm/functions/Function0;JLjava/lang/String;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BraceMenuSize;ZZLkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition : java/lang/Enum {
+	public static final field End Lio/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition;
+	public static final field Start Lio/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceControlCardsKt {
+	public static final fun BraceCheckboxCard (ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZZLio/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition;ZZLio/github/joelromanpr/brace/core/BraceCardElevation;Landroidx/compose/runtime/Composer;III)V
+	public static final fun BraceRadioCard (ZLkotlin/jvm/functions/Function0;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZLio/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition;ZZLio/github/joelromanpr/brace/core/BraceCardElevation;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceRadioCardGroup (Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;ZZLio/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceSwitchCard (ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZLio/github/joelromanpr/brace/core/BraceControlCardIndicatorPosition;ZZLio/github/joelromanpr/brace/core/BraceCardElevation;Landroidx/compose/runtime/Composer;II)V
+}
+
+public abstract interface class io/github/joelromanpr/brace/core/BraceControlGroupScope {
+	public abstract fun Item (Landroidx/compose/ui/Modifier;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;I)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceControlGroupScope$ComposeDefaultImpls {
+	public static final fun Item$default (Landroidx/compose/ui/Modifier;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function3;Lio/github/joelromanpr/brace/core/BraceControlGroupScope;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceDialogKt {
+	public static final fun BraceAlertDialog (ZLjava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceButtonIntent;ZZZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
+	public static final fun BraceDialog (ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ZLjava/lang/String;ZZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
+	public static final fun BraceDialogActions (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceDialogBody (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceDialogStep {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getCanAdvance ()Z
+	public final fun getContent ()Lkotlin/jvm/functions/Function3;
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public final fun getValidate ()Lkotlin/jvm/functions/Function0;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceDividerOrientation : java/lang/Enum {
+	public static final field Horizontal Lio/github/joelromanpr/brace/core/BraceDividerOrientation;
+	public static final field Vertical Lio/github/joelromanpr/brace/core/BraceDividerOrientation;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceDividerOrientation;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceDividerOrientation;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceDrawerKt {
+	public static final fun BraceDrawer-5tGJXgQ (ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceDrawerPosition;Lio/github/joelromanpr/brace/core/BraceDrawerSize;Landroidx/compose/ui/unit/Dp;Lkotlin/jvm/functions/Function2;ZLjava/lang/String;ZZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceDrawerPosition : java/lang/Enum {
+	public static final field Bottom Lio/github/joelromanpr/brace/core/BraceDrawerPosition;
+	public static final field End Lio/github/joelromanpr/brace/core/BraceDrawerPosition;
+	public static final field Start Lio/github/joelromanpr/brace/core/BraceDrawerPosition;
+	public static final field Top Lio/github/joelromanpr/brace/core/BraceDrawerPosition;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceDrawerPosition;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceDrawerPosition;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceDrawerSize : java/lang/Enum {
+	public static final field Large Lio/github/joelromanpr/brace/core/BraceDrawerSize;
+	public static final field Small Lio/github/joelromanpr/brace/core/BraceDrawerSize;
+	public static final field Standard Lio/github/joelromanpr/brace/core/BraceDrawerSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceDrawerSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceDrawerSize;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceDropdownKt {
+	public static final fun BraceDropdown (Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;ZZZZLio/github/joelromanpr/brace/core/BraceDropdownSize;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceDropdownOption {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Z)Lio/github/joelromanpr/brace/core/BraceDropdownOption;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceDropdownOption;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceDropdownOption;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEnabled ()Z
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceDropdownSize : java/lang/Enum {
+	public static final field Large Lio/github/joelromanpr/brace/core/BraceDropdownSize;
+	public static final field Medium Lio/github/joelromanpr/brace/core/BraceDropdownSize;
+	public static final field Small Lio/github/joelromanpr/brace/core/BraceDropdownSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceDropdownSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceDropdownSize;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceEditableTextIntent : java/lang/Enum {
+	public static final field Danger Lio/github/joelromanpr/brace/core/BraceEditableTextIntent;
+	public static final field Default Lio/github/joelromanpr/brace/core/BraceEditableTextIntent;
+	public static final field Primary Lio/github/joelromanpr/brace/core/BraceEditableTextIntent;
+	public static final field Success Lio/github/joelromanpr/brace/core/BraceEditableTextIntent;
+	public static final field Warning Lio/github/joelromanpr/brace/core/BraceEditableTextIntent;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceEditableTextIntent;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceEditableTextIntent;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceEditableTextKt {
+	public static final fun BraceEditableText (Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZZIILjava/lang/Integer;ZZLjava/lang/Boolean;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lio/github/joelromanpr/brace/core/BraceEditableTextIntent;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/foundation/text/KeyboardOptions;Landroidx/compose/runtime/Composer;IIII)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceEmptyStateIconSize : java/lang/Enum {
+	public static final field ExtraSmall Lio/github/joelromanpr/brace/core/BraceEmptyStateIconSize;
+	public static final field Small Lio/github/joelromanpr/brace/core/BraceEmptyStateIconSize;
+	public static final field Standard Lio/github/joelromanpr/brace/core/BraceEmptyStateIconSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceEmptyStateIconSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceEmptyStateIconSize;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceEmptyStateLayout : java/lang/Enum {
+	public static final field Horizontal Lio/github/joelromanpr/brace/core/BraceEmptyStateLayout;
+	public static final field Vertical Lio/github/joelromanpr/brace/core/BraceEmptyStateLayout;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceEmptyStateLayout;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceEmptyStateLayout;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceEntityTitleKt {
+	public static final fun BraceEntityTitle (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lio/github/joelromanpr/brace/core/BraceEntityTitleStyle;ZZZLkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceEntityTitleStyle : java/lang/Enum {
+	public static final field Body Lio/github/joelromanpr/brace/core/BraceEntityTitleStyle;
+	public static final field Display Lio/github/joelromanpr/brace/core/BraceEntityTitleStyle;
+	public static final field Subtitle Lio/github/joelromanpr/brace/core/BraceEntityTitleStyle;
+	public static final field Title Lio/github/joelromanpr/brace/core/BraceEntityTitleStyle;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceEntityTitleStyle;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceEntityTitleStyle;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceFeedbackKt {
+	public static final fun BraceCallout (Ljava/lang/String;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BraceCalloutIntent;ZZZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;ZLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceEmptyState (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lio/github/joelromanpr/brace/core/BraceEmptyStateIconSize;ZLio/github/joelromanpr/brace/core/BraceEmptyStateLayout;Lkotlin/jvm/functions/Function2;ZLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceFilePickerFieldKt {
+	public static final fun BraceFilePickerField (Ljava/lang/String;Ljava/util/List;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ljava/util/List;ZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceFilePickerSize;ZLandroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceFilePickerSize : java/lang/Enum {
+	public static final field Large Lio/github/joelromanpr/brace/core/BraceFilePickerSize;
+	public static final field Medium Lio/github/joelromanpr/brace/core/BraceFilePickerSize;
+	public static final field Small Lio/github/joelromanpr/brace/core/BraceFilePickerSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceFilePickerSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceFilePickerSize;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceFormFieldKt {
+	public static final fun BraceFormField (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ZLio/github/joelromanpr/brace/core/BraceFormIntent;ZZLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceFormIntent : java/lang/Enum {
+	public static final field Danger Lio/github/joelromanpr/brace/core/BraceFormIntent;
+	public static final field Default Lio/github/joelromanpr/brace/core/BraceFormIntent;
+	public static final field Primary Lio/github/joelromanpr/brace/core/BraceFormIntent;
+	public static final field Success Lio/github/joelromanpr/brace/core/BraceFormIntent;
+	public static final field Warning Lio/github/joelromanpr/brace/core/BraceFormIntent;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceFormIntent;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceFormIntent;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceFormLayoutKt {
+	public static final fun BraceControlGroup (Landroidx/compose/ui/Modifier;ZZLjava/lang/String;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceFieldLabel (Ljava/lang/String;Landroidx/compose/ui/Modifier;ZLjava/lang/String;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceHeadingLevel : java/lang/Enum {
+	public static final field Five Lio/github/joelromanpr/brace/core/BraceHeadingLevel;
+	public static final field Four Lio/github/joelromanpr/brace/core/BraceHeadingLevel;
+	public static final field One Lio/github/joelromanpr/brace/core/BraceHeadingLevel;
+	public static final field Six Lio/github/joelromanpr/brace/core/BraceHeadingLevel;
+	public static final field Three Lio/github/joelromanpr/brace/core/BraceHeadingLevel;
+	public static final field Two Lio/github/joelromanpr/brace/core/BraceHeadingLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceHeadingLevel;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceHeadingLevel;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceHotkeysKt {
+	public static final fun BraceShortcutLabel (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceShortcutRegistry (Ljava/util/List;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BraceShortcutRegistryState;ZLjava/lang/String;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceShortcutScope (Ljava/util/List;Landroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun braceShortcutEditable (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
+	public static final fun braceShortcuts (Landroidx/compose/ui/Modifier;Ljava/util/List;Z)Landroidx/compose/ui/Modifier;
+	public static synthetic fun braceShortcuts$default (Landroidx/compose/ui/Modifier;Ljava/util/List;ZILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+	public static final fun rememberBraceShortcutRegistryState (Landroidx/compose/runtime/Composer;I)Lio/github/joelromanpr/brace/core/BraceShortcutRegistryState;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceInputsKt {
+	public static final fun BraceCheckbox (ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;II)V
+	public static final fun BraceSwitch (ZLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;II)V
+	public static final fun BraceTextField (Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;ZZZLandroidx/compose/foundation/text/KeyboardOptions;Landroidx/compose/ui/text/input/VisualTransformation;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceLinkColor : java/lang/Enum {
+	public static final field Danger Lio/github/joelromanpr/brace/core/BraceLinkColor;
+	public static final field Inherit Lio/github/joelromanpr/brace/core/BraceLinkColor;
+	public static final field Primary Lio/github/joelromanpr/brace/core/BraceLinkColor;
+	public static final field Success Lio/github/joelromanpr/brace/core/BraceLinkColor;
+	public static final field Warning Lio/github/joelromanpr/brace/core/BraceLinkColor;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceLinkColor;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceLinkColor;
+}
+
+public abstract interface class io/github/joelromanpr/brace/core/BraceLinkDestination {
+	public abstract fun getLabel ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceLinkDestination$Action : io/github/joelromanpr/brace/core/BraceLinkDestination {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
+	public fun getLabel ()Ljava/lang/String;
+	public final fun getOnNavigate ()Lkotlin/jvm/functions/Function0;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceLinkDestination$Uri : io/github/joelromanpr/brace/core/BraceLinkDestination {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceLinkDestination$Uri;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceLinkDestination$Uri;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceLinkDestination$Uri;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getLabel ()Ljava/lang/String;
+	public final fun getUri ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceLinkKt {
+	public static final fun BraceLink-YVnJamc (Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceLinkDestination;Landroidx/compose/ui/Modifier;ZLio/github/joelromanpr/brace/core/BraceLinkUnderline;Lio/github/joelromanpr/brace/core/BraceLinkColor;Landroidx/compose/ui/graphics/Color;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceLinkButton (Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceLinkDestination;Landroidx/compose/ui/Modifier;ZZLio/github/joelromanpr/brace/core/BraceButtonIntent;Lio/github/joelromanpr/brace/core/BraceButtonVariant;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceLinkUnderline : java/lang/Enum {
+	public static final field Always Lio/github/joelromanpr/brace/core/BraceLinkUnderline;
+	public static final field Hover Lio/github/joelromanpr/brace/core/BraceLinkUnderline;
+	public static final field None Lio/github/joelromanpr/brace/core/BraceLinkUnderline;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceLinkUnderline;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceLinkUnderline;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceLoadingKt {
+	public static final fun BraceSkeleton-JEEbyFU (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/unit/Dp;Landroidx/compose/ui/unit/Dp;Ljava/lang/String;ZLandroidx/compose/runtime/Composer;II)V
+	public static final fun BraceSpinner-zyf5BA8 (Ljava/lang/String;Ljava/lang/Float;Landroidx/compose/ui/Modifier;Lkotlin/ranges/ClosedFloatingPointRange;Lio/github/joelromanpr/brace/core/BraceSpinnerSize;Landroidx/compose/ui/unit/Dp;Lio/github/joelromanpr/brace/core/BraceProgressIntent;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceMenuIntent : java/lang/Enum {
+	public static final field Danger Lio/github/joelromanpr/brace/core/BraceMenuIntent;
+	public static final field Default Lio/github/joelromanpr/brace/core/BraceMenuIntent;
+	public static final field Primary Lio/github/joelromanpr/brace/core/BraceMenuIntent;
+	public static final field Success Lio/github/joelromanpr/brace/core/BraceMenuIntent;
+	public static final field Warning Lio/github/joelromanpr/brace/core/BraceMenuIntent;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceMenuIntent;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceMenuIntent;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceMenuKt {
+	public static final fun BraceMenu (Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BraceMenuSize;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceMenuDivider (Landroidx/compose/ui/Modifier;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceMenuItem (Ljava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;ZLjava/lang/Boolean;ZLio/github/joelromanpr/brace/core/BraceMenuIntent;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;ZZLjava/lang/String;Landroidx/compose/runtime/Composer;III)V
+	public static final fun BraceMenuPopup (ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BraceMenuSize;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceMenuSize : java/lang/Enum {
+	public static final field Large Lio/github/joelromanpr/brace/core/BraceMenuSize;
+	public static final field Medium Lio/github/joelromanpr/brace/core/BraceMenuSize;
+	public static final field Small Lio/github/joelromanpr/brace/core/BraceMenuSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceMenuSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceMenuSize;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceMultiSliderKt {
+	public static final fun BraceMultiSlider (Ljava/util/List;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;FFFZZLio/github/joelromanpr/brace/core/BraceSliderTrackIntent;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceNumericButtonPosition : java/lang/Enum {
+	public static final field End Lio/github/joelromanpr/brace/core/BraceNumericButtonPosition;
+	public static final field None Lio/github/joelromanpr/brace/core/BraceNumericButtonPosition;
+	public static final field Start Lio/github/joelromanpr/brace/core/BraceNumericButtonPosition;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceNumericButtonPosition;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceNumericButtonPosition;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceNumericFieldKt {
+	public static final fun BraceNumericField (Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;ZZZLjava/lang/String;Ljava/lang/Double;Ljava/lang/Double;DLjava/lang/Double;Ljava/lang/Double;Ljava/util/Locale;ZZZZLio/github/joelromanpr/brace/core/BraceNumericButtonPosition;Lio/github/joelromanpr/brace/core/BraceNumericFieldSize;Lio/github/joelromanpr/brace/core/BraceNumericIntent;ZZLjava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;IIII)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceNumericFieldSize : java/lang/Enum {
+	public static final field Large Lio/github/joelromanpr/brace/core/BraceNumericFieldSize;
+	public static final field Medium Lio/github/joelromanpr/brace/core/BraceNumericFieldSize;
+	public static final field Small Lio/github/joelromanpr/brace/core/BraceNumericFieldSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceNumericFieldSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceNumericFieldSize;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceNumericIntent : java/lang/Enum {
+	public static final field Danger Lio/github/joelromanpr/brace/core/BraceNumericIntent;
+	public static final field Default Lio/github/joelromanpr/brace/core/BraceNumericIntent;
+	public static final field Primary Lio/github/joelromanpr/brace/core/BraceNumericIntent;
+	public static final field Success Lio/github/joelromanpr/brace/core/BraceNumericIntent;
+	public static final field Warning Lio/github/joelromanpr/brace/core/BraceNumericIntent;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceNumericIntent;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceNumericIntent;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceOverflowCollapseFrom : java/lang/Enum {
+	public static final field End Lio/github/joelromanpr/brace/core/BraceOverflowCollapseFrom;
+	public static final field Start Lio/github/joelromanpr/brace/core/BraceOverflowCollapseFrom;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceOverflowCollapseFrom;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceOverflowCollapseFrom;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceOverflowListKt {
+	public static final fun BraceOverflowList (Ljava/util/List;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BraceOverflowCollapseFrom;IZLjava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function4;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceOverlayKt {
+	public static final fun BraceOverlay (ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZZLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceOverlayHost (Lio/github/joelromanpr/brace/core/BraceOverlayState;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun rememberBraceOverlayState (Landroidx/compose/runtime/Composer;I)Lio/github/joelromanpr/brace/core/BraceOverlayState;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceOverlayState {
+	public static final field $stable I
+	public fun <init> ()V
+	public final fun getActiveCount ()I
+}
+
+public final class io/github/joelromanpr/brace/core/BracePanel {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BracePanel;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BracePanel;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BracePanel;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class io/github/joelromanpr/brace/core/BracePanelScope {
+	public abstract fun closePanel ()V
+	public abstract fun getPanel ()Lio/github/joelromanpr/brace/core/BracePanel;
+	public abstract fun getPreviousPanel ()Lio/github/joelromanpr/brace/core/BracePanel;
+	public abstract fun openPanel (Lio/github/joelromanpr/brace/core/BracePanel;)V
+}
+
+public final class io/github/joelromanpr/brace/core/BracePanelStackKt {
+	public static final fun BracePanelStack (Lio/github/joelromanpr/brace/core/BracePanelStackState;Landroidx/compose/ui/Modifier;ZZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BracePanelStack (Ljava/util/List;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;ZZLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun rememberBracePanelStackState (Lio/github/joelromanpr/brace/core/BracePanel;Landroidx/compose/runtime/Composer;I)Lio/github/joelromanpr/brace/core/BracePanelStackState;
+}
+
+public final class io/github/joelromanpr/brace/core/BracePanelStackState {
+	public static final field $stable I
+	public final fun closePanel ()Lio/github/joelromanpr/brace/core/BracePanel;
+	public final fun getActivePanel ()Lio/github/joelromanpr/brace/core/BracePanel;
+	public final fun getStack ()Ljava/util/List;
+	public final fun openPanel (Lio/github/joelromanpr/brace/core/BracePanel;)V
+}
+
+public final class io/github/joelromanpr/brace/core/BracePopoverKt {
+	public static final fun BracePopover (ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BracePopoverPlacement;Ljava/lang/String;ZZLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BracePopoverPlacement : java/lang/Enum {
+	public static final field Auto Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field Bottom Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field BottomEnd Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field BottomStart Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field End Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field EndBottom Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field EndTop Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field Start Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field StartBottom Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field StartTop Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field Top Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field TopEnd Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static final field TopStart Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BracePopoverPlacement;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceProgressBarKt {
+	public static final fun BraceProgressBar (Ljava/lang/String;Ljava/lang/Float;Landroidx/compose/ui/Modifier;Lkotlin/ranges/ClosedFloatingPointRange;Lio/github/joelromanpr/brace/core/BraceProgressIntent;ZLandroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceProgressIntent : java/lang/Enum {
+	public static final field Danger Lio/github/joelromanpr/brace/core/BraceProgressIntent;
+	public static final field Primary Lio/github/joelromanpr/brace/core/BraceProgressIntent;
+	public static final field Success Lio/github/joelromanpr/brace/core/BraceProgressIntent;
+	public static final field Warning Lio/github/joelromanpr/brace/core/BraceProgressIntent;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceProgressIntent;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceProgressIntent;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceRadioCardOption {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Lio/github/joelromanpr/brace/core/BraceRadioCardOption;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceRadioCardOption;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceRadioCardOption;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getEnabled ()Z
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceRadioIndicatorPosition : java/lang/Enum {
+	public static final field End Lio/github/joelromanpr/brace/core/BraceRadioIndicatorPosition;
+	public static final field Start Lio/github/joelromanpr/brace/core/BraceRadioIndicatorPosition;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceRadioIndicatorPosition;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceRadioIndicatorPosition;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceRadioOption {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Z
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;)Lio/github/joelromanpr/brace/core/BraceRadioOption;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceRadioOption;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceRadioOption;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getEnabled ()Z
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceRadioSegmentedKt {
+	public static final fun BraceRadio (ZLkotlin/jvm/functions/Function0;Ljava/lang/String;Landroidx/compose/ui/Modifier;ZLjava/lang/String;Lio/github/joelromanpr/brace/core/BraceRadioIndicatorPosition;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceRadioGroup (Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;ZZLio/github/joelromanpr/brace/core/BraceRadioIndicatorPosition;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceSegmentedControl (Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;ZZLio/github/joelromanpr/brace/core/BraceSegmentedIntent;Lio/github/joelromanpr/brace/core/BraceSegmentedSize;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSectionsKt {
+	public static final fun BraceSection-1h4D1Fs (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;ZLjava/lang/Boolean;Lkotlin/jvm/functions/Function1;ZLandroidx/compose/ui/unit/Dp;Landroidx/compose/foundation/layout/PaddingValues;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
+	public static final fun BraceSectionCard-oilTxCY (Landroidx/compose/ui/Modifier;ZLandroidx/compose/foundation/layout/PaddingValues;Landroidx/compose/ui/unit/Dp;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSegmentedIntent : java/lang/Enum {
+	public static final field Neutral Lio/github/joelromanpr/brace/core/BraceSegmentedIntent;
+	public static final field Primary Lio/github/joelromanpr/brace/core/BraceSegmentedIntent;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceSegmentedIntent;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceSegmentedIntent;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSegmentedOption {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Z
+	public final fun component4 ()Lkotlin/jvm/functions/Function2;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;)Lio/github/joelromanpr/brace/core/BraceSegmentedOption;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceSegmentedOption;Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceSegmentedOption;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEnabled ()Z
+	public final fun getIcon ()Lkotlin/jvm/functions/Function2;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSegmentedSize : java/lang/Enum {
+	public static final field Large Lio/github/joelromanpr/brace/core/BraceSegmentedSize;
+	public static final field Medium Lio/github/joelromanpr/brace/core/BraceSegmentedSize;
+	public static final field Small Lio/github/joelromanpr/brace/core/BraceSegmentedSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceSegmentedSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceSegmentedSize;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSemanticContentKt {
+	public static final fun BraceBlockquote (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceCode (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceCodeBlock (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceHeading (Ljava/lang/String;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BraceHeadingLevel;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceHeading1 (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceHeading2 (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceHeading3 (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceHeading4 (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceHeading5 (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceHeading6 (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceOrderedList (Ljava/util/List;Landroidx/compose/ui/Modifier;ILandroidx/compose/runtime/Composer;II)V
+	public static final fun BraceUnorderedList (Ljava/util/List;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceShortcut {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Lkotlin/jvm/functions/Function0;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Z
+	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun component8 ()Z
+	public final fun component9 ()Lkotlin/jvm/functions/Function0;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)Lio/github/joelromanpr/brace/core/BraceShortcut;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceShortcut;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceShortcut;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAllowInEditable ()Z
+	public final fun getCombo ()Ljava/lang/String;
+	public final fun getEnabled ()Z
+	public final fun getGlobal ()Z
+	public final fun getGroup ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getOnKeyDown ()Lkotlin/jvm/functions/Function0;
+	public final fun getOnKeyUp ()Lkotlin/jvm/functions/Function0;
+	public final fun getRepeatable ()Z
+	public final fun getSpokenComboLabel ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceShortcutRegistryState {
+	public static final field $stable I
+	public fun <init> ()V
+	public final fun dismissDiscovery ()V
+	public final fun getDiscoveryOpen ()Z
+	public final fun showDiscovery ()V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSimpleTableColumn {
+	public static final field $stable I
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Landroidx/compose/ui/unit/Dp;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Landroidx/compose/ui/unit/Dp;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3-lTKBWiU ()Landroidx/compose/ui/unit/Dp;
+	public final fun copy-lKiXBtU (Ljava/lang/String;Ljava/lang/String;Landroidx/compose/ui/unit/Dp;)Lio/github/joelromanpr/brace/core/BraceSimpleTableColumn;
+	public static synthetic fun copy-lKiXBtU$default (Lio/github/joelromanpr/brace/core/BraceSimpleTableColumn;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/ui/unit/Dp;ILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceSimpleTableColumn;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHeading ()Ljava/lang/String;
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getMinWidth-lTKBWiU ()Landroidx/compose/ui/unit/Dp;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSimpleTableKt {
+	public static final fun BraceSimpleTable (Ljava/util/List;Ljava/util/List;Ljava/lang/String;Landroidx/compose/ui/Modifier;ZZZLjava/lang/Boolean;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSimpleTableRow {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/util/Map;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/Map;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/Map;
+	public final fun component3 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/util/Map;Z)Lio/github/joelromanpr/brace/core/BraceSimpleTableRow;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceSimpleTableRow;Ljava/lang/String;Ljava/util/Map;ZILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceSimpleTableRow;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEnabled ()Z
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getValues ()Ljava/util/Map;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSliderHandle {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;FLjava/lang/String;Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;Lio/github/joelromanpr/brace/core/BraceSliderHandleType;Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;)V
+	public synthetic fun <init> (Ljava/lang/String;FLjava/lang/String;Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;Lio/github/joelromanpr/brace/core/BraceSliderHandleType;Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()F
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;
+	public final fun component5 ()Lio/github/joelromanpr/brace/core/BraceSliderHandleType;
+	public final fun component6 ()Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public final fun component7 ()Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public final fun copy (Ljava/lang/String;FLjava/lang/String;Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;Lio/github/joelromanpr/brace/core/BraceSliderHandleType;Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;)Lio/github/joelromanpr/brace/core/BraceSliderHandle;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceSliderHandle;Ljava/lang/String;FLjava/lang/String;Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;Lio/github/joelromanpr/brace/core/BraceSliderHandleType;Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;ILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceSliderHandle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getIntentAfter ()Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public final fun getIntentBefore ()Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public final fun getInteractionKind ()Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getType ()Lio/github/joelromanpr/brace/core/BraceSliderHandleType;
+	public final fun getValue ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSliderHandleInteraction : java/lang/Enum {
+	public static final field Lock Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;
+	public static final field None Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;
+	public static final field Push Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceSliderHandleInteraction;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSliderHandleType : java/lang/Enum {
+	public static final field End Lio/github/joelromanpr/brace/core/BraceSliderHandleType;
+	public static final field Full Lio/github/joelromanpr/brace/core/BraceSliderHandleType;
+	public static final field Start Lio/github/joelromanpr/brace/core/BraceSliderHandleType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceSliderHandleType;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceSliderHandleType;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSliderKt {
+	public static final fun BraceRangeSlider (Lkotlin/ranges/ClosedFloatingPointRange;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;FFFZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceSlider (FLkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;FFFZZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSliderTrackIntent : java/lang/Enum {
+	public static final field Danger Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public static final field Neutral Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public static final field Primary Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public static final field Success Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public static final field Warning Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceSliderTrackIntent;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceSpinnerSize : java/lang/Enum {
+	public static final field Large Lio/github/joelromanpr/brace/core/BraceSpinnerSize;
+	public static final field Medium Lio/github/joelromanpr/brace/core/BraceSpinnerSize;
+	public static final field Small Lio/github/joelromanpr/brace/core/BraceSpinnerSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceSpinnerSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceSpinnerSize;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceStepDialogKt {
+	public static final fun BraceStepDialog (ZLjava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/util/List;Ljava/lang/String;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BraceStepDialogLabels;Lio/github/joelromanpr/brace/core/BraceStepNavigation;ZZZLandroidx/compose/ui/focus/FocusRequester;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceStepDialogLabels {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getAvailable ()Ljava/lang/String;
+	public final fun getBack ()Ljava/lang/String;
+	public final fun getClose ()Ljava/lang/String;
+	public final fun getComplete ()Ljava/lang/String;
+	public final fun getCurrent ()Ljava/lang/String;
+	public final fun getNext ()Ljava/lang/String;
+	public final fun getPosition ()Lkotlin/jvm/functions/Function2;
+	public final fun getSteps ()Ljava/lang/String;
+	public final fun getUpcoming ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceStepNavigation : java/lang/Enum {
+	public static final field Auto Lio/github/joelromanpr/brace/core/BraceStepNavigation;
+	public static final field End Lio/github/joelromanpr/brace/core/BraceStepNavigation;
+	public static final field Start Lio/github/joelromanpr/brace/core/BraceStepNavigation;
+	public static final field Top Lio/github/joelromanpr/brace/core/BraceStepNavigation;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceStepNavigation;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceStepNavigation;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTab {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Z
+	public final fun component4 ()Lkotlin/jvm/functions/Function2;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;Ljava/lang/String;Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceTab;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceTab;Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceTab;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAccessibilityLabel ()Ljava/lang/String;
+	public final fun getBadge ()Ljava/lang/String;
+	public final fun getEnabled ()Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getLeadingIcon ()Lkotlin/jvm/functions/Function2;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTabSize : java/lang/Enum {
+	public static final field Large Lio/github/joelromanpr/brace/core/BraceTabSize;
+	public static final field Medium Lio/github/joelromanpr/brace/core/BraceTabSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceTabSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceTabSize;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTabsKt {
+	public static final fun BraceTabPanel (Lio/github/joelromanpr/brace/core/BraceTab;Ljava/lang/String;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceTabSpacer (Landroidx/compose/foundation/layout/ColumnScope;Landroidx/compose/runtime/Composer;I)V
+	public static final fun BraceTabSpacer (Landroidx/compose/foundation/layout/RowScope;Landroidx/compose/runtime/Composer;I)V
+	public static final fun BraceTabs (Ljava/util/List;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lio/github/joelromanpr/brace/core/BraceTabsOrientation;Lio/github/joelromanpr/brace/core/BraceTabSize;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTabsOrientation : java/lang/Enum {
+	public static final field Horizontal Lio/github/joelromanpr/brace/core/BraceTabsOrientation;
+	public static final field Vertical Lio/github/joelromanpr/brace/core/BraceTabsOrientation;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceTabsOrientation;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceTabsOrientation;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTagDuplicatePolicy : java/lang/Enum {
+	public static final field Allow Lio/github/joelromanpr/brace/core/BraceTagDuplicatePolicy;
+	public static final field RejectExact Lio/github/joelromanpr/brace/core/BraceTagDuplicatePolicy;
+	public static final field RejectIgnoreCase Lio/github/joelromanpr/brace/core/BraceTagDuplicatePolicy;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceTagDuplicatePolicy;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceTagDuplicatePolicy;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTagInputAddMethod : java/lang/Enum {
+	public static final field Blur Lio/github/joelromanpr/brace/core/BraceTagInputAddMethod;
+	public static final field Ime Lio/github/joelromanpr/brace/core/BraceTagInputAddMethod;
+	public static final field Keyboard Lio/github/joelromanpr/brace/core/BraceTagInputAddMethod;
+	public static final field Paste Lio/github/joelromanpr/brace/core/BraceTagInputAddMethod;
+	public static final field Separator Lio/github/joelromanpr/brace/core/BraceTagInputAddMethod;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceTagInputAddMethod;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceTagInputAddMethod;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTagInputKt {
+	public static final fun BraceTagInput (Ljava/util/List;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;ZZZLjava/lang/String;ZZLio/github/joelromanpr/brace/core/BraceTagDuplicatePolicy;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lio/github/joelromanpr/brace/core/BraceTagIntent;Lio/github/joelromanpr/brace/core/BraceTagSize;Landroidx/compose/foundation/text/KeyboardOptions;Landroidx/compose/runtime/Composer;IIII)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTagInputRejection : java/lang/Enum {
+	public static final field Duplicate Lio/github/joelromanpr/brace/core/BraceTagInputRejection;
+	public static final field Invalid Lio/github/joelromanpr/brace/core/BraceTagInputRejection;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceTagInputRejection;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceTagInputRejection;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTagIntent : java/lang/Enum {
+	public static final field Danger Lio/github/joelromanpr/brace/core/BraceTagIntent;
+	public static final field Default Lio/github/joelromanpr/brace/core/BraceTagIntent;
+	public static final field Primary Lio/github/joelromanpr/brace/core/BraceTagIntent;
+	public static final field Success Lio/github/joelromanpr/brace/core/BraceTagIntent;
+	public static final field Warning Lio/github/joelromanpr/brace/core/BraceTagIntent;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceTagIntent;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceTagIntent;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTagSize : java/lang/Enum {
+	public static final field Large Lio/github/joelromanpr/brace/core/BraceTagSize;
+	public static final field Medium Lio/github/joelromanpr/brace/core/BraceTagSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceTagSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceTagSize;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTagsKt {
+	public static final fun BraceCompoundTag (Ljava/lang/String;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceTagIntent;Lio/github/joelromanpr/brace/core/BraceTagSize;ZZZZZZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
+	public static final fun BraceTag (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceTagIntent;Lio/github/joelromanpr/brace/core/BraceTagSize;ZZZZZZZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTextAreaKt {
+	public static final fun BraceTextArea (Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZZZLjava/lang/String;IIZLio/github/joelromanpr/brace/core/BraceFormIntent;Lio/github/joelromanpr/brace/core/BraceTextAreaSize;ZLandroidx/compose/foundation/text/KeyboardOptions;Landroidx/compose/foundation/text/KeyboardActions;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTextAreaSize : java/lang/Enum {
+	public static final field Large Lio/github/joelromanpr/brace/core/BraceTextAreaSize;
+	public static final field Medium Lio/github/joelromanpr/brace/core/BraceTextAreaSize;
+	public static final field Small Lio/github/joelromanpr/brace/core/BraceTextAreaSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceTextAreaSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceTextAreaSize;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTextKt {
+	public static final fun BraceText (Ljava/lang/String;Landroidx/compose/ui/Modifier;ZLjava/lang/String;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceToastDismissReason : java/lang/Enum {
+	public static final field Action Lio/github/joelromanpr/brace/core/BraceToastDismissReason;
+	public static final field Cleared Lio/github/joelromanpr/brace/core/BraceToastDismissReason;
+	public static final field Evicted Lio/github/joelromanpr/brace/core/BraceToastDismissReason;
+	public static final field Manual Lio/github/joelromanpr/brace/core/BraceToastDismissReason;
+	public static final field Timeout Lio/github/joelromanpr/brace/core/BraceToastDismissReason;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceToastDismissReason;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceToastDismissReason;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceToastEntry {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastSpec;J)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lio/github/joelromanpr/brace/core/BraceToastSpec;
+	public final fun component3 ()J
+	public final fun copy (Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastSpec;J)Lio/github/joelromanpr/brace/core/BraceToastEntry;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceToastEntry;Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastSpec;JILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceToastEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getRevision ()J
+	public final fun getSpec ()Lio/github/joelromanpr/brace/core/BraceToastSpec;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceToastIntent : java/lang/Enum {
+	public static final field Danger Lio/github/joelromanpr/brace/core/BraceToastIntent;
+	public static final field Neutral Lio/github/joelromanpr/brace/core/BraceToastIntent;
+	public static final field Primary Lio/github/joelromanpr/brace/core/BraceToastIntent;
+	public static final field Success Lio/github/joelromanpr/brace/core/BraceToastIntent;
+	public static final field Warning Lio/github/joelromanpr/brace/core/BraceToastIntent;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceToastIntent;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceToastIntent;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceToastKt {
+	public static final fun BraceToast (Lio/github/joelromanpr/brace/core/BraceToastSpec;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceToastHost (Lio/github/joelromanpr/brace/core/BraceToastState;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/core/BraceToastPosition;ZLandroidx/compose/runtime/Composer;II)V
+	public static final fun rememberBraceToastState (ILandroidx/compose/runtime/Composer;II)Lio/github/joelromanpr/brace/core/BraceToastState;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceToastPosition : java/lang/Enum {
+	public static final field BottomCenter Lio/github/joelromanpr/brace/core/BraceToastPosition;
+	public static final field BottomEnd Lio/github/joelromanpr/brace/core/BraceToastPosition;
+	public static final field BottomStart Lio/github/joelromanpr/brace/core/BraceToastPosition;
+	public static final field TopCenter Lio/github/joelromanpr/brace/core/BraceToastPosition;
+	public static final field TopEnd Lio/github/joelromanpr/brace/core/BraceToastPosition;
+	public static final field TopStart Lio/github/joelromanpr/brace/core/BraceToastPosition;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceToastPosition;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceToastPosition;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceToastSpec {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastIntent;JZLjava/lang/String;Lkotlin/jvm/functions/Function0;ZLjava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastIntent;JZLjava/lang/String;Lkotlin/jvm/functions/Function0;ZLjava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Lkotlin/jvm/functions/Function1;
+	public final fun component2 ()Lio/github/joelromanpr/brace/core/BraceToastIntent;
+	public final fun component3 ()J
+	public final fun component4 ()Z
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Lkotlin/jvm/functions/Function0;
+	public final fun component7 ()Z
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Lkotlin/jvm/functions/Function2;
+	public final fun copy (Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastIntent;JZLjava/lang/String;Lkotlin/jvm/functions/Function0;ZLjava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)Lio/github/joelromanpr/brace/core/BraceToastSpec;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceToastSpec;Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastIntent;JZLjava/lang/String;Lkotlin/jvm/functions/Function0;ZLjava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceToastSpec;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getActionLabel ()Ljava/lang/String;
+	public final fun getAnnounceAssertively ()Z
+	public final fun getCloseContentDescription ()Ljava/lang/String;
+	public final fun getDurationMillis ()J
+	public final fun getIcon ()Lkotlin/jvm/functions/Function2;
+	public final fun getIntent ()Lio/github/joelromanpr/brace/core/BraceToastIntent;
+	public final fun getMessage ()Ljava/lang/String;
+	public final fun getOnAction ()Lkotlin/jvm/functions/Function0;
+	public final fun getOnDismiss ()Lkotlin/jvm/functions/Function1;
+	public final fun getShowCloseButton ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceToastState {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (I)V
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun clear ()V
+	public final fun dismiss (Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastDismissReason;)Z
+	public static synthetic fun dismiss$default (Lio/github/joelromanpr/brace/core/BraceToastState;Ljava/lang/String;Lio/github/joelromanpr/brace/core/BraceToastDismissReason;ILjava/lang/Object;)Z
+	public final fun getMaxVisible ()I
+	public final fun getVisibleToasts ()Ljava/util/List;
+	public final fun show (Lio/github/joelromanpr/brace/core/BraceToastSpec;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun show$default (Lio/github/joelromanpr/brace/core/BraceToastState;Lio/github/joelromanpr/brace/core/BraceToastSpec;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTooltipKt {
+	public static final fun BraceTooltip (Ljava/lang/String;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTopBarKt {
+	public static final fun BraceTopBar (Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;ZLandroidx/compose/runtime/Composer;II)V
+	public static final fun BraceTopBarDivider (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceTopBarGroup (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceTopBarTitle (Landroidx/compose/foundation/layout/RowScope;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTreeKt {
+	public static final fun BraceTree-eKw1uXw (Ljava/util/List;Ljava/util/Set;Lkotlin/jvm/functions/Function1;Ljava/util/Set;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZFLandroidx/compose/runtime/Composer;II)V
+	public static final fun rememberBraceTreeState (Ljava/util/Set;Ljava/util/Set;Landroidx/compose/runtime/Composer;II)Lio/github/joelromanpr/brace/core/BraceTreeState;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTreeNode {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ZZLkotlin/jvm/functions/Function2;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ZZLkotlin/jvm/functions/Function2;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/List;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Z
+	public final fun component6 ()Z
+	public final fun component7 ()Lkotlin/jvm/functions/Function2;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ZZLkotlin/jvm/functions/Function2;)Lio/github/joelromanpr/brace/core/BraceTreeNode;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/core/BraceTreeNode;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lio/github/joelromanpr/brace/core/BraceTreeNode;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getChildren ()Ljava/util/List;
+	public final fun getEnabled ()Z
+	public final fun getHasChildren ()Z
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getLeadingContent ()Lkotlin/jvm/functions/Function2;
+	public final fun getSecondaryLabel ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTreeState {
+	public static final field $stable I
+	public static final field Companion Lio/github/joelromanpr/brace/core/BraceTreeState$Companion;
+	public final fun getExpandedKeys ()Ljava/util/Set;
+	public final fun getSelectedKeys ()Ljava/util/Set;
+	public final fun setExpandedKeys (Ljava/util/Set;)V
+	public final fun setSelectedKeys (Ljava/util/Set;)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTreeState$Companion {
+	public final fun getSaver ()Landroidx/compose/runtime/saveable/Saver;
+}
+
+public final class io/github/joelromanpr/brace/core/ComposableSingletons$BraceDialogKt {
+	public static final field INSTANCE Lio/github/joelromanpr/brace/core/ComposableSingletons$BraceDialogKt;
+	public fun <init> ()V
+	public final fun getLambda$-1310785226$brace_core_release ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class io/github/joelromanpr/brace/core/ComposableSingletons$BraceFeedbackKt {
+	public static final field INSTANCE Lio/github/joelromanpr/brace/core/ComposableSingletons$BraceFeedbackKt;
+	public fun <init> ()V
+	public final fun getLambda$-1906735591$brace_core_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-532156489$brace_core_release ()Lkotlin/jvm/functions/Function3;
+}
+

@@ -1,0 +1,74 @@
+public final class io/github/joelromanpr/brace/icons/BraceIconIntent : java/lang/Enum {
+	public static final field Danger Lio/github/joelromanpr/brace/icons/BraceIconIntent;
+	public static final field Default Lio/github/joelromanpr/brace/icons/BraceIconIntent;
+	public static final field Primary Lio/github/joelromanpr/brace/icons/BraceIconIntent;
+	public static final field Success Lio/github/joelromanpr/brace/icons/BraceIconIntent;
+	public static final field Warning Lio/github/joelromanpr/brace/icons/BraceIconIntent;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/icons/BraceIconIntent;
+	public static fun values ()[Lio/github/joelromanpr/brace/icons/BraceIconIntent;
+}
+
+public final class io/github/joelromanpr/brace/icons/BraceIconName {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lio/github/joelromanpr/brace/icons/BraceIconName;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/icons/BraceIconName;Ljava/lang/String;ILjava/lang/Object;)Lio/github/joelromanpr/brace/icons/BraceIconName;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/icons/BraceIconRegistry {
+	public static final field $stable I
+	public static final field Companion Lio/github/joelromanpr/brace/icons/BraceIconRegistry$Companion;
+	public synthetic fun <init> (Ljava/util/Map;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun find (Lio/github/joelromanpr/brace/icons/BraceIconName;)Landroidx/compose/ui/graphics/vector/ImageVector;
+	public final fun find (Ljava/lang/String;)Landroidx/compose/ui/graphics/vector/ImageVector;
+	public final fun getNames ()Ljava/util/Set;
+	public final fun register (Lio/github/joelromanpr/brace/icons/BraceIconName;Landroidx/compose/ui/graphics/vector/ImageVector;)Lio/github/joelromanpr/brace/icons/BraceIconRegistry;
+	public final fun register (Ljava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;)Lio/github/joelromanpr/brace/icons/BraceIconRegistry;
+	public final fun resolve (Ljava/lang/String;Lio/github/joelromanpr/brace/icons/BraceIconName;)Landroidx/compose/ui/graphics/vector/ImageVector;
+	public static synthetic fun resolve$default (Lio/github/joelromanpr/brace/icons/BraceIconRegistry;Ljava/lang/String;Lio/github/joelromanpr/brace/icons/BraceIconName;ILjava/lang/Object;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class io/github/joelromanpr/brace/icons/BraceIconRegistry$Companion {
+	public final fun empty ()Lio/github/joelromanpr/brace/icons/BraceIconRegistry;
+	public final fun getDefault ()Lio/github/joelromanpr/brace/icons/BraceIconRegistry;
+}
+
+public final class io/github/joelromanpr/brace/icons/BraceIconSize : java/lang/Enum {
+	public static final field Large Lio/github/joelromanpr/brace/icons/BraceIconSize;
+	public static final field Medium Lio/github/joelromanpr/brace/icons/BraceIconSize;
+	public static final field Small Lio/github/joelromanpr/brace/icons/BraceIconSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/icons/BraceIconSize;
+	public static fun values ()[Lio/github/joelromanpr/brace/icons/BraceIconSize;
+}
+
+public final class io/github/joelromanpr/brace/icons/BraceIcons {
+	public static final field $stable I
+	public static final field INSTANCE Lio/github/joelromanpr/brace/icons/BraceIcons;
+	public final fun getAdd ()Lio/github/joelromanpr/brace/icons/BraceIconName;
+	public final fun getCheck ()Lio/github/joelromanpr/brace/icons/BraceIconName;
+	public final fun getChevronForward ()Lio/github/joelromanpr/brace/icons/BraceIconName;
+	public final fun getClose ()Lio/github/joelromanpr/brace/icons/BraceIconName;
+	public final fun getEdit ()Lio/github/joelromanpr/brace/icons/BraceIconName;
+	public final fun getHelp ()Lio/github/joelromanpr/brace/icons/BraceIconName;
+	public final fun getInfo ()Lio/github/joelromanpr/brace/icons/BraceIconName;
+	public final fun getMore ()Lio/github/joelromanpr/brace/icons/BraceIconName;
+	public final fun getRemove ()Lio/github/joelromanpr/brace/icons/BraceIconName;
+	public final fun getSearch ()Lio/github/joelromanpr/brace/icons/BraceIconName;
+	public final fun getWarning ()Lio/github/joelromanpr/brace/icons/BraceIconName;
+}
+
+public final class io/github/joelromanpr/brace/icons/BraceIconsKt {
+	public static final fun BraceIcon-NmqILg8 (Lio/github/joelromanpr/brace/icons/BraceIconName;Ljava/lang/String;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/icons/BraceIconSize;Landroidx/compose/ui/unit/Dp;Lio/github/joelromanpr/brace/icons/BraceIconIntent;Landroidx/compose/ui/graphics/Color;Lio/github/joelromanpr/brace/icons/BraceIconRegistry;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceIconButton (Lio/github/joelromanpr/brace/icons/BraceIconName;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;ZLio/github/joelromanpr/brace/icons/BraceIconSize;Lio/github/joelromanpr/brace/icons/BraceIconRegistry;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceIconByName-zwRYTaw (Ljava/lang/String;Ljava/lang/String;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/icons/BraceIconSize;Landroidx/compose/ui/unit/Dp;Lio/github/joelromanpr/brace/icons/BraceIconIntent;Landroidx/compose/ui/graphics/Color;Lio/github/joelromanpr/brace/icons/BraceIconRegistry;Lio/github/joelromanpr/brace/icons/BraceIconName;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceIconRegistryProvider (Lio/github/joelromanpr/brace/icons/BraceIconRegistry;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
+	public static final fun getLocalBraceIconRegistry ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+

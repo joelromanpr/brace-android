@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "artifact": "io.github.joelromanpr.brace:brace-icons",
+  "sourceBaseline": "Blueprint @blueprintjs/core 6.18.0, commit a60d4c92257612808fbfac81cfeee4fcba91a8b4",
+  "scope": "Original Brace glyphs bundled for the Android icon-loading capability; this is not Blueprint glyph parity.",
+  "assetLicense": "Apache-2.0",
+  "licenseUrl": "https://github.com/joelromanpr/brace-android/blob/main/LICENSE",
+  "sourceFile": "brace-icons/src/main/java/io/github/joelromanpr/brace/icons/BundledVectors.kt",
+  "thirdPartyAssetsCopied": false,
+  "glyphs": [
+    {
+      "name": "add",
+      "category": "actions",
+      "author": "Brace Android contributors",
+      "origin": "original Brace Android vector drawn for this repository",
+      "license": "Apache-2.0",
+      "viewport": "24x24",
+      "sourceFile": "brace-icons/src/main/java/io/github/joelromanpr/brace/icons/BundledVectors.kt"
+    },
+    {
+      "name": "check",
+      "category": "feedback",
+      "author": "Brace Android contributors",
+      "origin": "original Brace Android vector drawn for this repository",
+      "license": "Apache-2.0",
+      "viewport": "24x24",
+      "sourceFile": "brace-icons/src/main/java/io/github/joelromanpr/brace/icons/BundledVectors.kt"
+    },
+    {
+      "name": "chevron-forward",
+      "category": "navigation",
+      "author": "Brace Android contributors",
+      "origin": "original Brace Android vector drawn for this repository",
+      "license": "Apache-2.0",
+      "viewport": "24x24",
+      "sourceFile": "brace-icons/src/main/java/io/github/joelromanpr/brace/icons/BundledVectors.kt"
+    },
+    {
+      "name": "close",
+      "category": "actions",
+      "author": "Brace Android contributors",
+      "origin": "original Brace Android vector drawn for this repository",
+      "license": "Apache-2.0",
+      "viewport": "24x24",
+      "sourceFile": "brace-icons/src/main/java/io/github/joelromanpr/brace/icons/BundledVectors.kt"
+    },
+    {
+      "name": "edit",
+      "category": "actions",
+      "author": "Brace Android contributors",
+      "origin": "original Brace Android vector drawn for this repository",
+      "license": "Apache-2.0",
+      "viewport": "24x24",
+      "sourceFile": "brace-icons/src/main/java/io/github/joelromanpr/brace/icons/BundledVectors.kt"
+    },
+    {
+      "name": "help",
+      "category": "feedback",
+      "author": "Brace Android contributors",
+      "origin": "original Brace Android vector drawn for this repository",
+      "license": "Apache-2.0",
+      "viewport": "24x24",
+      "sourceFile": "brace-icons/src/main/java/io/github/joelromanpr/brace/icons/BundledVectors.kt"
+    },
+    {
+      "name": "info",
+      "category": "feedback",
+      "author": "Brace Android contributors",
+      "origin": "original Brace Android vector drawn for this repository",
+      "license": "Apache-2.0",
+      "viewport": "24x24",
+      "sourceFile": "brace-icons/src/main/java/io/github/joelromanpr/brace/icons/BundledVectors.kt"
+    },
+    {
+      "name": "more",
+      "category": "actions",
+      "author": "Brace Android contributors",
+      "origin": "original Brace Android vector drawn for this repository",
+      "license": "Apache-2.0",
+      "viewport": "24x24",
+      "sourceFile": "brace-icons/src/main/java/io/github/joelromanpr/brace/icons/BundledVectors.kt"
+    },
+    {
+      "name": "remove",
+      "category": "actions",
+      "author": "Brace Android contributors",
+      "origin": "original Brace Android vector drawn for this repository",
+      "license": "Apache-2.0",
+      "viewport": "24x24",
+      "sourceFile": "brace-icons/src/main/java/io/github/joelromanpr/brace/icons/BundledVectors.kt"
+    },
+    {
+      "name": "search",
+      "category": "navigation",
+      "author": "Brace Android contributors",
+      "origin": "original Brace Android vector drawn for this repository",
+      "license": "Apache-2.0",
+      "viewport": "24x24",
+      "sourceFile": "brace-icons/src/main/java/io/github/joelromanpr/brace/icons/BundledVectors.kt"
+    },
+    {
+      "name": "warning",
+      "category": "feedback",
+      "author": "Brace Android contributors",
+      "origin": "original Brace Android vector drawn for this repository",
+      "license": "Apache-2.0",
+      "viewport": "24x24",
+      "sourceFile": "brace-icons/src/main/java/io/github/joelromanpr/brace/icons/BundledVectors.kt"
+    }
+  ],
+  "pinnedBlueprintIconPackageVersion": "6.13.0"
+}

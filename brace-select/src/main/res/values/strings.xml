@@ -1,0 +1,16 @@
+<resources>
+    <string name="brace_select_choose">Choose an option</string>
+    <string name="brace_select_search">Search options</string>
+    <string name="brace_select_empty">No matching options</string>
+    <string name="brace_select_active_position">Option %1$d of %2$d: %3$s</string>
+    <string name="brace_select_expanded">Expanded</string>
+    <string name="brace_select_collapsed">Collapsed</string>
+    <string name="brace_suggest_done">Use typed text</string>
+    <string name="brace_multi_selected_count">%1$d selected</string>
+    <string name="brace_multi_remove">Remove %1$s</string>
+    <string name="brace_command_search">Search commands</string>
+    <string name="brace_command_empty">No matching commands</string>
+    <string name="brace_command_loading">Loading commands</string>
+    <string name="brace_command_active">Active command</string>
+    <string name="brace_command_close">Close commands</string>
+</resources>

@@ -39,6 +39,6 @@ BraceTheme {
 }
 ```
 
-Read the [theming guide](docs/theming.md), [component guides](docs/core-components.md), [semantic content guide](docs/semantic-content.md), [table guide](docs/table-viewport.md), [copying guide](docs/table-copying.md), and [compatibility policy](docs/compatibility.md). The [coverage inventory](inventory/blueprint-components.json) is machine-readable; the [roadmap](ROADMAP.md) tracks the next slices.
+Read the [theming guide](docs/theming.md), [component guides](docs/core-components.md), [semantic content guide](docs/semantic-content.md), [table guide](docs/table-viewport.md), [copying guide](docs/table-copying.md), [editing guide](docs/table-editing.md), and [compatibility policy](docs/compatibility.md). The [coverage inventory](inventory/blueprint-components.json) is machine-readable; the [roadmap](ROADMAP.md) tracks the next slices.
 
 Contributions are welcome. See [CONTRIBUTING](CONTRIBUTING.md), [GOVERNANCE](GOVERNANCE.md), [SECURITY](SECURITY.md), and [SUPPORT](SUPPORT.md). Brace is licensed under [Apache-2.0](LICENSE).

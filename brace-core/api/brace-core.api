@@ -489,6 +489,38 @@ public final class io/github/joelromanpr/brace/core/BraceSpinnerSize : java/lang
 	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceSpinnerSize;
 }
 
+public final class io/github/joelromanpr/brace/core/BraceTagDuplicatePolicy : java/lang/Enum {
+	public static final field Allow Lio/github/joelromanpr/brace/core/BraceTagDuplicatePolicy;
+	public static final field RejectExact Lio/github/joelromanpr/brace/core/BraceTagDuplicatePolicy;
+	public static final field RejectIgnoreCase Lio/github/joelromanpr/brace/core/BraceTagDuplicatePolicy;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceTagDuplicatePolicy;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceTagDuplicatePolicy;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTagInputAddMethod : java/lang/Enum {
+	public static final field Blur Lio/github/joelromanpr/brace/core/BraceTagInputAddMethod;
+	public static final field Ime Lio/github/joelromanpr/brace/core/BraceTagInputAddMethod;
+	public static final field Keyboard Lio/github/joelromanpr/brace/core/BraceTagInputAddMethod;
+	public static final field Paste Lio/github/joelromanpr/brace/core/BraceTagInputAddMethod;
+	public static final field Separator Lio/github/joelromanpr/brace/core/BraceTagInputAddMethod;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceTagInputAddMethod;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceTagInputAddMethod;
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTagInputKt {
+	public static final fun BraceTagInput (Ljava/util/List;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;ZZZLjava/lang/String;ZZLio/github/joelromanpr/brace/core/BraceTagDuplicatePolicy;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lio/github/joelromanpr/brace/core/BraceTagIntent;Lio/github/joelromanpr/brace/core/BraceTagSize;Landroidx/compose/foundation/text/KeyboardOptions;Landroidx/compose/runtime/Composer;IIII)V
+}
+
+public final class io/github/joelromanpr/brace/core/BraceTagInputRejection : java/lang/Enum {
+	public static final field Duplicate Lio/github/joelromanpr/brace/core/BraceTagInputRejection;
+	public static final field Invalid Lio/github/joelromanpr/brace/core/BraceTagInputRejection;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/core/BraceTagInputRejection;
+	public static fun values ()[Lio/github/joelromanpr/brace/core/BraceTagInputRejection;
+}
+
 public final class io/github/joelromanpr/brace/core/BraceTagIntent : java/lang/Enum {
 	public static final field Danger Lio/github/joelromanpr/brace/core/BraceTagIntent;
 	public static final field Default Lio/github/joelromanpr/brace/core/BraceTagIntent;

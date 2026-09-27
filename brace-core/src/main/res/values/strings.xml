@@ -59,4 +59,6 @@
     <string name="brace_entity_title_open">Open %1$s</string>
     <string name="brace_slider_range_start">Start of %1$s</string>
     <string name="brace_slider_range_end">End of %1$s</string>
+    <string name="brace_dropdown_announcement">%1$s, %2$s</string>
+    <string name="brace_dropdown_placeholder">Choose an option</string>
 </resources>

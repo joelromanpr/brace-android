@@ -63,6 +63,8 @@ import io.github.joelromanpr.brace.core.BraceSliderHandle
 import io.github.joelromanpr.brace.core.BraceSliderHandleInteraction
 import io.github.joelromanpr.brace.core.BraceSliderTrackIntent
 import io.github.joelromanpr.brace.core.BraceButton
+import io.github.joelromanpr.brace.core.BraceButtonGroup
+import io.github.joelromanpr.brace.core.BraceButtonGroupAction
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceCallout
 import io.github.joelromanpr.brace.core.BraceCalloutIntent
@@ -80,6 +82,8 @@ import io.github.joelromanpr.brace.core.BraceDialogStep
 import io.github.joelromanpr.brace.core.BraceStepDialog
 import io.github.joelromanpr.brace.core.BraceDrawer
 import io.github.joelromanpr.brace.core.BraceDrawerPosition
+import io.github.joelromanpr.brace.core.BraceDropdown
+import io.github.joelromanpr.brace.core.BraceDropdownOption
 import io.github.joelromanpr.brace.core.BraceEditableText
 import io.github.joelromanpr.brace.core.BraceEntityTitle
 import io.github.joelromanpr.brace.core.BraceLink
@@ -197,6 +201,7 @@ class ConsumerActivity : ComponentActivity() {
                 var caseNotes by remember { mutableStateOf("") }
                 var reportTitle by remember { mutableStateOf("Quarterly report") }
                 var amount by rememberSaveable { mutableStateOf("0.2") }
+                var exportFormat by rememberSaveable { mutableStateOf<String?>(null) }
                 var iconName by remember { mutableStateOf("search") }
                 val blueprintIconPack by produceState<BraceBlueprintIconPack?>(null) {
                     value = withContext(Dispatchers.IO) { BraceBlueprintIconPack.load(applicationContext) }
@@ -466,6 +471,20 @@ class ConsumerActivity : ComponentActivity() {
                                 BraceButton("Export", onClick = { count++ }, modifier = controlModifier)
                             }
                         }
+                        BraceButtonGroup(
+                            actions = listOf(
+                                BraceButtonGroupAction("inspect", "Inspect", onClick = { count++ }),
+                                BraceButtonGroupAction("share", "Share", onClick = { count++ },
+                                    intent = BraceButtonIntent.Primary),
+                            ),
+                            fill = true,
+                            accessibilityLabel = "Report commands",
+                        )
+                        BraceDropdown(
+                            options = listOf(BraceDropdownOption("csv", "CSV"), BraceDropdownOption("json", "JSON")),
+                            selectedValue = exportFormat, onValueChange = { exportFormat = it },
+                            label = "Export format",
+                        )
                         BraceNumericField(amount, { amount = it }, label = "Amount",
                             min = 0.0, max = 100.0, minorStepSize = 0.1)
                         BraceTagInput(tags, { tags = it }, tagDraft, { tagDraft = it }, "Skills")

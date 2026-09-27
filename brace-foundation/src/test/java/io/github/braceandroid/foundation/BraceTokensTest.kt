@@ -42,6 +42,9 @@ class BraceTokensTest {
                 scheme.components.datePicker.content to scheme.components.datePicker.container,
                 scheme.components.datePicker.selectedContent to scheme.components.datePicker.selectedContainer,
                 scheme.components.dateInput.content to scheme.components.dateInput.container,
+                scheme.components.buttonGroup.content to scheme.components.buttonGroup.hoverContainer,
+                scheme.components.buttonGroup.content to scheme.components.buttonGroup.pressedContainer,
+                scheme.components.buttonGroup.selectedContent to scheme.components.buttonGroup.selectedContainer,
             ).forEach { (text, background) ->
                 assertTrue("feedback text contrast below 4.5", braceContrastRatio(text, background) >= 4.5)
             }
@@ -197,6 +200,8 @@ class BraceTokensTest {
         assertEquals(Color.Red, components.select.focusRing)
         assertEquals(Color.Red, components.panelStack.focusRing)
         assertEquals(overridden.onSurface, components.panelStack.backContent)
+        assertEquals(Color.Red, components.buttonGroup.focusRing)
+        assertEquals(overridden.selection, components.buttonGroup.selectedContainer)
     }
 
     @Test

@@ -1,10 +1,11 @@
 public final class io/github/joelromanpr/brace/table/BraceDataTableKt {
-	public static final fun BraceDataTable--wUcUP8 (Ljava/util/List;Lkotlin/jvm/functions/Function1;Ljava/util/List;Lio/github/joelromanpr/brace/table/BraceTableSelection;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/table/BraceTableViewport;FLjava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/util/Map;Lkotlin/jvm/functions/Function2;Ljava/util/Map;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/unit/Dp;Landroidx/compose/ui/unit/Dp;Lio/github/joelromanpr/brace/table/BraceTableSelection$Cell;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;III)V
+	public static final fun BraceDataTable-dldD6T4 (Ljava/util/List;Lkotlin/jvm/functions/Function1;Ljava/util/List;Lio/github/joelromanpr/brace/table/BraceTableSelection;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/table/BraceTableViewport;FLjava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/util/Map;Lkotlin/jvm/functions/Function2;Ljava/util/Map;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/unit/Dp;Landroidx/compose/ui/unit/Dp;Lio/github/joelromanpr/brace/table/BraceTableSelection$Cell;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;IIII)V
 	public static final fun rememberBraceTableViewport (Landroidx/compose/runtime/Composer;I)Lio/github/joelromanpr/brace/table/BraceTableViewport;
 }
 
 public final class io/github/joelromanpr/brace/table/BraceEditableCellKt {
 	public static final fun BraceEditableCell (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function1;Ljava/lang/Integer;Ljava/lang/Integer;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BraceEditableColumnName (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function1;Ljava/lang/Integer;ZLandroidx/compose/runtime/Composer;II)V
 }
 
 public final class io/github/joelromanpr/brace/table/BraceTableClipboard {
@@ -15,11 +16,12 @@ public final class io/github/joelromanpr/brace/table/BraceTableClipboard {
 
 public final class io/github/joelromanpr/brace/table/BraceTableColumn {
 	public static final field $stable I
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;ZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getCellContent ()Lkotlin/jvm/functions/Function3;
 	public final fun getCellText ()Lkotlin/jvm/functions/Function1;
 	public final fun getEditable ()Z
+	public final fun getEditableName ()Z
 	public final fun getKey ()Ljava/lang/String;
 	public final fun getTitle ()Ljava/lang/String;
 	public final fun getWidth-D9Ej5fM ()F
@@ -93,6 +95,6 @@ public final class io/github/joelromanpr/brace/table/BraceTableViewport {
 public final class io/github/joelromanpr/brace/table/ComposableSingletons$BraceEditableCellKt {
 	public static final field INSTANCE Lio/github/joelromanpr/brace/table/ComposableSingletons$BraceEditableCellKt;
 	public fun <init> ()V
-	public final fun getLambda$-931628297$brace_table_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1790969276$brace_table_release ()Lkotlin/jvm/functions/Function3;
 }
 

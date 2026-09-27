@@ -314,7 +314,8 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "core-section" to "BraceSection(title = \"Projects\", collapsible = true) { Text(\"Section content\") }",
     "core-sectioncard" to "BraceSectionCard { Text(\"Project settings\") }",
     "core-breadcrumbs" to "BraceBreadcrumbs(listOf(BraceBreadcrumb(\"Home\", onClick = { home() }), BraceBreadcrumb(\"Projects\")))",
-    "core-tree" to """val state = rememberBraceTreeState(initialExpandedKeys = setOf("projects"))
+    "core-tree" to """val state = rememberBraceTreeState(
+    initialExpandedKeys = setOf("projects"), initialSelectedKeys = setOf("alpha"))
 val nodes = listOf(BraceTreeNode("projects", "Projects", children = listOf(
     BraceTreeNode("alpha", "Alpha"), BraceTreeNode("beta", "Beta"))))
 BraceTree(nodes, state.expandedKeys, { state.expandedKeys = it },
@@ -825,7 +826,10 @@ private fun TimePickerSample() {
 
 @Composable
 private fun TreeSample() {
-    val state = rememberBraceTreeState(initialExpandedKeys = setOf("projects"))
+    val state = rememberBraceTreeState(
+        initialExpandedKeys = setOf("projects"),
+        initialSelectedKeys = setOf("alpha"),
+    )
     var multiple by rememberSaveable { mutableStateOf(false) }
     val nodes = remember {
         listOf(

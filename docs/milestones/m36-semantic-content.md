@@ -10,7 +10,7 @@
 
 ## Verification
 
-- Current replay: inventory and documentation generation pass, 148 rows, 0/122 applicable rows stable. The new semantic-content guide and this report are registered as direct Pages routes.
+- Current replay on protected main `47989fc0f56652bee74223e08760907eeb6d9107`: inventory and documentation generation pass, 148 rows, 0/122 applicable rows stable. The site build validates 21 existing captures and 56 guides, including direct semantic-content and M36 audit routes.
 - Default inset text contrast from the platform-neutral token source: 13.65:1 light, 17.16:1 dark, 19.54:1 high-contrast light, 21.0:1 high-contrast dark. Muted quote citation text against the same inset surface: 5.59:1, 10.53:1, 12.22:1, and 15.47:1 respectively. Brand and scoped override colors still need consumer review.
 - Earlier M36 topic branch, before the current-main replay: exact core API dump/check, Kotlin compilation, and broad `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` passed (467 tasks). API 36 semantic-content tests: 3/3 passed. Full core suite: 174 tests total, 173 passed, one pre-existing overlay test skipped, zero failures. Earlier-topic Maven Local publication of four artifacts passed (156 tasks); a separate consumer app compiled from those artifacts (37 tasks). The current replay needs a fresh combined Gradle, device, and all-artifact consumer gate before PR readiness.
 - The 320×640 catalog heading detail was visually inspected in light and dark high-contrast modes; 2× system text remained scrollable. Manual TalkBack and brand/scoped-override visual review remain pending.

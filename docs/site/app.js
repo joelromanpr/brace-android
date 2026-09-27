@@ -49,7 +49,7 @@ function addFact(grid, label, value, isLink = false) {
     const guide = guideMap[path];
     const href = /^https:\/\//.test(value) ? value : guide ? `./${guide}${fragment ? `#${fragment}` : ''}` : repository ? repository + value.replace(/^\/+/, '') : null;
     if (href) {
-      const text = label === 'Blueprint documentation' ? 'Open Blueprint docs ↗' : label === 'Pinned Blueprint source' ? 'Open pinned source ↗' : guide ? 'Read guide ↗' : 'View public source ↗';
+      const text = label === 'Reference documentation' ? 'Open reference docs ↗' : label === 'Pinned source' ? 'Open pinned source ↗' : guide ? 'Read guide ↗' : 'View public source ↗';
       const link = el('a', '', text);
       link.href = href;
       link.rel = 'noopener noreferrer';
@@ -88,8 +88,8 @@ function card(item) {
   addFact(body, 'Adaptation or exclusion', item.reason);
   addFact(body, 'Priority', item.priority);
   addFact(body, 'Milestone', item.milestone);
-  addFact(body, 'Blueprint documentation', item.blueprintUrl, true);
-  addFact(body, 'Pinned Blueprint source', item.pinnedSourceUrl, true);
+  addFact(body, 'Reference documentation', item.blueprintUrl, true);
+  addFact(body, 'Pinned source', item.pinnedSourceUrl, true);
   addFact(body, 'Implementation', item.implementation, true);
   addFact(body, 'Sample', item.sample, true);
   addFact(body, 'Documentation', item.documentation, true);
@@ -277,7 +277,7 @@ async function load() {
     entryById = new Map(entries.map(item => [item.id, item]));
     await loadShowcase();
     const pin = data.baseline || {};
-    baseline.textContent = `Blueprint baseline: ${pin.releaseTag || pin.version || 'pinned stable'} · ${pin.commit || pin.sha || 'commit recorded in inventory'}`;
+    baseline.textContent = `Reference baseline: ${pin.releaseTag || pin.version || 'pinned stable'} · ${pin.commit || pin.sha || 'commit recorded in inventory'}`;
     const counts = data.summary || {};
     stats.replaceChildren(
       stat(`${counts.stableApplicableRows ?? 0}/${counts.applicableRows ?? entries.length}`, 'Released Android items'),

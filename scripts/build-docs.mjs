@@ -39,6 +39,8 @@ const guideSources = new Map([
   ['docs/table-viewport.md', 'table-viewport'],
   ['docs/table-selection-resize.md', 'table-selection-resize'],
   ['docs/table-copying.md', 'table-copying'],
+  ['docs/table-editing.md', 'table-editing'],
+  ['docs/milestones/m22-table-editing.md', 'milestone-m22'],
   ['docs/milestones/m21-table-copying.md', 'milestone-m21'],
   ['docs/web-mechanisms.md', 'web-mechanisms'],
   ['docs/links.md', 'links'],
@@ -237,6 +239,7 @@ const componentGuideLinks = [
   ['Data tables', 'table-viewport'],
   ['Selection and resizing', 'table-selection-resize'],
   ['Copying cells', 'table-copying'],
+  ['Editing cells', 'table-editing'],
   ['Icons', 'icons'],
 ];
 const extraGuideLinks = [

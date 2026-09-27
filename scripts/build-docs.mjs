@@ -223,6 +223,7 @@ const primaryGuideLinks = [
 ];
 const componentGuideLinks = [
   ['Core controls', 'core-components'],
+  ['Semantic content', 'semantic-content'],
   ['Forms and text', 'form-text'],
   ['Select and query', 'select-query'],
   ['Date and time', 'datetime-picker-input'],

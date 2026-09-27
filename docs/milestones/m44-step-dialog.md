@@ -16,7 +16,8 @@
 | Current-main compile and API | Foundation/core `apiCheck`, core Android-test Kotlin, and catalog Kotlin compilation passed **151 tasks** on `c7f87b4`. Core `apiDump` passed **19 tasks** on the preceding `1b802c3` main. |
 | Pre-EntityTitle-main API 36 | StepDialog tests passed **9/9**, 0 skipped or failed (**71 tasks**) on 320×640, 160 dpi, font scale 1.0. They cover validation, transitions, saveable state, launcher focus, Escape, mouse, RTL, compact 2× targets, automated accessibility, and native rail nodes. |
 | Earlier broader gate | The old topic branch passed root build/lint/API checks; current-main scope is covered by the focused checks above. |
-| Earlier Maven and visual | Foundation, core, icons, and select artifacts plus a separate coordinate-only consumer passed from Maven Local. A 320×640 light, dark high-contrast, and 2× visual pass showed rail, panel, field, and actions; font scale was restored to 1.0. |
+| Current-main Maven and consumer | Eight aligned `0.1.0-SNAPSHOT` artifacts published to Maven Local (**308 tasks**); each has nonempty AAR, sources and documentation JARs, POM, and Gradle metadata with matching coordinates, license, and SCM. The separate Maven-coordinate-only consumer built offline (**37 tasks**). This is local validation, not Maven Central publication. |
+| Earlier visual | A 320×640 light, dark high-contrast, and 2× visual pass showed rail, panel, field, and actions; font scale was restored to 1.0. |
 | Hosted | Required checks on the current-main replay are pending. No release or Maven Central publication is claimed. |
 
 ## Adaptation and limits

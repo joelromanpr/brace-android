@@ -1,6 +1,6 @@
 # M30: time picker and field
 
-**Status:** implementation in progress on draft `joelromanpr/m30-time-picker`, based on main `286d04e` after the M54 documentation merge. The pinned Blueprint 6.18.0 documentation has one public TimePicker row and no separate TimeInput row. `BraceTimeField` is the native companion API mapped within TimePicker. No Maven Central version has shipped; stable applicable coverage remains **0/121**.
+**Status:** implementation in progress on PR #39 (`joelromanpr/m30-time-picker`), based on main `286d04e` after the M54 documentation merge. The pinned Blueprint 6.18.0 documentation has one public TimePicker row and no separate TimeInput row. `BraceTimeField` is the native companion API mapped within TimePicker. No Maven Central version has shipped; stable applicable coverage remains **0/121**.
 
 ## Scope
 
@@ -17,7 +17,7 @@
 | Generated coverage and GitHub Pages source | **Passed**: 147 pinned inventory rows, 43 generated guides, 12 real catalog captures, 12/24 documented web-specific mappings, and 0/121 released applicable rows. Pages JavaScript syntax, token generation, inventory links, and whitespace checks passed. |
 | Maven Local artifact metadata and independent consumer | **Passed**: aligned foundation/core/icons/optional Blueprint icons/select/datetime `0.1.0-SNAPSHOT` local publications with AARs, sources, KDoc, POMs, and module metadata; the separate coordinate-only consumer assembled using both time APIs (**37 tasks**). The consumer gate found missing time imports after restack; they were restored and the gate reran successfully. |
 | Visual and manual assistive technology review | A real 400×800 API 36 catalog image of the picker, field, and disabled state was captured and visually inspected. Automated Compose accessibility checks and native UIAutomation nodes passed. 320 dp, RTL/large-text visual inspection, TalkBack listening, and multiple physical devices remain acceptance work. |
-| Hosted CI and review | **Pending** for the updated draft head. This report does not treat local gates as hosted CI evidence or mark the API stable. |
+| Hosted CI and review | **Passed** on screenshot-inclusive source head `33678b4`: [verify](https://github.com/joelromanpr/brace-android/actions/runs/36281062671/job/108512834002) (4m6s), [API 34 instrumented](https://github.com/joelromanpr/brace-android/actions/runs/36281062671/job/108512833813) (7m41s), and [CodeQL Java/Kotlin](https://github.com/joelromanpr/brace-android/actions/runs/36281062663/job/108512821634) (3m30s). The hosted datetime suite finished **30/30**, zero skipped or failed; repository-wide instrumentation also ran. This report-only follow-up requires renewed checks before PR readiness. Review and stable acceptance remain pending. |
 
 ## Known limits and next branch
 

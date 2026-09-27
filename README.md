@@ -12,7 +12,7 @@ Explore the [live docs and Android captures](https://joelromanpr.github.io/brace
 **Released: 0 of 122 tracked Android items** (0 of 94 components; 0 of 28 design-system capabilities). [See the full coverage record, web mappings, and experimental work](docs/coverage.md).
 <!-- coverage:end -->
 
-The library is **in progress** and has no Maven Central release yet. The source includes tokens and `BraceTheme`, core controls, overlays, and panel navigation, select and query APIs, date and time input and ranges, data tables, trees, and optional licensed icon packs. Each component's current status, Android behavior, tests, and source links are in the [coverage inventory](docs/coverage.md). Catalog screenshots do not change release status.
+The library is **in progress** and has no Maven Central release yet. The source includes tokens and `BraceTheme`, core controls, semantic content, overlays, and panel navigation, select and query APIs, date and time input and ranges, data tables, trees, and optional licensed icon packs. Each component's current status, Android behavior, tests, and source links are in the [coverage inventory](docs/coverage.md). Catalog screenshots do not change release status.
 
 The long-term comparison uses a [pinned reference release](BLUEPRINT_BASELINE.md). License and third-party asset details are in [attribution](docs/attribution.md).
 
@@ -39,6 +39,6 @@ BraceTheme {
 }
 ```
 
-Read the [theming guide](docs/theming.md), [component guides](docs/core-components.md), [table guide](docs/table-viewport.md), [copying guide](docs/table-copying.md), [editing guide](docs/table-editing.md), and [compatibility policy](docs/compatibility.md). The [coverage inventory](inventory/blueprint-components.json) is machine-readable; the [roadmap](ROADMAP.md) tracks the next slices.
+Read the [theming guide](docs/theming.md), [component guides](docs/core-components.md), [semantic content guide](docs/semantic-content.md), [table guide](docs/table-viewport.md), [copying guide](docs/table-copying.md), [editing guide](docs/table-editing.md), and [compatibility policy](docs/compatibility.md). The [coverage inventory](inventory/blueprint-components.json) is machine-readable; the [roadmap](ROADMAP.md) tracks the next slices.
 
 Contributions are welcome. See [CONTRIBUTING](CONTRIBUTING.md), [GOVERNANCE](GOVERNANCE.md), [SECURITY](SECURITY.md), and [SUPPORT](SUPPORT.md). Brace is licensed under [Apache-2.0](LICENSE).

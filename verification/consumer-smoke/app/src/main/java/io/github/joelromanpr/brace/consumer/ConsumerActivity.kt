@@ -50,6 +50,9 @@ import io.github.joelromanpr.brace.core.BraceTopBarDivider
 import io.github.joelromanpr.brace.core.BracePanel
 import io.github.joelromanpr.brace.core.BracePanelStack
 import io.github.joelromanpr.brace.core.rememberBracePanelStackState
+import io.github.joelromanpr.brace.core.BraceHeading2
+import io.github.joelromanpr.brace.core.BraceCode
+import io.github.joelromanpr.brace.core.BraceOrderedList
 import io.github.joelromanpr.brace.core.BraceButton
 import io.github.joelromanpr.brace.core.BraceButtonIntent
 import io.github.joelromanpr.brace.core.BraceCallout
@@ -178,6 +181,9 @@ class ConsumerActivity : ComponentActivity() {
                 val tree = rememberBraceTreeState(initialExpandedKeys = setOf("projects"))
                 Box(Modifier.fillMaxSize()) {
                     Column {
+                        BraceHeading2("Consumer smoke")
+                        BraceCode("val ready = true")
+                        BraceOrderedList(listOf("Build", "Publish locally", "Consume"))
                         BraceTopBar(
                             startContent = { BraceTopBarGroup {
                                 BraceTopBarTitle("Imports")

@@ -62,6 +62,7 @@ const guideSources = new Map([
   ['docs/milestones/m54-web-mechanisms.md', 'milestone-m54'],
   ['docs/milestones/m20-links.md', 'milestone-m20'],
   ['docs/milestones/m55-blueprint-next-icons.md', 'milestone-m55'],
+  ['docs/milestones/m57-icon-large-text.md', 'milestone-m57'],
   ['CONTRIBUTING.md', 'contributing'],
   ['docs/attribution.md', 'attribution'],
 ]);

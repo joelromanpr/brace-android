@@ -268,6 +268,7 @@ Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
     "table-cell-selection" to """var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
 BraceDataTable(rows, { it.id }, columns, selection, { selection = it })
 // Tap a cell or header; Shift+arrows extend a rectangular range.""".trimIndent(),
+    "table-copying" to "BraceTableClipboard.formatSelection(rows, { it.id }, columns, selection) // Ctrl/Cmd+C also copies in BraceDataTable",
     "table-column-and-row-resizing" to """var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
 var widths by remember { mutableStateOf<Map<String, Dp>>(emptyMap()) }
 var heights by remember { mutableStateOf<Map<String, Dp>>(emptyMap()) }
@@ -1078,7 +1079,7 @@ private fun ComponentSample(
         "datetime-daterangeinput" -> DateRangeFieldSample()
         "datetime-timepicker" -> TimePickerSample()
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
-        "table-cell-selection", "table-column-and-row-resizing" -> TableCatalogSample()
+        "table-cell-selection", "table-column-and-row-resizing", "table-copying" -> TableCatalogSample()
         "datetime-timezoneselect" -> {
             var selected by rememberSaveable { mutableStateOf<String?>(null) }
             var summer by rememberSaveable { mutableStateOf(true) }

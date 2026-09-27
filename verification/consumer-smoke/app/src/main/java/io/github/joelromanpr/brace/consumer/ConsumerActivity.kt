@@ -21,7 +21,10 @@ import androidx.compose.ui.unit.IntOffset
 import io.github.braceandroid.foundation.BraceTheme
 import io.github.joelromanpr.brace.datetime.BraceDatePicker
 import io.github.joelromanpr.brace.datetime.BraceDateField
+import io.github.joelromanpr.brace.datetime.BraceTimeField
+import io.github.joelromanpr.brace.datetime.BraceTimePicker
 import java.time.LocalDate
+import java.time.LocalTime
 import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -45,6 +48,9 @@ import io.github.joelromanpr.brace.core.BraceDialog
 import io.github.joelromanpr.brace.core.BraceDrawer
 import io.github.joelromanpr.brace.core.BraceDrawerPosition
 import io.github.joelromanpr.brace.core.BraceEditableText
+import io.github.joelromanpr.brace.core.BraceLink
+import io.github.joelromanpr.brace.core.BraceLinkButton
+import io.github.joelromanpr.brace.core.BraceLinkDestination
 import io.github.joelromanpr.brace.core.BraceFormField
 import io.github.joelromanpr.brace.core.BraceFormIntent
 import io.github.joelromanpr.brace.core.BraceMenu
@@ -140,6 +146,7 @@ class ConsumerActivity : ComponentActivity() {
                 var regionExpanded by remember { mutableStateOf(false) }
                 val regionQuery = rememberBraceQueryListState()
                 var dueDate by remember { mutableStateOf<LocalDate?>(null) }
+                var dueTime by rememberSaveable { mutableStateOf("14:30") }
                 var meal by remember { mutableStateOf("soup") }
                 var layout by remember { mutableStateOf("list") }
                 val shortcutState = rememberBraceShortcutRegistryState()
@@ -187,6 +194,9 @@ class ConsumerActivity : ComponentActivity() {
                             BraceSkeleton(label = "Loading next batch")
                         }
                         BraceBreadcrumbs(listOf(BraceBreadcrumb("Home", onClick = {}), BraceBreadcrumb("Imports")))
+                        BraceLink("Open reports", BraceLinkDestination.Action("Reports") { count++ })
+                        BraceLinkButton("Open guide", BraceLinkDestination.Uri("https://example.org/guide", "Guide"),
+                            onOpenUri = { count++ })
                         BraceTag("Active")
                         BraceFieldLabel("Export format", spokenLabel = "Export format, CSV") { controlModifier ->
                             BraceButton("CSV", onClick = {}, modifier = controlModifier)
@@ -204,6 +214,10 @@ class ConsumerActivity : ComponentActivity() {
                         BraceDateField(dueDate, { dueDate = it }, "Due date", locale = Locale.US)
                         BraceDatePicker(dueDate, { dueDate = it }, locale = Locale.US,
                             minDate = LocalDate.of(2026, 1, 1))
+                        BraceTimeField(LocalTime.parse(dueTime), { dueTime = it?.toString() ?: "14:30" },
+                            label = "Due time", locale = Locale.US, use24Hour = true)
+                        BraceTimePicker(LocalTime.parse(dueTime), { dueTime = it.toString() },
+                            locale = Locale.US, use24Hour = true)
                         BraceRadio(selected = meal == "soup", onSelect = { meal = "soup" }, label = "Soup")
                         BraceRadioGroup(
                             options = listOf(BraceRadioOption("soup", "Soup"), BraceRadioOption("salad", "Salad")),

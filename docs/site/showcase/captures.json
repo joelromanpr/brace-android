@@ -163,7 +163,7 @@
       ],
       "image": "showcase/08-icons-next-light.png",
       "alt": "Brace opt-in Blueprint next icon sample showing filled magnifying glass, directional chevron, and searchable glyph names",
-      "caption": "The opt-in /next artwork on draft M55 previews one subset of the pinned icon glyph catalog. The main inventory row remains planned.",
+      "caption": "The optional /next artwork previews a subset of the pinned icon glyph catalog. The inventory row remains in progress.",
       "device": "Android 16 (API 36) emulator · 160 dpi",
       "sourceBranch": "joelromanpr/m55-blueprint-next-icons",
       "sourceCommit": "26c62885cb670a6c3f6df8e93936bf32792e05c4",
@@ -247,6 +247,28 @@
       "contrast": "standard"
     },
     {
+      "id": "link-action-success-light",
+      "inventoryIds": [
+        "core-link"
+      ],
+      "image": "showcase/link-action-success-light.png",
+      "alt": "Brace Link sample in light mode with underlined green Guide and Reports links, a Reports navigation result, and state controls",
+      "caption": "A live app action updates the destination result, while the success intent recolors both links through semantic tokens.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m20-links",
+      "sourceCommit": "569d2328ceb473f9a145ca8b48d97e01ebce8794",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var destination by rememberSaveable { mutableStateOf(\"No navigation yet\") }\nBraceLink(\n    label = \"Open reports\",\n    destination = BraceLinkDestination.Action(\"Reports\") { destination = \"Reports\" },\n    color = BraceLinkColor.Success,\n)\nText(\"Destination: $destination\")",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800
+    },
+    {
       "id": "table-dark-high-contrast",
       "inventoryIds": [
         "table-table",
@@ -268,6 +290,28 @@
       "capturedAt": "2026-09-26",
       "pixelWidth": 320,
       "pixelHeight": 640
+    },
+    {
+      "id": "timepicker-light",
+      "inventoryIds": [
+        "datetime-timepicker"
+      ],
+      "image": "showcase/12-timepicker-light.png",
+      "alt": "Brace TimePicker showing hour and minute steppers at 23:30 in an overnight range, a Meeting time field, and a disabled time field in light mode",
+      "caption": "The in-progress native TimePicker pairs bounded hour and minute steppers with a localized editable time field and a disabled state.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m30-time-picker",
+      "sourceCommit": "78f71f291b563e2b266576c5d0cab8277d34a319",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var selected by rememberSaveable { mutableStateOf(\"23:30\") }\nBraceTimePicker(\n    value = LocalTime.parse(selected),\n    onValueChange = { selected = it.toString() },\n    locale = Locale.US,\n    use24Hour = true,\n    minTime = LocalTime.of(22, 0),\n    maxTime = LocalTime.of(2, 0),\n)\nBraceTimeField(\n    value = LocalTime.parse(selected),\n    onValueChange = { selected = it?.toString() ?: \"23:30\" },\n    label = \"Meeting time\",\n    locale = Locale.US,\n)",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800
     }
   ]
 }

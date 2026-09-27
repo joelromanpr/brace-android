@@ -20,3 +20,26 @@ public final class io/github/joelromanpr/brace/datetime/BraceDateShortcut {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class io/github/joelromanpr/brace/datetime/BraceTimeFieldKt {
+	public static final fun BraceTimeField (Ljava/time/LocalTime;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/util/Locale;Ljava/lang/Boolean;Lio/github/joelromanpr/brace/datetime/BraceTimePrecision;Ljava/time/LocalTime;Ljava/time/LocalTime;ZZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/time/Clock;Landroidx/compose/runtime/Composer;III)V
+}
+
+public final class io/github/joelromanpr/brace/datetime/BraceTimePickerKt {
+	public static final fun BraceTimePicker (Ljava/time/LocalTime;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ljava/util/Locale;Ljava/lang/Boolean;Lio/github/joelromanpr/brace/datetime/BraceTimePrecision;Ljava/time/LocalTime;Ljava/time/LocalTime;ZLandroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/joelromanpr/brace/datetime/BraceTimePrecision : java/lang/Enum {
+	public static final field Millisecond Lio/github/joelromanpr/brace/datetime/BraceTimePrecision;
+	public static final field Minute Lio/github/joelromanpr/brace/datetime/BraceTimePrecision;
+	public static final field Second Lio/github/joelromanpr/brace/datetime/BraceTimePrecision;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/joelromanpr/brace/datetime/BraceTimePrecision;
+	public static fun values ()[Lio/github/joelromanpr/brace/datetime/BraceTimePrecision;
+}
+
+public final class io/github/joelromanpr/brace/datetime/ComposableSingletons$BraceTimePickerKt {
+	public static final field INSTANCE Lio/github/joelromanpr/brace/datetime/ComposableSingletons$BraceTimePickerKt;
+	public fun <init> ()V
+	public final fun getLambda$1795320787$brace_datetime_release ()Lkotlin/jvm/functions/Function3;
+}
+

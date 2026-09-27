@@ -1,6 +1,6 @@
 # M18: table selection and resizing
 
-**Status:** draft PR [#25](https://github.com/joelromanpr/brace-android/pull/25), integrated onto the merged M14 table viewport at `eda2cf6`. These APIs remain **in progress**, `firstRelease` is null, and generated released coverage is **0/122** applicable rows (0/94 components). This report records source under review; it does not claim a published artifact or Blueprint parity.
+**Status:** draft PR [#25](https://github.com/joelromanpr/brace-android/pull/25), integrated onto main at `7d6fa174` (through M20 Links and M30 time picker). These APIs remain **in progress**, `firstRelease` is null, and generated released coverage is **0/122** applicable rows (0/94 components). This report records source under review; it does not claim a published artifact or Blueprint parity.
 
 ## Source in this slice
 
@@ -9,12 +9,12 @@
 - The pinned table resizing and cell-selection rows are **in progress** with implementation, catalog, documentation, and test links. The Region row remains planned because disjoint selections and whole-table selection are absent. Of 23 main-track table rows, 7 are in progress and 16 remain planned.
 - The [catalog](../../catalog/src/main/java/io/github/joelromanpr/brace/catalog/TableCatalogSample.kt) has a 120-row interactive sample with selection and size controls. The [usage guide](../table-selection-resize.md), Pages guide, and independent Maven consumer exercise the public API. The sample was extracted into its own composable to keep the catalog's JVM method under the bytecode limit.
 
-## Verification on the M14-integrated branch
+## Verification
 
 - `./gradlew build lint checkTokenGeneration checkBlueprintIconGeneration checkBlueprintNextIconGeneration checkInventory apiCheck :catalog:assembleDebug --no-parallel` passed **835 tasks**. The first attempt exposed a catalog `MethodTooLargeException`; extracting the table sample resolved it. Lint then caught a Unit-returning `remember`; the final gate passed after correction.
 - On the attached Android 16/API 36 emulator at **320 × 640, 160 dpi, font scale 1.0**, `:brace-table:connectedDebugAndroidTest` passed **32/32**, zero failed or skipped, in **71 Gradle tasks**. That is 16 M14 viewport tests plus 16 M18 selection/resizing tests. They cover touch/Shift range selection, keyboard and pointer resize, native named accessibility actions and 48 dp targets, RTL, large text and theme changes, focus transfer between resize handles, finite-size rejection, virtualization, state restoration, and automated accessibility checks where supported.
 - Eight aligned `0.1.0-SNAPSHOT` artifacts published to Maven Local (**308 tasks**): foundation, core, icons, optional legacy and `/next` Blueprint icon packs, select, datetime, and table. Each has an AAR, sources JAR, KDoc JAR, POM, and Gradle Module Metadata. The separate coordinate-only consumer passed a clean **38/38 task** offline assemble. No Maven Central publication or release tag was attempted.
-- `generate_coverage.py --check`, both pinned icon generator checks, JavaScript syntax checks, and the Pages build pass: **148 inventory rows, 12 real Android captures, 46 guides**, and **0/122** stable applicable rows. Git whitespace and conflict-marker checks pass. This branch still needs a current-head hosted PR run, and the next main integration must be revalidated.
+- `generate_coverage.py --check`, both pinned icon generator checks, JavaScript syntax checks, and the Pages build pass on the M20-integrated tree: **148 inventory rows, 14 real Android captures, 50 guides**, and **0/122** stable applicable rows. Git whitespace and conflict-marker checks pass. The 835-task, API36 device, Maven Local, and consumer gates above ran before the M20 main merge; scoped validation on the integrated tree and a current-head hosted PR run remain pending.
 
 ## Limits and next table slices
 

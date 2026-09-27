@@ -18,9 +18,9 @@ BraceButton(label = "Outlined", onClick = {}, variant = BraceButtonVariant.Outli
 BraceButton(label = "Pending", onClick = {}, loading = true)
 ```
 
-The API accepts optional `leadingIcon` and `trailingIcon` composable slots. The text label is mandatory and announced to accessibility services; icon slots are decorative. Filled and outlined visual variants use token colors for default, hover, pressed, focused, disabled, and loading states. Compact density draws a shorter visual control inside a 48 dp minimum hit region; large text may grow the control. Compose `clickable` provides touch, mouse, Enter, and Space activation. A focused button gets a visible token-colored border. `loading` suppresses activation and announces a loading state.
+The API accepts optional `leadingIcon` and `trailingIcon` composable slots. The text label is mandatory and announced to accessibility services; icon slots are decorative. Optional `accessibilityLabel` and `onClickLabel` supply a more specific spoken label and click action, for example a navigation destination. Filled and outlined visual variants use token colors for default, hover, pressed, focused, disabled, and loading states. Compact density draws a shorter visual control inside a 48 dp minimum hit region; large text may grow the control. Compose `clickable` provides touch, mouse, Enter, and Space activation. A focused button gets a visible token-colored border. `loading` suppresses activation and announces a loading state.
 
-An Android navigation action should call the app's navigator from `onClick`. Blueprint's web anchor behavior has no URL or DOM equivalent inside this button. Apps that need a link role should use an appropriate native text-link or navigation component; the inventory keeps this adaptation explicit.
+An Android navigation action can call the app's navigator from `onClick`. For an explicit URI or app destination, use [`BraceLinkButton`](links.md) or the text [`BraceLink`](links.md). Blueprint's web anchor attributes map to Android URI handling and callbacks; the inventory keeps this adaptation explicit.
 
 ## Checkbox
 

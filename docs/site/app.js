@@ -64,12 +64,13 @@ function card(item) {
   const details = el('details', 'component');
   details.id = `component-${item.id}`;
   const summary = el('summary');
-  const title = el('span', 'component-name', item.blueprintName || item.id);
+  const title = el('span', 'component-name', (item.braceApi || item.blueprintName || item.id).split(' / ')[0]);
   title.append(el('span', 'component-family', `${item.package || 'Unassigned'} · ${item.family || 'General'}`));
   const badge = el('span', `pill ${String(item.status || 'planned').replace(/\s+/g, '-')}`, item.status || 'planned');
   summary.append(title, badge);
   const body = el('dl', 'component-body');
   addFact(body, 'Brace API', item.braceApi);
+  addFact(body, 'Reference component', item.blueprintName);
   addFact(body, 'Artifact', item.artifact);
   addFact(body, 'Android mapping', item.classification);
   addFact(body, 'Behavior and accessibility', item.behavior);

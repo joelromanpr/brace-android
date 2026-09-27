@@ -486,7 +486,7 @@ private fun Catalog() {
                         }
                     } else {
                         BraceTextField(search, { search = it }, "Search components",
-                            placeholder = "Name, family, or Brace API")
+                            placeholder = "Component or family")
                         Spacer(Modifier.height(BraceTheme.spacing.sm))
                         FlowRow(Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm),
@@ -506,7 +506,7 @@ private fun Catalog() {
                                 (search.isBlank() || listOf(entry.name, entry.family, entry.api)
                                     .any { it.contains(search, ignoreCase = true) })
                         }
-                        Text("${filtered.size} of ${entries.size} inventory rows",
+                        Text("${filtered.size} of ${entries.size} items",
                             color = semantic.onSurfaceMuted, style = BraceTheme.typography.label,
                             modifier = Modifier.padding(top = BraceTheme.spacing.sm))
                         val families = filtered.groupBy { it.family }.toSortedMap()
@@ -537,9 +537,9 @@ private fun Catalog() {
                                             horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm),
                                             verticalAlignment = Alignment.CenterVertically) {
                                             Column(Modifier.weight(1f)) {
-                                                Text(entry.name, color = semantic.onSurface,
+                                                Text(entry.api, color = semantic.onSurface,
                                                     style = BraceTheme.typography.body)
-                                                Text(entry.api, color = semantic.onSurfaceMuted,
+                                                Text(entry.name, color = semantic.onSurfaceMuted,
                                                     style = BraceTheme.typography.label)
                                             }
                                             CatalogStatusBadge(entry.status)
@@ -617,7 +617,7 @@ internal fun Detail(entry: CatalogEntry, onBack: () -> Unit) {
     Box(Modifier.fillMaxSize()) {
       LazyColumn(Modifier.fillMaxSize(), state = listState, verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
         item { BraceButton("← All components", onClick = onBack, variant = BraceButtonVariant.Outline) }
-        item { Text(entry.name, color = semantic.onSurface, style = BraceTheme.typography.title) }
+        item { Text(entry.api, color = semantic.onSurface, style = BraceTheme.typography.title) }
         item { Text("${entry.status} · ${entry.classification} · ${entry.family}", color = semantic.onSurfaceMuted, style = BraceTheme.typography.label) }
         if (showNextIconJump) {
             item {
@@ -628,7 +628,7 @@ internal fun Detail(entry: CatalogEntry, onBack: () -> Unit) {
         }
         item { Text(entry.behavior, color = semantic.onSurface, style = BraceTheme.typography.body) }
         if (entry.reason.isNotBlank()) item { Text(entry.reason, color = semantic.onSurfaceMuted, style = BraceTheme.typography.body) }
-        item { Text("Blueprint source: ${entry.url}", color = semantic.onSurfaceMuted, style = BraceTheme.typography.label) }
+        item { Text("Reference: ${entry.name} · ${entry.url}", color = semantic.onSurfaceMuted, style = BraceTheme.typography.label) }
         if (hasLiveSample) {
             item { Text("Interactive states", color = semantic.onSurface, style = BraceTheme.typography.subtitle) }
             item {

@@ -10,7 +10,7 @@
 
 ## Verification
 
-The earlier M11-based slice passed a **377-task** build/lint/API/catalog gate, **11/11** API 36 interaction and accessibility tests, foundation/core/icons Maven Local publication (**115 tasks**), and an independent consumer build (**37 tasks**). Hosted verify and API 34 instrumentation passed on that earlier head. The current focused replay on merged selection and table-editing main passes token, coverage, JavaScript, and Pages checks: **148 rows, 23 real captures, 66 guides**. Its new catalog sample is isolated from the large component dispatcher. Current-head compile, device, Maven consumer, and hosted checks are pending.
+The earlier M11-based slice passed a **377-task** build/lint/API/catalog gate, **11/11** API 36 interaction and accessibility tests, foundation/core/icons Maven Local publication (**115 tasks**), and an independent consumer build (**37 tasks**). Hosted verify and API 34 instrumentation passed on that earlier head. The focused replay on merged selection and table-editing main passed core API, Android test compilation, catalog, token, and inventory checks; **11/11** API 36 Collapse/Text tests passed. All **eight** aligned artifacts were published to Maven Local with AAR, sources, documentation, POM, and Gradle metadata, and the independent coordinate-only Android consumer built. The Tree milestone is now integrated; token, coverage, JavaScript, and Pages checks pass with **148 rows, 24 real captures, 68 guides**. The catalog sample is isolated from the large component dispatcher. Tree-integrated hosted checks remain pending.
 
 ## Limits
 

@@ -74,6 +74,9 @@ import io.github.joelromanpr.brace.core.BraceCard
 import io.github.joelromanpr.brace.core.BraceBreadcrumb
 import io.github.joelromanpr.brace.core.BraceBreadcrumbItem
 import io.github.joelromanpr.brace.core.BraceBreadcrumbs
+import io.github.joelromanpr.brace.core.BraceTree
+import io.github.joelromanpr.brace.core.BraceTreeNode
+import io.github.joelromanpr.brace.core.rememberBraceTreeState
 import io.github.joelromanpr.brace.core.BraceTopBar
 import io.github.joelromanpr.brace.core.BraceTopBarGroup
 import io.github.joelromanpr.brace.core.BraceTopBarTitle
@@ -333,6 +336,17 @@ BraceEditableText(title, { title = it }, label = "Report title", editActionLabel
     "core-section" to "BraceSection(title = \"Projects\", collapsible = true) { Text(\"Section content\") }",
     "core-sectioncard" to "BraceSectionCard { Text(\"Project settings\") }",
     "core-breadcrumbs" to "BraceBreadcrumbs(listOf(BraceBreadcrumb(\"Home\", onClick = { home() }), BraceBreadcrumb(\"Projects\")))",
+    "core-tree" to """val state = rememberBraceTreeState(
+    initialExpandedKeys = setOf("projects"), initialSelectedKeys = setOf("alpha"))
+val nodes = listOf(BraceTreeNode("projects", "Projects", children = listOf(
+    BraceTreeNode("alpha", "Alpha"), BraceTreeNode("beta", "Beta"))))
+BraceTree(nodes, state.expandedKeys, { state.expandedKeys = it },
+    state.selectedKeys, { state.selectedKeys = it }, label = "Workspace tree")""".trimIndent(),
+    "core-treenode" to """val state = rememberBraceTreeState()
+val nodes = listOf(BraceTreeNode("projects", "Projects", children = listOf(
+    BraceTreeNode("alpha", "Alpha", secondaryLabel = "Active"))))
+BraceTree(nodes, state.expandedKeys, { state.expandedKeys = it },
+    state.selectedKeys, { state.selectedKeys = it }, label = "Workspace tree")""".trimIndent(),
     "core-navbar" to "BraceTopBar(startContent = { BraceTopBarGroup { BraceTopBarTitle(\"Reports\") } }, endContent = { BraceTopBarGroup { BraceButton(\"Edit\", onClick = ::edit) } })",
     "core-navbargroup" to "BraceTopBarGroup { BraceTopBarTitle(\"Reports\"); BraceTopBarDivider() }",
     "core-navbarheading" to "BraceTopBarGroup { BraceTopBarTitle(\"Reports\") }",
@@ -829,6 +843,37 @@ private fun TimePickerSample() {
             style = BraceTheme.typography.body)
         BraceTimeField(null, {}, label = "Unavailable time", enabled = false,
             locale = Locale.US)
+    }
+}
+
+@Composable
+private fun TreeSample() {
+    val state = rememberBraceTreeState(
+        initialExpandedKeys = setOf("projects"),
+        initialSelectedKeys = setOf("alpha"),
+    )
+    var multiple by rememberSaveable { mutableStateOf(false) }
+    val nodes = remember {
+        listOf(
+            BraceTreeNode("projects", "Projects", children = listOf(
+                BraceTreeNode("alpha", "Alpha", secondaryLabel = "Active"),
+                BraceTreeNode("beta", "Beta", secondaryLabel = "Disabled", enabled = false),
+                BraceTreeNode("gamma", "Gamma", children = listOf(BraceTreeNode("notes", "Notes"))),
+            )),
+            BraceTreeNode("reports", "Reports", hasChildren = true),
+        )
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        Text("Tap a row to select; tap its caret to expand. Keyboard: arrows, Home/End, Enter/Space.",
+            color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.body)
+        BraceTree(nodes, state.expandedKeys, { state.expandedKeys = it },
+            state.selectedKeys, { state.selectedKeys = it }, label = "Workspace tree",
+            multiSelect = multiple, maxHeight = 240.dp)
+        Text("Selected: ${state.selectedKeys.sorted().joinToString().ifEmpty { "None" }}",
+            color = BraceTheme.colors.semantic.onSurface, style = BraceTheme.typography.body)
+        BraceButton(if (multiple) "Single selection" else "Multiple selection",
+            onClick = { multiple = !multiple; state.selectedKeys = emptySet() },
+            variant = BraceButtonVariant.Outline)
     }
 }
 
@@ -1522,6 +1567,7 @@ private fun ComponentSample(
                 BraceSectionCard(padded = false) { Text("Edge to edge content", color = BraceTheme.colors.semantic.onSurface) }
             }
         }
+        "core-tree", "core-treenode" -> TreeSample()
         "core-breadcrumbs" -> {
             var destination by rememberSaveable { mutableStateOf("Dashboard") }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {

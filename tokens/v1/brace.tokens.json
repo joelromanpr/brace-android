@@ -627,6 +627,17 @@
       "selectedContent": "{semantic.onSelection}",
       "disabledContent": "{semantic.disabledContent}",
       "focusRing": "{semantic.focusRing}"
+    },
+    "tree": {
+      "container": "{semantic.surface}",
+      "content": "{semantic.onSurface}",
+      "mutedContent": "{semantic.onSurfaceMuted}",
+      "hoverContainer": "{semantic.hover}",
+      "selectedContainer": "{semantic.selection}",
+      "selectedContent": "{semantic.onSelection}",
+      "disabledContent": "{semantic.disabledContent}",
+      "caret": "{semantic.onSurfaceMuted}",
+      "focusRing": "{semantic.focusRing}"
     }
   },
   "componentMetricsDp": {
@@ -787,6 +798,11 @@
       "minWidth": 280,
       "rowHeight": 48,
       "listMaxHeight": 320
+    },
+    "tree": {
+      "indent": 16,
+      "horizontalPadding": 8,
+      "cornerRadius": 5
     }
   }
 }

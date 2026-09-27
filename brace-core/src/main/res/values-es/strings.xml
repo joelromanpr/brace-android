@@ -55,4 +55,6 @@
     <string name="brace_tree_collapsed">Contraído</string>
     <string name="brace_tree_select">Seleccionar nodo</string>
     <string name="brace_tree_node_position">%1$s, nivel %2$d, elemento %3$d de %4$d</string>
+    <string name="brace_slider_range_start">Inicio de %1$s</string>
+    <string name="brace_slider_range_end">Fin de %1$s</string>
 </resources>

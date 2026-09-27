@@ -85,6 +85,15 @@ class BraceTokensTest {
             ).forEach { (text, background) ->
                 assertTrue("panel stack text contrast below 4.5", braceContrastRatio(text, background) >= 4.5)
             }
+            val slider = scheme.components.slider
+            assertTrue("active slider ticks below 3:1",
+                braceContrastRatio(slider.activeTick, slider.activeTrack) >= 3.0)
+            assertTrue("inactive slider ticks below 3:1",
+                braceContrastRatio(slider.inactiveTick, slider.inactiveTrack) >= 3.0)
+            assertTrue("slider thumb below 3:1",
+                braceContrastRatio(slider.thumb, color.surface) >= 3.0)
+            assertTrue("pressed slider thumb below 3:1",
+                braceContrastRatio(slider.thumbPressed, color.surface) >= 3.0)
             val button = scheme.components.button
             listOf(
                 button.primaryContent to button.primaryHoverContainer,

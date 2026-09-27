@@ -25,7 +25,7 @@ Use the actual release version. Confirm the tag points to the reviewed `main` co
 
 ## After publishing
 
-Verify each artifact and its sources/docs files on Maven Central. Build a clean separate consumer with the released coordinates and no Maven Local. Publish GitHub Release notes with the tag, coverage counts, migration notes, and known limitations. If any validation fails, stop the release and fix forward with a new version; never replace a tag or overwrite an artifact.
+Verify each artifact and its sources/docs files on Maven Central. Build the [separate consumer](../../verification/consumer-smoke/README.md) with `-PbraceRepository=central`, the released version, and a fresh `GRADLE_USER_HOME` so Maven Local and cached Brace artifacts cannot mask resolution failures. Publish GitHub Release notes with the tag, coverage counts, migration notes, and known limitations. If any validation fails, stop the release and fix forward with a new version; never replace a tag or overwrite an artifact.
 
 ## Hotfix
 

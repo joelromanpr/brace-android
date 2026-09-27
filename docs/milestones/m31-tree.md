@@ -1,25 +1,25 @@
 # M31 delivery slice: Tree and TreeNode
 
-**Status:** locally verified source in draft [PR #41](https://github.com/joelromanpr/brace-android/pull/41) on `joelromanpr/m31-tree`, based on main `47d2d38`; hosted checks remain pending. The two pinned Blueprint rows are **in progress**. Released coverage remains **0/121** applicable rows and no release version is assigned.
+**Status:** local preflight on protected main `463ea6161dae7df24594dfb31a5d910c6c5f4a47`. [PR #41](https://github.com/joelromanpr/brace-android/pull/41) still points to the earlier draft branch; this replay has not been pushed or reviewed by hosted CI. The pinned Tree and TreeNode inventory rows remain **in progress**, with no first release version. Generated coverage is **0/122 applicable rows** and **0/94 components** stable.
 
 ## Scope
 
-- Controlled multi-root `BraceTree` and stable-key `BraceTreeNode` in `brace-core`, with `rememberBraceTreeState` for restoration.
-- Lazy viewport, touch and mouse selection/caret expansion, keyboard roving navigation with RTL arrows, and one hierarchical TalkBack node per visible item.
-- Tokenized tree states, compact/comfortable 48 dp targets, catalog sample and copyable usage, Pages guide, Maven consumer source, and focused device tests.
+- Controlled multi-root `BraceTree` and stable-key `BraceTreeNode` in `brace-core`, with saveable `rememberBraceTreeState`.
+- Lazy viewport, touch and mouse selection/caret expansion, keyboard navigation with RTL arrows, and one hierarchical accessibility node per visible row.
+- Versioned Tree color and metric tokens, compact/comfortable 48 dp targets, interactive catalog sample with copyable usage, Pages guide, separate-consumer source, and eight focused device tests.
+- Android adaptation of pinned Blueprint 6.18.0 commit `a60d4c92257612808fbfac81cfeee4fcba91a8b4` [Tree documentation](https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/core/src/components/tree/tree.mdx).
 
-## Verification
+## Current local verification
 
 | Gate | Result |
 | --- | --- |
-| Pinned Blueprint comparison | Inspected local Blueprint 6.18.0 commit `a60d4c92257612808fbfac81cfeee4fcba91a8b4` Tree docs and source. |
-| Token and inventory generation | Passed `python3 scripts/generate_tokens.py --check`, `python3 scripts/generate_coverage.py --check`, `node --check docs/site/app.js`, and `node scripts/build-docs.mjs` (147 rows, 33 guides, zero stable). |
-| Kotlin compile, lint, API baseline and catalog | Passed exact Gradle `:brace-foundation:apiDump :brace-core:apiDump`, focused core AndroidTest compilation, and `:catalog:assembleDebug`. Passed broad `build lint checkTokenGeneration checkInventory apiCheck :catalog:assembleDebug` (task count not emitted by `--quiet`). Both generated API baselines are committed with this slice. |
-| API 36 interaction and accessibility | Passed focused `BraceTreeTest` **8/8**, zero failures on `Brace_API36`, including controlled state, touch/mouse, keyboard/RTL, lazy viewport, save restoration, large text/high contrast, native accessibility node and API 34+ automated checks. The initial run exposed missing row test tags inside `clearAndSetSemantics`; after correction, native UIAutomation also needed interactive-window retrieval and dismissal of the emulator's older-target compatibility dialog. The final suite passed. |
-| Maven Local and separate consumer | Passed publication of aligned `brace-foundation`, `brace-core`, `brace-icons`, and `brace-select` `0.1.0-SNAPSHOT` artifacts to Maven Local, then passed coordinate-only `verification/consumer-smoke :app:assembleDebug`. Task counts were not emitted by `--quiet`. |
-| 320×640 catalog review | Passed light and dark high-contrast inspection on API 36: inventory search lists Tree and TreeNode as in progress, detail/usage and live sample fit, touch-selected Alpha changes label and highlight, and caret-expanded Gamma reveals Notes. Screenshots were inspected from the local emulator; no artifact is published. |
-| Hosted CI, review and release | Draft [PR #41](https://github.com/joelromanpr/brace-android/pull/41) is open. Hosted Actions checks are blocked by repository billing and remain required before ready-for-review or merge. No publication or stable claim. |
+| Inventory, tokens, and Pages | Generated inventory has 148 rows, 23 authentic Android captures, and 58 guides. Local Pages link check found 59 HTML pages and 7,276 references with none missing. Token and coverage generation, JavaScript syntax, and Pages build passed. |
+| API baselines | `:brace-foundation:apiDump :brace-core:apiDump` passed, 21 actionable Gradle tasks. The generated foundation baseline includes the Tree tokens alongside current main. |
+| Focused build and lint | Core test/AndroidTest compile, core and catalog lint, catalog debug assembly, foundation/core API checks, token check, and inventory check passed, 414 actionable Gradle tasks. The integrated catalog initially exceeded Kotlin's JVM method size; extracting `TreeSample` to its own composable resolved it. `:brace-core:testDebugUnitTest` had no source tests to run. |
+| API 36 device | Focused `BraceTreeTest` passed **8/8**, zero skipped or failed, 71 actionable Gradle tasks on `Brace_API36(AVD)`. Cases exercise controlled state, touch/mouse, keyboard/RTL, disabled nodes, lazy viewport, saved state, large text/high contrast, accessibility hierarchy, and automated checks where supported. |
+| Maven Local and independent consumer | The old draft branch passed four-artifact publication and a separate consumer at its earlier base. This combined replay has not yet been republished or consumed independently. |
+| Hosted CI and review | Pending the final main integration and push of this replay to draft PR #41. Current local results are not hosted check results. |
 
-## Limits and next branch
+## Limits and next step
 
-The current model intentionally uses stable keys and text labels rather than Blueprint's DOM node paths, CSS classes, arbitrary React labels, and DOM element lookup. Secondary labels stack beneath primary labels for large text rather than using Blueprint's right-aligned layout. Generic context-menu, double-click, and mouse enter/leave node callbacks are not implemented in this slice. Manual TalkBack remains required before a stable release. Hosted CI is currently blocked by repository Actions billing, so local verification does not imply a green PR check. The next concrete source branch is `joelromanpr/m35-blueprint-icon-pack` for an optional, licensed pinned icon glyph pack; the remaining pinned rows keep their individual inventory statuses.
+The API uses stable keys and text labels instead of Blueprint DOM node paths, CSS classes, arbitrary React elements, and DOM element lookup. Secondary labels stack below the primary label for large text. Separate context-menu, double-click, and mouse enter/leave callbacks are not implemented. Manual TalkBack review and final Maven Local consumer verification remain before considering stable status. Integrate the next protected-main merge, then push the focused Tree branch for hosted CI and review; keep both rows in progress until the acceptance criteria are met.

@@ -820,6 +820,34 @@ private fun TimePickerSample() {
 }
 
 @Composable
+private fun TreeSample() {
+    val state = rememberBraceTreeState(initialExpandedKeys = setOf("projects"))
+    var multiple by rememberSaveable { mutableStateOf(false) }
+    val nodes = remember {
+        listOf(
+            BraceTreeNode("projects", "Projects", children = listOf(
+                BraceTreeNode("alpha", "Alpha", secondaryLabel = "Active"),
+                BraceTreeNode("beta", "Beta", secondaryLabel = "Disabled", enabled = false),
+                BraceTreeNode("gamma", "Gamma", children = listOf(BraceTreeNode("notes", "Notes"))),
+            )),
+            BraceTreeNode("reports", "Reports", hasChildren = true),
+        )
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        Text("Tap a row to select; tap its caret to expand. Keyboard: arrows, Home/End, Enter/Space.",
+            color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.body)
+        BraceTree(nodes, state.expandedKeys, { state.expandedKeys = it },
+            state.selectedKeys, { state.selectedKeys = it }, label = "Workspace tree",
+            multiSelect = multiple, maxHeight = 240.dp)
+        Text("Selected: ${state.selectedKeys.sorted().joinToString().ifEmpty { "None" }}",
+            color = BraceTheme.colors.semantic.onSurface, style = BraceTheme.typography.body)
+        BraceButton(if (multiple) "Single selection" else "Multiple selection",
+            onClick = { multiple = !multiple; state.selectedKeys = emptySet() },
+            variant = BraceButtonVariant.Outline)
+    }
+}
+
+@Composable
 private fun ComponentSample(
     id: String,
     toasts: BraceToastState,
@@ -1507,32 +1535,7 @@ private fun ComponentSample(
                 BraceSectionCard(padded = false) { Text("Edge to edge content", color = BraceTheme.colors.semantic.onSurface) }
             }
         }
-        "core-tree", "core-treenode" -> {
-            val state = rememberBraceTreeState(initialExpandedKeys = setOf("projects"))
-            var multiple by rememberSaveable { mutableStateOf(false) }
-            val nodes = remember {
-                listOf(
-                    BraceTreeNode("projects", "Projects", children = listOf(
-                        BraceTreeNode("alpha", "Alpha", secondaryLabel = "Active"),
-                        BraceTreeNode("beta", "Beta", secondaryLabel = "Disabled", enabled = false),
-                        BraceTreeNode("gamma", "Gamma", children = listOf(BraceTreeNode("notes", "Notes"))),
-                    )),
-                    BraceTreeNode("reports", "Reports", hasChildren = true),
-                )
-            }
-            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                Text("Tap a row to select; tap its caret to expand. Keyboard: arrows, Home/End, Enter/Space.",
-                    color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.body)
-                BraceTree(nodes, state.expandedKeys, { state.expandedKeys = it },
-                    state.selectedKeys, { state.selectedKeys = it }, label = "Workspace tree",
-                    multiSelect = multiple, maxHeight = 240.dp)
-                Text("Selected: ${state.selectedKeys.sorted().joinToString().ifEmpty { "None" }}",
-                    color = BraceTheme.colors.semantic.onSurface, style = BraceTheme.typography.body)
-                BraceButton(if (multiple) "Single selection" else "Multiple selection",
-                    onClick = { multiple = !multiple; state.selectedKeys = emptySet() },
-                    variant = BraceButtonVariant.Outline)
-            }
-        }
+        "core-tree", "core-treenode" -> TreeSample()
         "core-breadcrumbs" -> {
             var destination by rememberSaveable { mutableStateOf("Dashboard") }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {

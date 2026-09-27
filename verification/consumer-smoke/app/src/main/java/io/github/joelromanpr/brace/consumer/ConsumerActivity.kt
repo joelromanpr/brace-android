@@ -26,6 +26,8 @@ import io.github.joelromanpr.brace.datetime.BraceDateRangeField
 import io.github.joelromanpr.brace.datetime.BraceDateField
 import io.github.joelromanpr.brace.datetime.BraceTimeField
 import io.github.joelromanpr.brace.datetime.BraceTimePicker
+import io.github.joelromanpr.brace.datetime.BraceTimeZoneSelect
+import java.time.ZoneId
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.Locale
@@ -156,6 +158,7 @@ class ConsumerActivity : ComponentActivity() {
                 var dueTime by rememberSaveable { mutableStateOf("14:30") }
                 var meal by remember { mutableStateOf("soup") }
                 var layout by remember { mutableStateOf("list") }
+                var reportingZone by remember { mutableStateOf<ZoneId?>(null) }
                 val shortcutState = rememberBraceShortcutRegistryState()
                 val toasts = rememberBraceToastState()
                 Box(Modifier.fillMaxSize()) {
@@ -220,6 +223,7 @@ class ConsumerActivity : ComponentActivity() {
                             min = 0.0, max = 100.0, minorStepSize = 0.1)
                         BraceTagInput(tags, { tags = it }, tagDraft, { tagDraft = it }, "Skills")
                         BraceDateField(dueDate, { dueDate = it }, "Due date", locale = Locale.US)
+                        BraceTimeZoneSelect(reportingZone, { reportingZone = it }, "Reporting time zone", locale = Locale.US)
                         BraceDatePicker(dueDate, { dueDate = it }, locale = Locale.US,
                             minDate = LocalDate.of(2026, 1, 1))
                         BraceDateRangeField(travelRange, { travelRange = it }, "Travel dates", locale = Locale.US)

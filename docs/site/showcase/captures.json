@@ -485,6 +485,50 @@
       "capturedAt": "2026-09-26",
       "pixelWidth": 400,
       "pixelHeight": 800
+    },
+    {
+      "inventoryIds": [
+        "datetime-timezoneselect"
+      ],
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m34-timezone-select",
+      "sourceCommit": "09060d978c62d09ca6a078faa691c49e2a5c0326",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800,
+      "id": "time-zone-search-light",
+      "image": "showcase/14-time-zone-search-light.png",
+      "alt": "Open Brace TimeZoneSelect popup in light mode filtering Tokyo to the Asia/Tokyo IANA row with UTC+09:00 offset and Android keyboard",
+      "caption": "The native time-zone search filters Android IANA identities and shows the offset and localized name at a summer reference instant.",
+      "usage": "var zoneId by rememberSaveable { mutableStateOf<String?>(null) }\nBraceTimeZoneSelect(\n    value = zoneId?.let(ZoneId::of),\n    onValueChange = { zoneId = it.id },\n    label = \"Reporting time zone\",\n    locale = Locale.US,\n    referenceInstant = Instant.parse(\"2026-07-15T12:00:00Z\"),\n    showLocalTimeZone = true,\n)"
+    },
+    {
+      "inventoryIds": [
+        "datetime-timezoneselect"
+      ],
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m34-timezone-select",
+      "sourceCommit": "09060d978c62d09ca6a078faa691c49e2a5c0326",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800,
+      "id": "time-zone-selected-light",
+      "image": "showcase/15-time-zone-selected-light.png",
+      "alt": "Brace TimeZoneSelect catalog sample in light mode with Asia/Tokyo selected, its UTC+09:00 offset, display controls, and disabled field",
+      "caption": "A controlled selection keeps the IANA ID, reference offset, display options, and disabled state visible in the catalog.",
+      "usage": "var zoneId by rememberSaveable { mutableStateOf<String?>(null) }\nBraceTimeZoneSelect(\n    value = zoneId?.let(ZoneId::of),\n    onValueChange = { zoneId = it.id },\n    label = \"Reporting time zone\",\n    locale = Locale.US,\n    referenceInstant = Instant.parse(\"2026-07-15T12:00:00Z\"),\n    showLocalTimeZone = true,\n)"
     }
   ]
 }

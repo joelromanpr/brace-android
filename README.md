@@ -12,7 +12,7 @@ Explore the [live docs and Android captures](https://joelromanpr.github.io/brace
 **Released: 0 of 122 tracked Android items** (0 of 94 components; 0 of 28 design-system capabilities). [See the full coverage record, web mappings, and experimental work](docs/coverage.md).
 <!-- coverage:end -->
 
-The library is **in progress** and has no Maven Central release yet. The source includes tokens and `BraceTheme`, core controls, semantic content, and overlays, select and query APIs, date and time input and ranges, data tables, and optional licensed icon packs. Each component's current status, Android behavior, tests, and source links are in the [coverage inventory](docs/coverage.md). Catalog screenshots do not change release status.
+The library is **in progress** and has no Maven Central release yet. The source includes tokens and `BraceTheme`, core controls, semantic content, and overlays, select and query APIs, date and time input and ranges, data tables, trees, and optional licensed icon packs. Each component's current status, Android behavior, tests, and source links are in the [coverage inventory](docs/coverage.md). Catalog screenshots do not change release status.
 
 The long-term comparison uses a [pinned reference release](BLUEPRINT_BASELINE.md). License and third-party asset details are in [attribution](docs/attribution.md).
 

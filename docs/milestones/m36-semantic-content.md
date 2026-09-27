@@ -1,6 +1,6 @@
 # M36 — semantic content adapters
 
-**Status:** exact-M16-main scoped compile passed; hosted review pending. No public artifact or stable inventory claim.
+**Status:** Tree-main integration ready for hosted review; no public artifact or stable inventory claim.
 
 ## Delivered in this slice
 
@@ -10,9 +10,10 @@
 
 ## Verification
 
-- On protected main `47989fc0f56652bee74223e08760907eeb6d9107`, inventory and documentation generation passed with 148 rows and 0/122 applicable rows stable. M34, M21, M15, M22, and M16 were then integrated; generated coverage and site/static checks still pass on M16 main `dd8ab119805a8676fa72a055d0803f4923cf24a3`. The site build validates 23 existing captures and 66 guides, including direct semantic-content and M36 audit routes. The combined Gradle and device gates below were run before M34/M21/M15/M22/M16 integration; the exact-head scoped gate below passed. Hosted checks and a current-head device rerun remain pending.
+- On protected main `47989fc0f56652bee74223e08760907eeb6d9107`, inventory and documentation generation passed with 148 rows and 0/122 applicable rows stable. M34, M21, M15, M22, M16, and Tree M31 were then integrated; generated coverage and site/static checks pass on Tree main `fee948c5823a28b9e23325345181aff19ca56ef7`. The site build validates 24 existing captures and 68 guides, including direct semantic-content and M36 audit routes. The broad Gradle/Maven gate below was run before these integrations; the M16-head scoped/device/hosted checks below passed. Hosted checks for the Tree-integrated PR head remain pending.
 - To keep the growing catalog under the JVM method-size limit, the semantic sample is dispatched to a private composable; its public API and behavior did not change.
 - On exact M16-main integration, `:brace-core:apiCheck :brace-core:compileDebugAndroidTestKotlin :catalog:assembleDebug checkInventory` passed offline (227 tasks). This verifies the catalog sample extraction compiles with the new select and table slices.
+- On the M16-integrated PR head `501e4b37b82d40310f7d65edf6a2c80109424ef2`, API 36 at 320×640, 160 dpi, font scale 1.0 passed focused semantic-content tests 3/3 (71 Gradle tasks). Hosted [verify](https://github.com/joelromanpr/brace-android/actions/runs/36292141731/job/108544146566), [API 34 instrumented](https://github.com/joelromanpr/brace-android/actions/runs/36292141731/job/108544146489), [CodeQL analysis](https://github.com/joelromanpr/brace-android/actions/runs/36292141801/job/108544146549), and CodeQL checks all passed. These results predate the Tree-main integration and do not substitute for its fresh required checks.
 - Combined `build lint checkTokenGeneration checkBlueprintIconGeneration checkBlueprintNextIconGeneration checkInventory apiCheck :catalog:assembleDebug` passed offline on the replay (836 tasks). The API dump was regenerated to match canonical class ordering; the exported semantic-content signatures did not change.
 - API 36 at 320×640, 160 dpi, font scale 1.0: focused `BraceSemanticContentTest` passed 3/3 (71 Gradle tasks), covering headings through theme changes, RTL list collection/order semantics, and readable noninteractive quote/code semantics.
 - Eight aligned `0.1.0-SNAPSHOT` artifacts published to Maven Local (308 tasks). Each has an AAR, sources JAR, KDoc JAR, POM, and Gradle Module Metadata. The separate Maven-coordinate-only consumer compiled with `BraceHeading2` and `BraceOrderedList` (37 tasks). This is local verification, not a Maven Central release.

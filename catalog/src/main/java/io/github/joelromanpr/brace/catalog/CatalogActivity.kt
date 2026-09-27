@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
@@ -31,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -167,15 +169,11 @@ import io.github.joelromanpr.brace.datetime.BraceTimePrecision
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.YearMonth
-import io.github.joelromanpr.brace.table.BraceDataTable
-import io.github.joelromanpr.brace.table.BraceTableColumn
-import io.github.joelromanpr.brace.table.BraceTableSelection
 import org.json.JSONObject
 import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-
-private data class DemoTableRecord(val id: String, val case: String, val status: String)
+import kotlinx.coroutines.launch
 
 /** Interactive catalog whose component names and availability come from the pinned inventory. */
 class CatalogActivity : ComponentActivity() {
@@ -185,7 +183,7 @@ class CatalogActivity : ComponentActivity() {
     }
 }
 
-private data class CatalogEntry(
+internal data class CatalogEntry(
     val id: String,
     val name: String,
     val family: String,
@@ -244,7 +242,18 @@ Column(Modifier.braceQueryNavigation(state, visible.map { it.key },
     "table-column" to "BraceTableColumn<Record>(\"name\", \"Name\", 140.dp, { it.name })",
     "table-viewport-rendering" to "val viewport = rememberBraceTableViewport(); BraceDataTable(rows, { it.id }, columns, selection, { selection = it }, viewport = viewport)",
     "table-fixed-headers" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // row and column headers stay visible",
-    "table-keyboard-navigation" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // arrows, Home/End, Page Up/Down",
+    "table-keyboard-navigation" to "BraceDataTable(rows, { it.id }, columns, selection, { selection = it }) // arrows/Home/End/Page; Shift extends a range",
+    "table-cell-selection" to """var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
+BraceDataTable(rows, { it.id }, columns, selection, { selection = it })
+// Tap a cell or header; Shift+arrows extend a rectangular range.""".trimIndent(),
+    "table-column-and-row-resizing" to """var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
+var widths by remember { mutableStateOf<Map<String, Dp>>(emptyMap()) }
+var heights by remember { mutableStateOf<Map<String, Dp>>(emptyMap()) }
+BraceDataTable(rows, { it.id }, columns, selection, { selection = it },
+    columnWidths = widths,
+    onColumnWidthChange = { key, width -> widths = widths + (key to width) },
+    rowHeights = heights,
+    onRowHeightChange = { key, height -> heights = heights + (key to height) })""".trimIndent(),
     "core-css-utility-classes" to """val semantic = BraceTheme.colors.semantic
 Box(Modifier.background(semantic.surface).padding(BraceTheme.spacing.md)) {
     BraceButton("Retry", onClick = ::retry, variant = BraceButtonVariant.Outline)
@@ -567,20 +576,33 @@ private fun ScenarioCard(eyebrow: String, title: String, description: String, on
 }
 
 @Composable
-private fun Detail(entry: CatalogEntry, onBack: () -> Unit) {
+internal fun Detail(entry: CatalogEntry, onBack: () -> Unit) {
     val semantic = BraceTheme.colors.semantic
     val clipboard = LocalClipboardManager.current
     val toasts = remember(entry.id) { BraceToastState() }
     var toastPosition by rememberSaveable(entry.id) { mutableStateOf(BraceToastPosition.BottomEnd) }
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    val hasLiveSample = entry.id in usageExamples
+    val showNextIconJump = entry.id == "icons-next-glyph-catalog" && hasLiveSample
+    // Back, title, status, jump, behavior, optional reason, source, and sample heading.
+    val liveSampleIndex = 7 + (if (entry.reason.isNotBlank()) 1 else 0)
     Box(Modifier.fillMaxSize()) {
-      LazyColumn(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
+      LazyColumn(Modifier.fillMaxSize(), state = listState, verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.md)) {
         item { BraceButton("← All components", onClick = onBack, variant = BraceButtonVariant.Outline) }
         item { Text(entry.name, color = semantic.onSurface, style = BraceTheme.typography.title) }
         item { Text("${entry.status} · ${entry.classification} · ${entry.family}", color = semantic.onSurfaceMuted, style = BraceTheme.typography.label) }
+        if (showNextIconJump) {
+            item {
+                BraceButton("Jump to live icon sample", onClick = {
+                    scope.launch { listState.scrollToItem(liveSampleIndex) }
+                }, variant = BraceButtonVariant.Outline)
+            }
+        }
         item { Text(entry.behavior, color = semantic.onSurface, style = BraceTheme.typography.body) }
         if (entry.reason.isNotBlank()) item { Text(entry.reason, color = semantic.onSurfaceMuted, style = BraceTheme.typography.body) }
         item { Text("Blueprint source: ${entry.url}", color = semantic.onSurfaceMuted, style = BraceTheme.typography.label) }
-        if (entry.id in usageExamples) {
+        if (hasLiveSample) {
             item { Text("Interactive states", color = semantic.onSurface, style = BraceTheme.typography.subtitle) }
             item {
                 ComponentSample(entry.id, toasts, toastPosition) { toastPosition = it }
@@ -727,37 +749,6 @@ private fun TimePickerSample() {
             style = BraceTheme.typography.body)
         BraceTimeField(null, {}, label = "Unavailable time", enabled = false,
             locale = Locale.US)
-    }
-}
-
-@Composable
-private fun TableViewportSample() {
-    val records = remember { List(120) { DemoTableRecord("record-$it", "Case ${1000 + it}", if (it % 3 == 0) "Review" else "Ready") } }
-    val tableColumns = remember { listOf(
-        BraceTableColumn<DemoTableRecord>("case", "Case", 140.dp, { it.case }),
-        BraceTableColumn<DemoTableRecord>("status", "Status", 130.dp, { it.status }),
-        BraceTableColumn<DemoTableRecord>("owner", "Owner", 130.dp, { "Team ${(it.id.substringAfter('-').toInt() % 4) + 1}" }),
-    ) }
-    var selectedRow by rememberSaveable { mutableStateOf<String?>(null) }
-    var selectedColumn by rememberSaveable { mutableStateOf<String?>(null) }
-    val selection = when {
-        selectedRow == null -> null
-        selectedColumn == null -> BraceTableSelection.Row(selectedRow!!)
-        else -> BraceTableSelection.Cell(selectedRow!!, selectedColumn!!)
-    }
-    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-        Text("Scroll in both directions. Tap a cell or row number; focus the table for arrow keys.",
-            color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.body)
-        BraceDataTable(records, { it.id }, tableColumns, selection, {
-            when (it) {
-                is BraceTableSelection.Cell -> { selectedRow = it.rowKey; selectedColumn = it.columnKey }
-                is BraceTableSelection.Row -> { selectedRow = it.rowKey; selectedColumn = null }
-            }
-        }, modifier = Modifier.fillMaxWidth(), height = 260.dp, label = "Cases", rowLabel = { it.case })
-        Text("Selection: ${selection ?: "None"}", color = BraceTheme.colors.semantic.onSurface,
-            style = BraceTheme.typography.body)
-        BraceButton("Clear selection", onClick = { selectedRow = null; selectedColumn = null },
-            variant = BraceButtonVariant.Outline)
     }
 }
 
@@ -1048,7 +1039,8 @@ private fun ComponentSample(
             }
         }
         "datetime-timepicker" -> TimePickerSample()
-        "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation" -> TableViewportSample()
+        "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
+        "table-cell-selection", "table-column-and-row-resizing" -> TableCatalogSample()
         "core-button" -> {
             var count by rememberSaveable { mutableStateOf(0) }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {

@@ -107,6 +107,8 @@ import io.github.joelromanpr.brace.blueprinticonsnext.BraceBlueprintNextIconVari
 import io.github.joelromanpr.brace.select.BraceSelect
 import io.github.joelromanpr.brace.select.BraceSelectOption
 import io.github.joelromanpr.brace.select.BraceSuggest
+import io.github.joelromanpr.brace.select.BraceCommand
+import io.github.joelromanpr.brace.select.BraceCommandPalette
 import io.github.joelromanpr.brace.select.BraceMultiSelect
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
 import io.github.joelromanpr.brace.table.BraceTableClipboard
@@ -156,6 +158,9 @@ class ConsumerActivity : ComponentActivity() {
                 var regionKey by remember { mutableStateOf<String?>(null) }
                 var regionExpanded by remember { mutableStateOf(false) }
                 val regionQuery = rememberBraceQueryListState()
+                var commandOpen by rememberSaveable { mutableStateOf(false) }
+                val commandQuery = rememberBraceQueryListState()
+                val commandTrigger = remember { FocusRequester() }
                 var tags by remember { mutableStateOf(listOf("Compose")) }
                 var tagDraft by remember { mutableStateOf("") }
                 var dueDate by remember { mutableStateOf<LocalDate?>(null) }
@@ -360,6 +365,18 @@ class ConsumerActivity : ComponentActivity() {
                                     expanded = false,
                                     onExpandedChange = {},
                                     label = "Regions",
+                                )
+                                BraceButton("Commands", onClick = { commandOpen = true },
+                                    modifier = Modifier.focusRequester(commandTrigger))
+                                BraceCommandPalette(
+                                    commands = listOf(BraceCommand("open", "open", "Open record",
+                                        group = "Records")),
+                                    open = commandOpen,
+                                    onOpenChange = { commandOpen = it },
+                                    onExecute = { count++ },
+                                    title = "Commands",
+                                    state = commandQuery,
+                                    restoreFocusTo = commandTrigger,
                                 )
                                 BraceSelect(
                                     options = listOf(BraceSelectOption("east", "east", "East"),

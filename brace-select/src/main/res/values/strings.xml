@@ -8,4 +8,9 @@
     <string name="brace_suggest_done">Use typed text</string>
     <string name="brace_multi_selected_count">%1$d selected</string>
     <string name="brace_multi_remove">Remove %1$s</string>
+    <string name="brace_command_search">Search commands</string>
+    <string name="brace_command_empty">No matching commands</string>
+    <string name="brace_command_loading">Loading commands</string>
+    <string name="brace_command_active">Active command</string>
+    <string name="brace_command_close">Close commands</string>
 </resources>

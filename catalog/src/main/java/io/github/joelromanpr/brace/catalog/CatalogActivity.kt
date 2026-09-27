@@ -254,6 +254,14 @@ BraceSuggest(value, { value = it }, options, selectedKey,
 var expanded by rememberSaveable { mutableStateOf(false) }
 val options = listOf(BraceSelectOption("east", "east", "East"), BraceSelectOption("west", "west", "West"))
 BraceMultiSelect(options, keys, { keys = it }, expanded, { expanded = it }, label = "Regions")""".trimIndent(),
+    "select-omnibar" to """var open by rememberSaveable { mutableStateOf(false) }
+val state = rememberBraceQueryListState()
+val triggerFocus = remember { FocusRequester() }
+val commands = listOf(BraceCommand("open", "open", "Open record", group = "Records"),
+    BraceCommand("export", "export", "Export CSV", group = "Reports"))
+BraceButton("Commands", onClick = { open = true }, modifier = Modifier.focusRequester(triggerFocus))
+BraceCommandPalette(commands, open, { open = it }, onExecute = { runCommand(it.value) },
+    title = "Commands", state = state, restoreFocusTo = triggerFocus)""".trimIndent(),
     "select-querylist" to """val state = rememberBraceQueryListState()
 val options = listOf(BraceSelectOption("east", "east", "East"), BraceSelectOption("west", "west", "West"))
 val visible = state.filter(options)
@@ -1072,6 +1080,7 @@ private fun ComponentSample(
             }
         }
         "select-suggest", "select-multiselect", "select-select", "select-querylist" -> SelectCatalogSample(id)
+        "select-omnibar" -> CommandPaletteCatalogSample()
         "datetime-datepicker" -> {
             var selected by rememberSaveable { mutableStateOf<String?>("2026-09-18") }
             val start = LocalDate.of(2026, 9, 1)

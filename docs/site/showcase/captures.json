@@ -2,6 +2,30 @@
   "schemaVersion": 1,
   "captures": [
     {
+      "id": "tree-selection-phone",
+      "title": "Tree · selected and disabled nodes",
+      "inventoryIds": [
+        "core-tree",
+        "core-treenode"
+      ],
+      "image": "showcase/tree-400.png",
+      "alt": "Brace Tree on an Android phone, with Projects expanded, Alpha selected, Beta disabled, and Gamma and Reports collapsed",
+      "caption": "The API 36 Compose catalog shows a selected child, a disabled child, and expandable branches in the light theme. The Tree and TreeNode inventory rows remain in progress.",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "val tree = rememberBraceTreeState(\n    initialExpandedKeys = setOf(\"projects\"),\n    initialSelectedKeys = setOf(\"alpha\"),\n)\nval nodes = listOf(BraceTreeNode(\"projects\", \"Projects\", children = listOf(\n    BraceTreeNode(\"alpha\", \"Alpha\", secondaryLabel = \"Active\"),\n    BraceTreeNode(\"beta\", \"Beta\", enabled = false),\n)))\nBraceTree(nodes, tree.expandedKeys, { tree.expandedKeys = it },\n    tree.selectedKeys, { tree.selectedKeys = it }, label = \"Workspace tree\")",
+      "format": "phone",
+      "theme": "light",
+      "pixelWidth": 400,
+      "pixelHeight": 960,
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m31-tree",
+      "sourceCommit": "7d7390e606c2c8703724e3b1d426bb47d037b1d6",
+      "sourceStage": "draft",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26"
+    },
+    {
       "id": "fleet-operations-wide",
       "title": "Electric fleet · wide table",
       "inventoryIds": [

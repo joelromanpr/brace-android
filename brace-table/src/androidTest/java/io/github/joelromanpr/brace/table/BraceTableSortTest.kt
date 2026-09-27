@@ -21,9 +21,9 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHeightIsAtLeast
-import androidx.compose.ui.test.assertDoesNotExist
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsFocused
+import androidx.compose.ui.test.click
 import androidx.compose.ui.test.junit4.StateRestorationTester
 import androidx.compose.ui.test.junit4.accessibility.enableAccessibilityChecks
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -223,7 +223,8 @@ class BraceTableSortTest {
     }
 
     @Test fun nativeHeaderActionExposesDirectionAndSortControlPassesAccessibilityCheck() {
-        var sort by mutableStateOf<BraceTableSort?>(null)
+        var sort by mutableStateOf<BraceTableSort?>(
+            BraceTableSort("name", BraceTableSortDirection.Ascending))
         rule.setContent {
             BraceTheme {
                 BraceDataTable(rows, { it.id }, columns, null, {}, Modifier.width(320.dp),
@@ -231,15 +232,21 @@ class BraceTableSortTest {
             }
         }
         val header = nativeNode("Name, column 1")
-        assertTrue(header.actionList.any { it.label?.toString() == "Sort Name ascending" })
-        val control = nativeNode("Sort Name ascending")
+        assertEquals("Sorted ascending", header.stateDescription?.toString())
+        assertTrue(header.actionList.any { it.label?.toString() == "Sort Name descending" })
+        val control = nativeNode("Sort Name descending")
         assertTrue(control.isVisibleToUser && control.isImportantForAccessibility)
-        assertTrue(control.actionList.any { it.id == AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.id })
+        assertTrue("sort node class=${control.className} actions=${control.actionList.map { it.id to it.label }}",
+            control.actionList.any { it.id == AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.id })
+        assertTrue(control.performAction(AccessibilityNodeInfo.ACTION_CLICK))
+        rule.waitUntil { sort == BraceTableSort("name", BraceTableSortDirection.Descending) }
+        rule.onNodeWithTag("brace-table-header:name").assert(
+            SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Sorted descending"))
         val actions = rule.onNodeWithTag("brace-table-header:name").fetchSemanticsNode()
             .config[SemanticsActions.CustomActions]
-        rule.runOnIdle { assertTrue(actions.single { it.label == "Sort Name ascending" }.action()) }
-        assertEquals(BraceTableSort("name", BraceTableSortDirection.Ascending), sort)
-        assertEquals("Sorted ascending", nativeNode("Name, column 1").stateDescription?.toString())
+        rule.runOnIdle { assertTrue(actions.single { it.label == "Clear sorting for Name" }.action()) }
+        rule.waitForIdle()
+        assertEquals(null, sort)
         if (Build.VERSION.SDK_INT >= 34) {
             rule.enableAccessibilityChecks()
             rule.onNodeWithTag("brace-table-sort:name").tryPerformAccessibilityChecks()

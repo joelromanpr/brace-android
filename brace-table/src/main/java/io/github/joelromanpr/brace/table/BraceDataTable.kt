@@ -7,7 +7,6 @@ import android.view.KeyEvent as AndroidKeyEvent
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.scrollBy
@@ -15,7 +14,6 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -78,6 +76,10 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.collectionItemInfo
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.focused
+import androidx.compose.ui.semantics.requestFocus
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.stateDescription
@@ -664,7 +666,9 @@ fun <Row> BraceDataTable(
                         }
                         if (sortable && !isNameEditing) {
                             val sortInteraction = remember(column.key) { MutableInteractionSource() }
-                            val sortFocused by sortInteraction.collectIsFocusedAsState()
+                            val sortRequester = remember(column.key) { FocusRequester() }
+                            var sortFocused by remember(column.key) { mutableStateOf(false) }
+                            val latestRequestSort by rememberUpdatedState(requestSort)
                             val sortHovered by sortInteraction.collectIsHoveredAsState()
                             val sortBackground = when {
                                 !sortEnabled -> semantic.disabledContainer
@@ -685,13 +689,31 @@ fun <Row> BraceDataTable(
                                     .border(if (sortFocused) BraceTheme.sizing.focusRingWidth
                                         else metrics.gridLineWidth,
                                         if (sortFocused) semantic.focusRing else colors.gridLine)
-                                    .clickable(enabled = sortEnabled, role = Role.Button,
-                                        interactionSource = sortInteraction, indication = null,
-                                        onClick = requestSort)
+                                    .focusRequester(sortRequester)
+                                    .onFocusChanged { sortFocused = it.isFocused }
+                                    .onPreviewKeyEvent { event ->
+                                        if (!sortEnabled || event.type != KeyEventType.KeyDown ||
+                                            event.isAltPressed || event.isCtrlPressed ||
+                                            event.isMetaPressed || event.isShiftPressed) false
+                                        else if (event.nativeKeyEvent.keyCode == AndroidKeyEvent.KEYCODE_ENTER ||
+                                            event.nativeKeyEvent.keyCode == AndroidKeyEvent.KEYCODE_SPACE) {
+                                            requestSort(); true
+                                        } else false
+                                    }
+                                    .hoverable(sortInteraction, enabled = sortEnabled)
+                                    .pointerInput(sortEnabled, column.key) {
+                                        if (sortEnabled) detectTapGestures(onTap = { latestRequestSort() })
+                                    }
+                                    .focusable(enabled = sortEnabled)
                                     .testTag("brace-table-sort:${column.key}")
-                                    .semantics {
+                                    .clearAndSetSemantics {
                                         contentDescription = sortActionDescription
                                         stateDescription = sortStateDescription
+                                        role = Role.Button
+                                        focused = sortFocused
+                                        requestFocus { sortRequester.requestFocus() }
+                                        if (sortEnabled) onClick(sortActionDescription) { requestSort(); true }
+                                        else disabled()
                                     },
                                 contentAlignment = Alignment.Center,
                             ) {

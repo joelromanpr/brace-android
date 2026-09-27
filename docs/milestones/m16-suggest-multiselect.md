@@ -11,7 +11,7 @@
 
 ## Verification
 
-The M57-based replay passed an **836-task** build/lint/API/inventory/catalog gate, **32/32** API 36 select tests, and **5/5** shared popover tests. The first hosted run caught a Kotlin `MethodTooLargeException` in the catalog's combined `ComponentSample`; select examples now live in `SelectCatalogSample.kt`. The corrected M57 tree passed the full local gate and device suites. With M33 date ranges integrated, scoped catalog compile/API/token/inventory checks passed **151 tasks**; the Pages build has **148 rows, 15 captures, and 55 guides**. Hosted CI on this corrected main-integrated head remains pending. Earlier source work also published four local artifacts and built a coordinate-only consumer; those gates will be repeated after the final main restack.
+The source passed an **836-task** build/lint/API/inventory/catalog gate, **32/32** API 36 select tests, **5/5** shared popover tests, all **eight** aligned Maven Local artifacts (**308 tasks**), and an independent offline consumer (**37 tasks**). The first hosted run caught a Kotlin `MethodTooLargeException` in the catalog's combined `ComponentSample`; select examples now live in `SelectCatalogSample.kt`. The corrected head passed hosted verify, API 34 instrumented, CodeQL, and analysis. The replay on the redesigned showcase base passes the inventory and Pages build with **148 rows, 21 real captures, and 56 guides**. Final hosted checks are required after this restack.
 
 ## Limits
 

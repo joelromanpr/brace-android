@@ -35,4 +35,8 @@
     <string name="brace_numeric_range">Minimum %1$s, maximum %2$s</string>
     <string name="brace_numeric_minimum">Minimum %1$s</string>
     <string name="brace_numeric_maximum">Maximum %1$s</string>
+    <string name="brace_button_loading">Loading</string>
+    <string name="brace_link_description">%1$s, link to %2$s</string>
+    <string name="brace_link_button_description">%1$s, opens %2$s</string>
+    <string name="brace_link_open">Open %1$s</string>
 </resources>

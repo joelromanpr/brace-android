@@ -22,10 +22,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.focused
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.requestFocus
+import androidx.compose.ui.semantics.text
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import io.github.braceandroid.foundation.BraceTheme
 
@@ -40,7 +50,8 @@ public enum class BraceButtonVariant { Solid, Outline }
  *
  * The caller owns the enabled and loading states. While [loading] is true, activation is
  * suppressed and an announced loading state replaces the label visually. Icon slots are
- * decorative to accessibility services because the button always announces [label].
+ * decorative to accessibility services because the button announces [accessibilityLabel] or [label].
+ * [onClickLabel] can name a navigation destination for assistive technology.
  */
 @Composable
 public fun BraceButton(
@@ -53,8 +64,14 @@ public fun BraceButton(
     variant: BraceButtonVariant = BraceButtonVariant.Solid,
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
+    accessibilityLabel: String? = null,
+    onClickLabel: String? = null,
 ) {
+    require(accessibilityLabel == null || accessibilityLabel.isNotBlank()) { "accessibility label must not be blank" }
+    require(onClickLabel == null || onClickLabel.isNotBlank()) { "click action label must not be blank" }
+    val loadingDescription = stringResource(R.string.brace_button_loading)
     val interactionSource = remember { MutableInteractionSource() }
+    val focusRequester = remember { FocusRequester() }
     val pressed by interactionSource.collectIsPressedAsState()
     val focused by interactionSource.collectIsFocusedAsState()
     val hovered by interactionSource.collectIsHoveredAsState()
@@ -107,17 +124,26 @@ public fun BraceButton(
     Box(
         modifier = modifier
             .defaultMinSize(minWidth = BraceTheme.sizing.touchTarget, minHeight = BraceTheme.sizing.touchTarget)
+            .focusRequester(focusRequester)
+            .clearAndSetSemantics {
+                contentDescription = accessibilityLabel ?: label
+                if (!loading) text = AnnotatedString(label)
+                role = Role.Button
+                if (loading) stateDescription = loadingDescription
+                if (!enabled || loading) disabled() else {
+                    this.focused = focused
+                    onClick(onClickLabel) { onClick(); true }
+                    requestFocus { focusRequester.requestFocus(); true }
+                }
+            }
             .clickable(
                 enabled = enabled && !loading,
                 role = Role.Button,
                 interactionSource = interactionSource,
                 indication = null,
+                onClickLabel = onClickLabel,
                 onClick = onClick,
-            )
-            .semantics {
-                contentDescription = label
-                if (loading) stateDescription = "Loading"
-            },
+            ),
         contentAlignment = Alignment.Center,
     ) {
         Row(

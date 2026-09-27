@@ -20,6 +20,7 @@ const guideSources = new Map([
   ['docs/control-cards.md', 'control-cards'],
   ['docs/content-feedback.md', 'content-feedback'],
   ['docs/semantic-content.md', 'semantic-content'],
+  ['docs/entity-title.md', 'entity-title'],
   ['docs/loading-feedback.md', 'loading-feedback'],
   ['docs/navigation-feedback.md', 'navigation-feedback'],
   ['docs/overlays.md', 'overlays'],
@@ -85,6 +86,7 @@ const guideSources = new Map([
   ['docs/milestones/m18-table-selection-resize.md', 'milestone-m18'],
   ['docs/milestones/m35-blueprint-icon-pack.md', 'milestone-m35'],
   ['docs/milestones/m36-semantic-content.md', 'milestone-m36'],
+  ['docs/milestones/m28-entity-title.md', 'milestone-m28'],
   ['docs/milestones/m54-web-mechanisms.md', 'milestone-m54'],
   ['docs/milestones/m20-links.md', 'milestone-m20'],
   ['docs/milestones/m55-blueprint-next-icons.md', 'milestone-m55'],
@@ -254,6 +256,7 @@ const primaryGuideLinks = [
 const componentGuideLinks = [
   ['Core controls', 'core-components'],
   ['Semantic content', 'semantic-content'],
+  ['Entity title', 'entity-title'],
   ['Forms and text', 'form-text'],
   ['File picker', 'file-picker'],
   ['Select and query', 'select-query'],

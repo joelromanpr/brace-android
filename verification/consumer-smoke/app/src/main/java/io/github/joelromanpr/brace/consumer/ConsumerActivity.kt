@@ -80,6 +80,7 @@ import io.github.joelromanpr.brace.core.BraceStepDialog
 import io.github.joelromanpr.brace.core.BraceDrawer
 import io.github.joelromanpr.brace.core.BraceDrawerPosition
 import io.github.joelromanpr.brace.core.BraceEditableText
+import io.github.joelromanpr.brace.core.BraceEntityTitle
 import io.github.joelromanpr.brace.core.BraceLink
 import io.github.joelromanpr.brace.core.BraceLinkButton
 import io.github.joelromanpr.brace.core.BraceLinkDestination
@@ -320,6 +321,12 @@ class ConsumerActivity : ComponentActivity() {
                             BraceSpinner(label = "Indexing records", value = 0.5f)
                             BraceSkeleton(label = "Loading next batch")
                         }
+                        BraceEntityTitle(
+                            title = "Quarterly report",
+                            subtitle = "Edited today",
+                            tags = { BraceTag("Draft") },
+                            onTitleClick = { count++ },
+                        )
                         BraceBreadcrumbs(listOf(BraceBreadcrumb("Home", onClick = {}), BraceBreadcrumb("Imports")))
                         BraceLink("Open reports", BraceLinkDestination.Action("Reports") { count++ })
                         BraceLinkButton("Open guide", BraceLinkDestination.Uri("https://example.org/guide", "Guide"),

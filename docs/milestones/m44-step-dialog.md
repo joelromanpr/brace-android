@@ -1,6 +1,6 @@
 # M44 — Step dialog
 
-**Status:** draft [PR #53](https://github.com/joelromanpr/brace-android/pull/53), locally replayed on protected main `1b802c39c1980afc7fed7756c95fc9cb135b88e9`. Pinned Blueprint 6.18.0 rows `MultistepDialog` and `DialogStep` remain **in progress**, with no first release version. Stable coverage remains **0/122** applicable rows.
+**Status:** draft [PR #53](https://github.com/joelromanpr/brace-android/pull/53), locally replayed on protected main `c7f87b46b84be8823e1b3fc4a86f5903f0a0714a`. Pinned Blueprint 6.18.0 rows `MultistepDialog` and `DialogStep` remain **in progress**, with no first release version. Stable coverage remains **0/122** applicable rows.
 
 ## Included in this slice
 
@@ -12,9 +12,9 @@
 
 | Gate | Result |
 | --- | --- |
-| Current source and docs | Token and coverage generation checks, both pinned icon checks, contrast, Pages build, JavaScript syntax, and Git whitespace passed. Output: **148 rows, 0/122 stable, 25 real catalog captures, 86 guides**. |
-| Current-main compile and API | Core `apiDump` passed **19 tasks**. Foundation/core `apiCheck`, core Android-test Kotlin, and catalog Kotlin compilation passed **151 tasks** after the sample extraction. |
-| Current-main API 36 | StepDialog tests passed **9/9**, 0 skipped or failed (**71 tasks**) on 320×640, 160 dpi, font scale 1.0. They cover validation, transitions, saveable state, launcher focus, Escape, mouse, RTL, compact 2× targets, automated accessibility, and native rail nodes. |
+| Current source and docs | Token and coverage generation checks, both pinned icon checks, contrast, Pages build, JavaScript syntax, and Git whitespace passed. Output: **148 rows, 0/122 stable, 25 real catalog captures, 88 guides**. |
+| Current-main compile and API | Foundation/core `apiCheck`, core Android-test Kotlin, and catalog Kotlin compilation passed **151 tasks** on `c7f87b4`. Core `apiDump` passed **19 tasks** on the preceding `1b802c3` main. |
+| Pre-EntityTitle-main API 36 | StepDialog tests passed **9/9**, 0 skipped or failed (**71 tasks**) on 320×640, 160 dpi, font scale 1.0. They cover validation, transitions, saveable state, launcher focus, Escape, mouse, RTL, compact 2× targets, automated accessibility, and native rail nodes. |
 | Earlier broader gate | The old topic branch passed root build/lint/API checks; current-main scope is covered by the focused checks above. |
 | Earlier Maven and visual | Foundation, core, icons, and select artifacts plus a separate coordinate-only consumer passed from Maven Local. A 320×640 light, dark high-contrast, and 2× visual pass showed rail, panel, field, and actions; font scale was restored to 1.0. |
 | Hosted | Required checks on the current-main replay are pending. No release or Maven Central publication is claimed. |

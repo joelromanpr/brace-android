@@ -47,9 +47,17 @@ const guideSources = new Map([
   ['docs/table-editing.md', 'table-editing'],
   ['docs/table-column-name.md', 'table-column-name'],
   ['docs/table-sorting.md', 'table-sorting'],
+  ['docs/table-formats.md', 'table-formats'],
+  ['docs/table-cells.md', 'table-cells'],
+  ['docs/table-loading.md', 'table-loading'],
+  ['docs/table-regions.md', 'table-regions'],
+  ['docs/table-reordering.md', 'table-reordering'],
+  ['docs/table-freezing.md', 'table-freezing'],
+  ['docs/table-accessibility.md', 'table-accessibility'],
   ['docs/milestones/m22-table-editing.md', 'milestone-m22'],
   ['docs/milestones/m26-table-editable-name.md', 'milestone-m26'],
   ['docs/milestones/m46-table-sorting.md', 'milestone-m46'],
+  ['docs/milestones/table-integration.md', 'milestone-table-integration'],
   ['docs/milestones/m21-table-copying.md', 'milestone-m21'],
   ['docs/web-mechanisms.md', 'web-mechanisms'],
   ['docs/links.md', 'links'],
@@ -58,6 +66,7 @@ const guideSources = new Map([
   ['docs/panel-stack.md', 'panel-stack'],
   ['docs/sliders.md', 'sliders'],
   ['docs/multi-slider.md', 'multi-slider'],
+  ['docs/simple-table.md', 'simple-table'],
   ['docs/milestones/m1-foundation-core.md', 'milestone-m1'],
   ['docs/milestones/m2-content-feedback.md', 'milestone-m2'],
   ['docs/milestones/m3-navigation-feedback.md', 'milestone-m3'],
@@ -96,6 +105,7 @@ const guideSources = new Map([
   ['docs/milestones/m32-panel-stack.md', 'milestone-m32'],
   ['docs/milestones/m37-sliders.md', 'milestone-m37'],
   ['docs/milestones/m38-multi-slider.md', 'milestone-m38'],
+  ['docs/milestones/m45-simple-table.md', 'milestone-m45'],
   ['CONTRIBUTING.md', 'contributing'],
   ['docs/attribution.md', 'attribution'],
 ]);
@@ -262,12 +272,20 @@ const componentGuideLinks = [
   ['Date ranges', 'datetime-range'],
   ['Trees', 'tree'],
   ['Time-zone selection', 'time-zone-select'],
+  ['Small tables', 'simple-table'],
   ['Data tables', 'table-viewport'],
+  ['Cells and headers', 'table-cells'],
+  ['Loading and status', 'table-loading'],
+  ['Selection regions', 'table-regions'],
+  ['Reordering', 'table-reordering'],
+  ['Frozen rows and columns', 'table-freezing'],
+  ['Table accessibility', 'table-accessibility'],
   ['Selection and resizing', 'table-selection-resize'],
   ['Copying cells', 'table-copying'],
   ['Editing cells', 'table-editing'],
   ['Editing column names', 'table-column-name'],
   ['Sorting columns', 'table-sorting'],
+  ['Table value formats', 'table-formats'],
   ['Icons', 'icons'],
 ];
 const extraGuideLinks = [
@@ -296,6 +314,8 @@ function guidePage(title, body, sourcePath) {
     .filter(id => /^milestone-m\d+$/.test(id))
     .sort((a, b) => Number(a.slice(11)) - Number(b.slice(11)))
     .map(id => [`M${id.slice(11)} report`, id]);
+  if (guideSources.has('docs/milestones/table-integration.md'))
+    milestoneLinks.unshift(['Table family integration', 'milestone-table-integration']);
   const navSections = `
       <div class="guide-nav-group"><span class="guide-nav-title">Start here</span>${primaryGuideLinks.map(navLink).join('')}</div>
       <details class="guide-nav-details"${[...componentGuideLinks, ...extraGuideLinks].some(([, id]) => id === current) ? ' open' : ''}><summary>Component guides</summary><div>${[...componentGuideLinks, ...extraGuideLinks].filter(([, id]) => [...guideSources.values()].includes(id)).map(navLink).join('')}</div></details>
@@ -305,6 +325,11 @@ function guidePage(title, body, sourcePath) {
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142338"><title>${escapeHtml(title)} · Brace Android</title><link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./guide.css"></head>
 <body><a class="skip" href="#main">Skip to content</a><header class="topbar"><a class="brand" href="./index.html" aria-label="Brace Android home"><span class="mark" aria-hidden="true">B</span><span>Brace <b>Android</b></span></a><nav aria-label="Main navigation"><a href="./index.html#examples">App examples</a><a href="./index.html#coverage">Coverage</a><a href="./installation.html">Get started</a><a href="https://github.com/joelromanpr/brace-android">GitHub ↗</a></nav></header><main id="main" class="guide-layout">${navigation}<article class="guide-article"><p class="eyebrow">Brace Android documentation</p>${body}<p class="source-link">${repository ? `Source: <a href="${repository + sourcePath}">${escapeHtml(sourcePath)} ↗</a>` : `Source path: <code>${escapeHtml(sourcePath)}</code> · public repository link pending`}</p></article></main><footer><span>Brace Android · Apache-2.0</span><span>Independent Android design system</span></footer></body></html>`;
+
+
+
+
+
 }
 
 await rm(siteOutput, { recursive: true, force: true });

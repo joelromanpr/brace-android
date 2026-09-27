@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -93,6 +94,9 @@ import io.github.joelromanpr.brace.core.BraceProgressBar
 import io.github.joelromanpr.brace.core.BraceSpinner
 import io.github.joelromanpr.brace.core.BraceSkeleton
 import io.github.joelromanpr.brace.core.BraceSection
+import io.github.joelromanpr.brace.core.BraceSimpleTable
+import io.github.joelromanpr.brace.core.BraceSimpleTableColumn
+import io.github.joelromanpr.brace.core.BraceSimpleTableRow
 import io.github.joelromanpr.brace.core.BraceShortcut
 import io.github.joelromanpr.brace.core.BraceShortcutLabel
 import io.github.joelromanpr.brace.core.BraceShortcutRegistry
@@ -136,11 +140,23 @@ import io.github.joelromanpr.brace.select.BraceCommandPalette
 import io.github.joelromanpr.brace.select.BraceMultiSelect
 import io.github.joelromanpr.brace.select.rememberBraceQueryListState
 import io.github.joelromanpr.brace.table.BraceTableClipboard
+import io.github.joelromanpr.brace.table.BraceTableCell
+import io.github.joelromanpr.brace.table.BraceColumnHeader
+import io.github.joelromanpr.brace.table.BraceRowHeader
+import io.github.joelromanpr.brace.table.BraceTableLoading
+import io.github.joelromanpr.brace.table.BraceTableState
 import io.github.joelromanpr.brace.table.BraceDataTable
 import io.github.joelromanpr.brace.table.BraceTableColumn
 import io.github.joelromanpr.brace.table.BraceTableSelection
 import io.github.joelromanpr.brace.table.BraceTableSortDirection
 import io.github.joelromanpr.brace.table.rememberBraceTableSortState
+import io.github.joelromanpr.brace.table.BraceTruncatedCell
+import io.github.joelromanpr.brace.table.BraceJsonCell
+import io.github.joelromanpr.brace.table.BraceJsonFormatter
+import io.github.joelromanpr.brace.table.BraceRevealMode
+import io.github.joelromanpr.brace.table.BraceTableRegion
+import io.github.joelromanpr.brace.table.BraceTableRegions
+import io.github.joelromanpr.brace.table.BraceTableReorder
 import io.github.joelromanpr.brace.table.rememberBraceTableViewport
 import androidx.compose.ui.unit.dp
 
@@ -270,22 +286,64 @@ class ConsumerActivity : ComponentActivity() {
                         var statusColumnTitle by remember { mutableStateOf("Status") }
                         var editingColumnName by remember { mutableStateOf<String?>(null) }
                         var selectedTable: BraceTableSelection? by remember {
-                            mutableStateOf(BraceTableSelection.Range("ready", "status", "review", "status"))
+                            mutableStateOf(BraceTableSelection.Regions(listOf(
+                                BraceTableRegion.Cells("ready", "status"),
+                                BraceTableRegion.Cells("review", "status"),
+                            )))
                         }
                         var tableColumnWidth by remember { mutableStateOf(160.dp) }
+                        var tableColumnOrder by remember { mutableStateOf(listOf("status", "payload")) }
+                        val tableColumns = tableColumnOrder.map { key ->
+                            if (key == "status") BraceTableColumn<Pair<String, String>>("status", statusColumnTitle, 160.dp,
+                                { it.second }, editable = true, editableName = true, sortable = true)
+                            else BraceTableColumn<Pair<String, String>>("payload", "Payload", 160.dp,
+                                { BraceJsonFormatter.format(mapOf("status" to it.second)) },
+                                cellContent = { row -> BraceJsonCell(mapOf("status" to row.second),
+                                    maxCharacters = 12, revealMode = BraceRevealMode.Never) },
+                                revealFullValue = { true }, fullValuePreformatted = true)
+                        }
                         var tableRowHeight by remember { mutableStateOf(64.dp) }
                         val tableViewport = rememberBraceTableViewport()
+                        Row {
+                            BraceRowHeader("Ready", 0, "ready", false,
+                                { selectedTable = BraceTableSelection.Row("ready") },
+                                Modifier.width(64.dp).height(48.dp))
+                            BraceColumnHeader("Status", 0, "status", false,
+                                { selectedTable = BraceTableSelection.Column("status") },
+                                Modifier.width(120.dp).height(48.dp))
+                            BraceTableCell("Ready", "Status", "Ready", 0, 0, "ready", "status", false,
+                                { selectedTable = BraceTableSelection.Cell("ready", "status") },
+                                Modifier.width(120.dp).height(48.dp))
+                        }
+                        var tableMode by rememberSaveable { mutableStateOf("ready") }
+                        val tableState: BraceTableState = when (tableMode) {
+                            "loading" -> BraceTableState.Loading(BraceTableLoading(
+                                columnCells = mapOf("status" to true),
+                                columnHeaderOverrides = mapOf("status" to true),
+                            ))
+                            "empty" -> BraceTableState.Empty("No matching imports")
+                            "error" -> BraceTableState.Error("Could not load imports",
+                                onRetry = { tableMode = "ready" })
+                            else -> BraceTableState.Ready
+                        }
                         BraceDataTable(
                             rows = displayedTableRows,
                             rowKey = { it.first },
-                            columns = listOf(BraceTableColumn<Pair<String, String>>("status", statusColumnTitle, 160.dp,
-                                { it.second }, editable = true, editableName = true, sortable = true)),
+                            columns = tableColumns,
                             selection = selectedTable,
                             onSelectionChange = { selectedTable = it },
                             viewport = tableViewport,
                             height = 160.dp,
                             sort = tableSort.value,
                             onSortChange = { tableSort.value = it },
+                            rowLabel = { it.second },
+                            rowHeaderContent = { _, index ->
+                                BasicText("R" + (index + 1),
+                                    style = BraceTheme.typography.label.copy(
+                                        color = if (selectedTable == BraceTableSelection.Row(displayedTableRows[index].first))
+                                            BraceTheme.colors.semantic.onSelection
+                                        else BraceTheme.colors.components.table.headerContent))
+                            },
                             columnWidths = mapOf("status" to tableColumnWidth),
                             onColumnWidthChange = { _, width -> tableColumnWidth = width },
                             rowHeights = mapOf("ready" to tableRowHeight),
@@ -300,9 +358,49 @@ class ConsumerActivity : ComponentActivity() {
                             onEditingColumnNameChange = { editingColumnName = it },
                             onColumnNameCommit = { key, value -> if (key == "status") statusColumnTitle = value },
                             validateColumnName = { _, value -> if (value.length < 3) "Too short" else null },
+                            state = tableState,
+                            onRowOrderChange = { keys ->
+                                tableRows = BraceTableReorder.applyOrder(tableRows, { it.first }, keys)
+                                tableSort.value = null
+                            },
+                            onColumnOrderChange = { tableColumnOrder = it },
                         )
+                        BraceDataTable(
+                            rows = displayedTableRows,
+                            rowKey = { it.first },
+                            columns = listOf(
+                                BraceTableColumn<Pair<String, String>>("status", "Status", 100.dp, { it.second }),
+                                BraceTableColumn<Pair<String, String>>("key", "Key", 100.dp, { it.first }),
+                            ),
+                            selection = null,
+                            onSelectionChange = {},
+                            modifier = Modifier.width(320.dp),
+                            height = 160.dp,
+                            frozenRows = 1,
+                            frozenColumns = 1,
+                        )
+                        BasicText("Table order: ${tableRows.joinToString { it.first }} / ${tableColumnOrder.joinToString()}")
+                        Row {
+                            BraceButton("Table ready", onClick = { tableMode = "ready" })
+                            BraceButton("Table loading", onClick = { tableMode = "loading" })
+                        }
+                        Row {
+                            BraceButton("Table empty", onClick = { tableMode = "empty" })
+                            BraceButton("Table error", onClick = { tableMode = "error" })
+                        }
                         BasicText("Table copy: ${BraceTableClipboard.formatSelection(tableRows, { it.first },
                             listOf(BraceTableColumn<Pair<String, String>>("status", "Status", 120.dp, { it.second })), selectedTable) ?: "none"}")
+                        BraceTruncatedCell("Long import message with details", Modifier.width(220.dp),
+                            maxCharacters = 16)
+                        BraceJsonCell(mapOf("status" to "ready"), Modifier.width(220.dp),
+                            maxCharacters = 18)
+                        BraceButton("Select entire table", onClick = {
+                            selectedTable = BraceTableSelection.Regions(listOf(BraceTableRegion.Table))
+                        })
+                        BraceButton("Add review region", onClick = {
+                            selectedTable = BraceTableRegions.add(selectedTable,
+                                BraceTableRegion.Rows("review"))
+                        })
                         BraceButton("Select status column", onClick = {
                             selectedTable = BraceTableSelection.Column("status")
                         })
@@ -340,6 +438,15 @@ class ConsumerActivity : ComponentActivity() {
                             expandedKeys = tree.expandedKeys, onExpandedKeysChange = { tree.expandedKeys = it },
                             selectedKeys = tree.selectedKeys, onSelectedKeysChange = { tree.selectedKeys = it },
                             label = "Workspace tree", maxHeight = 160.dp,
+                        )
+                        var selectedJob by rememberSaveable { mutableStateOf<String?>(null) }
+                        BraceSimpleTable(
+                            columns = listOf(BraceSimpleTableColumn("job", "Job"),
+                                BraceSimpleTableColumn("state", "State")),
+                            rows = listOf(BraceSimpleTableRow("latest",
+                                mapOf("job" to "Latest import", "state" to "Ready"))),
+                            label = "Import jobs", striped = true, interactive = true,
+                            selectedRowKey = selectedJob, onRowClick = { selectedJob = it },
                         )
                         BraceTag("Active")
                         BraceFieldLabel("Export format", spokenLabel = "Export format, CSV") { controlModifier ->

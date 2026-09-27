@@ -34,6 +34,7 @@ import io.github.joelromanpr.brace.core.BraceTextField
 import io.github.joelromanpr.brace.table.BraceDataTable
 import io.github.joelromanpr.brace.table.BraceTableColumn
 import io.github.joelromanpr.brace.table.BraceTableSelection
+import io.github.joelromanpr.brace.table.rememberBraceTableSelection
 
 private data class FleetVehicle(
     val id: String,
@@ -103,7 +104,8 @@ internal fun FleetOperationsSample(
             BraceTableColumn<FleetVehicle>("arrival", "ETA", 80.dp, { it.arrival }),
         )
     }
-    val selection = when {
+    var selectionOverride by rememberBraceTableSelection()
+    val selection = selectionOverride ?: when {
         selectedRow == null && selectedColumn != null -> BraceTableSelection.Column(selectedColumn!!)
         selectedRow == null -> null
         anchorRow != null && anchorColumn != null && selectedColumn != null ->
@@ -175,6 +177,7 @@ internal fun FleetOperationsSample(
                     columns = columns,
                     selection = selection,
                     onSelectionChange = { chosen ->
+                        if (chosen !is BraceTableSelection.Regions) selectionOverride = null
                         when (chosen) {
                             is BraceTableSelection.Cell -> {
                                 selectedRow = chosen.rowKey
@@ -200,6 +203,7 @@ internal fun FleetOperationsSample(
                                 anchorRow = chosen.anchorRowKey
                                 anchorColumn = chosen.anchorColumnKey
                             }
+                            is BraceTableSelection.Regions -> { selectionOverride = chosen }
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),

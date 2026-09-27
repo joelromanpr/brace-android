@@ -62,4 +62,4 @@ Inside `BraceTabs`, use `trailingContent` for the same placement. The CSS flex e
 
 ## Verification and release gate
 
-`BraceTabsTest` covers touch, mouse, keyboard, RTL, 2× text, controlled selection, panel state, disabled semantics, restoration, narrow vertical layout, and API 34+ automated accessibility checks. See the [M27 milestone report](milestones/m27-tabs.md) for actual local and hosted results. Manual TalkBack, tablet, and physical mouse review remain before these rows can be stable. The inventory retains `firstRelease: null` until publication.
+[`BraceTabsTest`](../brace-core/src/androidTest/java/io/github/joelromanpr/brace/core/BraceTabsTest.kt) covers touch, mouse, keyboard, RTL, 2× text, controlled selection, panel state, disabled semantics, restoration, narrow vertical layout, and API 34+ automated accessibility checks. Manual TalkBack, tablet, and physical mouse review remain before these rows can be stable. The inventory retains `firstRelease: null` until publication.

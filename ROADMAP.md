@@ -6,7 +6,7 @@ Brace Android is growing into a complete Compose design system for data-rich app
 
 - Polish the catalog and real app examples so developers can inspect components, states, themes, and behavior quickly.
 - Finish cross-device and accessibility review of the controls, overlays, selection tools, date and time controls, icons, and table already in source.
-- Prepare the first preview release with tested Maven artifacts and clear in-progress labels.
+- Review the alpha components against the acceptance checks, then mark each finished inventory row stable.
 
 ## Next
 

@@ -965,6 +965,37 @@ private fun SemanticContentSample(id: String) {
 }
 
 @Composable
+private fun EntityTitleSample() {
+    var loading by rememberSaveable { mutableStateOf(false) }
+    var wide by rememberSaveable { mutableStateOf(false) }
+    var prominent by rememberSaveable { mutableStateOf(false) }
+    var opens by rememberSaveable { mutableStateOf(0) }
+    Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+        BraceEntityTitle(
+            title = "Quarterly operations and risk report",
+            subtitle = "Edited today by the analysis team",
+            modifier = Modifier.width(if (wide) 320.dp else 190.dp),
+            icon = { Text("◆", color = BraceTheme.colors.components.entityTitle.icon) },
+            tags = { BraceTag("Draft"); BraceTag("Priority", intent = BraceTagIntent.Primary) },
+            style = if (prominent) BraceEntityTitleStyle.Title else BraceEntityTitleStyle.Body,
+            ellipsize = true,
+            fill = true,
+            loading = loading,
+            onTitleClick = { opens++ },
+        )
+        Text("Opened $opens times", color = BraceTheme.colors.semantic.onSurfaceMuted)
+        Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+            BraceButton(if (loading) "Show content" else "Show loading",
+                onClick = { loading = !loading }, variant = BraceButtonVariant.Outline)
+            BraceButton(if (wide) "Narrow row" else "Widen row",
+                onClick = { wide = !wide }, variant = BraceButtonVariant.Outline)
+        }
+        BraceButton(if (prominent) "Body title" else "Prominent title",
+            onClick = { prominent = !prominent }, variant = BraceButtonVariant.Outline)
+    }
+}
+
+@Composable
 private fun ComponentSample(
     id: String,
     toasts: BraceToastState,
@@ -1542,35 +1573,7 @@ private fun ComponentSample(
                 BraceNumericField("", {}, label = "Disabled", enabled = false)
             }
         }
-        "core-entitytitle" -> {
-            var loading by rememberSaveable { mutableStateOf(false) }
-            var wide by rememberSaveable { mutableStateOf(false) }
-            var prominent by rememberSaveable { mutableStateOf(false) }
-            var opens by rememberSaveable { mutableStateOf(0) }
-            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                BraceEntityTitle(
-                    title = "Quarterly operations and risk report",
-                    subtitle = "Edited today by the analysis team",
-                    modifier = Modifier.width(if (wide) 320.dp else 190.dp),
-                    icon = { Text("◆", color = BraceTheme.colors.components.entityTitle.icon) },
-                    tags = { BraceTag("Draft"); BraceTag("Priority", intent = BraceTagIntent.Primary) },
-                    style = if (prominent) BraceEntityTitleStyle.Title else BraceEntityTitleStyle.Body,
-                    ellipsize = true,
-                    fill = true,
-                    loading = loading,
-                    onTitleClick = { opens++ },
-                )
-                Text("Opened $opens times", color = BraceTheme.colors.semantic.onSurfaceMuted)
-                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                    BraceButton(if (loading) "Show content" else "Show loading",
-                        onClick = { loading = !loading }, variant = BraceButtonVariant.Outline)
-                    BraceButton(if (wide) "Narrow row" else "Widen row",
-                        onClick = { wide = !wide }, variant = BraceButtonVariant.Outline)
-                }
-                BraceButton(if (prominent) "Body title" else "Prominent title",
-                    onClick = { prominent = !prominent }, variant = BraceButtonVariant.Outline)
-            }
-        }
+        "core-entitytitle" -> EntityTitleSample()
         "core-card" -> {
             var selected by rememberSaveable { mutableStateOf(false) }
             Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {

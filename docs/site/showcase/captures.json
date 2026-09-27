@@ -312,6 +312,28 @@
       "capturedAt": "2026-09-26",
       "pixelWidth": 400,
       "pixelHeight": 800
+    },
+    {
+      "id": "date-range-picker-light",
+      "inventoryIds": [
+        "datetime-daterangepicker"
+      ],
+      "image": "showcase/13-date-range-light.png",
+      "alt": "Brace DateRangePicker in light mode showing September 2026 with September 14 through 18 selected, an outlined range shortcut and current day, and a clear action",
+      "caption": "The in-progress native DateRangePicker shows two endpoints and the days between them, a supplied shortcut, a clear action, and the current-day outline.",
+      "device": "Android 16 (API 36) emulator · 160 dpi",
+      "sourceBranch": "joelromanpr/m33-datetime-range",
+      "sourceCommit": "f7725911692bfd5b81f052c4051be616d87668c8",
+      "sourceStage": "draft",
+      "sourceFile": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "usage": "var start by rememberSaveable { mutableStateOf<String?>(null) }\nvar end by rememberSaveable { mutableStateOf<String?>(null) }\nBraceDateRangePicker(\n    value = BraceDateRange(start?.let(LocalDate::parse), end?.let(LocalDate::parse)),\n    onValueChange = { start = it.start?.toString(); end = it.end?.toString() },\n    locale = Locale.US,\n    shortcuts = listOf(BraceDateRangeShortcut(\"Sept 14–18\",\n        BraceDateRange(LocalDate.of(2026, 9, 14), LocalDate.of(2026, 9, 18)))),\n)",
+      "format": "phone",
+      "theme": "light",
+      "contrast": "standard",
+      "density": "comfortable",
+      "capturedAt": "2026-09-26",
+      "pixelWidth": 400,
+      "pixelHeight": 800
     }
   ]
 }

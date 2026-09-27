@@ -14,7 +14,8 @@
 | --- | --- |
 | Current source and docs | Token and coverage generation checks, both pinned icon checks, contrast, Pages build, JavaScript syntax, and Git whitespace passed. Output: **148 rows, 0/122 stable, 25 real catalog captures, 86 guides**. |
 | Current-main compile and API | Core `apiDump` passed **19 tasks**. Foundation/core `apiCheck`, core Android-test Kotlin, and catalog Kotlin compilation passed **151 tasks** after the sample extraction. |
-| Earlier device and broader gate | The old topic branch passed root build/lint/API checks and API 36 StepDialog tests **9/9**. Tests cover validation, transitions, saveable state, launcher focus, Escape, mouse, RTL, compact 2× targets, automated accessibility, and native rail nodes. |
+| Current-main API 36 | StepDialog tests passed **9/9**, 0 skipped or failed (**71 tasks**) on 320×640, 160 dpi, font scale 1.0. They cover validation, transitions, saveable state, launcher focus, Escape, mouse, RTL, compact 2× targets, automated accessibility, and native rail nodes. |
+| Earlier broader gate | The old topic branch passed root build/lint/API checks; current-main scope is covered by the focused checks above. |
 | Earlier Maven and visual | Foundation, core, icons, and select artifacts plus a separate coordinate-only consumer passed from Maven Local. A 320×640 light, dark high-contrast, and 2× visual pass showed rail, panel, field, and actions; font scale was restored to 1.0. |
 | Hosted | Required checks on the current-main replay are pending. No release or Maven Central publication is claimed. |
 

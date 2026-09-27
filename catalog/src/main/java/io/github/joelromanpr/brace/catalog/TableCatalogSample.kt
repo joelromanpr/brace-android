@@ -27,7 +27,7 @@ import io.github.joelromanpr.brace.table.BraceTableRegions
 import io.github.joelromanpr.brace.table.BraceTableReorder
 import io.github.joelromanpr.brace.table.rememberBraceTableSelection
 
-private data class DemoTableRecord(val id: String, val case: String, val status: String)
+internal data class DemoTableRecord(val id: String, val case: String, val status: String)
 
 /** Interactive 120-row table with selection, resizing, copying, cell editing, and header renaming. */
 @Composable
@@ -63,15 +63,16 @@ internal fun TableCatalogSample() {
         else BraceTableSelection.Cell(editingRow, editingColumn)
     val rowNames = remember(records) { records.associate { it.id to it.case } }
     val columnNames = remember(tableColumns) { tableColumns.associate { it.key to it.title } }
-    val selectionSummary = when (selection) {
-        is BraceTableSelection.Cell -> "${rowNames[selection.rowKey]} · ${columnNames[selection.columnKey]}"
-        is BraceTableSelection.Row -> "Row ${rowNames[selection.rowKey]}"
-        is BraceTableSelection.Column -> "Column ${columnNames[selection.columnKey]}"
+    val shownSelection = selection
+    val selectionSummary = when (shownSelection) {
+        is BraceTableSelection.Cell -> "${rowNames[shownSelection.rowKey]} · ${columnNames[shownSelection.columnKey]}"
+        is BraceTableSelection.Row -> "Row ${rowNames[shownSelection.rowKey]}"
+        is BraceTableSelection.Column -> "Column ${columnNames[shownSelection.columnKey]}"
         is BraceTableSelection.Range ->
-            "${rowNames[selection.anchorRowKey]} · ${columnNames[selection.anchorColumnKey]} → " +
-                "${rowNames[selection.extentRowKey]} · ${columnNames[selection.extentColumnKey]}"
-        is BraceTableSelection.Regions -> if (BraceTableRegion.Table in selection.regions)
-            "Entire table" else "${selection.regions.size} regions"
+            "${rowNames[shownSelection.anchorRowKey]} · ${columnNames[shownSelection.anchorColumnKey]} → " +
+                "${rowNames[shownSelection.extentRowKey]} · ${columnNames[shownSelection.extentColumnKey]}"
+        is BraceTableSelection.Regions -> if (BraceTableRegion.Table in shownSelection.regions)
+            "Entire table" else "${shownSelection.regions.size} regions"
         null -> "None"
     }
     Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
@@ -136,8 +137,7 @@ internal fun TableCatalogSample() {
                     editingColumn = cell.columnKey
                 }
             }
-        }, enabled = selection is BraceTableSelection.Cell &&
-            (selection.columnKey == "case" || selection.columnKey == "status"),
+        }, enabled = (selection as? BraceTableSelection.Cell)?.columnKey in setOf("case", "status"),
             variant = BraceButtonVariant.Outline)
         BraceButton("Edit selected column name", onClick = {
             (selection as? BraceTableSelection.Column)?.let { editingName = it.columnKey; editingRow = ""; editingColumn = "" }

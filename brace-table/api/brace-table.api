@@ -4,9 +4,7 @@ public final class io/github/joelromanpr/brace/table/BraceCellFormatsKt {
 }
 
 public final class io/github/joelromanpr/brace/table/BraceDataTableKt {
-	public static final fun BraceDataTable-aZ2uIb8 (Ljava/util/List;Lkotlin/jvm/functions/Function1;Ljava/util/List;Lio/github/joelromanpr/brace/table/BraceTableSelection;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/table/BraceTableViewport;FLjava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/util/Map;Lkotlin/jvm/functions/Function2;Ljava/util/Map;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/unit/Dp;Landroidx/compose/ui/unit/Dp;Lio/github/joelromanpr/brace/table/BraceTableSelection$Cell;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lio/github/joelromanpr/brace/table/BraceTableSort;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;IIII)V
-
-
+	public static final fun BraceDataTable-r3yOMI4 (Ljava/util/List;Lkotlin/jvm/functions/Function1;Ljava/util/List;Lio/github/joelromanpr/brace/table/BraceTableSelection;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lio/github/joelromanpr/brace/table/BraceTableViewport;FLjava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/util/Map;Lkotlin/jvm/functions/Function2;Ljava/util/Map;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/unit/Dp;Landroidx/compose/ui/unit/Dp;Lio/github/joelromanpr/brace/table/BraceTableSelection$Cell;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lio/github/joelromanpr/brace/table/BraceTableSort;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function4;Lio/github/joelromanpr/brace/table/BraceTableState;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;IILandroidx/compose/runtime/Composer;IIIIII)V
 	public static final fun rememberBraceTableViewport (Landroidx/compose/runtime/Composer;I)Lio/github/joelromanpr/brace/table/BraceTableViewport;
 }
 
@@ -45,10 +43,8 @@ public final class io/github/joelromanpr/brace/table/BraceTableClipboard {
 
 public final class io/github/joelromanpr/brace/table/BraceTableColumn {
 	public static final field $stable I
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;ZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;ZZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
-
-
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;ZZZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;ZZZLkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getCellContent ()Lkotlin/jvm/functions/Function3;
 	public final fun getCellText ()Lkotlin/jvm/functions/Function1;
 	public final fun getEditable ()Z
@@ -240,6 +236,10 @@ public final class io/github/joelromanpr/brace/table/BraceTableSelection$Row : i
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class io/github/joelromanpr/brace/table/BraceTableSelectionStateKt {
+	public static final fun getBraceTableSelectionSaver ()Landroidx/compose/runtime/saveable/Saver;
+	public static final fun rememberBraceTableSelection (Lio/github/joelromanpr/brace/table/BraceTableSelection;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/MutableState;
+}
 
 public final class io/github/joelromanpr/brace/table/BraceTableSort {
 	public static final field $stable I
@@ -283,6 +283,63 @@ public final class io/github/joelromanpr/brace/table/BraceTableSortState$Compani
 	public final fun getSaver ()Landroidx/compose/runtime/saveable/Saver;
 }
 
+public abstract interface class io/github/joelromanpr/brace/table/BraceTableState {
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableState$Empty : io/github/joelromanpr/brace/table/BraceTableState {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lio/github/joelromanpr/brace/table/BraceTableState$Empty;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/table/BraceTableState$Empty;Ljava/lang/String;ILjava/lang/Object;)Lio/github/joelromanpr/brace/table/BraceTableState$Empty;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableState$Error : io/github/joelromanpr/brace/table/BraceTableState {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lkotlin/jvm/functions/Function0;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Lio/github/joelromanpr/brace/table/BraceTableState$Error;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/table/BraceTableState$Error;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Lio/github/joelromanpr/brace/table/BraceTableState$Error;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessage ()Ljava/lang/String;
+	public final fun getOnRetry ()Lkotlin/jvm/functions/Function0;
+	public final fun getRetryLabel ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableState$Loading : io/github/joelromanpr/brace/table/BraceTableState {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Lio/github/joelromanpr/brace/table/BraceTableLoading;Ljava/lang/String;)V
+	public synthetic fun <init> (Lio/github/joelromanpr/brace/table/BraceTableLoading;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lio/github/joelromanpr/brace/table/BraceTableLoading;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Lio/github/joelromanpr/brace/table/BraceTableLoading;Ljava/lang/String;)Lio/github/joelromanpr/brace/table/BraceTableState$Loading;
+	public static synthetic fun copy$default (Lio/github/joelromanpr/brace/table/BraceTableState$Loading;Lio/github/joelromanpr/brace/table/BraceTableLoading;Ljava/lang/String;ILjava/lang/Object;)Lio/github/joelromanpr/brace/table/BraceTableState$Loading;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLoading ()Lio/github/joelromanpr/brace/table/BraceTableLoading;
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/joelromanpr/brace/table/BraceTableState$Ready : io/github/joelromanpr/brace/table/BraceTableState {
+	public static final field $stable I
+	public static final field INSTANCE Lio/github/joelromanpr/brace/table/BraceTableState$Ready;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
 
 public final class io/github/joelromanpr/brace/table/BraceTableViewport {
 	public static final field $stable I

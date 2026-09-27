@@ -49,24 +49,15 @@ const guideSources = new Map([
   ['docs/table-sorting.md', 'table-sorting'],
   ['docs/table-formats.md', 'table-formats'],
   ['docs/table-cells.md', 'table-cells'],
-  ['docs/milestones/m48-table-cells.md', 'milestone-m48'],
   ['docs/table-loading.md', 'table-loading'],
-  ['docs/milestones/m49-table-loading.md', 'milestone-m49'],
   ['docs/table-regions.md', 'table-regions'],
-  ['docs/milestones/m50-table-regions.md', 'milestone-m50'],
   ['docs/table-reordering.md', 'table-reordering'],
-  ['docs/milestones/m51-table-reordering.md', 'milestone-m51'],
-  ['docs/milestones/m52-table-integration.md', 'milestone-m52'],
   ['docs/table-freezing.md', 'table-freezing'],
-  ['docs/milestones/m53-table-freezing.md', 'milestone-m53'],
   ['docs/table-accessibility.md', 'table-accessibility'],
-  ['docs/milestones/m56-table-accessibility.md', 'milestone-m56'],
-  ['docs/milestones/m58-table-formatting.md', 'milestone-m58'],
-  ['docs/milestones/m58-table-formatting.md', 'milestone-m58'],
   ['docs/milestones/m22-table-editing.md', 'milestone-m22'],
   ['docs/milestones/m26-table-editable-name.md', 'milestone-m26'],
   ['docs/milestones/m46-table-sorting.md', 'milestone-m46'],
-  ['docs/milestones/m47-table-formatters.md', 'milestone-m47'],
+  ['docs/milestones/table-integration.md', 'milestone-table-integration'],
   ['docs/milestones/m21-table-copying.md', 'milestone-m21'],
   ['docs/web-mechanisms.md', 'web-mechanisms'],
   ['docs/links.md', 'links'],
@@ -323,6 +314,8 @@ function guidePage(title, body, sourcePath) {
     .filter(id => /^milestone-m\d+$/.test(id))
     .sort((a, b) => Number(a.slice(11)) - Number(b.slice(11)))
     .map(id => [`M${id.slice(11)} report`, id]);
+  if (guideSources.has('docs/milestones/table-integration.md'))
+    milestoneLinks.unshift(['Table family integration', 'milestone-table-integration']);
   const navSections = `
       <div class="guide-nav-group"><span class="guide-nav-title">Start here</span>${primaryGuideLinks.map(navLink).join('')}</div>
       <details class="guide-nav-details"${[...componentGuideLinks, ...extraGuideLinks].some(([, id]) => id === current) ? ' open' : ''}><summary>Component guides</summary><div>${[...componentGuideLinks, ...extraGuideLinks].filter(([, id]) => [...guideSources.values()].includes(id)).map(navLink).join('')}</div></details>

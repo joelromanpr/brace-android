@@ -1314,55 +1314,7 @@ private fun ComponentSample(
                     color = semantic.onSurfaceMuted, style = BraceTheme.typography.label)
             }
         }
-        "core-blueprintprovider" -> {
-            var localHighContrast by rememberSaveable { mutableStateOf(false) }
-            var detailsOpen by rememberSaveable { mutableStateOf(false) }
-            var refreshed by rememberSaveable { mutableStateOf(0) }
-            val shortcutState = rememberBraceShortcutRegistryState()
-            val overlayState = rememberBraceOverlayState()
-            BraceShortcutRegistry(
-                shortcuts = listOf(
-                    BraceShortcut("ctrl+r", "Refresh local preview", group = "Preview",
-                        onKeyDown = { refreshed++ }),
-                ),
-                state = shortcutState,
-                discoveryTitle = "Preview shortcuts",
-            ) {
-                BraceOverlayHost(overlayState) {
-                    BraceTheme(
-                        contrast = if (localHighContrast) BraceContrast.High else BraceContrast.Standard,
-                    ) {
-                        val semantic = BraceTheme.colors.semantic
-                        Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                            Text("This preview has its own theme and screen behavior scope.",
-                                color = semantic.onSurface, style = BraceTheme.typography.body)
-                            BraceButton(
-                                if (localHighContrast) "Standard local contrast" else "High local contrast",
-                                onClick = { localHighContrast = !localHighContrast },
-                                variant = BraceButtonVariant.Outline,
-                            )
-                            BraceButton("Open scoped overlay", onClick = { detailsOpen = true })
-                            BraceButton("Show shortcut guide",
-                                onClick = shortcutState::showDiscovery,
-                                variant = BraceButtonVariant.Outline)
-                            Text("Ctrl+R refreshes while a preview control has focus · $refreshed",
-                                color = semantic.onSurfaceMuted, style = BraceTheme.typography.label)
-                        }
-                        BraceOverlay(
-                            open = detailsOpen,
-                            onDismissRequest = { detailsOpen = false },
-                            title = "Scoped details",
-                        ) {
-                            Column(Modifier.padding(BraceTheme.spacing.md)) {
-                                Text("Scoped details", color = BraceTheme.colors.semantic.onSurface,
-                                    style = BraceTheme.typography.subtitle)
-                                BraceButton("Close", onClick = { detailsOpen = false })
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        "core-blueprintprovider" -> ScopedPreviewCatalogSample()
         "core-icon" -> {
             var large by rememberSaveable { mutableStateOf(false) }
             var danger by rememberSaveable { mutableStateOf(false) }
@@ -1391,58 +1343,7 @@ private fun ComponentSample(
                 }
             }
         }
-        "icons-icon-glyph-catalog" -> {
-            val context = LocalContext.current
-            val pack by produceState<BraceBlueprintIconPack?>(null, context) {
-                value = withContext(Dispatchers.IO) { BraceBlueprintIconPack.load(context) }
-            }
-            val loadedPack = pack ?: run {
-                Text("Loading licensed icon artwork", color = BraceTheme.colors.semantic.onSurfaceMuted)
-                return
-            }
-            var query by rememberSaveable { mutableStateOf("map") }
-            var chosen by rememberSaveable { mutableStateOf("map") }
-            var use16 by rememberSaveable { mutableStateOf(false) }
-            var activations by rememberSaveable { mutableStateOf(0) }
-            val actionRegistry = remember(loadedPack) {
-                BraceIconRegistry.empty().register(BraceBlueprintIconNames.Search,
-                    loadedPack.find(BraceBlueprintIconNames.Search)!!)
-            }
-            val available = loadedPack.find(chosen) != null
-            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                Text("Opt-in Blueprint artwork · ${loadedPack.size} pinned names · Apache-2.0",
-                    color = BraceTheme.colors.semantic.onSurfaceMuted)
-                BraceTextField(query, { query = it }, "Search glyph names and tags")
-                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                    BraceBlueprintIconByName(loadedPack, chosen,
-                        if (available) "${loadedPack.metadata(chosen)?.displayName} icon" else "Unknown icon, help shown",
-                        size = BraceIconSize.Large,
-                        resolution = if (use16) BraceBlueprintIconResolution.Px16
-                            else BraceBlueprintIconResolution.Px20,
-                        intent = BraceIconIntent.Primary)
-                    Text(if (available) chosen else "Unknown: $chosen", color = BraceTheme.colors.semantic.onSurface)
-                }
-                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                    BraceBlueprintIcon(loadedPack, BraceBlueprintIconNames.ChevronRight, null,
-                        mirrorInRtl = true, intent = BraceIconIntent.Primary)
-                    Text("Directional artwork mirrors in RTL", color = BraceTheme.colors.semantic.onSurface)
-                }
-                BraceIconButton(BraceBlueprintIconNames.Search, "Search with Blueprint icon",
-                    onClick = { activations++ }, registry = actionRegistry)
-                Text("Icon action activated $activations times",
-                    color = BraceTheme.colors.semantic.onSurfaceMuted)
-                Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                    BraceButton(if (use16) "Use 20px artwork" else "Use 16px artwork",
-                        onClick = { use16 = !use16 }, variant = BraceButtonVariant.Outline)
-                    BraceButton("Try fallback", onClick = { chosen = "not-in-pack" },
-                        variant = BraceButtonVariant.Outline)
-                }
-                loadedPack.search(query, limit = 8).forEach { glyph ->
-                    BraceButton("${glyph.displayName} · ${glyph.name}", onClick = { chosen = glyph.name },
-                        variant = BraceButtonVariant.Outline)
-                }
-            }
-        }
+        "icons-icon-glyph-catalog" -> IconGlyphCatalogSample()
         "icons-next-glyph-catalog" -> BlueprintNextGlyphSample()
         "icons-icon-loading" -> {
             var iconName by rememberSaveable { mutableStateOf("search") }
@@ -1524,104 +1425,9 @@ private fun ComponentSample(
         "datetime-timepicker" -> TimePickerSample()
         "table-sorting" -> TableSortingCatalogSample()
         "table-formatting" -> TableFormattingCatalogSample()
-        "table-truncatedformat" -> {
-            var short by rememberSaveable { mutableStateOf(false) }
-            var always by rememberSaveable { mutableStateOf(false) }
-            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                    BraceButton(if (short) "Long value" else "Short value", onClick = { short = !short },
-                        variant = BraceButtonVariant.Outline)
-                    BraceButton(if (always) "Always show More" else "Show when clipped", onClick = { always = !always },
-                        variant = BraceButtonVariant.Outline)
-                }
-                BraceTruncatedCell(
-                    value = if (short) "Ready" else "A long report description with details that need a full-value reveal",
-                    modifier = Modifier.width(240.dp), maxCharacters = 20,
-                    revealMode = if (always) BraceRevealMode.Always else BraceRevealMode.WhenTruncated,
-                )
-            }
-        }
-        "table-jsonformat" -> {
-            var kind by rememberSaveable { mutableStateOf("object") }
-            val payload: Any? = when (kind) {
-                "string" -> "Plain JSON string"
-                "null" -> null
-                else -> linkedMapOf("status" to "ready", "items" to listOf(1, null, true))
-            }
-            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                    listOf("object", "string", "null").forEach { option ->
-                        BraceButton(option, onClick = { kind = option }, variant = BraceButtonVariant.Outline)
-                    }
-                }
-                BraceJsonCell(payload, modifier = Modifier.width(240.dp), maxCharacters = 22)
-                Text("Full JSON: ${BraceJsonFormatter.format(payload)}",
-                    color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.code)
-                val rows = remember { listOf("job" to linkedMapOf<String, Any?>("status" to "ready")) }
-                var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
-                BraceDataTable(rows, { it.first }, listOf(
-                    BraceTableColumn<Pair<String, LinkedHashMap<String, Any?>>>("payload", "Payload", 180.dp,
-                        { BraceJsonFormatter.format(it.second) },
-                        cellContent = { row -> BraceJsonCell(row.second, maxCharacters = 16,
-                            revealMode = BraceRevealMode.Never) }),
-                ), selection, { selection = it }, height = 145.dp, label = "Formatted data table")
-            }
-        }
-        "table-loading-states" -> {
-            val records = remember {
-                listOf(
-                    DemoTableRecord("record-1", "Case 1001", "Ready"),
-                    DemoTableRecord("record-2", "Case 1002", "Review"),
-                    DemoTableRecord("record-3", "Case 1003", "Ready"),
-                )
-            }
-            val tableColumns = remember {
-                listOf(
-                    BraceTableColumn<DemoTableRecord>("case", "Case", 140.dp, { it.case }),
-                    BraceTableColumn<DemoTableRecord>("status", "Status", 130.dp, { it.status }),
-                )
-            }
-            var mode by rememberSaveable { mutableStateOf("ready") }
-            var retries by rememberSaveable { mutableStateOf(0) }
-            var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
-            val state: BraceTableState = when (mode) {
-                "all" -> BraceTableState.Loading()
-                "column" -> BraceTableState.Loading(BraceTableLoading(
-                    columnCells = mapOf("status" to true),
-                    columnHeaderOverrides = mapOf("status" to true),
-                ))
-                "cell" -> BraceTableState.Loading(BraceTableLoading(
-                    cellOverrides = mapOf(BraceTableSelection.Cell("record-2", "status") to true),
-                    rowHeaderOverrides = mapOf("record-2" to true),
-                ))
-                "empty" -> BraceTableState.Empty("No matching cases")
-                "error" -> BraceTableState.Error("Could not load cases",
-                    onRetry = { retries++; mode = "ready" })
-                else -> BraceTableState.Ready
-            }
-            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                Row(Modifier.horizontalScroll(rememberScrollState()),
-                    horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xs)) {
-                    BraceButton("Ready", onClick = { mode = "ready" })
-                    BraceButton("All loading", onClick = { mode = "all" })
-                    BraceButton("Column", onClick = { mode = "column" })
-                }
-                Row(Modifier.horizontalScroll(rememberScrollState()),
-                    horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xs)) {
-                    BraceButton("Cell + row", onClick = { mode = "cell" })
-                    BraceButton("Empty", onClick = { mode = "empty" })
-                    BraceButton("Error", onClick = { mode = "error" })
-                }
-                BraceDataTable(records, { it.id }, tableColumns, selection,
-                    { selection = it }, modifier = Modifier.fillMaxWidth(),
-                    height = 250.dp, label = "Cases", rowLabel = { it.case },
-                    state = state)
-                Text("State: $mode · retries: $retries", color = BraceTheme.colors.semantic.onSurface,
-                    style = BraceTheme.typography.body)
-            }
-        }
-
-
+        "table-truncatedformat" -> TruncatedCellCatalogSample()
+        "table-jsonformat" -> JsonCellCatalogSample()
+        "table-loading-states" -> TableLoadingCatalogSample()
         "table-table", "table-column", "table-viewport-rendering", "table-fixed-headers", "table-keyboard-navigation",
         "table-cell-selection", "table-region", "table-reordering", "table-freezing", "table-table-accessibility", "table-column-and-row-resizing", "table-copying",
 
@@ -2022,37 +1828,7 @@ private fun ComponentSample(
                 BraceButton("Toggle shimmer", onClick = { animated = !animated })
             }
         }
-        "core-htmltable" -> {
-            var selected by rememberSaveable { mutableStateOf<String?>(null) }
-            var bordered by rememberSaveable { mutableStateOf(true) }
-            var striped by rememberSaveable { mutableStateOf(true) }
-            var compact by rememberSaveable { mutableStateOf(false) }
-            val columns = remember { listOf(
-                BraceSimpleTableColumn("name", "Name"),
-                BraceSimpleTableColumn("status", "Status"),
-                BraceSimpleTableColumn("owner", "Owner"),
-            ) }
-            val rows = remember { listOf(
-                BraceSimpleTableRow("alpha", mapOf("name" to "Alpha", "status" to "Ready", "owner" to "Casey")),
-                BraceSimpleTableRow("beta", mapOf("name" to "Beta", "status" to "Paused", "owner" to "Drew")),
-                BraceSimpleTableRow("gamma", mapOf("name" to "Gamma", "status" to "Running", "owner" to "Morgan")),
-            ) }
-            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                Row(Modifier.horizontalScroll(rememberScrollState()),
-                    horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
-                    BraceButton(if (bordered) "Bordered" else "No borders", onClick = { bordered = !bordered },
-                        variant = BraceButtonVariant.Outline)
-                    BraceButton(if (striped) "Striped" else "No stripes", onClick = { striped = !striped },
-                        variant = BraceButtonVariant.Outline)
-                    BraceButton(if (compact) "Compact rows" else "Comfortable rows", onClick = { compact = !compact },
-                        variant = BraceButtonVariant.Outline)
-                }
-                BraceSimpleTable(columns, rows, label = "Job status", bordered = bordered,
-                    striped = striped, interactive = true, compact = compact,
-                    selectedRowKey = selected, onRowClick = { selected = it })
-                Text("Selected: ${selected ?: "none"}", color = BraceTheme.colors.semantic.onSurfaceMuted)
-            }
-        }
+        "core-htmltable" -> SimpleTableCatalogSample()
         "core-section" -> {
             BraceSection(title = "Projects", subtitle = "Three active workspaces", collapsible = true) {
                 BraceSectionCard { Text("Tap the heading to collapse", color = BraceTheme.colors.semantic.onSurface) }
@@ -2394,3 +2170,243 @@ private fun ComponentSample(
 
     }
 }
+
+@Composable
+private fun TruncatedCellCatalogSample() {
+            var short by rememberSaveable { mutableStateOf(false) }
+            var always by rememberSaveable { mutableStateOf(false) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (short) "Long value" else "Short value", onClick = { short = !short },
+                        variant = BraceButtonVariant.Outline)
+                    BraceButton(if (always) "Always show More" else "Show when clipped", onClick = { always = !always },
+                        variant = BraceButtonVariant.Outline)
+                }
+                BraceTruncatedCell(
+                    value = if (short) "Ready" else "A long report description with details that need a full-value reveal",
+                    modifier = Modifier.width(240.dp), maxCharacters = 20,
+                    revealMode = if (always) BraceRevealMode.Always else BraceRevealMode.WhenTruncated,
+                )
+            }
+        }
+
+@Composable
+private fun JsonCellCatalogSample() {
+            var kind by rememberSaveable { mutableStateOf("object") }
+            val payload: Any? = when (kind) {
+                "string" -> "Plain JSON string"
+                "null" -> null
+                else -> linkedMapOf("status" to "ready", "items" to listOf(1, null, true))
+            }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    listOf("object", "string", "null").forEach { option ->
+                        BraceButton(option, onClick = { kind = option }, variant = BraceButtonVariant.Outline)
+                    }
+                }
+                BraceJsonCell(payload, modifier = Modifier.width(240.dp), maxCharacters = 22)
+                Text("Full JSON: ${BraceJsonFormatter.format(payload)}",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted, style = BraceTheme.typography.code)
+                val rows = remember { listOf("job" to linkedMapOf<String, Any?>("status" to "ready")) }
+                var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
+                BraceDataTable(rows, { it.first }, listOf(
+                    BraceTableColumn<Pair<String, LinkedHashMap<String, Any?>>>("payload", "Payload", 180.dp,
+                        { BraceJsonFormatter.format(it.second) },
+                        cellContent = { row -> BraceJsonCell(row.second, maxCharacters = 16,
+                            revealMode = BraceRevealMode.Never) }),
+                ), selection, { selection = it }, height = 145.dp, label = "Formatted data table")
+            }
+        }
+
+@Composable
+private fun TableLoadingCatalogSample() {
+            val records = remember {
+                listOf(
+                    DemoTableRecord("record-1", "Case 1001", "Ready"),
+                    DemoTableRecord("record-2", "Case 1002", "Review"),
+                    DemoTableRecord("record-3", "Case 1003", "Ready"),
+                )
+            }
+            val tableColumns = remember {
+                listOf(
+                    BraceTableColumn<DemoTableRecord>("case", "Case", 140.dp, { it.case }),
+                    BraceTableColumn<DemoTableRecord>("status", "Status", 130.dp, { it.status }),
+                )
+            }
+            var mode by rememberSaveable { mutableStateOf("ready") }
+            var retries by rememberSaveable { mutableStateOf(0) }
+            var selection by remember { mutableStateOf<BraceTableSelection?>(null) }
+            val state: BraceTableState = when (mode) {
+                "all" -> BraceTableState.Loading()
+                "column" -> BraceTableState.Loading(BraceTableLoading(
+                    columnCells = mapOf("status" to true),
+                    columnHeaderOverrides = mapOf("status" to true),
+                ))
+                "cell" -> BraceTableState.Loading(BraceTableLoading(
+                    cellOverrides = mapOf(BraceTableSelection.Cell("record-2", "status") to true),
+                    rowHeaderOverrides = mapOf("record-2" to true),
+                ))
+                "empty" -> BraceTableState.Empty("No matching cases")
+                "error" -> BraceTableState.Error("Could not load cases",
+                    onRetry = { retries++; mode = "ready" })
+                else -> BraceTableState.Ready
+            }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Row(Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xs)) {
+                    BraceButton("Ready", onClick = { mode = "ready" })
+                    BraceButton("All loading", onClick = { mode = "all" })
+                    BraceButton("Column", onClick = { mode = "column" })
+                }
+                Row(Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.xs)) {
+                    BraceButton("Cell + row", onClick = { mode = "cell" })
+                    BraceButton("Empty", onClick = { mode = "empty" })
+                    BraceButton("Error", onClick = { mode = "error" })
+                }
+                BraceDataTable(records, { it.id }, tableColumns, selection,
+                    { selection = it }, modifier = Modifier.fillMaxWidth(),
+                    height = 250.dp, label = "Cases", rowLabel = { it.case },
+                    state = state)
+                Text("State: $mode · retries: $retries", color = BraceTheme.colors.semantic.onSurface,
+                    style = BraceTheme.typography.body)
+            }
+        }
+
+@Composable
+private fun ScopedPreviewCatalogSample() {
+            var localHighContrast by rememberSaveable { mutableStateOf(false) }
+            var detailsOpen by rememberSaveable { mutableStateOf(false) }
+            var refreshed by rememberSaveable { mutableStateOf(0) }
+            val shortcutState = rememberBraceShortcutRegistryState()
+            val overlayState = rememberBraceOverlayState()
+            BraceShortcutRegistry(
+                shortcuts = listOf(
+                    BraceShortcut("ctrl+r", "Refresh local preview", group = "Preview",
+                        onKeyDown = { refreshed++ }),
+                ),
+                state = shortcutState,
+                discoveryTitle = "Preview shortcuts",
+            ) {
+                BraceOverlayHost(overlayState) {
+                    BraceTheme(
+                        contrast = if (localHighContrast) BraceContrast.High else BraceContrast.Standard,
+                    ) {
+                        val semantic = BraceTheme.colors.semantic
+                        Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                            Text("This preview has its own theme and screen behavior scope.",
+                                color = semantic.onSurface, style = BraceTheme.typography.body)
+                            BraceButton(
+                                if (localHighContrast) "Standard local contrast" else "High local contrast",
+                                onClick = { localHighContrast = !localHighContrast },
+                                variant = BraceButtonVariant.Outline,
+                            )
+                            BraceButton("Open scoped overlay", onClick = { detailsOpen = true })
+                            BraceButton("Show shortcut guide",
+                                onClick = shortcutState::showDiscovery,
+                                variant = BraceButtonVariant.Outline)
+                            Text("Ctrl+R refreshes while a preview control has focus · $refreshed",
+                                color = semantic.onSurfaceMuted, style = BraceTheme.typography.label)
+                        }
+                        BraceOverlay(
+                            open = detailsOpen,
+                            onDismissRequest = { detailsOpen = false },
+                            title = "Scoped details",
+                        ) {
+                            Column(Modifier.padding(BraceTheme.spacing.md)) {
+                                Text("Scoped details", color = BraceTheme.colors.semantic.onSurface,
+                                    style = BraceTheme.typography.subtitle)
+                                BraceButton("Close", onClick = { detailsOpen = false })
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+@Composable
+private fun IconGlyphCatalogSample() {
+            val context = LocalContext.current
+            val pack by produceState<BraceBlueprintIconPack?>(null, context) {
+                value = withContext(Dispatchers.IO) { BraceBlueprintIconPack.load(context) }
+            }
+            val loadedPack = pack ?: run {
+                Text("Loading licensed icon artwork", color = BraceTheme.colors.semantic.onSurfaceMuted)
+                return
+            }
+            var query by rememberSaveable { mutableStateOf("map") }
+            var chosen by rememberSaveable { mutableStateOf("map") }
+            var use16 by rememberSaveable { mutableStateOf(false) }
+            var activations by rememberSaveable { mutableStateOf(0) }
+            val actionRegistry = remember(loadedPack) {
+                BraceIconRegistry.empty().register(BraceBlueprintIconNames.Search,
+                    loadedPack.find(BraceBlueprintIconNames.Search)!!)
+            }
+            val available = loadedPack.find(chosen) != null
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Text("Opt-in Blueprint artwork · ${loadedPack.size} pinned names · Apache-2.0",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                BraceTextField(query, { query = it }, "Search glyph names and tags")
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceBlueprintIconByName(loadedPack, chosen,
+                        if (available) "${loadedPack.metadata(chosen)?.displayName} icon" else "Unknown icon, help shown",
+                        size = BraceIconSize.Large,
+                        resolution = if (use16) BraceBlueprintIconResolution.Px16
+                            else BraceBlueprintIconResolution.Px20,
+                        intent = BraceIconIntent.Primary)
+                    Text(if (available) chosen else "Unknown: $chosen", color = BraceTheme.colors.semantic.onSurface)
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceBlueprintIcon(loadedPack, BraceBlueprintIconNames.ChevronRight, null,
+                        mirrorInRtl = true, intent = BraceIconIntent.Primary)
+                    Text("Directional artwork mirrors in RTL", color = BraceTheme.colors.semantic.onSurface)
+                }
+                BraceIconButton(BraceBlueprintIconNames.Search, "Search with Blueprint icon",
+                    onClick = { activations++ }, registry = actionRegistry)
+                Text("Icon action activated $activations times",
+                    color = BraceTheme.colors.semantic.onSurfaceMuted)
+                Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (use16) "Use 20px artwork" else "Use 16px artwork",
+                        onClick = { use16 = !use16 }, variant = BraceButtonVariant.Outline)
+                    BraceButton("Try fallback", onClick = { chosen = "not-in-pack" },
+                        variant = BraceButtonVariant.Outline)
+                }
+                loadedPack.search(query, limit = 8).forEach { glyph ->
+                    BraceButton("${glyph.displayName} · ${glyph.name}", onClick = { chosen = glyph.name },
+                        variant = BraceButtonVariant.Outline)
+                }
+            }
+        }
+
+@Composable
+private fun SimpleTableCatalogSample() {
+            var selected by rememberSaveable { mutableStateOf<String?>(null) }
+            var bordered by rememberSaveable { mutableStateOf(true) }
+            var striped by rememberSaveable { mutableStateOf(true) }
+            var compact by rememberSaveable { mutableStateOf(false) }
+            val columns = remember { listOf(
+                BraceSimpleTableColumn("name", "Name"),
+                BraceSimpleTableColumn("status", "Status"),
+                BraceSimpleTableColumn("owner", "Owner"),
+            ) }
+            val rows = remember { listOf(
+                BraceSimpleTableRow("alpha", mapOf("name" to "Alpha", "status" to "Ready", "owner" to "Casey")),
+                BraceSimpleTableRow("beta", mapOf("name" to "Beta", "status" to "Paused", "owner" to "Drew")),
+                BraceSimpleTableRow("gamma", mapOf("name" to "Gamma", "status" to "Running", "owner" to "Morgan")),
+            ) }
+            Column(verticalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                Row(Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(BraceTheme.spacing.sm)) {
+                    BraceButton(if (bordered) "Bordered" else "No borders", onClick = { bordered = !bordered },
+                        variant = BraceButtonVariant.Outline)
+                    BraceButton(if (striped) "Striped" else "No stripes", onClick = { striped = !striped },
+                        variant = BraceButtonVariant.Outline)
+                    BraceButton(if (compact) "Compact rows" else "Comfortable rows", onClick = { compact = !compact },
+                        variant = BraceButtonVariant.Outline)
+                }
+                BraceSimpleTable(columns, rows, label = "Job status", bordered = bordered,
+                    striped = striped, interactive = true, compact = compact,
+                    selectedRowKey = selected, onRowClick = { selected = it })
+                Text("Selected: ${selected ?: "none"}", color = BraceTheme.colors.semantic.onSurfaceMuted)
+            }
+        }

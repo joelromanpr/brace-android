@@ -190,12 +190,20 @@ class BraceTableSortTest {
                     onColumnWidthChange = { _, _ -> })
             }
         }
-        val sortedWidth = rule.onNodeWithTag("brace-table-header:name")
+        val sortedHeader = rule.onNodeWithTag("brace-table-header:name")
             .fetchSemanticsNode().boundsInRoot.width
-        val plainWidth = rule.onNodeWithTag("brace-table-header:id")
+        val sortTarget = rule.onNodeWithTag("brace-table-sort:name")
             .fetchSemanticsNode().boundsInRoot.width
-        assertEquals(144f * pixelsPerDp, sortedWidth, 2f * pixelsPerDp)
-        assertEquals(100f * pixelsPerDp, plainWidth, 2f * pixelsPerDp)
+        val sortedResize = rule.onNodeWithTag("brace-table-resize-column:name")
+            .fetchSemanticsNode().boundsInRoot.width
+        val plainHeader = rule.onNodeWithTag("brace-table-header:id")
+            .fetchSemanticsNode().boundsInRoot.width
+        val plainResize = rule.onNodeWithTag("brace-table-resize-column:id")
+            .fetchSemanticsNode().boundsInRoot.width
+        assertEquals(144f * pixelsPerDp, sortedHeader + sortTarget + sortedResize,
+            2f * pixelsPerDp)
+        assertEquals(100f * pixelsPerDp, plainHeader + plainResize, 2f * pixelsPerDp)
+        assertTrue("unsortable column should reserve no sort target", plainHeader > sortedHeader)
     }
 
     @Test fun activeHeaderEditSuppressesSortWithoutDisplacingItsDraft() {

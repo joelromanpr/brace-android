@@ -6,6 +6,7 @@ import android.content.Context
 import android.view.KeyEvent as AndroidKeyEvent
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.border
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -13,6 +14,7 @@ import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -47,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.zIndex
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
@@ -70,33 +73,30 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CollectionInfo
-import androidx.compose.ui.semantics.LiveRegionMode
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.CollectionItemInfo
 import androidx.compose.ui.semantics.CustomAccessibilityAction
-import androidx.compose.ui.semantics.collectionInfo
-import androidx.compose.ui.semantics.isTraversalGroup
-
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.collectionItemInfo
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.disabled
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.focused
-import androidx.compose.ui.semantics.requestFocus
-import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.requestFocus
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.testTag
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.text.rememberTextMeasurer
-
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density

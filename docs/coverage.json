@@ -3124,6 +3124,31 @@
       "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/src/icons-list.mdx"
     },
     {
+      "id": "icons-next-glyph-catalog",
+      "package": "icons",
+      "family": "icons",
+      "kind": "capability",
+      "track": "main",
+      "blueprintName": "Next icon glyph catalog",
+      "blueprintUrl": "https://blueprintjs.com/docs/#icons/icons-list",
+      "sourcePage": "icons/icons-list",
+      "braceApi": "BraceBlueprintNextIconPack / BraceBlueprintNextIconNames / BraceBlueprintNextIcon",
+      "artifact": "io.github.joelromanpr.brace:brace-blueprint-icons-next",
+      "behavior": "Opt-in native pack for the pinned public @blueprintjs/icons/next subpath: 695 canonical outlined 16px glyphs, 386 filled variants, metadata search, and a 706-name legacy migration map. Exact variant lookup, outlined fallback for unavailable filled artwork, original Brace Help fallback for unknown names, semantic tint, named action integration, and opt-in RTL mirroring.",
+      "classification": "adaptation",
+      "reason": "The pinned package publicly exports /next even though the navigation's icons-list page describes the legacy catalog. SVG artwork becomes an optional AAR manifest parsed to cached Compose ImageVectors; 466 canonical next names do not occur in the 706-name legacy pack. The published SVG/path and mapping byte hashes, license, and modifications are recorded. Manual TalkBack and cross-device visual review remain open.",
+      "milestone": "M55",
+      "priority": "P1",
+      "status": "in progress",
+      "implementation": "brace-blueprint-icons-next/src/main/java/io/github/joelromanpr/brace/blueprinticonsnext/BraceBlueprintNextIconPack.kt",
+      "sample": "catalog/src/main/java/io/github/joelromanpr/brace/catalog/CatalogActivity.kt",
+      "documentation": "docs/icons.md",
+      "tests": "brace-blueprint-icons-next/src/androidTest/java/io/github/joelromanpr/brace/blueprinticonsnext/BraceBlueprintNextIconPackTest.kt",
+      "firstRelease": null,
+      "pinnedSourceUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/src/icons-list.mdx",
+      "pinnedAssetUrl": "https://github.com/palantir/blueprint/blob/a60d4c92257612808fbfac81cfeee4fcba91a8b4/packages/icons/icons-next.json"
+    },
+    {
       "id": "table-table",
       "package": "table",
       "family": "table",
@@ -3725,13 +3750,13 @@
     }
   ],
   "summary": {
-    "totalRows": 147,
+    "totalRows": 148,
     "documentedPages": 85,
-    "applicableRows": 121,
+    "applicableRows": 122,
     "stableApplicableRows": 0,
     "applicableComponents": 94,
     "stableComponents": 0,
-    "applicableCapabilities": 27,
+    "applicableCapabilities": 28,
     "stableCapabilities": 0,
     "webSpecificMappings": 24,
     "documentedWebSpecificMappings": 12,
@@ -3763,10 +3788,10 @@
         }
       },
       "icons": {
-        "total": 2,
+        "total": 3,
         "stable": 0,
         "status": {
-          "in progress": 2
+          "in progress": 3
         }
       },
       "labs": {
